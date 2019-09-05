@@ -6,5 +6,5 @@ module.exports = {
     searchPath: './src',
     absoluteImportPaths: ['./src'],
   },
-  outputFileExtension: "ts"
+  outputFileExtension: "tsx"
 };
