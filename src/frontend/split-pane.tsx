@@ -1,19 +1,28 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-_l = require 'lodash'
-TheirSplitPane = (require 'react-split-pane').default
-{assert} = require '../util'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+import createReactClass from 'create-react-class';
+import _l from 'lodash';
+import { default as TheirSplitPane } from 'react-split-pane';
+import { assert } from '../util';
 
-module.exports = createReactClass
-    render: ->
-        assert => not @props.onDragStarted?
-        assert => not @props.onDragFinished?
-        React.createElement("div", null,
-            React.createElement(TheirSplitPane, Object.assign({},  @props, {"onDragStarted": (=> @setState({draggingPane: yes})), "onDragFinished": (=> @setState({draggingPane: no}))}),
-                (@props.children)
+export default createReactClass({
+    render() {
+        assert(() => (this.props.onDragStarted == null));
+        assert(() => (this.props.onDragFinished == null));
+        return React.createElement("div", null,
+            React.createElement(TheirSplitPane, Object.assign({},  this.props, {"onDragStarted": (() => this.setState({draggingPane: true})), "onDragFinished": (() => this.setState({draggingPane: false}))}),
+                (this.props.children)
             ),
-            (React.createElement("div", {"style": (position: 'fixed', width: '100vw', height: '100vh')}) if @state.draggingPane)
-        )
+            (this.state.draggingPane ? React.createElement("div", {"style": ({position: 'fixed', width: '100vw', height: '100vh'})}) : undefined)
+        );
+    },
 
-    getInitialState: ->
-        draggingPane: no
+    getInitialState() {
+        return {draggingPane: false};
+    }
+});

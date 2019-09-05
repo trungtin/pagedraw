@@ -1,54 +1,70 @@
-_ = require 'underscore'
-React = require 'react'
-createReactClass = require 'create-react-class'
-{assert} = require '../util'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let EditableText;
+import _ from 'underscore';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import { assert } from '../util';
 
-module.exports = EditableText = createReactClass
-    displayName: 'EditableText'
+export default EditableText = createReactClass({
+    displayName: 'EditableText',
 
-    render: ->
-        if @props.isEditing
-            React.createElement("input", {"type": "text",  \
-                   "autoFocus": (true),  \
-                   "value": (@newValue),  \
-                   "onChange": (@handleChange),  \
-                   "style": (_.extend({color:'black'}, @props.editingStyle)),  \
-                   "onKeyDown": (@inputKeyDown),  \
-                   "onBlur": (@finish),  \
-                   "onFocus": (@inputHandleFocus)})
-        else
-            React.createElement("span", {"style": (_.extend({
+    render() {
+        if (this.props.isEditing) {
+            return React.createElement("input", {"type": "text",  
+                   "autoFocus": (true),  
+                   "value": (this.newValue),  
+                   "onChange": (this.handleChange),  
+                   "style": (_.extend({color:'black'}, this.props.editingStyle)),  
+                   "onKeyDown": (this.inputKeyDown),  
+                   "onBlur": (this.finish),  
+                   "onFocus": (this.inputHandleFocus)});
+        } else {
+            return React.createElement("span", {"style": (_.extend({
                     display:'block',
                     width:'100%',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
-                  }, @props.readOnlyStyle)),  \
-                  "onMouseDown": (@textMouseDown)}, (@props.valueLink.value))
+                  }, this.props.readOnlyStyle)),  
+                  "onMouseDown": (this.textMouseDown)}, (this.props.valueLink.value));
+        }
+    },
 
-    handleChange: (e) ->
-        # store value from input field for our internal usage
-        @newValue = e.target.value
-        @forceUpdate()
+    handleChange(e) {
+        // store value from input field for our internal usage
+        this.newValue = e.target.value;
+        return this.forceUpdate();
+    },
 
-    inputKeyDown: (e) ->
-        switch e.key
-            when "Escape"
-                @newValue = @props.valueLink.value
-                @finish()
-            when "Enter"
-                @finish()
+    inputKeyDown(e) {
+        switch (e.key) {
+            case "Escape":
+                this.newValue = this.props.valueLink.value;
+                return this.finish();
+            case "Enter":
+                return this.finish();
+        }
+    },
 
-    inputHandleFocus: (e) ->
-        e.target.setSelectionRange(0, e.target.value.length)
+    inputHandleFocus(e) {
+        return e.target.setSelectionRange(0, e.target.value.length);
+    },
 
-    textMouseDown: (e) ->
-        if @props.isEditable == undefined || @props.isEditable == true
-            e.preventDefault()
-            @newValue = @props.valueLink.value
-            @props.onSwitchToEditMode(true)
+    textMouseDown(e) {
+        if ((this.props.isEditable === undefined) || (this.props.isEditable === true)) {
+            e.preventDefault();
+            this.newValue = this.props.valueLink.value;
+            return this.props.onSwitchToEditMode(true);
+        }
+    },
 
-    finish: ->
-        assert => @props.isEditing
-        @props.valueLink.requestChange(@newValue) unless @newValue == @props.valueLink.value
-        @props.onSwitchToEditMode(false)
+    finish() {
+        assert(() => this.props.isEditing);
+        if (this.newValue !== this.props.valueLink.value) { this.props.valueLink.requestChange(this.newValue); }
+        return this.props.onSwitchToEditMode(false);
+    }
+});

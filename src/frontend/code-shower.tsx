@@ -1,15 +1,22 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
-createReactClass = require 'create-react-class'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let CodeShower;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import SelectOnClick from './select-on-click';
 
-SelectOnClick = require './select-on-click'
-
-module.exports = CodeShower = createReactClass
-    displayName: 'CodeShower'
-    render: ->
-        React.createElement(SelectOnClick, null,
-            React.createElement("pre", Object.assign({},  @props),
-                (@props.content)
+export default CodeShower = createReactClass({
+    displayName: 'CodeShower',
+    render() {
+        return React.createElement(SelectOnClick, null,
+            React.createElement("pre", Object.assign({},  this.props),
+                (this.props.content)
             )
-        )
+        );
+    }
+});

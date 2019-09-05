@@ -1,205 +1,230 @@
-_l = require 'lodash'
-React = require 'react'
-createReactClass = require 'create-react-class'
-ReactDOM = require 'react-dom'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let previewOfInstance;
+import _l from 'lodash';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import ReactDOM from 'react-dom';
+import imagesLoaded from 'imagesloaded';
+import { font_loading_head_tags_for_doc } from '../fonts';
 
-imagesLoaded = require 'imagesloaded'
-{font_loading_head_tags_for_doc} = require '../fonts'
+// initialize the compiler
+import '../load_compiler';
 
-# initialize the compiler
-require '../load_compiler'
+import { assert, memoize_on } from '../util';
+import { Doc } from '../doc';
+import { InstanceBlock } from '../blocks/instance-block';
+import LayoutBlock from '../blocks/layout-block';
+import ArtboardBlock from '../blocks/artboard-block';
+import { assert_valid_compiler_options } from '../compiler-options';
+import { LayoutEditorContextProvider } from './layout-editor-context-provider';
+import { LayoutView } from './layout-view';
+import { pdomToReact } from './pdom-to-react';
+import programs from '../programs';
+import config from '../config';
 
-{assert, memoize_on} = require '../util'
+import {
+    evalPdomForInstance,
+    compileComponentForInstanceEditor,
+    blocks_from_block_tree,
+    postorder_walk_block_tree,
+} from '../core';
 
-{Doc} = require '../doc'
-{InstanceBlock} = require '../blocks/instance-block'
-LayoutBlock = require '../blocks/layout-block'
-ArtboardBlock = require '../blocks/artboard-block'
-{assert_valid_compiler_options} = require '../compiler-options'
+window.normalizeDocjson = function(docjson, skipBrowserDependentCode) {
+    if (skipBrowserDependentCode == null) { skipBrowserDependentCode = false; }
+    const {Editor} = require('./edit-page');
+    return new Promise(function(resolve, reject) {
 
-{LayoutEditorContextProvider} = require './layout-editor-context-provider'
-{LayoutView} = require './layout-view'
-{pdomToReact} = require './pdom-to-react'
-programs = require '../programs'
+        // FIXME: use the util.assertHandler hook for the usual util.assert
+        assert = function(fn) { if (!fn()) { return reject(new Error("Assertion failed in normalize check")); } };
 
-config = require '../config'
-{evalPdomForInstance, compileComponentForInstanceEditor, blocks_from_block_tree, postorder_walk_block_tree} = require '../core'
-
-window.normalizeDocjson = (docjson, skipBrowserDependentCode = false) ->
-    {Editor} = require './edit-page'
-    new Promise (resolve, reject) ->
-
-        # FIXME: use the util.assertHandler hook for the usual util.assert
-        assert = (fn) -> reject(new Error("Assertion failed in normalize check")) if not fn()
-
-        ReactDOM.render(
-            React.createElement(Editor, {"normalizeCheckMode": ({docjson, callback: resolve, assert}), "skipBrowserDependentCode": (skipBrowserDependentCode)})
-            document.getElementById('app'))
+        return ReactDOM.render(
+            React.createElement(Editor, {"normalizeCheckMode": ({docjson, callback: resolve, assert}), "skipBrowserDependentCode": (skipBrowserDependentCode)}),
+            document.getElementById('app'));
+    });
+};
 
 
-window.loadEditor = (docjson) ->
-    {Editor} = require './edit-page'
-    new Promise (resolve, reject) ->
-        config.warnOnEvalPdomErrors = false
+window.loadEditor = function(docjson) {
+    const {Editor} = require('./edit-page');
+    return new Promise(function(resolve, reject) {
+        config.warnOnEvalPdomErrors = false;
 
-        window.didEditorCrashBeforeLoading = (didCrash) ->
-            # called when the Editor finishes loading, or on window.onerror
-            return reject(new Error("loading crashed, you dummy!")) if didCrash
-            return reject(new Error("Something went wrong in load doc")) if not editorInstance?.doc?.serialize?
-            justLoaded = editorInstance.doc.serialize()
-            editorInstance.normalizeForceAll()
-            return resolve([justLoaded, editorInstance.doc.serialize()])
+        window.didEditorCrashBeforeLoading = function(didCrash) {
+            // called when the Editor finishes loading, or on window.onerror
+            if (didCrash) { return reject(new Error("loading crashed, you dummy!")); }
+            if ((__guard__(editorInstance != null ? editorInstance.doc : undefined, x => x.serialize) == null)) { return reject(new Error("Something went wrong in load doc")); }
+            const justLoaded = editorInstance.doc.serialize();
+            editorInstance.normalizeForceAll();
+            return resolve([justLoaded, editorInstance.doc.serialize()]);
+        };
 
-        window.addEventListener 'error', (err) ->
-            reject(err.toString())
+        window.addEventListener('error', err => reject(err.toString()));
 
-        editorInstance = null
-        ReactDOM.render(
-            React.createElement(Editor, {"ref": ((_instance) -> editorInstance = _instance), "initialDocJson": (docjson)})
-            document.getElementById('app'))
+        var editorInstance = null;
+        return ReactDOM.render(
+            React.createElement(Editor, {"ref"(_instance) { return editorInstance = _instance; }, "initialDocJson": (docjson)}),
+            document.getElementById('app'));
+    });
+};
 
-## FIXME previewOfInstance and previewOfArtboard are **very** similar
+//# FIXME previewOfInstance and previewOfArtboard are **very** similar
 
-window.previewOfInstance = previewOfInstance = (instanceUniqueKey, docjson) ->
-    doc = Doc.deserialize(docjson)
-    doc.enterReadonlyMode()
-    instanceBlock = doc.getBlockByKey(instanceUniqueKey)
+window.previewOfInstance = (previewOfInstance = function(instanceUniqueKey, docjson) {
+    const doc = Doc.deserialize(docjson);
+    doc.enterReadonlyMode();
+    const instanceBlock = doc.getBlockByKey(instanceUniqueKey);
 
-    compile_options = {
-        for_editor: false
-        for_component_instance_editor: true
-        templateLang: doc.export_lang
-        getCompiledComponentByUniqueKey: (uniqueKey) ->
-            componentBlockTree = doc.getBlockTreeByUniqueKey(uniqueKey)
-            return undefined if componentBlockTree == undefined
-            return compileComponentForInstanceEditor(componentBlockTree, compile_options)
-    }
-    assert_valid_compiler_options(compile_options)
+    var compile_options = {
+        for_editor: false,
+        for_component_instance_editor: true,
+        templateLang: doc.export_lang,
+        getCompiledComponentByUniqueKey(uniqueKey) {
+            const componentBlockTree = doc.getBlockTreeByUniqueKey(uniqueKey);
+            if (componentBlockTree === undefined) { return undefined; }
+            return compileComponentForInstanceEditor(componentBlockTree, compile_options);
+        }
+    };
+    assert_valid_compiler_options(compile_options);
 
-    assert -> instanceBlock instanceof InstanceBlock and instanceBlock.getSourceComponent()?
-    pdom = instanceBlock.toPdom(compile_options)
+    assert(() => instanceBlock instanceof InstanceBlock && (instanceBlock.getSourceComponent() != null));
+    const pdom = instanceBlock.toPdom(compile_options);
 
-    ## FIXME this is not being recomputed whenever the window size changes, which means we won't accurately
-    # represent ScreenSizeGroups
-    # We should normally try catch around the next line, but in this case we are assuming no errors will happen so not
-    # try catching makes the stack trace easier to debug.
-    evaled_pdom = evalPdomForInstance(
+    //# FIXME this is not being recomputed whenever the window size changes, which means we won't accurately
+    // represent ScreenSizeGroups
+    // We should normally try catch around the next line, but in this case we are assuming no errors will happen so not
+    // try catching makes the stack trace easier to debug.
+    const evaled_pdom = evalPdomForInstance(
         pdom,
         compile_options.getCompiledComponentByUniqueKey,
         compile_options.templateLang,
-        window.innerWidth)
+        window.innerWidth);
 
-    React.createElement("div", null,
+    return React.createElement("div", null,
         (font_loading_head_tags_for_doc(doc)),
         (pdomToReact(evaled_pdom))
-    )
+    );
+});
 
 
-window.previewOfArtboard = exports.previewOfArtboard = (artboardUniqueKey, docjson) ->
-    doc = Doc.deserialize(docjson)
-    doc.enterReadonlyMode()
-    artboard = doc.getBlockByKey(artboardUniqueKey)
-
-    compile_options = {
-        # FIXME it's unclear whether for_editor should be true or false.  We should run this
-        # twice, once for each.
-        for_editor: false
-
-        for_component_instance_editor: true
-        templateLang: doc.export_lang
-        getCompiledComponentByUniqueKey: (uniqueKey) ->
-            # FIXME: memoize?
-            componentBlockTree = doc.getBlockTreeByUniqueKey(uniqueKey)
-            return undefined if componentBlockTree == undefined
-            return compileComponentForInstanceEditor(componentBlockTree, compile_options)
-    }
-    assert_valid_compiler_options(compile_options)
+const defaultExport = {};
 
 
-    # use only static values for the toplevel to match Layout mode
-    artboard_clone_blocktree = programs.all_static_blocktree_clone(artboard.blockTree)
+window.previewOfArtboard = (defaultExport.previewOfArtboard = function(artboardUniqueKey, docjson) {
+    const doc = Doc.deserialize(docjson);
+    doc.enterReadonlyMode();
+    const artboard = doc.getBlockByKey(artboardUniqueKey);
 
-    # we don't want any minHeight: 100vh
-    postorder_walk_block_tree artboard_clone_blocktree, ({block}) ->
-        block.is_screenfull = false if block instanceof ArtboardBlock or block instanceof LayoutBlock
+    var compile_options = {
+        // FIXME it's unclear whether for_editor should be true or false.  We should run this
+        // twice, once for each.
+        for_editor: false,
 
-    pdom = compileComponentForInstanceEditor(artboard_clone_blocktree, compile_options)
+        for_component_instance_editor: true,
+        templateLang: doc.export_lang,
+        getCompiledComponentByUniqueKey(uniqueKey) {
+            // FIXME: memoize?
+            const componentBlockTree = doc.getBlockTreeByUniqueKey(uniqueKey);
+            if (componentBlockTree === undefined) { return undefined; }
+            return compileComponentForInstanceEditor(componentBlockTree, compile_options);
+        }
+    };
+    assert_valid_compiler_options(compile_options);
 
-    # We should normally try catch around the next line, but in this case we are assuming no errors will happen so not
-    # try catching makes the stack trace easier to debug.
-    evaled_pdom = evalPdomForInstance(
+
+    // use only static values for the toplevel to match Layout mode
+    const artboard_clone_blocktree = programs.all_static_blocktree_clone(artboard.blockTree);
+
+    // we don't want any minHeight: 100vh
+    postorder_walk_block_tree(artboard_clone_blocktree, function({block}) {
+        if (block instanceof ArtboardBlock || block instanceof LayoutBlock) { return block.is_screenfull = false; }
+    });
+
+    const pdom = compileComponentForInstanceEditor(artboard_clone_blocktree, compile_options);
+
+    // We should normally try catch around the next line, but in this case we are assuming no errors will happen so not
+    // try catching makes the stack trace easier to debug.
+    const evaled_pdom = evalPdomForInstance(
         pdom,
         compile_options.getCompiledComponentByUniqueKey,
         compile_options.templateLang,
 
-        # FIXME should this be artboard.width?
-        window.innerWidth)
+        // FIXME should this be artboard.width?
+        window.innerWidth);
 
-    React.createElement("div", {"className": "expand-children", "style": (height: artboard.height, width: artboard.width)},
+    return React.createElement("div", {"className": "expand-children", "style": ({height: artboard.height, width: artboard.width})},
         (font_loading_head_tags_for_doc(doc)),
         (pdomToReact(evaled_pdom))
-    )
+    );
+});
 
 
 
-window.layoutEditorOfArtboard = exports.layoutEditorOfArtboard = (artboardUniqueKey, docjson) ->
-    doc = Doc.deserialize(docjson)
-    doc.enterReadonlyMode()
-    artboard = doc.getBlockByKey(artboardUniqueKey)
-    React.createElement(LayoutEditorContextProvider, {"doc": (doc)},
+window.layoutEditorOfArtboard = (defaultExport.layoutEditorOfArtboard = function(artboardUniqueKey, docjson) {
+    let shifted_doc;
+    const doc = Doc.deserialize(docjson);
+    doc.enterReadonlyMode();
+    const artboard = doc.getBlockByKey(artboardUniqueKey);
+    return React.createElement(LayoutEditorContextProvider, {"doc": (doc)},
         (
-            # Pick from the existing doc instead of getting a freshRepresentation because they're not going to
-            # be mutated.  Think about that if you refactor this code.
-            shifted_doc = new Doc(_l.pick(doc, ['export_lang', 'fonts', 'custom_fonts']))
+            // Pick from the existing doc instead of getting a freshRepresentation because they're not going to
+            // be mutated.  Think about that if you refactor this code.
+            (// We can't passs {blocks} to the Doc constructor or the constructor will set block.doc
+            shifted_doc = new Doc(_l.pick(doc, ['export_lang', 'fonts', 'custom_fonts'])), shifted_doc.blocks = artboard.andChildren().map(block => {
+                const clone = block.freshRepresentation();
+                clone.top -= artboard.top;
+                clone.left -= artboard.left;
 
-            # We can't passs {blocks} to the Doc constructor or the constructor will set block.doc
-            shifted_doc.blocks = artboard.andChildren().map (block) =>
-                clone = block.freshRepresentation()
-                clone.top -= artboard.top
-                clone.left -= artboard.left
+                // HACK tell the cloned blocks they belong to the source doc, so instance blocks
+                // look for their source component in the source doc
+                clone.doc = doc;
 
-                # HACK tell the cloned blocks they belong to the source doc, so instance blocks
-                # look for their source component in the source doc
-                clone.doc = doc
-
-                return clone
-
-            shifted_doc.enterReadonlyMode()
-
-            # UNCLEAR what's the pointerEvents 'none' for?  @michael wrote it in the original code
+                return clone;
+            }), shifted_doc.enterReadonlyMode(), // UNCLEAR what's the pointerEvents 'none' for?  @michael wrote it in the original code
             React.createElement("div", {"style": ({width: artboard.width, height: artboard.height, pointerEvents: 'none'})},
                 (font_loading_head_tags_for_doc(shifted_doc)),
-                React.createElement(LayoutView, {"doc": (shifted_doc), "blockOverrides": ({}), "overlayForBlock": (=> null)})
-            )
-        )
-    )
+                React.createElement(LayoutView, {"doc": (shifted_doc), "blockOverrides": ({}), "overlayForBlock": (() => null)})
+            )))
+    );
+});
 
 
-##
+export default defaultExport;
 
-ComponentDidLoad = createReactClass
-    render: ->
-        React.createElement("div", {"ref": "wrapper"},
-            (@props.elem)
-        )
 
-    componentDidMount: ->
-        # Wait for images to load before considering this component "Loaded"
-        imagesLoaded(@refs.wrapper, {background: true}, (=> window.document.fonts.ready.then(@props.callback)))
+//#
 
-window.loadForScreenshotting = (loader_params) ->
-    return new Promise((resolve, reject) ->
-        window.load_for_screenshotting_params = loader_params # leak in case you need to debug
-        [loader, args...] = loader_params
-        elem = window[loader](args...)
-        ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (elem), "callback": (resolve)}), document.getElementById('app'))
-    )
+const ComponentDidLoad = createReactClass({
+    render() {
+        return React.createElement("div", {"ref": "wrapper"},
+            (this.props.elem)
+        );
+    },
 
-window.loadPreviewOfInstance = (instanceUniqueKey, docjson) ->
-    # legacy— should be using loadForScreenshotting directly
-    return window.loadForScreenshotting(['previewOfInstance', instanceUniqueKey, docjson])
+    componentDidMount() {
+        // Wait for images to load before considering this component "Loaded"
+        return imagesLoaded(this.refs.wrapper, {background: true}, (() => window.document.fonts.ready.then(this.props.callback)));
+    }
+});
 
-window.loadPdom = (pdom) ->
-    new Promise((resolve, reject) ->
-        ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (pdomToReact(pdom)), "callback": (resolve)}), document.getElementById('app'))
-    )
+window.loadForScreenshotting = loader_params => new Promise(function(resolve, reject) {
+    window.load_for_screenshotting_params = loader_params; // leak in case you need to debug
+    const [loader, ...args] = Array.from(loader_params);
+    const elem = window[loader](...Array.from(args || []));
+    return ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (elem), "callback": (resolve)}), document.getElementById('app'));
+});
+
+window.loadPreviewOfInstance = (instanceUniqueKey, docjson) => // legacy— should be using loadForScreenshotting directly
+window.loadForScreenshotting(['previewOfInstance', instanceUniqueKey, docjson]);
+
+window.loadPdom = pdom => new Promise((resolve, reject) => ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (pdomToReact(pdom)), "callback": (resolve)}), document.getElementById('app')));
+
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}

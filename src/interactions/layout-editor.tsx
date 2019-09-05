@@ -1,1757 +1,2300 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-propTypes = require 'prop-types'
-ReactDOM = require 'react-dom'
-_ = require 'underscore'
-_l = require 'lodash'
+/*
+ * decaffeinate suggestions:
+ * DS001: Remove Babel/TypeScript constructor workaround
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS104: Avoid inline assignments
+ * DS201: Simplify complex destructure assignments
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let ContentEditorMode, DraggingScreenMode, DrawingMode, DrawProtoLinkMode, DynamicizingMode, IdleMode, PushdownTypingMode, ReplaceBlocksMode, SelectRangeMode, TypingMode, UserLevelBlockTypes, VerticalPushdownMode;
+import React from 'react';
+import createReactClass from 'create-react-class';
+import propTypes from 'prop-types';
+import ReactDOM from 'react-dom';
+import _ from 'underscore';
+import _l from 'lodash';
+import config from '../config';
+import { find_unused, find_connected, assert } from '../util';
+import analytics from '../frontend/analytics';
+import { Doc } from '../doc';
+import Block from '../block';
+import { Dynamicable } from '../dynamicable';
+import { PropSpec, StringPropControl, ImagePropControl } from '../props';
+import TextBlock from '../blocks/text-block';
+import LineBlock from '../blocks/line-block';
+import ImageBlock from '../blocks/image-block';
+import ArtboardBlock from '../blocks/artboard-block';
+import LayoutBlock from '../blocks/layout-block';
+import { InstanceBlock } from '../blocks/instance-block';
+import { MutlistateHoleBlock, MutlistateAltsBlock } from '../blocks/non-component-multistate-block';
+const {LineBlockType, LayoutBlockType, TextBlockType, ComponentBlockType} = (UserLevelBlockTypes = require('../user-level-block-type'));
 
-config = require '../config'
-{find_unused, find_connected, assert} = require '../util'
-analytics = require '../frontend/analytics'
-
-{Doc} = require '../doc'
-Block = require '../block'
-{Dynamicable} = require '../dynamicable'
-{PropSpec, StringPropControl, ImagePropControl} = require '../props'
-
-TextBlock = require '../blocks/text-block'
-LineBlock = require '../blocks/line-block'
-ImageBlock = require '../blocks/image-block'
-ArtboardBlock = require '../blocks/artboard-block'
-LayoutBlock = require '../blocks/layout-block'
-{InstanceBlock} = require '../blocks/instance-block'
-{ MutlistateHoleBlock, MutlistateAltsBlock } = require '../blocks/non-component-multistate-block'
-{LineBlockType, LayoutBlockType, TextBlockType, ComponentBlockType} = UserLevelBlockTypes = require '../user-level-block-type'
-
-{windowMouseMachine, DraggingCanvas} = require '../frontend/DraggingCanvas'
-Zoomable = require '../frontend/zoomable'
-{ResizingFrame} = require '../frontend/resizing-grip'
-{LayoutView} = require '../editor/layout-view'
-
-{EditorMode} = require './editor-mode'
-{QuillComponent} = require '../frontend/quill-component'
-core = require '../core'
+import { windowMouseMachine, DraggingCanvas } from '../frontend/DraggingCanvas';
+import Zoomable from '../frontend/zoomable';
+import { ResizingFrame } from '../frontend/resizing-grip';
+import { LayoutView } from '../editor/layout-view';
+import { EditorMode } from './editor-mode';
+import { QuillComponent } from '../frontend/quill-component';
+import core from '../core';
 
 
-# We use this to get the mouse position when just hovering
-PassDomNodeToRenderForMouse = createReactClass
-    render: -> @props.render(@domNode)
-    componentDidMount: -> @domNode = ReactDOM.findDOMNode(this)
+// We use this to get the mouse position when just hovering
+const PassDomNodeToRenderForMouse = createReactClass({
+    render() { return this.props.render(this.domNode); },
+    componentDidMount() { return this.domNode = ReactDOM.findDOMNode(this); }
+});
 
-class LayoutEditorMode extends EditorMode
-    ## Override points
+class LayoutEditorMode extends EditorMode {
+    //# Override points
 
-    isAlreadySimilarTo: (other) ->
-        # override this if you have any mode parameters
-        return other instanceof @constructor
+    isAlreadySimilarTo(other) {
+        // override this if you have any mode parameters
+        return other instanceof this.constructor;
+    }
 
-    ## Rendering override points
+    //# Rendering override points
 
-    cursor: -> 'default'
+    cursor() { return 'default'; }
 
-    highlight_blocks_on_hover: -> false
+    highlight_blocks_on_hover() { return false; }
 
-    getBlockOverrides: -> {}
+    getBlockOverrides() { return {}; }
 
-    measure_distance_on_alt_hover: -> false
+    measure_distance_on_alt_hover() { return false; }
 
-    disable_overlay_for_block: (block) -> false
+    disable_overlay_for_block(block) { return false; }
 
-    extra_overlay_classes_for_block: (block) -> ''
+    extra_overlay_classes_for_block(block) { return ''; }
 
-    hide_floating_controls: -> false
+    hide_floating_controls() { return false; }
 
-    ## Interaction override points
+    //# Interaction override points
 
-    handleMouseMove: (e) =>
-        # no-op; override in subclasses
+    handleMouseMove(e) {}
+        // no-op; override in subclasses
 
-    handleClick: (mouse) =>
-        # override in subclasses
-        @getClickedBlocksAndSelect(mouse)
-        @editor.setEditorStateToDefault()
-        @editor.handleDocChanged()
+    handleClick(mouse) {
+        // override in subclasses
+        this.getClickedBlocksAndSelect(mouse);
+        this.editor.setEditorStateToDefault();
+        return this.editor.handleDocChanged();
+    }
 
-    handleDoubleClick: (where) =>
-        # no-op; override in subclasses
+    handleDoubleClick(where) {}
+        // no-op; override in subclasses
 
-    handleDrag: (from, onMove, onEnd) =>
-        # override in subclasses
-        # Switch to defaultState then continue with the drag interaction
-        idle_mode = new IdleMode()
-        @editor.setEditorMode(idle_mode)
-        @minimalDirty()
-        idle_mode.handleDrag(from, onMove, onEnd)
+    handleDrag(from, onMove, onEnd) {
+        // override in subclasses
+        // Switch to defaultState then continue with the drag interaction
+        const idle_mode = new IdleMode();
+        this.editor.setEditorMode(idle_mode);
+        this.minimalDirty();
+        return idle_mode.handleDrag(from, onMove, onEnd);
+    }
 
-    ##
+    //#
 
-    constructor: ->
-        # mostly legacyish; will try to remove
-        @activeGridlines = []
-        @activeRulers = []
-        @selectionBox = null
+    constructor() {
+        // mostly legacyish; will try to remove
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        this.render_canvas_knowing_dom = this.render_canvas_knowing_dom.bind(this);
+        this.getOverlayForBlock = this.getOverlayForBlock.bind(this);
+        this.getGridlines = this.getGridlines.bind(this);
+        this.getRuler = this.getRuler.bind(this);
+        this.getOverlappingRulers = this.getOverlappingRulers.bind(this);
+        this.minimalDirty = this.minimalDirty.bind(this);
+        this.getClickedBlocksAndSelect = this.getClickedBlocksAndSelect.bind(this);
+        this.proxyBlock = this.proxyBlock.bind(this);
+        this.prepareDrag = this.prepareDrag.bind(this);
+        this.activeGridlines = [];
+        this.activeRulers = [];
+        this.selectionBox = null;
+    }
 
-    willMount: (@editor) ->
+    willMount(editor) {
+        this.editor = editor;
+    }
 
-    rebuild_render_caches: ->
-        docArea = Block.unionBlock(@editor.doc.blocks) ? {bottom: 0, right: 0}
-        @editorGeometry =
-            height: docArea.bottom + window.innerHeight
+    rebuild_render_caches() {
+        let left;
+        const docArea = (left = Block.unionBlock(this.editor.doc.blocks)) != null ? left : {bottom: 0, right: 0};
+        this.editorGeometry = {
+            height: docArea.bottom + window.innerHeight,
             width: docArea.right + window.innerWidth
+        };
 
-        @selectedBlocks = @editor.getSelectedBlocks()
+        return this.selectedBlocks = this.editor.getSelectedBlocks();
+    }
 
-    canvas: (editor) ->
-        React.createElement(Zoomable, {"viewportManager": (@editor.viewportManager), "style": (flex: 1, backgroundColor: '#f3f1f3')},
-            React.createElement(PassDomNodeToRenderForMouse, {"render": (@render_canvas_knowing_dom)})
-        )
+    canvas(editor) {
+        return React.createElement(Zoomable, {"viewportManager": (this.editor.viewportManager), "style": ({flex: 1, backgroundColor: '#f3f1f3'})},
+            React.createElement(PassDomNodeToRenderForMouse, {"render": (this.render_canvas_knowing_dom)})
+        );
+    }
 
-    render_canvas_knowing_dom: (draggingCanvasDiv) =>
-        is_in_distance_measuring_mode = @measure_distance_on_alt_hover() \
-                                    and windowMouseMachine.getCurrentModifierKeysPressed().altKey \
-                                    # If we're mid-interaction and not normalized, we may have 0-width blocks.
-                                    # 0-width (or 0-height) blocks can mess up our @getOverlappingRulers, which
-                                    # uses unionBlock, which may not properly handle 0-length blocks.
-                                    and not @editor.interactionInProgress \
-                                    # need draggingCanvas in order to get the block hovered over
-                                    and draggingCanvasDiv
+    render_canvas_knowing_dom(draggingCanvasDiv) {
+        let rulers, measuringGridlines;
+        const is_in_distance_measuring_mode = this.measure_distance_on_alt_hover() 
+                                    && windowMouseMachine.getCurrentModifierKeysPressed().altKey 
+                                    // If we're mid-interaction and not normalized, we may have 0-width blocks.
+                                    // 0-width (or 0-height) blocks can mess up our @getOverlappingRulers, which
+                                    // uses unionBlock, which may not properly handle 0-length blocks.
+                                    && !this.editor.interactionInProgress 
+                                    // need draggingCanvas in order to get the block hovered over
+                                    && draggingCanvasDiv;
 
-        hovered_block =
-            if   is_in_distance_measuring_mode \
-            then @editor.getBlockUnderMouseLocation(windowMouseMachine.getMousePositionForDiv(draggingCanvasDiv))
-            else null
+        const hovered_block =
+            is_in_distance_measuring_mode 
+            ? this.editor.getBlockUnderMouseLocation(windowMouseMachine.getMousePositionForDiv(draggingCanvasDiv))
+            : null;
 
-        # cache hovered_block as a kind of render_param so LayoutView's blocks' overlays can check it cheaply
-        @render_cached_measuring_from_block = hovered_block
+        // cache hovered_block as a kind of render_param so LayoutView's blocks' overlays can check it cheaply
+        this.render_cached_measuring_from_block = hovered_block;
 
-        # NOTE bad code: this produces bizarre results, putting gridlines in very odd places
+        // NOTE bad code: this produces bizarre results, putting gridlines in very odd places
         [rulers, measuringGridlines] =
-            if not (is_in_distance_measuring_mode \
-                and hovered_block? \
-                and (measuring_from_block = _l.first(@selectedBlocks))?
-            )
-                [@activeRulers, []]
+            Array.from((() => {
+            let measuring_from_block;
+            if (!(is_in_distance_measuring_mode 
+                && (hovered_block != null) 
+                && ((measuring_from_block = _l.first(this.selectedBlocks)) != null)
+            )) {
+                return [this.activeRulers, []];
 
-            else
-                # FIXME calling .parent here is very bad because it will force BlockTree creation
-                if hovered_block == measuring_from_block and (parent_container = hovered_block.parent?.getContentSubregionAsBlock())?
-                    [@getOverlappingRulers(hovered_block, parent_container), []]
+            } else {
+                // FIXME calling .parent here is very bad because it will force BlockTree creation
+                let inside, parent_container;
+                if ((hovered_block === measuring_from_block) && ((parent_container = hovered_block.parent != null ? hovered_block.parent.getContentSubregionAsBlock() : undefined) != null)) {
+                    return [this.getOverlappingRulers(hovered_block, parent_container), []];
 
-                else if hovered_block == measuring_from_block
-                    [[], []]
+                } else if (hovered_block === measuring_from_block) {
+                    return [[], []];
 
-                else if (inside = measuring_from_block.getContentSubregionAsBlock())?.contains(hovered_block)
-                    [@getOverlappingRulers(inside, hovered_block), []]
+                } else if (__guard__((inside = measuring_from_block.getContentSubregionAsBlock()), x => x.contains(hovered_block))) {
+                    return [this.getOverlappingRulers(inside, hovered_block), []];
 
-                else if (inside = hovered_block.getContentSubregionAsBlock())?.contains(measuring_from_block)
-                    [@getOverlappingRulers(measuring_from_block, inside), []]
+                } else if (__guard__((inside = hovered_block.getContentSubregionAsBlock()), x1 => x1.contains(measuring_from_block))) {
+                    return [this.getOverlappingRulers(measuring_from_block, inside), []];
 
-                else if measuring_from_block.overlaps(hovered_block)
-                    # FIXME: should also take getContentSubregionAsBlock into account
-                    [@getOverlappingRulers(measuring_from_block, hovered_block), []]
+                } else if (measuring_from_block.overlaps(hovered_block)) {
+                    // FIXME: should also take getContentSubregionAsBlock into account
+                    return [this.getOverlappingRulers(measuring_from_block, hovered_block), []];
 
-                else
-                    rulers = _l.compact ['top', 'left'].map (axis) => @getRuler(measuring_from_block, hovered_block, axis)
+                } else {
+                    rulers = _l.compact(['top', 'left'].map(axis => this.getRuler(measuring_from_block, hovered_block, axis)));
 
-                    gridlinesByAxis = _.groupBy @getGridlines([hovered_block]), 'axis'
-                    measuringGridlines = ['top', 'left'].map (axis) =>
-                        gridline = _l.minBy gridlinesByAxis[axis], (gridline) => [
-                            _l.min(_l.values(Block.axis[axis]).map((edge_name) -> Math.abs(gridline.position - measuring_from_block[edge_name]))),
+                    const gridlinesByAxis = _.groupBy(this.getGridlines([hovered_block]), 'axis');
+                    measuringGridlines = ['top', 'left'].map(axis => {
+                        const gridline = _l.minBy(gridlinesByAxis[axis], gridline => [
+                            _l.min(_l.values(Block.axis[axis]).map(edge_name => Math.abs(gridline.position - measuring_from_block[edge_name]))),
                             measuring_from_block.distance(gridline.source)
-                        ]
+                        ]);
 
-                        # All gridlines are initialized as covering the whole page
-                        # Here we make them go only from the movingBlock (block) to the snappingBlock (gridline.source)
-                        orth_ax = Block.orthogonalAxis[gridline.axis]
-                        gridline.start = _l.min [measuring_from_block[Block.axis[orth_ax].start], gridline.source[Block.axis[orth_ax].end]]
-                        gridline.end   = _l.max [measuring_from_block[Block.axis[orth_ax].end],   gridline.source[Block.axis[orth_ax].start]]
+                        // All gridlines are initialized as covering the whole page
+                        // Here we make them go only from the movingBlock (block) to the snappingBlock (gridline.source)
+                        const orth_ax = Block.orthogonalAxis[gridline.axis];
+                        gridline.start = _l.min([measuring_from_block[Block.axis[orth_ax].start], gridline.source[Block.axis[orth_ax].end]]);
+                        gridline.end   = _l.max([measuring_from_block[Block.axis[orth_ax].end],   gridline.source[Block.axis[orth_ax].start]]);
 
-                        return gridline
+                        return gridline;
+                    });
 
-                    [rulers, measuringGridlines]
+                    return [rulers, measuringGridlines];
+                }
+            }
+        })());
 
-        # when the editor has focus, don't give it a nasty outline
-        classes = []
-        classes.push('highlight-blocks-on-hover') if @highlight_blocks_on_hover()
+        // when the editor has focus, don't give it a nasty outline
+        const classes = [];
+        if (this.highlight_blocks_on_hover()) { classes.push('highlight-blocks-on-hover'); }
 
-        React.createElement(DraggingCanvas, {"classes": (classes), "ref": "draggingCanvas",  \
-            "style": (cursor: @cursor(), height: @editorGeometry.height, width: @editorGeometry.width),  \
-            "onDrag": (@prepareDrag), "onClick": (@handleClick), "onDoubleClick": (@handleDoubleClick), "onMouseMove": (@handleMouseMove),  \
-            "onInteractionHappened": (->)},
+        return React.createElement(DraggingCanvas, {"classes": (classes), "ref": "draggingCanvas",  
+            "style": ({cursor: this.cursor(), height: this.editorGeometry.height, width: this.editorGeometry.width}),  
+            "onDrag": (this.prepareDrag), "onClick": (this.handleClick), "onDoubleClick": (this.handleDoubleClick), "onMouseMove": (this.handleMouseMove),  
+            "onInteractionHappened"() {}},
 
-            React.createElement("div", {"style": (zIndex: 0, isolation: 'isolate')},
-                React.createElement(LayoutView, { \
-                    "doc": (@editor.doc),  \
-                    "blockOverrides": (@getBlockOverrides()),  \
-                    "overlayForBlock": (@getOverlayForBlock)})
+            React.createElement("div", {"style": ({zIndex: 0, isolation: 'isolate'})},
+                React.createElement(LayoutView, { 
+                    "doc": (this.editor.doc),  
+                    "blockOverrides": (this.getBlockOverrides()),  
+                    "overlayForBlock": (this.getOverlayForBlock)})
             ),
 
-            React.createElement("div", {"style": (zIndex: 1, isolation: 'isolate')},
-                ( @renderPrototypingArrows() if config.prototyping ),
-                ( @renderGridlines(@getGridlines(@editor.doc.blocks), '1px dashed rgba(255, 50, 50, 0.8)') if config.showGridlines ),
-                ( @renderGridlines(@activeGridlines, '1px solid rgba(255, 50, 50, 0.8)') ),
-                ( @renderGridlines(measuringGridlines, '1px dashed rgba(255, 50, 50, 0.8)')),
-                ( @renderRulers(rulers) ),
-                ( @showSlices() if config.show_slices ),
+            React.createElement("div", {"style": ({zIndex: 1, isolation: 'isolate'})},
+                ( config.prototyping ? this.renderPrototypingArrows() : undefined ),
+                ( config.showGridlines ? this.renderGridlines(this.getGridlines(this.editor.doc.blocks), '1px dashed rgba(255, 50, 50, 0.8)') : undefined ),
+                ( this.renderGridlines(this.activeGridlines, '1px solid rgba(255, 50, 50, 0.8)') ),
+                ( this.renderGridlines(measuringGridlines, '1px dashed rgba(255, 50, 50, 0.8)')),
+                ( this.renderRulers(rulers) ),
+                ( config.show_slices ? this.showSlices() : undefined ),
 
-                ( unless @hide_floating_controls()
-                    @selectedBlocks.map (block) =>
-                        React.createElement(ResizingFrame, {"key": (block.uniqueKey), "resizable_edges": (block.resizableEdges),  \
-                            "style": (position: 'absolute', top: block.top, left: block.left, height: block.height, width: block.width),  \
-                            "flag": ((grip) => {
-                                control: 'resizer', block: block
+                ( !this.hide_floating_controls() ?
+                    this.selectedBlocks.map(block => {
+                        return React.createElement(ResizingFrame, {"key": (block.uniqueKey), "resizable_edges": (block.resizableEdges),  
+                            "style": ({position: 'absolute', top: block.top, left: block.left, height: block.height, width: block.width}),  
+                            "flag": (grip => ({
+                                control: 'resizer', block,
                                 edges: grip.sides, grip_label: grip.label
-                            })
-                        })
+                            }))
+                        });
+                }) : undefined
                 ),
 
-                ( if config.prototyping and not @hide_floating_controls() and @selectedBlocks.length == 1
-                    @selectedBlocks.map (block) =>
-                        React.createElement("div", {"key": (block.uniqueKey),  \
-                            "className": "unzoomed-control",  \
-                            "onMouseDown": ((evt) => evt.nativeEvent.context = {control: 'proto-linker', block: block}),  \
-                            "style": (
+                ( config.prototyping && !this.hide_floating_controls() && (this.selectedBlocks.length === 1) ?
+                    this.selectedBlocks.map(block => {
+                        return React.createElement("div", {"key": (block.uniqueKey),  
+                            "className": "unzoomed-control",  
+                            "onMouseDown": (evt => { return evt.nativeEvent.context = {control: 'proto-linker', block}; }),  
+                            "style": ({
                                 backgroundColor: 'rgba(260, 165, 0, 0.7)',
                                 height: 30, width: 30, borderRadius: 30,
                                 border: '4px solid white',
-                                position: 'absolute'
+                                position: 'absolute',
                                 top: block.vertCenter - 15, left: block.right + 40
-                            )
-                        })
+                            })
+                        });
+                }) : undefined
                 ),
 
-                ( @extra_overlays?() )
+                ( typeof this.extra_overlays === 'function' ? this.extra_overlays()  : undefined)
             )
-        )
+        );
+    }
 
-    getOverlayForBlock: (block) =>
-        return null if @disable_overlay_for_block(block)
+    getOverlayForBlock(block) {
+        if (this.disable_overlay_for_block(block)) { return null; }
 
-        overlayClasses = 'mouse-full-block-overlay'
+        let overlayClasses = 'mouse-full-block-overlay';
 
-        # Let's highlight all blocks that are overlapping, so users don't get
-        # unexpected absolute blocks
-        editorCache = @editor.editorCache
-        isOverlapping =
-            if editorCache.render_params.dont_recalculate_overlapping \
-            then editorCache.lastOverlappingStateByKey[block.uniqueKey] ? false \
-            else editorCache.lastOverlappingStateByKey[block.uniqueKey] = \
+        // Let's highlight all blocks that are overlapping, so users don't get
+        // unexpected absolute blocks
+        const {
+            editorCache
+        } = this.editor;
+        const isOverlapping =
+            editorCache.render_params.dont_recalculate_overlapping 
+            ? editorCache.lastOverlappingStateByKey[block.uniqueKey] != null ? editorCache.lastOverlappingStateByKey[block.uniqueKey] : false 
+            : (editorCache.lastOverlappingStateByKey[block.uniqueKey] = 
 
-            # disable overlap highlighting if config.highlightOverlapping == false
-            config.highlightOverlapping != false and \
+            // disable overlap highlighting if config.highlightOverlapping == false
+            (config.highlightOverlapping !== false) && 
 
-            # FIXME we're actually trying to find unslicability, which is not quite the same thing as
-            # overlapping without hierarchy
-            _l.some(block.doc.getBlockTreeParentForBlock(block).children, (siblingNode) ->
-                siblingNode.block != block and siblingNode.block.overlaps(block)
-            )
-        overlayClasses += ' overlapping-block' if isOverlapping
+            // FIXME we're actually trying to find unslicability, which is not quite the same thing as
+            // overlapping without hierarchy
+            _l.some(block.doc.getBlockTreeParentForBlock(block).children, siblingNode => (siblingNode.block !== block) && siblingNode.block.overlaps(block)));
+        if (isOverlapping) { overlayClasses += ' overlapping-block'; }
 
-        overlayClasses += ' unlocked-block' unless block.locked
-        overlayClasses += ' block-selected' if block in @selectedBlocks
-        overlayClasses += ' highlight-because-hover-in-layer-list' if block == @editor.highlightedBlock
-        overlayClasses += ' border-on-measure' if @render_cached_measuring_from_block == block
+        if (!block.locked) { overlayClasses += ' unlocked-block'; }
+        if (Array.from(this.selectedBlocks).includes(block)) { overlayClasses += ' block-selected'; }
+        if (block === this.editor.highlightedBlock) { overlayClasses += ' highlight-because-hover-in-layer-list'; }
+        if (this.render_cached_measuring_from_block === block) { overlayClasses += ' border-on-measure'; }
 
-        overlayClasses += @extra_overlay_classes_for_block(block)
+        overlayClasses += this.extra_overlay_classes_for_block(block);
 
-        React.createElement("div", {"className": (overlayClasses)})
+        return React.createElement("div", {"className": (overlayClasses)});
+    }
 
 
-    renderPrototypingArrows: ->
-        # FIXME: This is doing an O(n) operation in render. Perf should be shit
-        blocksByKey = _l.keyBy(@editor.doc.blocks, 'uniqueKey')
-        arrows = (for b in @editor.doc.blocks when (target = b.protoComponentRef) and (to = blocksByKey[target])?
-            start_pt = {top: b.vertCenter, left: b.right}
-            [start_pt, ((l) -> _l.minBy(l, (o) -> Block.distanceOrdering(start_pt, o)))([
-                {top: to.vertCenter, left: to.left}
-                {top: to.vertCenter, left: to.right}
-                {top: to.top, left: to.horzCenter}
-                {top: to.bottom, left: to.horzCenter}
-            ])]
-        )
-        arrows.push([@prototype_link_in_progress.from, @prototype_link_in_progress.to]) if @prototype_link_in_progress?
+    renderPrototypingArrows() {
+        // FIXME: This is doing an O(n) operation in render. Perf should be shit
+        let to;
+        const blocksByKey = _l.keyBy(this.editor.doc.blocks, 'uniqueKey');
+        const arrows = ((() => {
+            const result = [];
+            for (let b of Array.from(this.editor.doc.blocks)) {
+                var target;
+                if ((target = b.protoComponentRef) && ((to = blocksByKey[target]) != null)) {
+                    var start_pt = {top: b.vertCenter, left: b.right};
+                    result.push([start_pt, ((l => _l.minBy(l, o => Block.distanceOrdering(start_pt, o))))([
+                        {top: to.vertCenter, left: to.left},
+                        {top: to.vertCenter, left: to.right},
+                        {top: to.top, left: to.horzCenter},
+                        {top: to.bottom, left: to.horzCenter}
+                    ])]);
+                }
+            }
+        
+            return result;
+        })());
+        if (this.prototype_link_in_progress != null) { arrows.push([this.prototype_link_in_progress.from, this.prototype_link_in_progress.to]); }
 
-        # FIXME: Should depend on zoom
-        [h, w] = [10, 7]
+        // FIXME: Should depend on zoom
+        const [h, w] = Array.from([10, 7]);
 
-        React.createElement("svg", {"style": (
-            position: 'absolute', zIndex: 1, pointerEvents: 'none'
+        return React.createElement("svg", {"style": ({
+            position: 'absolute', zIndex: 1, pointerEvents: 'none',
             top: 0, left: 0,
-            width: @editorGeometry.width, height: @editorGeometry.height,
-        )},
+            width: this.editorGeometry.width, height: this.editorGeometry.height,
+        })},
             React.createElement("defs", null,
                 React.createElement("marker", {"id": "arrowhead", "markerWidth": (w), "markerHeight": (h), "refX": (w), "refY": (h/2), "orient": "auto", "markerUnits": "strokeWidth"},
-                    React.createElement("path", {"d": "M 0, 0 L #{w}, #{h/2} z", "stroke": "rgba(255, 165, 0, 0.7)"}),
-                    React.createElement("path", {"d": "M #{w}, #{h/2} L 0, #{h} z", "stroke": "rgba(255, 165, 0, 0.7)"})
+                    React.createElement("path", {"d": `M 0, 0 L ${w}, ${h/2} z`, "stroke": "rgba(255, 165, 0, 0.7)"}),
+                    React.createElement("path", {"d": `M ${w}, ${h/2} L 0, ${h} z`, "stroke": "rgba(255, 165, 0, 0.7)"})
                 )
             ),
             (
-                arrows.map ([from, to], i) =>
-                    # render arrow
-                    [x1, y1, x2, y2] = [(from.left + to.left) / 2, from.top - 5, (from.left + to.left) / 2, to.top + 5]
-                    React.createElement("path", {"key": (i),  \
-                        "d": ("M#{from.left} #{from.top} C #{x1} #{y1}, #{x2} #{y2}, #{to.left} #{to.top}"),  \
-                        "stroke": "rgba(255,165,0, 0.7)", "fill": "transparent", "markerEnd": "url(#arrowhead)"})
+                arrows.map((...args) => {
+                    // render arrow
+                    let from, i;
+                    let to;
+                    [from, to] = Array.from(args[0]), i = args[1];
+                    const [x1, y1, x2, y2] = Array.from([(from.left + to.left) / 2, from.top - 5, (from.left + to.left) / 2, to.top + 5]);
+                    return React.createElement("path", {"key": (i),  
+                        "d": (`M${from.left} ${from.top} C ${x1} ${y1}, ${x2} ${y2}, ${to.left} ${to.top}`),  
+                        "stroke": "rgba(255,165,0, 0.7)", "fill": "transparent", "markerEnd": "url(#arrowhead)"});
+            })
             )
-        )
+        );
+    }
 
-    # Render rulers on the screen. Ruler design inspired by Sketch's
-    renderRulers: (rulers) ->
-        _l.compact _l.map rulers, ({start, end, position, axis, display}, i) ->
-            ruler_style =
-                position: 'absolute'
-                color: 'rgba(255, 50, 50, 0.8)'
-                textAlign: 'center'
-                backgroundColor: 'red'
-                display: 'flex'
-                justifyContent: 'center'
-                fontSize: '10px'
+    // Render rulers on the screen. Ruler design inspired by Sketch's
+    renderRulers(rulers) {
+        return _l.compact(_l.map(rulers, function({start, end, position, axis, display}, i) {
+            const ruler_style = {
+                position: 'absolute',
+                color: 'rgba(255, 50, 50, 0.8)',
+                textAlign: 'center',
+                backgroundColor: 'red',
+                display: 'flex',
+                justifyContent: 'center',
+                fontSize: '10px',
                 fontFamily: 'Roboto'
-            tick_width = 7
-            if axis == 'left'
-                React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend ruler_style, {
-                    top: start, height: end - start
-                    left: position, width: '1px'
+            };
+            const tick_width = 7;
+            if (axis === 'left') {
+                return React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend(ruler_style, {
+                    top: start, height: end - start,
+                    left: position, width: '1px',
                     flexDirection: 'column'
-                })},
-                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, top: 0, left: -tick_width / 2)}),
-                    React.createElement("div", {"style": (padding: '5px')}, (display)),
-                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, bottom: 0, left: -tick_width / 2)})
-                )
-            else if axis == 'top'
-                React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend ruler_style, {
-                    left: start, width: end - start
+                }))},
+                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, top: 0, left: -tick_width / 2})}),
+                    React.createElement("div", {"style": ({padding: '5px'})}, (display)),
+                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, bottom: 0, left: -tick_width / 2})})
+                );
+            } else if (axis === 'top') {
+                return React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend(ruler_style, {
+                    left: start, width: end - start,
                     top: position, height: '1px'
-                })},
-                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, left: 0, bottom: -tick_width / 2)}),
-                    React.createElement("div", {"style": (padding: '5px')}, (display)),
-                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, right: 0, bottom: -tick_width / 2)})
-                )
-            else
-                throw new Error 'unknown ruler direction'
+                }))},
+                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, left: 0, bottom: -tick_width / 2})}),
+                    React.createElement("div", {"style": ({padding: '5px'})}, (display)),
+                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, right: 0, bottom: -tick_width / 2})})
+                );
+            } else {
+                throw new Error('unknown ruler direction');
+            }
+        })
+        );
+    }
 
 
-    ## Gridlines
-    renderGridlines: (gridlines, style) ->
-        _.map gridlines, ({source, axis, position, start, end}, i) =>
-            if axis == 'left'
-                React.createElement("div", {"key": ('gridline' + i), "style": ({
-                    position: 'absolute'
-                    top: start, height: end - start
-                    left: position
-                    borderLeft: style
+    //# Gridlines
+    renderGridlines(gridlines, style) {
+        return _.map(gridlines, ({source, axis, position, start, end}, i) => {
+            if (axis === 'left') {
+                return React.createElement("div", {"key": ('gridline' + i), "style": ({
+                    position: 'absolute',
+                    top: start, height: end - start,
+                    left: position,
+                    borderLeft: style,
                     color: 'rgba(255, 50, 50, 0.8)'
-                })})
-            else if axis == 'top'
-                React.createElement("div", {"key": ('gridline' + i), "style": ({
-                    position: 'absolute'
-                    left: start, width: end - start
-                    top: position
-                    borderTop: style
+                })});
+            } else if (axis === 'top') {
+                return React.createElement("div", {"key": ('gridline' + i), "style": ({
+                    position: 'absolute',
+                    left: start, width: end - start,
+                    top: position,
+                    borderTop: style,
                     color: 'rgba(255, 50, 50, 0.8)'
-                })})
-            else
-                throw new Error 'unknown gridline direction'
+                })});
+            } else {
+                throw new Error('unknown gridline direction');
+            }
+        });
+    }
 
-    getGridlines: (block_geometries) =>
-        docGeometry = @editor.doc.docBlock.currentDimensions()
-        lengthOfAxis = {
-            top: docGeometry.bottom
+    getGridlines(block_geometries) {
+        const docGeometry = this.editor.doc.docBlock.currentDimensions();
+        const lengthOfAxis = {
+            top: docGeometry.bottom,
             left: docGeometry.right
+        };
+
+        return _.flatten(block_geometries.map(geometry => {
+            return Block.allEdgeNames.map(edge => {
+                const ax = Block.axisOfEdge[edge];
+                const orth_ax = Block.orthogonalAxis[ax];
+                return {source: geometry, axis: ax, position: geometry[edge], start: 0, end: lengthOfAxis[orth_ax]};
+        });
+    }));
+    }
+
+    //# Interaction Utils
+
+    // snapToGrid :: (block) -> (to -> ())) -> (to -> ()))
+    // to :: {top, left, delta: {top, left}}
+    snapToGrid(block, block_edges, ignoreBlocks) { if (ignoreBlocks == null) { ignoreBlocks = [block]; } return updater => {
+        // FIXME: @editor.doc.blocks must also be proxies of the blocks instead of just blocks
+        // so snap to grid plays nicely with live collab
+        let b;
+        const blocks = _l.differenceBy(this.editor.doc.blocks, ignoreBlocks, 'uniqueKey');
+
+        // only snap to blocks within our current viewport
+        const viewportBlock = new Block(this.editor.viewportManager.getViewport());
+
+        // blocks_and_subregions :: [ Block|geometry ]
+        // where geometry = {isSubregion: true, top, left, height, width right, bottom, vertCenter, horzCenter})]
+        const blocks_and_subregions = _l.compact(_l.flatten(((() => {
+            const result = [];
+            
+            for (b of Array.from(blocks)) {                 if (b.overlaps(viewportBlock)) {
+                    result.push([b, (b.hasStrictContentSubregion() ? b.getContentSubregion() : undefined)]);
+                }
+            }
+        
+            return result;
+        })()))
+        );
+
+        // gridlines :: [{source: Block|geometry, axis: "top"|"left", position: number, start: number, end: number}]
+        const gridlines = this.getGridlines(blocks_and_subregions);
+
+        return to => {
+            // just pass through if snap to grid is disabled.  Do the check on every mouse move instead of
+            // once at the top so we can toggle snapping after we've began a drag.
+            let axis;
+            const disableSnapToGrid = windowMouseMachine.getCurrentModifierKeysPressed().capsLockKey;
+            if (disableSnapToGrid) {
+                updater(to);
+                // in case we just turned off snapping in the middle of a drag, kill the gridlines
+                this.activeGridlines = [];
+                this.activeRulers = [];
+                return;
+            }
+
+            // `block` is likely a proxy.  We're going to use `block` a lot, and don't want to pay the proxy overhead.
+            // block.getBlock() will get us a block not wrapped in a Proxy.  We call it every time so we're working with
+            // the latest block anyway, because we're doing the same thing the proxy is.
+            block = block.getBlock();
+
+            // FIXME: we crash if a collaborator deletes a block while we're working with it
+
+            // First update the blocks to where they would go without snapToGrid
+            updater(to);
+
+            // snap all edges being dragged to all possible edges of other blocks
+
+            const relevantGridlines =
+                (() => {
+                let artboard;
+                if (__guard__((artboard = block.getEnclosingArtboard()), x => x.showDesignGrid)) {
+                    return _l.flatten(artboard.gridGetAllColumns().map(col => {
+                        return [{source: col, axis: 'left', position: col.left, start: artboard.top, end: artboard.bottom},
+                        {source: col, axis: 'left', position: col.right, start: artboard.top, end: artboard.bottom}];
+                }));
+
+                } else {
+                    // Substitute all blocks by their subregions if they have one and the subregion overlaps with the
+                    // moving block by more than 50%
+                    // FIXME: This should be done without calculating the overlappingRatio, but rather
+                    // by checking the edge being snapped of block against the one of the
+                    // snappable block
+                    const overlapping = _l.filter(blocks_and_subregions, b => ((block.overlappingRatio(b)) > 0.5) && !block.contains(b));
+                    return _l.filter(gridlines, function(g) {
+                        if (!(block.outerManhattanDistance(g.source) < 500)) { return false; }
+
+                        // source can be a Block or a geometry (return val of Block.getContentSubregion()).  If it's a geometry,
+                        // g.source.hasStrictContentSubregion will not exist
+
+                        if (g.source.isSubregion) {
+                            return Array.from(overlapping).includes(g.source);
+                        } else if ((typeof g.source.hasStrictContentSubregion === 'function' ? g.source.hasStrictContentSubregion() : undefined)) {
+                            return !Array.from(overlapping).includes(g.source);
+                        } else {
+                            return true;
+                        }
+                    });
+                }
+            })();
+
+            // gridlinesByAxis :: {Axis: [Gridline]}
+            // We get gridlines from all edgeNames since edges only specify which edges of block we want to
+            // snap, not which edges of the other blocks
+            const gridlinesByAxis = _.groupBy(relevantGridlines, 'axis');
+
+            // closestLines :: {Axis: Gridline?}
+            // Get the one vertical line and one horizontal line closest to our block, if any
+            const closestLines = _.mapObject(gridlinesByAxis, (alignedGridlines, axis) => {
+                const relevant_edges = (Array.from(block_edges).filter((edge) => Block.axisOfEdge[edge] === axis));
+                return _l.minBy(alignedGridlines, gridline => {
+                    return [(_l.min(relevant_edges.map(edge_name => Math.abs(gridline.position - block[edge_name])))), block.distance(gridline.source)];
+            });
+        });
+
+            // accidents :: {Axis: number?}
+            // Calculate the distances from both closest lines
+            const accident = _l.mapValues(closestLines, (gridline, axis) => {
+                let subregion;
+                if (gridline == null) { return undefined; }
+                const relevant_edges = (Array.from(block_edges).filter((edge) => Block.axisOfEdge[edge] === axis));
+                // FIXME: A block with a border can still snap out of the border to a block inside if
+                // the mouse movement comes from the inside
+                const moving_object = block.contains(gridline.source) && ((subregion = block.getContentSubregion()) != null) ? subregion : block;
+                return _l.minBy(relevant_edges.map(edge_name => gridline.position - moving_object[edge_name]), Math.abs);
+            });
+
+            // if the mouse is off by less than threshold on a particular axis, move it so it'll be on the gridline
+            const threshold = _l.clamp(10 / this.editor.viewportManager.getZoom(), 1, 10);
+            const adjusted_axes = ['top', 'left'].filter(axis => (accident[axis] != null) && (Math.abs(accident[axis]) < threshold));
+
+            // "update" the mouse location and delta to a simulated location taking into account ideal snapping
+            for (axis of Array.from(adjusted_axes)) { to[axis]       += accident[axis]; }
+            for (axis of Array.from(adjusted_axes)) { to.delta[axis] += accident[axis]; }
+
+            // re-run the move handler with the simulated location
+            updater(to);
+
+            if (!config.visualizeSnapToGrid) { return; }
+
+            this.activeGridlines = adjusted_axes.map(function(axis) {
+                let subregion;
+                const gridline = closestLines[axis];
+                const moving_object = block.contains(gridline.source) && ((subregion = block.getContentSubregion()) != null) ? subregion : block;
+
+                // All gridlines are initialized as covering the whole page
+                // Here we make them go only from the movingBlock (block) to the snappingBlock (gridline.source)
+                const orth_ax = Block.orthogonalAxis[gridline.axis];
+                gridline.start = _l.min([moving_object[Block.axis[orth_ax].start], gridline.source[Block.axis[orth_ax].start]]);
+                gridline.end = _l.max([moving_object[Block.axis[orth_ax].end], gridline.source[Block.axis[orth_ax].end]]);
+
+                return gridline;
+            });
+
+            // Add rulers to the screen for every gridline
+            return this.activeRulers = _l.compact(this.activeGridlines.map(({source, axis}) => {
+                if (_l.isEmpty(source)) { return null; } else { return this.getRuler(source, block, axis); }
+            })
+            );
+        };
+    }; }
+
+
+    getRuler(fromBlock, toBlock, axis) {
+        // The source of the gridline is the target we're snapping to
+        let end, position, start;
+        if (axis === 'top') {
+            position = fromBlock.top + (fromBlock.height / 2);
+            start = _l.min([fromBlock.right, toBlock.right]);
+            end = _l.max([fromBlock.left, toBlock.left]);
+        } else if (axis === 'left') {
+            position = fromBlock.left + (fromBlock.width / 2);
+            start = _l.min([fromBlock.bottom, toBlock.bottom]);
+            end = _l.max([fromBlock.top, toBlock.top]);
+        } else {
+            throw new Error('Unknown gridline axis');
         }
 
-        _.flatten block_geometries.map (geometry) =>
-            return Block.allEdgeNames.map (edge) =>
-                ax = Block.axisOfEdge[edge]
-                orth_ax = Block.orthogonalAxis[ax]
-                {source: geometry, axis: ax, position: geometry[edge], start: 0, end: lengthOfAxis[orth_ax]}
+        // Only display rulers for positive distances
+        if ((end - start) <= 0) { return null; }
 
-    ## Interaction Utils
-
-    # snapToGrid :: (block) -> (to -> ())) -> (to -> ()))
-    # to :: {top, left, delta: {top, left}}
-    snapToGrid: (block, block_edges, ignoreBlocks = [block]) -> (updater) =>
-        # FIXME: @editor.doc.blocks must also be proxies of the blocks instead of just blocks
-        # so snap to grid plays nicely with live collab
-        blocks = _l.differenceBy @editor.doc.blocks, ignoreBlocks, 'uniqueKey'
-
-        # only snap to blocks within our current viewport
-        viewportBlock = new Block(@editor.viewportManager.getViewport())
-
-        # blocks_and_subregions :: [ Block|geometry ]
-        # where geometry = {isSubregion: true, top, left, height, width right, bottom, vertCenter, horzCenter})]
-        blocks_and_subregions = _l.compact _l.flatten (
-            [b, (b.getContentSubregion() if b.hasStrictContentSubregion())] \
-            for b in blocks when b.overlaps(viewportBlock)
-        )
-
-        # gridlines :: [{source: Block|geometry, axis: "top"|"left", position: number, start: number, end: number}]
-        gridlines = @getGridlines(blocks_and_subregions)
-
-        return (to) =>
-            # just pass through if snap to grid is disabled.  Do the check on every mouse move instead of
-            # once at the top so we can toggle snapping after we've began a drag.
-            disableSnapToGrid = windowMouseMachine.getCurrentModifierKeysPressed().capsLockKey
-            if disableSnapToGrid
-                updater(to)
-                # in case we just turned off snapping in the middle of a drag, kill the gridlines
-                @activeGridlines = []
-                @activeRulers = []
-                return
-
-            # `block` is likely a proxy.  We're going to use `block` a lot, and don't want to pay the proxy overhead.
-            # block.getBlock() will get us a block not wrapped in a Proxy.  We call it every time so we're working with
-            # the latest block anyway, because we're doing the same thing the proxy is.
-            block = block.getBlock()
-
-            # FIXME: we crash if a collaborator deletes a block while we're working with it
-
-            # First update the blocks to where they would go without snapToGrid
-            updater(to)
-
-            # snap all edges being dragged to all possible edges of other blocks
-
-            relevantGridlines =
-                if (artboard = block.getEnclosingArtboard())?.showDesignGrid
-                    _l.flatten artboard.gridGetAllColumns().map (col) =>
-                        [{source: col, axis: 'left', position: col.left, start: artboard.top, end: artboard.bottom},
-                        {source: col, axis: 'left', position: col.right, start: artboard.top, end: artboard.bottom}]
-
-                else
-                    # Substitute all blocks by their subregions if they have one and the subregion overlaps with the
-                    # moving block by more than 50%
-                    # FIXME: This should be done without calculating the overlappingRatio, but rather
-                    # by checking the edge being snapped of block against the one of the
-                    # snappable block
-                    overlapping = _l.filter blocks_and_subregions, (b) -> (block.overlappingRatio b) > 0.5 and not block.contains(b)
-                    _l.filter gridlines, (g) ->
-                        return false unless block.outerManhattanDistance(g.source) < 500
-
-                        # source can be a Block or a geometry (return val of Block.getContentSubregion()).  If it's a geometry,
-                        # g.source.hasStrictContentSubregion will not exist
-
-                        if g.source.isSubregion
-                            g.source in overlapping
-                        else if g.source.hasStrictContentSubregion?()
-                            g.source not in overlapping
-                        else
-                            true
-
-            # gridlinesByAxis :: {Axis: [Gridline]}
-            # We get gridlines from all edgeNames since edges only specify which edges of block we want to
-            # snap, not which edges of the other blocks
-            gridlinesByAxis = _.groupBy relevantGridlines, 'axis'
-
-            # closestLines :: {Axis: Gridline?}
-            # Get the one vertical line and one horizontal line closest to our block, if any
-            closestLines = _.mapObject gridlinesByAxis, (alignedGridlines, axis) =>
-                relevant_edges = (edge for edge in block_edges when Block.axisOfEdge[edge] == axis)
-                _l.minBy alignedGridlines, (gridline) =>
-                    [(_l.min relevant_edges.map((edge_name) -> Math.abs(gridline.position - block[edge_name]))), block.distance(gridline.source)]
-
-            # accidents :: {Axis: number?}
-            # Calculate the distances from both closest lines
-            accident = _l.mapValues closestLines, (gridline, axis) =>
-                return undefined unless gridline?
-                relevant_edges = (edge for edge in block_edges when Block.axisOfEdge[edge] == axis)
-                # FIXME: A block with a border can still snap out of the border to a block inside if
-                # the mouse movement comes from the inside
-                moving_object = if block.contains(gridline.source) and (subregion = block.getContentSubregion())? then subregion else block
-                _l.minBy(relevant_edges.map((edge_name) -> gridline.position - moving_object[edge_name]), Math.abs)
-
-            # if the mouse is off by less than threshold on a particular axis, move it so it'll be on the gridline
-            threshold = _l.clamp(10 / @editor.viewportManager.getZoom(), 1, 10)
-            adjusted_axes = ['top', 'left'].filter((axis) -> accident[axis]? and Math.abs(accident[axis]) < threshold)
-
-            # "update" the mouse location and delta to a simulated location taking into account ideal snapping
-            to[axis]       += accident[axis] for axis in adjusted_axes
-            to.delta[axis] += accident[axis] for axis in adjusted_axes
-
-            # re-run the move handler with the simulated location
-            updater(to)
-
-            return unless config.visualizeSnapToGrid
-
-            @activeGridlines = adjusted_axes.map (axis) ->
-                gridline = closestLines[axis]
-                moving_object = if block.contains(gridline.source) and (subregion = block.getContentSubregion())? then subregion else block
-
-                # All gridlines are initialized as covering the whole page
-                # Here we make them go only from the movingBlock (block) to the snappingBlock (gridline.source)
-                orth_ax = Block.orthogonalAxis[gridline.axis]
-                gridline.start = _l.min [moving_object[Block.axis[orth_ax].start], gridline.source[Block.axis[orth_ax].start]]
-                gridline.end = _l.max [moving_object[Block.axis[orth_ax].end], gridline.source[Block.axis[orth_ax].end]]
-
-                return gridline
-
-            # Add rulers to the screen for every gridline
-            @activeRulers = _l.compact @activeGridlines.map ({source, axis}) =>
-                if _l.isEmpty(source) then null else @getRuler(source, block, axis)
+        return {axis, position, start, end, display: `${end - start}`};
+    }
 
 
-    getRuler: (fromBlock, toBlock, axis) =>
-        # The source of the gridline is the target we're snapping to
-        if axis == 'top'
-            position = fromBlock.top + fromBlock.height / 2
-            start = _l.min [fromBlock.right, toBlock.right]
-            end = _l.max [fromBlock.left, toBlock.left]
-        else if axis == 'left'
-            position = fromBlock.left + fromBlock.width / 2
-            start = _l.min [fromBlock.bottom, toBlock.bottom]
-            end = _l.max [fromBlock.top, toBlock.top]
-        else
-            throw new Error 'Unknown gridline axis'
-
-        # Only display rulers for positive distances
-        return null if end - start <= 0
-
-        return {axis, position, start, end, display: "#{end - start}"}
-
-
-    getOverlappingRulers: (block, toBlock) =>
-        makeRuler = (axis, position, start, end) -> {
-            axis, position, display: "#{Math.abs(end - start)}"
-            start: Math.min(start, end), end: Math.max(start, end)
-        }
-        intersection = Block.intersection([block, toBlock])
+    getOverlappingRulers(block, toBlock) {
+        const makeRuler = (axis, position, start, end) => ({
+            axis,
+            position,
+            display: `${Math.abs(end - start)}`,
+            start: Math.min(start, end),
+            end: Math.max(start, end)
+        });
+        const intersection = Block.intersection([block, toBlock]);
         return [
-            makeRuler 'top', intersection.top + intersection.height / 2, toBlock.left, block.left
-            makeRuler 'left', intersection.left + intersection.width / 2, toBlock.top, block.top
-            makeRuler 'left', intersection.left + intersection.width / 2, block.bottom, toBlock.bottom
-            makeRuler 'top', intersection.top + intersection.height / 2, block.right, toBlock.right
-        ]
+            makeRuler('top', intersection.top + (intersection.height / 2), toBlock.left, block.left),
+            makeRuler('left', intersection.left + (intersection.width / 2), toBlock.top, block.top),
+            makeRuler('left', intersection.left + (intersection.width / 2), block.bottom, toBlock.bottom),
+            makeRuler('top', intersection.top + (intersection.height / 2), block.right, toBlock.right)
+        ];
+    }
 
 
-    showSlices: ->
-        lines = []
+    showSlices() {
+        const lines = [];
 
-        for artboard in @editor.doc.artboards
-            do recurse = ({direction, slices} = core.blockTreeToSlices(artboard.blockTree), {top, left, bottom, right} = artboard) ->
-                {forward, box_forward, line} =
-                    switch direction
-                        when 'vertical' then {
-                            forward: (x) -> top += x
-                            box_forward: (x) -> {left, right, top, bottom: top + x}
-                            line: -> {axis: 'top', position: top, start: left, end: right}
-                        }
-                        when 'horizontal' then {
-                            forward: (x) -> left += x
-                            box_forward: (x) -> {top, bottom, left, right: left + x}
-                            line: -> {axis: 'left', position: left, start: top, end: bottom}
-                        }
+        for (let artboard of Array.from(this.editor.doc.artboards)) {
+            var recurse;
+            (recurse = function({direction, slices}, {top, left, bottom, right}) {
+                const {forward, box_forward, line} =
+                    (() => { switch (direction) {
+                        case 'vertical': return {
+                            forward(x) { return top += x; },
+                            box_forward(x) { return {left, right, top, bottom: top + x}; },
+                            line() { return {axis: 'top', position: top, start: left, end: right}; }
+                        };
+                        case 'horizontal': return {
+                            forward(x) { return left += x; },
+                            box_forward(x) { return {top, bottom, left, right: left + x}; },
+                            line() { return {axis: 'left', position: left, start: top, end: bottom}; }
+                        };
+                    } })();
 
-                for {margin, length, start, end, contents} in slices
-                    forward(margin)
-                    lines.push line()
-                    recurse(contents, box_forward(length))
-                    forward(length)
-                    lines.push line()
+                return (() => {
+                    const result = [];
+                    for (let {margin, length, start, end, contents} of Array.from(slices)) {
+                        forward(margin);
+                        lines.push(line());
+                        recurse(contents, box_forward(length));
+                        forward(length);
+                        result.push(lines.push(line()));
+                    }
+                    return result;
+                })();
+            })(core.blockTreeToSlices(artboard.blockTree), artboard);
+        }
 
-        @renderGridlines(lines, '1px solid green')
+        return this.renderGridlines(lines, '1px solid green');
+    }
 
-    minimalDirty: =>
-        @editor.handleDocChanged(
-            fast: true
+    minimalDirty() {
+        return this.editor.handleDocChanged({
+            fast: true,
             dontUpdateSidebars: true,
             dont_recalculate_overlapping: true,
             subsetOfBlocksToRerender: []
-        )
+        });
+    }
 
-    getClickedBlocksAndSelect: (mouse) =>
-        old_selected_blocks = _l.map @selectedBlocks, 'uniqueKey'
+    getClickedBlocksAndSelect(mouse) {
+        let clickedBlock;
+        const old_selected_blocks = _l.map(this.selectedBlocks, 'uniqueKey');
 
-        if clickedBlock = @editor.getBlockUnderMouseLocation(mouse)
-            # TODO don't change selection if clicking into editor to bring back focus
-            #      esp if we have multiple selection
-            toggleSelected = mouse.evt.shiftKey
-            selectAdjacent = mouse.evt.altKey
+        if (clickedBlock = this.editor.getBlockUnderMouseLocation(mouse)) {
+            // TODO don't change selection if clicking into editor to bring back focus
+            //      esp if we have multiple selection
+            const toggleSelected = mouse.evt.shiftKey;
+            const selectAdjacent = mouse.evt.altKey;
 
-            blocks = [clickedBlock]
+            let blocks = [clickedBlock];
 
-            if selectAdjacent
-                # Get everything that's touching block to the left, right, or below, recursively
-                touching = find_connected [clickedBlock], (block) =>
-                    @editor.doc.blocks.filter((adj) -> _l.some(['left', 'right', 'bottom'], ((side) -> block.touching(side, adj))))
+            if (selectAdjacent) {
+                // Get everything that's touching block to the left, right, or below, recursively
+                const touching = find_connected([clickedBlock], block => {
+                    return this.editor.doc.blocks.filter(adj => _l.some(['left', 'right', 'bottom'], (side => block.touching(side, adj))));
+                });
 
-                blocks = _l.uniq _l.flatMap touching, (b) -> b.andChildren()
+                blocks = _l.uniq(_l.flatMap(touching, b => b.andChildren()));
+            }
 
-            # select the relevant blocks
-            @editor.selectBlocks(blocks, additive: toggleSelected)
+            // select the relevant blocks
+            this.editor.selectBlocks(blocks, {additive: toggleSelected});
 
-        else
-            @editor.selectBlocks([])
+        } else {
+            this.editor.selectBlocks([]);
+        }
 
-        # only selection changed
-        new_selected_blocks = _l.map @editor.getSelectedBlocks(), 'uniqueKey'
-        xor_set = (a, b) -> [].concat(_l.difference(a, b), _l.difference(b, a))
-        @editor.handleDocChanged(fast: true, subsetOfBlocksToRerender: xor_set(old_selected_blocks, new_selected_blocks))
-
-
-    # We need to pass proxies of the blocks to all interactions because someone live collabing with
-    # us might trigger a swapDoc in the middle of an interaction. This would make
-    # the block references in this function all point to blocks that don't exist anymore
-    # We use proxies here so instead of doing block.something we'll always do
-    # block.getBlock().something instead which will guarantee that we are always handling the
-    # most up to date blocks
-    proxyBlock: (block) => new Proxy block,
-        get: (target, key) -> target.getBlock()?[key]
-        set: (target, key, value) -> target.getBlock()?[key] = value
+        // only selection changed
+        const new_selected_blocks = _l.map(this.editor.getSelectedBlocks(), 'uniqueKey');
+        const xor_set = (a, b) => [].concat(_l.difference(a, b), _l.difference(b, a));
+        return this.editor.handleDocChanged({fast: true, subsetOfBlocksToRerender: xor_set(old_selected_blocks, new_selected_blocks)});
+    }
 
 
-    prepareDrag: (from, onMove, onEnd) =>
-        @editor.setInteractionInProgress(true)
+    // We need to pass proxies of the blocks to all interactions because someone live collabing with
+    // us might trigger a swapDoc in the middle of an interaction. This would make
+    // the block references in this function all point to blocks that don't exist anymore
+    // We use proxies here so instead of doing block.something we'll always do
+    // block.getBlock().something instead which will guarantee that we are always handling the
+    // most up to date blocks
+    proxyBlock(block) { return new Proxy(block, {
+        get(target, key) { return __guard__(target.getBlock(), x => x[key]); },
+        set(target, key, value) { return __guard__(target.getBlock(), x => x[key] = value); }
+    }
+    ); }
 
-        after = (handler, extra) ->
-            newHandler = null
-            handler (args...) ->
-                newHandler?(args...)
-                extra(args...)
-            return ((nh) -> newHandler = nh)
 
-        # set activeBlocks in your drag handler if you want to use it
-        @activeBlocks = undefined
+    prepareDrag(from, onMove, onEnd) {
+        this.editor.setInteractionInProgress(true);
 
-        onMove = after onMove, =>
-            @editor.handleDocChanged({
+        const after = function(handler, extra) {
+            let newHandler = null;
+            handler(function(...args) {
+                if (typeof newHandler === 'function') {
+                    newHandler(...Array.from(args || []));
+                }
+                return extra(...Array.from(args || []));
+            });
+            return nh => newHandler = nh;
+        };
+
+        // set activeBlocks in your drag handler if you want to use it
+        this.activeBlocks = undefined;
+
+        onMove = after(onMove, () => {
+            return this.editor.handleDocChanged({
                 fast: true,
                 dontUpdateSidebars: true,
                 dont_recalculate_overlapping: true,
-                subsetOfBlocksToRerender: @activeBlocks
-            })
-
-        onEnd = after onEnd, =>
-            @activeBlocks = undefined
-            @editor.setInteractionInProgress(false)
-
-        @handleDrag(from, onMove, onEnd)
-
-
-    ## Grab bag of dragging interactions
-
-    resizeBlockFromCenter: (block, edges, from, onMove, onEnd) ->
-        @activeBlocks = _l.map [block], 'uniqueKey'
-
-        original = _l.pick block, Block.allEdgeNames
-
-        onMove @snapToGrid(block, edges, block) ({delta}) =>
-            for edge in edges
-                switch edge
-                    when 'right'
-                        clampedDelta = _l.clamp(delta.left, -(original.right - original.left) / 2, delta.left)
-                        block.edges.left = original.left - clampedDelta
-                        block.edges.right = original.right + clampedDelta
-
-                    when 'left'
-                        clampedDelta = _l.clamp(delta.left, -Infinity, (original.right - original.left) / 2)
-                        block.edges.left = original.left + clampedDelta
-                        block.edges.right = original.right - clampedDelta
-
-                    when 'bottom'
-                        clampedDelta = _l.clamp(delta.top, -(original.bottom - original.top) / 2, delta.top)
-                        block.edges.top = original.top - clampedDelta
-                        block.edges.bottom = original.bottom + clampedDelta
-
-                    when 'top'
-                        clampedDelta = _l.clamp(delta.top, -Infinity, (original.bottom - original.top) / 2)
-                        block.edges.top = original.top + clampedDelta
-                        block.edges.bottom = original.bottom - clampedDelta
-
-        onEnd (at) =>
-            @activeGridlines = []
-            @activeRulers = []
-            @editor.handleDocChanged()
-
-
-    resizeBlockFixedRatio: (block, edges, from, onMove, onEnd) ->
-        # If any of the edges are not resizable, it doesn't make sense to maintain a fixed ratio
-        # so we just call regular resizeBlock instead
-        return @resizeBlock(block, edges, from, onMove, onEnd) unless block.allEdgesResizable()
-
-        @activeBlocks = [block.uniqueKey]
-
-        originalEdges = _l.pick block, Block.allEdgeNames
-
-        original_width = block.width
-        original_height = block.height
-
-        # Fixme?: Currently this has no Snap to Grid because otherwise the ratio could
-        # be messed up. This is the same Design decision that Sketch does.
-        # We could potentially choose the primary_edge based on what's snapping
-        # and resize from there, but this might have issues if we have two edges snapping
-        # at the same time. Oh well...
-        onMove ({delta}) =>
-            primary_edge = edges[0]
-            primary_delta = delta[Block.axisOfEdge[primary_edge]]
-
-            signed_delta = Block.factorOfEdge[primary_edge] * primary_delta
-            factor = (original_width + signed_delta) / original_width
-
-            # Let's make sure we don't try to set negative height/width
-            return if factor < 0
-
-            # This does the proportional resizing by multiplying both sides by the same factor
-            block.width = original_width * factor
-            block.height = original_height * factor
-
-            # If we're dragging any of the top/left edges, we also move
-            # them. If we don't do this, only the right/bottom edges appear to be resizing no
-            # matter which resizing grip we're dragging
-            for edge in edges
-                if edge == 'top'
-                    block.top = originalEdges[edge] - (block.height - original_height)
-                else if edge == 'left'
-                    block.left = originalEdges[edge] - (block.width - original_width)
-
-        onEnd (at) =>
-            @editor.handleDocChanged()
-
-    resizeLine: (block, edges, from, onMove, onEnd) ->
-        @activeBlocks = [block.uniqueKey]
-
-        # Precompute which point is moving vs which point is pivoting for line blocks
-        assert -> block.resizableEdges.length == 2
-        assert -> Block.axisOfEdge[block.resizableEdges[0]] == Block.axisOfEdge[block.resizableEdges[1]]
-        axis = Block.axisOfEdge[block.resizableEdges[0]]
-
-        moving_edge = _l.minBy block.resizableEdges, (e) -> Math.abs(block[e] - from[axis])
-        cross_axis_offset = if axis == 'top' then block.left else block.top
-        moving = _l.fromPairs [[axis, block[moving_edge]], [Block.orthogonalAxis[axis], cross_axis_offset]]
-        pivot = _l.fromPairs [[axis, block[Block.opposite(moving_edge)]], [Block.orthogonalAxis[axis], cross_axis_offset]]
-        old_thickness = block.thickness
-
-        onMove @snapToGrid(block, edges, [block]) ({delta}) =>
-            # lines have custom resizing behavior. They shrink their smaller length
-            to = {top: moving.top + delta.top, left: moving.left + delta.left}
-            {top, height, left, width} = pointsToCoordinatesForLine(pivot, to, block.thickness)
-            [block.top, block.height] = [top, height]
-            [block.left, block.width] = [left, width]
-            block.thickness = old_thickness # Preserve thickness no matter what
-
-        onEnd (at) =>
-            @activeGridlines = []
-            @activeRulers = []
-            @editor.handleDocChanged()
-
-    resizeBlocks: (grabbedBlock, edges, blocksToResize, from, onMove, onEnd) ->
-        return @resizeLine(grabbedBlock, edges, from, onMove, onEnd) if grabbedBlock instanceof LineBlock and blocksToResize.length == 1 and blocksToResize[0] == grabbedBlock
-        @activeBlocks = _l.map blocksToResize, 'uniqueKey'
-
-        originalEdges = {}
-        for block in blocksToResize
-            originalEdges[block.uniqueKey] = _l.pick block, edges
-
-        # The below does evalPdom so we need to wrap it in a try catch
-        try
-            {minWidth, minHeight} = @editor.getBlockMinGeometry(block)
-        catch e
-            console.warn e
-            [minWidth, minHeight] = [0, 0]
-
-        onMove @snapToGrid(grabbedBlock, edges, blocksToResize) ({delta}) =>
-            for block in blocksToResize
-                for edge in edges
-                    # We don't resize line blocks along their thickness axis
-                    continue if block instanceof LineBlock and edge not in block.resizableEdges
-
-                    newPosition = originalEdges[block.uniqueKey][edge] + delta[Block.axisOfEdge[edge]]
-
-                    # Don't let user push edges under their min values
-                    if edge == 'left'
-                        newPosition = block.right - minWidth if block.right - newPosition < minWidth
-                    else if edge == 'right'
-                        newPosition = block.left + minWidth if newPosition - block.left < minWidth
-                    else if edge == 'top'
-                        newPosition = block.bottom - minHeight if block.bottom - newPosition < minHeight
-                    else if edge == 'bottom'
-                        newPosition = block.top + minHeight if newPosition - block.top < minHeight
-                    else
-                        throw new Error('Unkown edge')
-
-                    block.edges[edge] = newPosition
-
-
-        onEnd (at) =>
-            @activeGridlines = []
-            @activeRulers = []
-            @editor.handleDocChanged()
-
-    resizeBlock: (block, edges, from, onMove, onEnd) -> @resizeBlocks(block, from.ctx.edges, [block], from, onMove, onEnd)
-
-    resizeBlockAndChildrenProportionately: (grabbedBlock, edges, from, onMove, onEnd) ->
-        blocksToResize = grabbedBlock.andChildren()
-        @activeBlocks = _l.map blocksToResize, 'uniqueKey'
-
-        originalEdges = {}
-        for block in blocksToResize
-            originalEdges[block.uniqueKey] = _l.pick block, edges.concat(['top', 'left', 'width', 'height', 'fontSize'])
-            originalEdges[block.uniqueKey].relativeTopRatio = (block.top - grabbedBlock.top) / grabbedBlock.height
-            originalEdges[block.uniqueKey].relativeLeftRatio = (block.left - grabbedBlock.left) / grabbedBlock.width
-
-        onMove @snapToGrid(grabbedBlock, edges, [grabbedBlock]) ({delta}) =>
-            for edge in edges
-                grabbedBlock.edges[edge] = originalEdges[grabbedBlock.uniqueKey][edge] + delta[Block.axisOfEdge[edge]]
-
-            # All ratios are calculated based on the grabbedBlock
-            original = originalEdges[grabbedBlock.uniqueKey]
-            [horizontalRatio, verticalRatio] = [grabbedBlock.width / original.width, grabbedBlock.height / original.height]
-
-            # And then applied to the other blocks
-            for block in blocksToResize when block != grabbedBlock
-                original = originalEdges[block.uniqueKey]
-                [block.width, block.height] = [original.width * horizontalRatio, original.height * verticalRatio]
-                [block.top, block.left] = [original.relativeTopRatio * grabbedBlock.height + grabbedBlock.top, original.relativeLeftRatio * grabbedBlock.width + grabbedBlock.left]
-
-                if block instanceof TextBlock
-                    block.fontSize = original.fontSize.mapStatic (prev) -> Math.round(horizontalRatio * prev)
-
-        onEnd (at) =>
-            @activeGridlines = []
-            @activeRulers = []
-            @editor.handleDocChanged()
-
-
-    moveBlocks: (grabbedBlock, blocksToMove, from, onMove, onEnd) ->
-        @activeBlocks = _l.map _l.union(@selectedBlocks, blocksToMove), 'uniqueKey'
-
-        initialSelectedArea = Block.unionBlock(blocksToMove)
-        dragLock = null
-
-        movers = blocksToMove.map (block) =>
-            start = {top: block.top, left: block.left}
-            return (dtop, dleft) ->
-                block.top = start.top + dtop
-                block.left = start.left + dleft
-
-        onMove @snapToGrid(grabbedBlock, Block.allEdgeNames, blocksToMove) (to) =>
-            [dtop, dleft] = [to.delta.top, to.delta.left]
-
-            if from.evt.getModifierState('Shift')
-                if dtop != dleft and dragLock == null
-                    dragLock = if (Math.abs(dtop) >= Math.abs(dleft)) then 'vertical' else 'horizontal'
-                if dragLock == 'vertical'
-                    dleft = 0
-                else if dragLock == 'horizontal'
-                    dtop = 0
-
-            mover(dtop, dleft) for mover in movers
-
-        onEnd (at) =>
-            @activeGridlines = []
-            @activeRulers = []
-            @editor.handleDocChanged()
-
-pointsToCoordinatesForLine = (pivot, moving, thickness) ->
-    [width, height] = [Math.abs(pivot.left - moving.left), Math.abs(pivot.top - moving.top)]
-    if height < width and moving.left < pivot.left
-         return {width, height: thickness, top: pivot.top, left: moving.left}
-    else if height < width and moving.left >= pivot.left
-         return {width, height: thickness, top: pivot.top, left: pivot.left}
-    else if height >= width and moving.top < pivot.top
-         return {width: thickness, height, top: moving.top, left: pivot.left}
-    else if height >= width and moving.top >= pivot.top
-         return {width: thickness, height, top: pivot.top, left: pivot.left}
-    else
-        throw new Error("Unreachable case")
-
-
-
-class __UNSTABLE_DragInteraction extends LayoutEditorMode
-    constructor: (@constructor_args...) ->
-        super()
-
-    bindDrag: (@from, @onMove, @onEnd) ->
-
-    willMount: (@editor) ->
-        args = @constructor_args
-        delete @constructor_args
-        @start args..., @from, @onMove, (onEndHandler) =>
-            @onEnd (args...) =>
-                @editor.setEditorMode new IdleMode()
-                onEndHandler(args...)
-
-    start: (from, onMove, onEnd) ->
-        # implement in subclasses!
-
-
-exports.SelectRangeMode = class SelectRangeMode extends __UNSTABLE_DragInteraction
-    start: (from, onMove, onEnd) ->
-        @activeBlocks = []
-
-        rangeRect = new Block
-            top: from.top, left: from.left
-            height: 0, width: 0,
-
-        @extra_overlays = ->
-            React.createElement(React.Fragment, null,
-                React.createElement("div", {"style": ({
-                    backgroundColor: 'rgba(100, 100, 255, 0.2)'
-                    border: '1px solid rgba(100, 100, 255, 1)'
-                    position: 'absolute'
-                    top: rangeRect.top
-                    left: rangeRect.left
-                    height: rangeRect.height
-                    width: rangeRect.width
-                })})
-            )
-
-        onMove (to) =>
-            order = (a, b) -> if a <= b then [a, b] else [b, a]
-            [top, bottom] = order(from.top, to.top)
-            [left, right] = order(from.left, to.left)
-
-            [rangeRect.top, rangeRect.height] = [top, bottom - top]
-            [rangeRect.left, rangeRect.width] = [left, right - left]
-
-        onEnd (at) =>
-            highlighted = @editor.doc.blocks.filter (b) ->
-                b.overlaps(rangeRect) and not b.contains(rangeRect)
-
-            @editor.selectBlocks(highlighted)
-            @editor.handleDocChanged(fast: true, dont_recalculate_overlapping: true)
-
-
-exports.DrawProtoLinkMode = class DrawProtoLinkMode extends __UNSTABLE_DragInteraction
-    start: (block, from, onMove, onEnd) ->
-        @activeBlocks = []
-
-        block.protoComponentRef = undefined
-        # FIXME: the above deserves a @editor.handleDocChanged()?
-
-        my_root_component = block.getRootComponent()
-        get_target = (location) =>
-            hovered = @editor.getBlockUnderMouseLocation(location)?.getRootComponent()
-            return hovered unless hovered == my_root_component
-            return undefined # if hovered == my_root_component
-
-        @prototype_link_in_progress = {from, to: from, hovered_component: null}
-
-        @extra_overlays = ->
-            React.createElement(React.Fragment, null,
-                ( if @prototype_link_in_progress?.target?
-                    React.createElement("div", {"style": (_l.extend(@prototype_link_in_progress.target.withMargin(40).geometry, {
-                        position: 'absolute'
-                        backgroundColor: 'rgba(250, 165, 0, 0.5)'
+                subsetOfBlocksToRerender: this.activeBlocks
+            });
+        });
+
+        onEnd = after(onEnd, () => {
+            this.activeBlocks = undefined;
+            return this.editor.setInteractionInProgress(false);
+        });
+
+        return this.handleDrag(from, onMove, onEnd);
+    }
+
+
+    //# Grab bag of dragging interactions
+
+    resizeBlockFromCenter(block, edges, from, onMove, onEnd) {
+        this.activeBlocks = _l.map([block], 'uniqueKey');
+
+        const original = _l.pick(block, Block.allEdgeNames);
+
+        onMove(this.snapToGrid(block, edges, block)(({delta}) => {
+            return (() => {
+                const result = [];
+                for (let edge of Array.from(edges)) {
+                    switch (edge) {
+                        case 'right':
+                            var clampedDelta = _l.clamp(delta.left, -(original.right - original.left) / 2, delta.left);
+                            block.edges.left = original.left - clampedDelta;
+                            result.push(block.edges.right = original.right + clampedDelta);
+                            break;
+
+                        case 'left':
+                            clampedDelta = _l.clamp(delta.left, -Infinity, (original.right - original.left) / 2);
+                            block.edges.left = original.left + clampedDelta;
+                            result.push(block.edges.right = original.right - clampedDelta);
+                            break;
+
+                        case 'bottom':
+                            clampedDelta = _l.clamp(delta.top, -(original.bottom - original.top) / 2, delta.top);
+                            block.edges.top = original.top - clampedDelta;
+                            result.push(block.edges.bottom = original.bottom + clampedDelta);
+                            break;
+
+                        case 'top':
+                            clampedDelta = _l.clamp(delta.top, -Infinity, (original.bottom - original.top) / 2);
+                            block.edges.top = original.top + clampedDelta;
+                            result.push(block.edges.bottom = original.bottom - clampedDelta);
+                            break;
+                        default:
+                            result.push(undefined);
+                    }
+                }
+                return result;
+            })();
+        })
+        );
+
+        return onEnd(at => {
+            this.activeGridlines = [];
+            this.activeRulers = [];
+            return this.editor.handleDocChanged();
+        });
+    }
+
+
+    resizeBlockFixedRatio(block, edges, from, onMove, onEnd) {
+        // If any of the edges are not resizable, it doesn't make sense to maintain a fixed ratio
+        // so we just call regular resizeBlock instead
+        if (!block.allEdgesResizable()) { return this.resizeBlock(block, edges, from, onMove, onEnd); }
+
+        this.activeBlocks = [block.uniqueKey];
+
+        const originalEdges = _l.pick(block, Block.allEdgeNames);
+
+        const original_width = block.width;
+        const original_height = block.height;
+
+        // Fixme?: Currently this has no Snap to Grid because otherwise the ratio could
+        // be messed up. This is the same Design decision that Sketch does.
+        // We could potentially choose the primary_edge based on what's snapping
+        // and resize from there, but this might have issues if we have two edges snapping
+        // at the same time. Oh well...
+        onMove(({delta}) => {
+            const primary_edge = edges[0];
+            const primary_delta = delta[Block.axisOfEdge[primary_edge]];
+
+            const signed_delta = Block.factorOfEdge[primary_edge] * primary_delta;
+            const factor = (original_width + signed_delta) / original_width;
+
+            // Let's make sure we don't try to set negative height/width
+            if (factor < 0) { return; }
+
+            // This does the proportional resizing by multiplying both sides by the same factor
+            block.width = original_width * factor;
+            block.height = original_height * factor;
+
+            // If we're dragging any of the top/left edges, we also move
+            // them. If we don't do this, only the right/bottom edges appear to be resizing no
+            // matter which resizing grip we're dragging
+            return (() => {
+                const result = [];
+                for (let edge of Array.from(edges)) {
+                    if (edge === 'top') {
+                        result.push(block.top = originalEdges[edge] - (block.height - original_height));
+                    } else if (edge === 'left') {
+                        result.push(block.left = originalEdges[edge] - (block.width - original_width));
+                    } else {
+                        result.push(undefined);
+                    }
+                }
+                return result;
+            })();
+        });
+
+        return onEnd(at => {
+            return this.editor.handleDocChanged();
+        });
+    }
+
+    resizeLine(block, edges, from, onMove, onEnd) {
+        this.activeBlocks = [block.uniqueKey];
+
+        // Precompute which point is moving vs which point is pivoting for line blocks
+        assert(() => block.resizableEdges.length === 2);
+        assert(() => Block.axisOfEdge[block.resizableEdges[0]] === Block.axisOfEdge[block.resizableEdges[1]]);
+        const axis = Block.axisOfEdge[block.resizableEdges[0]];
+
+        const moving_edge = _l.minBy(block.resizableEdges, e => Math.abs(block[e] - from[axis]));
+        const cross_axis_offset = axis === 'top' ? block.left : block.top;
+        const moving = _l.fromPairs([[axis, block[moving_edge]], [Block.orthogonalAxis[axis], cross_axis_offset]]);
+        const pivot = _l.fromPairs([[axis, block[Block.opposite(moving_edge)]], [Block.orthogonalAxis[axis], cross_axis_offset]]);
+        const old_thickness = block.thickness;
+
+        onMove(this.snapToGrid(block, edges, [block])(({delta}) => {
+            // lines have custom resizing behavior. They shrink their smaller length
+            const to = {top: moving.top + delta.top, left: moving.left + delta.left};
+            const {top, height, left, width} = pointsToCoordinatesForLine(pivot, to, block.thickness);
+            [block.top, block.height] = Array.from([top, height]);
+            [block.left, block.width] = Array.from([left, width]);
+            return block.thickness = old_thickness;
+        })
+        ); // Preserve thickness no matter what
+
+        return onEnd(at => {
+            this.activeGridlines = [];
+            this.activeRulers = [];
+            return this.editor.handleDocChanged();
+        });
+    }
+
+    resizeBlocks(grabbedBlock, edges, blocksToResize, from, onMove, onEnd) {
+        let block, minHeight, minWidth;
+        if (grabbedBlock instanceof LineBlock && (blocksToResize.length === 1) && (blocksToResize[0] === grabbedBlock)) { return this.resizeLine(grabbedBlock, edges, from, onMove, onEnd); }
+        this.activeBlocks = _l.map(blocksToResize, 'uniqueKey');
+
+        const originalEdges = {};
+        for (block of Array.from(blocksToResize)) {
+            originalEdges[block.uniqueKey] = _l.pick(block, edges);
+        }
+
+        // The below does evalPdom so we need to wrap it in a try catch
+        try {
+            ({minWidth, minHeight} = this.editor.getBlockMinGeometry(block));
+        } catch (e) {
+            console.warn(e);
+            [minWidth, minHeight] = Array.from([0, 0]);
+        }
+
+        onMove(this.snapToGrid(grabbedBlock, edges, blocksToResize)(({delta}) => {
+            return (() => {
+                const result = [];
+                for (block of Array.from(blocksToResize)) {
+                    result.push((() => {
+                        const result1 = [];
+                        for (let edge of Array.from(edges)) {
+                        // We don't resize line blocks along their thickness axis
+                            if (block instanceof LineBlock && !Array.from(block.resizableEdges).includes(edge)) { continue; }
+
+                            let newPosition = originalEdges[block.uniqueKey][edge] + delta[Block.axisOfEdge[edge]];
+
+                            // Don't let user push edges under their min values
+                            if (edge === 'left') {
+                                if ((block.right - newPosition) < minWidth) { newPosition = block.right - minWidth; }
+                            } else if (edge === 'right') {
+                                if ((newPosition - block.left) < minWidth) { newPosition = block.left + minWidth; }
+                            } else if (edge === 'top') {
+                                if ((block.bottom - newPosition) < minHeight) { newPosition = block.bottom - minHeight; }
+                            } else if (edge === 'bottom') {
+                                if ((newPosition - block.top) < minHeight) { newPosition = block.top + minHeight; }
+                            } else {
+                                throw new Error('Unkown edge');
+                            }
+
+                            result1.push(block.edges[edge] = newPosition);
+                        }
+                        return result1;
+                    })());
+                }
+                return result;
+            })();
+        })
+        );
+
+
+        return onEnd(at => {
+            this.activeGridlines = [];
+            this.activeRulers = [];
+            return this.editor.handleDocChanged();
+        });
+    }
+
+    resizeBlock(block, edges, from, onMove, onEnd) { return this.resizeBlocks(block, from.ctx.edges, [block], from, onMove, onEnd); }
+
+    resizeBlockAndChildrenProportionately(grabbedBlock, edges, from, onMove, onEnd) {
+        let block;
+        const blocksToResize = grabbedBlock.andChildren();
+        this.activeBlocks = _l.map(blocksToResize, 'uniqueKey');
+
+        const originalEdges = {};
+        for (block of Array.from(blocksToResize)) {
+            originalEdges[block.uniqueKey] = _l.pick(block, edges.concat(['top', 'left', 'width', 'height', 'fontSize']));
+            originalEdges[block.uniqueKey].relativeTopRatio = (block.top - grabbedBlock.top) / grabbedBlock.height;
+            originalEdges[block.uniqueKey].relativeLeftRatio = (block.left - grabbedBlock.left) / grabbedBlock.width;
+        }
+
+        onMove(this.snapToGrid(grabbedBlock, edges, [grabbedBlock])(({delta}) => {
+            for (let edge of Array.from(edges)) {
+                grabbedBlock.edges[edge] = originalEdges[grabbedBlock.uniqueKey][edge] + delta[Block.axisOfEdge[edge]];
+            }
+
+            // All ratios are calculated based on the grabbedBlock
+            let original = originalEdges[grabbedBlock.uniqueKey];
+            const [horizontalRatio, verticalRatio] = Array.from([grabbedBlock.width / original.width, grabbedBlock.height / original.height]);
+
+            // And then applied to the other blocks
+            return (() => {
+                const result = [];
+                for (block of Array.from(blocksToResize)) {
+                    if (block !== grabbedBlock) {
+                        original = originalEdges[block.uniqueKey];
+                        [block.width, block.height] = Array.from([original.width * horizontalRatio, original.height * verticalRatio]);
+                        [block.top, block.left] = Array.from([(original.relativeTopRatio * grabbedBlock.height) + grabbedBlock.top, (original.relativeLeftRatio * grabbedBlock.width) + grabbedBlock.left]);
+
+                        if (block instanceof TextBlock) {
+                            result.push(block.fontSize = original.fontSize.mapStatic(prev => Math.round(horizontalRatio * prev)));
+                        } else {
+                            result.push(undefined);
+                        }
+                    }
+                }
+                return result;
+            })();
+        })
+        );
+
+        return onEnd(at => {
+            this.activeGridlines = [];
+            this.activeRulers = [];
+            return this.editor.handleDocChanged();
+        });
+    }
+
+
+    moveBlocks(grabbedBlock, blocksToMove, from, onMove, onEnd) {
+        this.activeBlocks = _l.map(_l.union(this.selectedBlocks, blocksToMove), 'uniqueKey');
+
+        const initialSelectedArea = Block.unionBlock(blocksToMove);
+        let dragLock = null;
+
+        const movers = blocksToMove.map(block => {
+            const start = {top: block.top, left: block.left};
+            return function(dtop, dleft) {
+                block.top = start.top + dtop;
+                return block.left = start.left + dleft;
+            };
+        });
+
+        onMove(this.snapToGrid(grabbedBlock, Block.allEdgeNames, blocksToMove)(to => {
+            let [dtop, dleft] = Array.from([to.delta.top, to.delta.left]);
+
+            if (from.evt.getModifierState('Shift')) {
+                if ((dtop !== dleft) && (dragLock === null)) {
+                    dragLock = (Math.abs(dtop) >= Math.abs(dleft)) ? 'vertical' : 'horizontal';
+                }
+                if (dragLock === 'vertical') {
+                    dleft = 0;
+                } else if (dragLock === 'horizontal') {
+                    dtop = 0;
+                }
+            }
+
+            return Array.from(movers).map((mover) => mover(dtop, dleft));
+        })
+        );
+
+        return onEnd(at => {
+            this.activeGridlines = [];
+            this.activeRulers = [];
+            return this.editor.handleDocChanged();
+        });
+    }
+}
+
+var pointsToCoordinatesForLine = function(pivot, moving, thickness) {
+    const [width, height] = Array.from([Math.abs(pivot.left - moving.left), Math.abs(pivot.top - moving.top)]);
+    if ((height < width) && (moving.left < pivot.left)) {
+         return {width, height: thickness, top: pivot.top, left: moving.left};
+    } else if ((height < width) && (moving.left >= pivot.left)) {
+         return {width, height: thickness, top: pivot.top, left: pivot.left};
+    } else if ((height >= width) && (moving.top < pivot.top)) {
+         return {width: thickness, height, top: moving.top, left: pivot.left};
+    } else if ((height >= width) && (moving.top >= pivot.top)) {
+         return {width: thickness, height, top: pivot.top, left: pivot.left};
+    } else {
+        throw new Error("Unreachable case");
+    }
+};
+
+
+
+class __UNSTABLE_DragInteraction extends LayoutEditorMode {
+    constructor(...args) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        [...this.constructor_args] = Array.from(args);
+        super();
+    }
+
+    bindDrag(from, onMove, onEnd) {
+        this.from = from;
+        this.onMove = onMove;
+        this.onEnd = onEnd;
+    }
+
+    willMount(editor) {
+        this.editor = editor;
+        const args = this.constructor_args;
+        delete this.constructor_args;
+        return this.start(...Array.from(args), this.from, this.onMove, onEndHandler => {
+            return this.onEnd((...args) => {
+                this.editor.setEditorMode(new IdleMode());
+                return onEndHandler(...Array.from(args || []));
+            });
+        });
+    }
+
+    start(from, onMove, onEnd) {}
+}
+// implement in subclasses!
+
+
+const defaultExport = {};
+
+
+defaultExport.SelectRangeMode = (SelectRangeMode = class SelectRangeMode extends __UNSTABLE_DragInteraction {
+    start(from, onMove, onEnd) {
+        this.activeBlocks = [];
+
+        const rangeRect = new Block({
+            top: from.top, left: from.left,
+            height: 0, width: 0
+        });
+
+        this.extra_overlays = () => React.createElement(React.Fragment, null,
+            React.createElement("div", {"style": ({
+                backgroundColor: 'rgba(100, 100, 255, 0.2)',
+                border: '1px solid rgba(100, 100, 255, 1)',
+                position: 'absolute',
+                top: rangeRect.top,
+                left: rangeRect.left,
+                height: rangeRect.height,
+                width: rangeRect.width
+            })})
+        );
+
+        onMove(to => {
+            let ref;
+            const order = function(a, b) { if (a <= b) { return [a, b]; } else { return [b, a]; } };
+            const [top, bottom] = Array.from(order(from.top, to.top));
+            const [left, right] = Array.from(order(from.left, to.left));
+
+            [rangeRect.top, rangeRect.height] = Array.from([top, bottom - top]);
+            return [rangeRect.left, rangeRect.width] = Array.from(ref = [left, right - left]), ref;
+    });
+
+        return onEnd(at => {
+            const highlighted = this.editor.doc.blocks.filter(b => b.overlaps(rangeRect) && !b.contains(rangeRect));
+
+            this.editor.selectBlocks(highlighted);
+            return this.editor.handleDocChanged({fast: true, dont_recalculate_overlapping: true});
+        });
+    }
+});
+
+
+defaultExport.DrawProtoLinkMode = (DrawProtoLinkMode = class DrawProtoLinkMode extends __UNSTABLE_DragInteraction {
+    start(block, from, onMove, onEnd) {
+        this.activeBlocks = [];
+
+        block.protoComponentRef = undefined;
+        // FIXME: the above deserves a @editor.handleDocChanged()?
+
+        const my_root_component = block.getRootComponent();
+        const get_target = location => {
+            const hovered = __guard__(this.editor.getBlockUnderMouseLocation(location), x => x.getRootComponent());
+            if (hovered !== my_root_component) { return hovered; }
+            return undefined; // if hovered == my_root_component
+        };
+
+        this.prototype_link_in_progress = {from, to: from, hovered_component: null};
+
+        this.extra_overlays = function() {
+            return React.createElement(React.Fragment, null,
+                ( ((this.prototype_link_in_progress != null ? this.prototype_link_in_progress.target : undefined) != null) ?
+                    React.createElement("div", {"style": (_l.extend(this.prototype_link_in_progress.target.withMargin(40).geometry, {
+                        position: 'absolute',
+                        backgroundColor: 'rgba(250, 165, 0, 0.5)',
                         border: '10px solid rgba(250, 165, 0, 1)',
                         borderRadius: 40
-                    }))})
+                    }))}) : undefined
                 )
-            )
+            );
+        };
 
-        onMove (to) =>
-            # update the UI
-            @prototype_link_in_progress = {from, to, target: get_target(to)}
-            @activeBlocks = _l.uniq _l.compact @activeBlocks.concat([@prototype_link_in_progress.target?.uniqueKey])
+        onMove(to => {
+            // update the UI
+            this.prototype_link_in_progress = {from, to, target: get_target(to)};
+            return this.activeBlocks = _l.uniq(_l.compact(this.activeBlocks.concat([(this.prototype_link_in_progress.target != null ? this.prototype_link_in_progress.target.uniqueKey : undefined)])));
+        });
 
-        onEnd (at) =>
-            block.protoComponentRef = get_target(at)?.uniqueKey
-            @prototype_link_in_progress = null
-            @editor.handleDocChanged(dont_recalculate_overlapping: true)
+        return onEnd(at => {
+            block.protoComponentRef = __guard__(get_target(at), x => x.uniqueKey);
+            this.prototype_link_in_progress = null;
+            return this.editor.handleDocChanged({dont_recalculate_overlapping: true});
+        });
+    }
+});
 
 
 
 
-exports.IdleMode = class IdleMode extends LayoutEditorMode
-    highlight_blocks_on_hover: -> true
+defaultExport.IdleMode = (IdleMode = class IdleMode extends LayoutEditorMode {
+    constructor(...args) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleClick = this.handleClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        super(...args);
+    }
 
-    measure_distance_on_alt_hover: -> true
+    highlight_blocks_on_hover() { return true; }
 
-    handleClick: (mouse) =>
-        @getClickedBlocksAndSelect(mouse)
+    measure_distance_on_alt_hover() { return true; }
 
-    handleDoubleClick: (where) =>
-        block = @editor.getBlockUnderMouseLocation(where)
-        return if not block?
+    handleClick(mouse) {
+        return this.getClickedBlocksAndSelect(mouse);
+    }
 
-        # If it is an instance block, we select the source
-        if block instanceof InstanceBlock
-            component = block.getSourceComponent()
-            return if not component?
-            return if component not instanceof Block # FIXME: this is for CodeInstanceBlocks. Maybe show lib-manager modal
-            @editor.viewportManager.centerOn(component)
-            @editor.selectBlocks([component])
-            @editor.handleDocChanged(
-                fast: true
+    handleDoubleClick(where) {
+        let editContentMode, preview_artboard;
+        const block = this.editor.getBlockUnderMouseLocation(where);
+        if ((block == null)) { return; }
+
+        // If it is an instance block, we select the source
+        if (block instanceof InstanceBlock) {
+            const component = block.getSourceComponent();
+            if ((component == null)) { return; }
+            if (!(component instanceof Block)) { return; } // FIXME: this is for CodeInstanceBlocks. Maybe show lib-manager modal
+            this.editor.viewportManager.centerOn(component);
+            this.editor.selectBlocks([component]);
+            return this.editor.handleDocChanged({
+                fast: true,
                 dont_recalculate_overlapping: true,
                 mutated_blocks: {}
-            )
+            });
 
-        else if block instanceof MutlistateHoleBlock and (preview_artboard = block.getArtboardForEditor())?
-            @editor.viewportManager.centerOn(preview_artboard)
-            @editor.selectBlocks([preview_artboard])
-            @editor.handleDocChanged(
-                fast: true
+        } else if (block instanceof MutlistateHoleBlock && ((preview_artboard = block.getArtboardForEditor()) != null)) {
+            this.editor.viewportManager.centerOn(preview_artboard);
+            this.editor.selectBlocks([preview_artboard]);
+            return this.editor.handleDocChanged({
+                fast: true,
                 dont_recalculate_overlapping: true,
                 mutated_blocks: {}
-            )
+            });
 
-        # if it has editable content (i.e. text block), we go into content mode
-        else if (editContentMode = block.editContentMode(where))?
-            @editor.setEditorMode(editContentMode)
-            @editor.handleDocChanged(fast: true)
+        // if it has editable content (i.e. text block), we go into content mode
+        } else if ((editContentMode = block.editContentMode(where)) != null) {
+            this.editor.setEditorMode(editContentMode);
+            return this.editor.handleDocChanged({fast: true});
 
-        else
-            @editor.selectBlocks(block.andChildren())
-            @editor.handleDocChanged(fast: true)
+        } else {
+            this.editor.selectBlocks(block.andChildren());
+            return this.editor.handleDocChanged({fast: true});
+        }
+    }
 
-    handleMouseMove: (e) =>
-        if e.altKey
-            @minimalDirty()
+    handleMouseMove(e) {
+        if (e.altKey) {
+            return this.minimalDirty();
+        }
+    }
 
-    handleDrag: (from, onMove, onEnd) =>
-        proxyBlock = @proxyBlock
+    handleDrag(from, onMove, onEnd) {
+        let block, blocks, left;
+        const {
+            proxyBlock
+        } = this;
 
-        drag_interaction_mode = (interaction) =>
-            interaction.bindDrag(from, onMove, onEnd)
-            @editor.setEditorMode(interaction)
-
-
-        # dispatch
-        if from.ctx?.control == 'resizer'
-            if from.evt.shiftKey or from.ctx?.block.aspectRatioLocked
-                @resizeBlockFixedRatio(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd)
-
-            else if from.evt.altKey
-                @resizeBlockFromCenter(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd)
-
-            else if from.evt.metaKey
-                @resizeBlockAndChildrenProportionately(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd)
-
-            else
-                @resizeBlock(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd)
-
-        else if from.ctx?.control == 'proto-linker'
-            drag_interaction_mode new DrawProtoLinkMode(proxyBlock(from.ctx.block))
-
-        else if from.evt.metaKey
-            drag_interaction_mode new SelectRangeMode()
-
-        # Duplicate the blocks if option pressed
-        else if from.evt.altKey and block = (_l.find(@selectedBlocks, (b) -> b.containsPoint(from)) ? @editor.getBlockUnderMouseLocation(from))
-            clone = block.clone()
-            children_clones = _.uniq(@editor.doc.getChildren(block)).map (b) -> b.clone()
-            allToMove = _l.concat(children_clones, [clone])
-
-            @editor.doc.addBlock(block) for block in allToMove
-            @editor.handleDocChanged(fast: true) # Make the new blocks appear on screen right away
-
-            @editor.selectBlocks([clone])
-
-            return @moveBlocks(proxyBlock(clone), allToMove.map(proxyBlock), from, onMove, onEnd)
-
-        else if block = _l.find(@selectedBlocks, (b) -> b.containsPoint(from))
-            # if there's more than one selected block the point is in, there's a
-            # parent-child relationship between them.  We take the first one we see,
-            # but we should probably take the biggest (most parent) one.
-            blockToSnap = block
-
-            # move all the selected blocks
-            blocks = @selectedBlocks
-
-            # move their children as well if there is only one block and
-            # the config flag is set and the user is pressing
-            # nothing or if the user is pressing the alt key and the config flag is not set
-            if blocks.length == 1 and block.canContainChildren and \
-            ((config.moveBlockWithChildrenByDefault and not from.evt.shiftKey) or \
-            (not config.moveBlockWithChildrenByDefault and from.evt.shiftKey))
-                blocks = _l.flatMap blocks, (block) -> block.andChildren()
-
-            # make sure @moveBlocks gets a set of blocks
-            blocks = _.uniq(blocks)
-
-            return @moveBlocks(proxyBlock(blockToSnap), blocks.map(proxyBlock), from, onMove, onEnd)
-
-        else if (block = @editor.getBlockUnderMouseLocation(from)) and not block.locked
-            blocks = [block]
-            @editor.selectBlocks(blocks)
-
-            blocks = if from.evt.shiftKey or not block.canContainChildren then [block] else block.andChildren()
-
-            return @moveBlocks(proxyBlock(block), blocks.map(proxyBlock), from, onMove, onEnd)
-
-        else
-            drag_interaction_mode new SelectRangeMode()
+        const drag_interaction_mode = interaction => {
+            interaction.bindDrag(from, onMove, onEnd);
+            return this.editor.setEditorMode(interaction);
+        };
 
 
-{editorReactStylesForPdom} = require '../editor/pdom-to-react'
+        // dispatch
+        if ((from.ctx != null ? from.ctx.control : undefined) === 'resizer') {
+            if (from.evt.shiftKey || (from.ctx != null ? from.ctx.block.aspectRatioLocked : undefined)) {
+                return this.resizeBlockFixedRatio(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd);
+
+            } else if (from.evt.altKey) {
+                return this.resizeBlockFromCenter(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd);
+
+            } else if (from.evt.metaKey) {
+                return this.resizeBlockAndChildrenProportionately(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd);
+
+            } else {
+                return this.resizeBlock(proxyBlock(from.ctx.block), from.ctx.edges, from, onMove, onEnd);
+            }
+
+        } else if ((from.ctx != null ? from.ctx.control : undefined) === 'proto-linker') {
+            return drag_interaction_mode(new DrawProtoLinkMode(proxyBlock(from.ctx.block)));
+
+        } else if (from.evt.metaKey) {
+            return drag_interaction_mode(new SelectRangeMode());
+
+        // Duplicate the blocks if option pressed
+        } else if (from.evt.altKey && (block = ((left = _l.find(this.selectedBlocks, b => b.containsPoint(from))) != null ? left : this.editor.getBlockUnderMouseLocation(from)))) {
+            const clone = block.clone();
+            const children_clones = _.uniq(this.editor.doc.getChildren(block)).map(b => b.clone());
+            const allToMove = _l.concat(children_clones, [clone]);
+
+            for (block of Array.from(allToMove)) { this.editor.doc.addBlock(block); }
+            this.editor.handleDocChanged({fast: true}); // Make the new blocks appear on screen right away
+
+            this.editor.selectBlocks([clone]);
+
+            return this.moveBlocks(proxyBlock(clone), allToMove.map(proxyBlock), from, onMove, onEnd);
+
+        } else if (block = _l.find(this.selectedBlocks, b => b.containsPoint(from))) {
+            // if there's more than one selected block the point is in, there's a
+            // parent-child relationship between them.  We take the first one we see,
+            // but we should probably take the biggest (most parent) one.
+            const blockToSnap = block;
+
+            // move all the selected blocks
+            blocks = this.selectedBlocks;
+
+            // move their children as well if there is only one block and
+            // the config flag is set and the user is pressing
+            // nothing or if the user is pressing the alt key and the config flag is not set
+            if ((blocks.length === 1) && block.canContainChildren && 
+            ((config.moveBlockWithChildrenByDefault && !from.evt.shiftKey) || 
+            (!config.moveBlockWithChildrenByDefault && from.evt.shiftKey))) {
+                blocks = _l.flatMap(blocks, block => block.andChildren());
+            }
+
+            // make sure @moveBlocks gets a set of blocks
+            blocks = _.uniq(blocks);
+
+            return this.moveBlocks(proxyBlock(blockToSnap), blocks.map(proxyBlock), from, onMove, onEnd);
+
+        } else if ((block = this.editor.getBlockUnderMouseLocation(from)) && !block.locked) {
+            blocks = [block];
+            this.editor.selectBlocks(blocks);
+
+            blocks = from.evt.shiftKey || !block.canContainChildren ? [block] : block.andChildren();
+
+            return this.moveBlocks(proxyBlock(block), blocks.map(proxyBlock), from, onMove, onEnd);
+
+        } else {
+            return drag_interaction_mode(new SelectRangeMode());
+        }
+    }
+});
 
 
-exports.ContentEditorMode = class ContentEditorMode extends LayoutEditorMode
-    constructor: (block) ->
-        super()
-        @block = @proxyBlock(block)
-
-    willMount: (@editor) ->
-        # Ensure block is selected
-        @editor.selectBlocks([@block.getBlock()]) unless _l.isEqual @editor.getSelectedBlocks(), [@block.getBlock()]
-
-    getBlockOverrides: ->
-        # not entirely sure why we need this check...
-        return {} unless @selectedBlocks.length == 1 and @selectedBlocks[0] ==  @block.getBlock()
-        _l.fromPairs([[@block.uniqueKey, @contentEditor()]])
-
-    disable_overlay_for_block: (block) -> @selectedBlocks.some((b) => block.overlaps(b))
-
-    hide_floating_controls: -> true
-
-    keepBlockSelectionOnEscKey: -> yes
-
-    handleClick: (mouse) =>
-        if @block.containsPoint(mouse)
-            @handleContentClick(mouse)
-        else
-            super(mouse)
-
-    handleDrag: (from, onMove, onEnd) =>
-        if @block.containsPoint(from)
-            @handleContentDrag(from, onMove, onEnd)
-        else
-            super(from, onMove, onEnd)
-
-    # override in subclasses!
-    contentEditor: ->
-        React.createElement("div", null)
-
-    handleContentClick: (mouse) ->
-        # pass
-
-    handleContentDrag: (from, onMove, onEnd) ->
-        # pass
+const {editorReactStylesForPdom} = require('../editor/pdom-to-react');
 
 
-exports.TypingMode = class TypingMode extends ContentEditorMode
-    constructor: (block, {mouse, selectAllTextInQuill, put_cursor_at_end} = {}) ->
-        super(block)
+defaultExport.ContentEditorMode = (ContentEditorMode = class ContentEditorMode extends LayoutEditorMode {
+    constructor(block) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleClick = this.handleClick.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        super();
+        this.block = this.proxyBlock(block);
+    }
 
-        @onQuillMounted = (quill_component) ->
-            quill_component.focus()
+    willMount(editor) {
+        // Ensure block is selected
+        this.editor = editor;
+        if (!_l.isEqual(this.editor.getSelectedBlocks(), [this.block.getBlock()])) { return this.editor.selectBlocks([this.block.getBlock()]); }
+    }
 
-            if selectAllTextInQuill
-                quill_component.select_all_content()
+    getBlockOverrides() {
+        // not entirely sure why we need this check...
+        if ((this.selectedBlocks.length !== 1) || (this.selectedBlocks[0] !==  this.block.getBlock())) { return {}; }
+        return _l.fromPairs([[this.block.uniqueKey, this.contentEditor()]]);
+    }
 
-            else if mouse?
-                range = document.caretRangeFromPoint(mouse.evt.clientX, mouse.evt.clientY)
-                selection = window.getSelection()
-                selection.removeAllRanges()
-                selection.addRange(range)
+    disable_overlay_for_block(block) { return this.selectedBlocks.some(b => block.overlaps(b)); }
 
-            else if put_cursor_at_end?
-                quill_component.put_cursor_at_end()
+    hide_floating_controls() { return true; }
+
+    keepBlockSelectionOnEscKey() { return true; }
+
+    handleClick(mouse) {
+        if (this.block.containsPoint(mouse)) {
+            return this.handleContentClick(mouse);
+        } else {
+            return super.handleClick(mouse);
+        }
+    }
+
+    handleDrag(from, onMove, onEnd) {
+        if (this.block.containsPoint(from)) {
+            return this.handleContentDrag(from, onMove, onEnd);
+        } else {
+            return super.handleDrag(from, onMove, onEnd);
+        }
+    }
+
+    // override in subclasses!
+    contentEditor() {
+        return React.createElement("div", null);
+    }
+
+    handleContentClick(mouse) {}
+        // pass
+
+    handleContentDrag(from, onMove, onEnd) {}
+});
+// pass
 
 
-    contentEditor: ->
-        # FIXME: there has to be a better way...
-        textStyles = editorReactStylesForPdom core.pdomDynamicableToPdomStatic @block.toPdom({
-            templateLang: @block.doc.export_lang
-            for_editor: true
-            for_component_instance_editor: false
-            getCompiledComponentByUniqueKey: ->
-                assert -> false
+defaultExport.TypingMode = (TypingMode = class TypingMode extends ContentEditorMode {
+    constructor(block, param) {
+        if (param == null) { param = {}; }
+        const {mouse, selectAllTextInQuill, put_cursor_at_end} = param;
+        super(block);
+
+        this.onQuillMounted = function(quill_component) {
+            quill_component.focus();
+
+            if (selectAllTextInQuill) {
+                return quill_component.select_all_content();
+
+            } else if (mouse != null) {
+                const range = document.caretRangeFromPoint(mouse.evt.clientX, mouse.evt.clientY);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                return selection.addRange(range);
+
+            } else if (put_cursor_at_end != null) {
+                return quill_component.put_cursor_at_end();
+            }
+        };
+    }
+
+
+    contentEditor() {
+        // FIXME: there has to be a better way...
+        const textStyles = editorReactStylesForPdom(core.pdomDynamicableToPdomStatic(this.block.toPdom({
+            templateLang: this.block.doc.export_lang,
+            for_editor: true,
+            for_component_instance_editor: false,
+            getCompiledComponentByUniqueKey() {
+                return assert(() => false);
+            }
         })
+        )
+        );
 
-        React.createElement("div", {"style": (_l.extend textStyles, {minHeight: @block.height})},
-            React.createElement(QuillComponent, { \
-                "ref": ((quill_component) =>
-                    if quill_component? and @onQuillMounted?
-                        @onQuillMounted(quill_component)
-                        delete @onQuillMounted
-                ),  \
-                "value": (@block.textContent.staticValue),  \
-                "onChange": ((newval) =>
-                    @block.textContent.staticValue = newval
-                    @editor.handleDocChanged()
+        return React.createElement("div", {"style": (_l.extend(textStyles, {minHeight: this.block.height}))},
+            React.createElement(QuillComponent, { 
+                "ref": (quill_component => {
+                    if ((quill_component != null) && (this.onQuillMounted != null)) {
+                        this.onQuillMounted(quill_component);
+                        return delete this.onQuillMounted;
+                    }
+                }
+                ),  
+                "value": (this.block.textContent.staticValue),  
+                "onChange": (newval => {
+                    this.block.textContent.staticValue = newval;
+                    return this.editor.handleDocChanged();
+                }
                 )})
-        )
+        );
+    }
+});
 
-exports.PushdownTypingMode = class PushdownTypingMode extends ContentEditorMode
-    constructor: (block) ->
-        super(block)
+defaultExport.PushdownTypingMode = (PushdownTypingMode = class PushdownTypingMode extends ContentEditorMode {
+    constructor(block) {
+        super(block);
 
-        @onQuillMounted = (quill_component) ->
-            quill_component.focus()
+        this.onQuillMounted = quill_component => quill_component.focus();
+    }
 
-    changeTextWithPushdown: (new_content) ->
-        {getSizeOfPdom} = require '../editor/get-size-of-pdom'
-        @block.textContent.staticValue = new_content
+    changeTextWithPushdown(new_content) {
+        let block;
+        const {getSizeOfPdom} = require('../editor/get-size-of-pdom');
+        this.block.textContent.staticValue = new_content;
 
-        instanceEditorCompilerOptions = @editor.getInstanceEditorCompileOptions()
-        pdom = @block.pdomForGeometryGetter(instanceEditorCompilerOptions)
-        {height, width} = getSizeOfPdom(pdom, @editor.offscreen_node())
+        const instanceEditorCompilerOptions = this.editor.getInstanceEditorCompileOptions();
+        const pdom = this.block.pdomForGeometryGetter(instanceEditorCompilerOptions);
+        const {height, width} = getSizeOfPdom(pdom, this.editor.offscreen_node());
 
-        from = {top: @block.bottom, left: @block.left}
-        deltaY = height - @block.height
+        const from = {top: this.block.bottom, left: this.block.left};
+        const deltaY = height - this.block.height;
 
-        blocks = @editor.doc.blocks
-        make_line = (block, kind) -> {block, kind, y_axis: block[kind], left: block.left, right: block.right}
+        const {
+            blocks
+        } = this.editor.doc;
+        const make_line = (block, kind) => ({
+            block,
+            kind,
+            y_axis: block[kind],
+            left: block.left,
+            right: block.right
+        });
 
-        lines = [].concat(
-            # look at top lines of blocks below mouse
-            (make_line(block, 'top') for block in blocks when from.top <= block.top),
+        const lines = [].concat(
+            // look at top lines of blocks below mouse
+            ((() => {
+            const result = [];
+            for (block of Array.from(blocks)) {                 if (from.top <= block.top) {
+                    result.push(make_line(block, 'top'));
+                }
+            }
+            return result;
+        })()),
 
-            # look at bottom lines of blocks the mouse is inside, so we can resize them
-            (make_line(block, 'bottom') for block in blocks when block.top < from.top <= block.bottom and 'bottom' in block.resizableEdges)
-        )
+            // look at bottom lines of blocks the mouse is inside, so we can resize them
+            ((() => {
+            const result1 = [];
+            for (block of Array.from(blocks)) {                 if ((block.top < from.top && from.top <= block.bottom) && Array.from(block.resizableEdges).includes('bottom')) {
+                    result1.push(make_line(block, 'bottom'));
+                }
+            }
+            return result1;
+        })())
+        );
 
-        sorted_buckets = (lst, it) ->
-            ret = []
-            unequalable_sentinal = {}
-            [fn, current_bucket, current_value] = [_l.iteratee(it), null, unequalable_sentinal]
-            for elem in _l.sortBy(lst, fn)
-                next_value = fn(elem)
-                if current_value != next_value
-                    [current_bucket, current_value] = [[], next_value]
-                    ret.push(current_bucket)
-                current_bucket.push(elem)
-            return ret
-
-
-        # we're going to scan down to build up the lines_to_push_down
-        lines_to_push_down = []
-
-        # scan from top to bottom
-        scandown_horizontal_range = {left: from.left, right: from.left}
-
-        # scan the lines from top to bottom
-        for bucket_of_lines_at_this_vertical_point in sorted_buckets(lines, 'y_axis')
-            hit_lines = bucket_of_lines_at_this_vertical_point.filter (line) -> ranges_intersect(line, scandown_horizontal_range)
-            continue if _l.isEmpty(hit_lines)
-
-            # when there's multiple lines at the same level, take all the ones that intersect with the scandown range, recursively
-            hit_lines = find_connected hit_lines, (a) -> bucket_of_lines_at_this_vertical_point.filter((b) -> ranges_intersect(a, b))
-
-            lines_to_push_down.push(line) for line in hit_lines
-            scandown_horizontal_range = union_ranges(scandown_horizontal_range, line) for line in hit_lines
-
-        @activeBlocks = _l.uniq _l.concat(_l.map(lines_to_push_down, 'block.uniqueKey'), [@block.uniqueKey])
-        # TODO also set mutated_blocks to just the resizing ones
-
-        for {y_axis, block, kind} in lines_to_push_down
-            # y_axis is immutably starting value
-            new_line_position = y_axis + deltaY
-
-            block.top    = new_line_position                            if kind == 'top'
-            block.height = Math.max(0, new_line_position - block.top)   if kind == 'bottom'
+        const sorted_buckets = function(lst, it) {
+            const ret = [];
+            const unequalable_sentinal = {};
+            let [fn, current_bucket, current_value] = Array.from([_l.iteratee(it), null, unequalable_sentinal]);
+            for (let elem of Array.from(_l.sortBy(lst, fn))) {
+                const next_value = fn(elem);
+                if (current_value !== next_value) {
+                    [current_bucket, current_value] = Array.from([[], next_value]);
+                    ret.push(current_bucket);
+                }
+                current_bucket.push(elem);
+            }
+            return ret;
+        };
 
 
-    contentEditor: ->
-        # FIXME: there has to be a better way...
-        textStyles = editorReactStylesForPdom core.pdomDynamicableToPdomStatic @block.toPdom({
-            templateLang: @block.doc.export_lang
-            for_editor: true
-            for_component_instance_editor: false
-            getCompiledComponentByUniqueKey: ->
-                assert -> false
+        // we're going to scan down to build up the lines_to_push_down
+        const lines_to_push_down = [];
+
+        // scan from top to bottom
+        let scandown_horizontal_range = {left: from.left, right: from.left};
+
+        // scan the lines from top to bottom
+        for (var bucket_of_lines_at_this_vertical_point of Array.from(sorted_buckets(lines, 'y_axis'))) {
+            var line;
+            let hit_lines = bucket_of_lines_at_this_vertical_point.filter(line => ranges_intersect(line, scandown_horizontal_range));
+            if (_l.isEmpty(hit_lines)) { continue; }
+
+            // when there's multiple lines at the same level, take all the ones that intersect with the scandown range, recursively
+            hit_lines = find_connected(hit_lines, a => bucket_of_lines_at_this_vertical_point.filter(b => ranges_intersect(a, b)));
+
+            for (line of Array.from(hit_lines)) { lines_to_push_down.push(line); }
+            for (line of Array.from(hit_lines)) { scandown_horizontal_range = union_ranges(scandown_horizontal_range, line); }
+        }
+
+        this.activeBlocks = _l.uniq(_l.concat(_l.map(lines_to_push_down, 'block.uniqueKey'), [this.block.uniqueKey]));
+        // TODO also set mutated_blocks to just the resizing ones
+
+        return (() => {
+            let kind, y_axis;
+            const result2 = [];
+            for ({y_axis, block, kind} of Array.from(lines_to_push_down)) {
+            // y_axis is immutably starting value
+                const new_line_position = y_axis + deltaY;
+
+                if (kind === 'top') { block.top    = new_line_position; }
+                if (kind === 'bottom') { result2.push(block.height = Math.max(0, new_line_position - block.top)); } else {
+                    result2.push(undefined);
+                }
+            }
+            return result2;
+        })();
+    }
+
+
+    contentEditor() {
+        // FIXME: there has to be a better way...
+        const textStyles = editorReactStylesForPdom(core.pdomDynamicableToPdomStatic(this.block.toPdom({
+            templateLang: this.block.doc.export_lang,
+            for_editor: true,
+            for_component_instance_editor: false,
+            getCompiledComponentByUniqueKey() {
+                return assert(() => false);
+            }
         })
-
-        React.createElement("div", {"style": (_l.extend textStyles, {minHeight: @block.height})},
-            React.createElement(QuillComponent, { \
-                "throttle_ms": (0),  \
-                "ref": ((quill_component) =>
-                    if quill_component? and @onQuillMounted?
-                        @onQuillMounted(quill_component)
-                        delete @onQuillMounted
-                ),  \
-                "value": (@block.textContent.staticValue),  \
-                "onChange": ((newval) =>
-                    @changeTextWithPushdown(newval)
-                    @editor.handleDocChanged()
-                )})
         )
+        );
+
+        return React.createElement("div", {"style": (_l.extend(textStyles, {minHeight: this.block.height}))},
+            React.createElement(QuillComponent, { 
+                "throttle_ms": (0),  
+                "ref": (quill_component => {
+                    if ((quill_component != null) && (this.onQuillMounted != null)) {
+                        this.onQuillMounted(quill_component);
+                        return delete this.onQuillMounted;
+                    }
+                }
+                ),  
+                "value": (this.block.textContent.staticValue),  
+                "onChange": (newval => {
+                    this.changeTextWithPushdown(newval);
+                    return this.editor.handleDocChanged();
+                }
+                )})
+        );
+    }
+});
 
 
 
-wasDrawnOntoDoc = (block) ->
-    analytics.track("Drew block", {type: block.constructor.userVisibleLabel, label: block.getLabel(), uniqueKey: block.uniqueKey})
-    block.wasDrawnOntoDoc()
+const wasDrawnOntoDoc = function(block) {
+    analytics.track("Drew block", {type: block.constructor.userVisibleLabel, label: block.getLabel(), uniqueKey: block.uniqueKey});
+    return block.wasDrawnOntoDoc();
+};
 
 
-# The eponymous pageDRAW
-exports.DrawingMode = class DrawingMode extends LayoutEditorMode
-    constructor: (user_level_block_type) ->
-        super()
-        @user_level_block_type = user_level_block_type
-        @drawingBox = null
+// The eponymous pageDRAW
+defaultExport.DrawingMode = (DrawingMode = class DrawingMode extends LayoutEditorMode {
+    constructor(user_level_block_type) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleClick = this.handleClick.bind(this);
+        this.extra_overlays = this.extra_overlays.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        super();
+        this.user_level_block_type = user_level_block_type;
+        this.drawingBox = null;
+    }
 
-    isAlreadySimilarTo: (other) ->
-        super(other) and other.user_level_block_type?.isEqual(@user_level_block_type)
+    isAlreadySimilarTo(other) {
+        return super.isAlreadySimilarTo(other) && (other.user_level_block_type != null ? other.user_level_block_type.isEqual(this.user_level_block_type) : undefined);
+    }
 
-    cursor: ->
-        return 'text' if @user_level_block_type == TextBlockType
-        return 'crosshair'
+    cursor() {
+        if (this.user_level_block_type === TextBlockType) { return 'text'; }
+        return 'crosshair';
+    }
 
-    hide_floating_controls: -> yes
+    hide_floating_controls() { return true; }
 
-    extra_overlay_classes_for_block: (block) ->
-        overlayClasses = ''
-        overlayClasses += ' click-disabled' if @user_level_block_type?.component == block
-        return overlayClasses
+    extra_overlay_classes_for_block(block) {
+        let overlayClasses = '';
+        if ((this.user_level_block_type != null ? this.user_level_block_type.component : undefined) === block) { overlayClasses += ' click-disabled'; }
+        return overlayClasses;
+    }
 
-    handleClick: (mouse) =>
-        if @user_level_block_type == TextBlockType
-            # FIXME: width is hard-coded to 100 right now
-            # height is hard coded to 17 here but that makes no difference since normalize() should take care of assigning
-            # this height correctly
-            block = TextBlockType.create(textContent: Dynamicable(String).from('Type something'), top: mouse.top, left: mouse.left, width: 100, height: 17)
-            @editor.doc.addBlock(block)
-            @editor.setEditorMode new TypingMode(block, selectAllTextInQuill: true)
-            wasDrawnOntoDoc(block)
-            @editor.handleDocChanged()
+    handleClick(mouse) {
+        let block;
+        if (this.user_level_block_type === TextBlockType) {
+            // FIXME: width is hard-coded to 100 right now
+            // height is hard coded to 17 here but that makes no difference since normalize() should take care of assigning
+            // this height correctly
+            block = TextBlockType.create({textContent: Dynamicable(String).from('Type something'), top: mouse.top, left: mouse.left, width: 100, height: 17});
+            this.editor.doc.addBlock(block);
+            this.editor.setEditorMode(new TypingMode(block, {selectAllTextInQuill: true}));
+            wasDrawnOntoDoc(block);
+            return this.editor.handleDocChanged();
 
-        else if @user_level_block_type instanceof ComponentBlockType
-            user_level_block_type = @user_level_block_type
-            return if user_level_block_type.component.containsPoint(mouse)
+        } else if (this.user_level_block_type instanceof ComponentBlockType) {
+            const {
+                user_level_block_type
+            } = this;
+            if (user_level_block_type.component.containsPoint(mouse)) { return; }
 
-            block = user_level_block_type.create(top: mouse.top, left: mouse.left, height: user_level_block_type.component.height, width: user_level_block_type.component.width)
-            @editor.doc.addBlock(block)
-            wasDrawnOntoDoc(block)
-            @editor.selectBlocks([block])
-            @editor.setEditorStateToDefault()
-            @editor.handleDocChanged()
+            block = user_level_block_type.create({top: mouse.top, left: mouse.left, height: user_level_block_type.component.height, width: user_level_block_type.component.width});
+            this.editor.doc.addBlock(block);
+            wasDrawnOntoDoc(block);
+            this.editor.selectBlocks([block]);
+            this.editor.setEditorStateToDefault();
+            return this.editor.handleDocChanged();
 
-        else
-            @editor.setEditorStateToDefault()
-            @minimalDirty()
+        } else {
+            this.editor.setEditorStateToDefault();
+            return this.minimalDirty();
+        }
+    }
 
 
-    extra_overlays: =>
-        React.createElement(React.Fragment, null,
-            ( if @drawingBox?
+    extra_overlays() {
+        return React.createElement(React.Fragment, null,
+            ( (this.drawingBox != null) ?
                 React.createElement("div", {"style": ({
-                    backgroundColor: 'rgba(0, 0, 0, 0)'
-                    border: '1px solid grey'
-                    position: 'absolute'
-                    top: @drawingBox.top
-                    left: @drawingBox.left
-                    height: @drawingBox.height
-                    width: @drawingBox.width
-                })})
+                    backgroundColor: 'rgba(0, 0, 0, 0)',
+                    border: '1px solid grey',
+                    position: 'absolute',
+                    top: this.drawingBox.top,
+                    left: this.drawingBox.left,
+                    height: this.drawingBox.height,
+                    width: this.drawingBox.width
+                })}) : undefined
             )
-        )
+        );
+    }
 
-    handleDrag: (from, onMove, onEnd) =>
-        user_level_block_type = @user_level_block_type
+    handleDrag(from, onMove, onEnd) {
+        const {
+            user_level_block_type
+        } = this;
 
-        if user_level_block_type instanceof ComponentBlockType and user_level_block_type.component.containsPoint(from)
-            # don't let users draw an instance of a component inside itself
-            return
+        if (user_level_block_type instanceof ComponentBlockType && user_level_block_type.component.containsPoint(from)) {
+            // don't let users draw an instance of a component inside itself
+            return;
+        }
 
-        block = user_level_block_type.create(doc: @editor.doc)
+        const block = user_level_block_type.create({doc: this.editor.doc});
 
-        if user_level_block_type == LineBlockType
-            return @drawLine(block, from, onMove, onEnd)
+        if (user_level_block_type === LineBlockType) {
+            return this.drawLine(block, from, onMove, onEnd);
 
-        else if user_level_block_type == TextBlockType
-            block.contentDeterminesWidth = false
-            block.textContent = Dynamicable(String).from('Type something')
+        } else if (user_level_block_type === TextBlockType) {
+            block.contentDeterminesWidth = false;
+            block.textContent = Dynamicable(String).from('Type something');
+        }
 
-        @activeBlocks = []
-        @editor.selectBlocks([])
+        this.activeBlocks = [];
+        this.editor.selectBlocks([]);
 
-        [block.top, block.left, block.width, block.height] = [from.top, from.left, 0, 0]
-        @drawingBox = block
+        [block.top, block.left, block.width, block.height] = Array.from([from.top, from.left, 0, 0]);
+        this.drawingBox = block;
 
-        onMove @snapToGrid(@drawingBox, Block.edgeNames) (to) =>
-            order = (a, b) -> if a <= b then [a, b] else [b, a]
+        onMove(this.snapToGrid(this.drawingBox, Block.edgeNames)(to => {
+            let bottom, ref, right;
+            const order = function(a, b) { if (a <= b) { return [a, b]; } else { return [b, a]; } };
 
-            if to.evt.shiftKey
-                sideLength = Math.max(Math.abs(to.delta.top), Math.abs(to.delta.left))
-                to = _l.mapValues to.delta, (len, axis) -> from[axis] + Math.sign(len) * sideLength
+            if (to.evt.shiftKey) {
+                const sideLength = Math.max(Math.abs(to.delta.top), Math.abs(to.delta.left));
+                to = _l.mapValues(to.delta, (len, axis) => from[axis] + (Math.sign(len) * sideLength));
+            }
 
-            [block.top, bottom] = order(from.top, to.top)
-            [block.left, right] = order(from.left, to.left)
+            [block.top, bottom] = Array.from(order(from.top, to.top));
+            [block.left, right] = Array.from(order(from.left, to.left));
 
-            # we can't assign block.bottom and block.right directly because that sets .top and .left
-            # instead of .width and .height
-            [block.height, block.width] = [bottom - block.top, right - block.left]
+            // we can't assign block.bottom and block.right directly because that sets .top and .left
+            // instead of .width and .height
+            return [block.height, block.width] = Array.from(ref = [bottom - block.top, right - block.left]), ref;
+    }));
 
-        onEnd (at) =>
-            if (block.width < 3 and block.height < 3) or block.width < 1 or block.height < 1
-                return
+        return onEnd(at => {
+            if (((block.width < 3) && (block.height < 3)) || (block.width < 1) || (block.height < 1)) {
+                return;
+            }
 
-            block.aspectRatioLocked = true if at.evt.shiftKey
+            if (at.evt.shiftKey) { block.aspectRatioLocked = true; }
 
-            @editor.doc.addBlock(block)
-            wasDrawnOntoDoc(block)
-            @editor.selectBlocks([block])
+            this.editor.doc.addBlock(block);
+            wasDrawnOntoDoc(block);
+            this.editor.selectBlocks([block]);
 
-            @editor.setEditorStateToDefault() unless block instanceof TextBlock
-            @editor.setEditorMode(new TypingMode(block, selectAllTextInQuill: true)) if block instanceof TextBlock
+            if (!(block instanceof TextBlock)) { this.editor.setEditorStateToDefault(); }
+            if (block instanceof TextBlock) { this.editor.setEditorMode(new TypingMode(block, {selectAllTextInQuill: true})); }
 
-            @editor.handleDocChanged()
+            return this.editor.handleDocChanged();
+        });
+    }
 
-    drawLine: (block, from, onMove, onEnd) ->
-        @activeBlocks = []
+    drawLine(block, from, onMove, onEnd) {
+        this.activeBlocks = [];
 
-        @editor.selectBlocks([])
-        [block.top, block.left, block.width, block.height] = [from.top, from.left, 0, 0]
-        @drawingBox = block
+        this.editor.selectBlocks([]);
+        [block.top, block.left, block.width, block.height] = Array.from([from.top, from.left, 0, 0]);
+        this.drawingBox = block;
 
-        onMove @snapToGrid(@drawingBox, Block.edgeNames) (to) =>
-            {top, height, left, width} = pointsToCoordinatesForLine(from, to, 1)
+        onMove(this.snapToGrid(this.drawingBox, Block.edgeNames)(to => {
+            let ref;
+            const {top, height, left, width} = pointsToCoordinatesForLine(from, to, 1);
 
-            [block.top, block.height] = [top, height]
-            [block.left, block.width] = [left, width]
-
-
-        onEnd (at) =>
-            if (block.width < 3 and block.height < 3) or block.width < 1 or block.height < 1
-                return
-
-            @editor.doc.addBlock(block)
-            wasDrawnOntoDoc(block)
-            @editor.setEditorStateToDefault()
-            @editor.selectBlocks([block])
-            @editor.handleDocChanged()
+            [block.top, block.height] = Array.from([top, height]);
+            return [block.left, block.width] = Array.from(ref = [left, width]), ref;
+    }));
 
 
-{Sidebar} = require '../editor/sidebar'
+        return onEnd(at => {
+            if (((block.width < 3) && (block.height < 3)) || (block.width < 1) || (block.height < 1)) {
+                return;
+            }
 
-exports.DynamicizingMode = class DynamicizingMode extends LayoutEditorMode
-    cursor: -> 'pointer'
-    highlight_blocks_on_hover: -> true
+            this.editor.doc.addBlock(block);
+            wasDrawnOntoDoc(block);
+            this.editor.setEditorStateToDefault();
+            this.editor.selectBlocks([block]);
+            return this.editor.handleDocChanged();
+        });
+    }
+});
 
-    extra_overlay_classes_for_block: (block) ->
-        overlayClasses = ''
 
-        dynamicables = block.getDynamicsForUI().map ([_a, _b, dynamicable]) -> dynamicable
-        dynamicProperties = dynamicables.filter (dyn) -> dyn.isDynamic
-        hasEmptyDynamics = dynamicProperties.some (val) -> _l.isEmpty(val.code)
+const {Sidebar} = require('../editor/sidebar');
 
-        overlayClasses += ' filled-dynamics' if dynamicProperties.length > 0 and not hasEmptyDynamics
-        overlayClasses += ' empty-dynamics' if hasEmptyDynamics
-        overlayClasses += ' custom-code' if block.hasCustomCode or block.externalComponentInstances.length > 0
+defaultExport.DynamicizingMode = (DynamicizingMode = class DynamicizingMode extends LayoutEditorMode {
+    constructor(...args) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleClick = this.handleClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        super(...args);
+    }
 
-        return overlayClasses
+    cursor() { return 'pointer'; }
+    highlight_blocks_on_hover() { return true; }
 
-    sidebar: (editor) ->
-        React.createElement(Sidebar, { \
-            "sidebarMode": "code",  \
-            "editor": (editor),  \
-            "value": (editor.getSelectedBlocks()),  \
-            "selectBlocks": (editor.selectBlocks),  \
-            "editorCache": (editor.editorCache),  \
-            "doc": (editor.doc),  \
-            "setEditorMode": (editor.setEditorMode),  \
+    extra_overlay_classes_for_block(block) {
+        let overlayClasses = '';
+
+        const dynamicables = block.getDynamicsForUI().map(function(...args) { const [_a, _b, dynamicable] = Array.from(args[0]); return dynamicable; });
+        const dynamicProperties = dynamicables.filter(dyn => dyn.isDynamic);
+        const hasEmptyDynamics = dynamicProperties.some(val => _l.isEmpty(val.code));
+
+        if ((dynamicProperties.length > 0) && !hasEmptyDynamics) { overlayClasses += ' filled-dynamics'; }
+        if (hasEmptyDynamics) { overlayClasses += ' empty-dynamics'; }
+        if (block.hasCustomCode || (block.externalComponentInstances.length > 0)) { overlayClasses += ' custom-code'; }
+
+        return overlayClasses;
+    }
+
+    sidebar(editor) {
+        return React.createElement(Sidebar, { 
+            "sidebarMode": "code",  
+            "editor": (editor),  
+            "value": (editor.getSelectedBlocks()),  
+            "selectBlocks": (editor.selectBlocks),  
+            "editorCache": (editor.editorCache),  
+            "doc": (editor.doc),  
+            "setEditorMode": (editor.setEditorMode),  
             "onChange": (editor.handleDocChanged)
-            })
+            });
+    }
 
-    handleClick: (mouse) =>
-        # override in subclasses
-        @getClickedBlocksAndSelect(mouse)
-        @editor.handleDocChanged(fast: true, mutated_blocks: {})
+    handleClick(mouse) {
+        // override in subclasses
+        this.getClickedBlocksAndSelect(mouse);
+        return this.editor.handleDocChanged({fast: true, mutated_blocks: {}});
+    }
 
-    handleDrag: (from, onMove, onEnd) ->
-        # no-op
+    handleDrag(from, onMove, onEnd) {}
+        // no-op
 
-    handleDoubleClick: (mouse) =>
-        clickedBlock = @editor.getBlockUnderMouseLocation(mouse)
-        return if not clickedBlock?
+    handleDoubleClick(mouse) {
+        let base_name, dynamicable, prop_control, rootComponentSpec;
+        const clickedBlock = this.editor.getBlockUnderMouseLocation(mouse);
+        if ((clickedBlock == null)) { return; }
 
-        # This is gross. Should maybe unify the concept of PropControl types and Dynamicable types
-        # and refactor this out (?)
-        if clickedBlock instanceof TextBlock
-            dynamicable = clickedBlock.textContent
-            prop_control = new StringPropControl()
-            base_name = 'text'
-        else if clickedBlock instanceof ImageBlock
-            dynamicable = clickedBlock.image
-            prop_control = new ImagePropControl()
-            base_name = 'img_src'
-        else
-            dynamicable = null
+        // This is gross. Should maybe unify the concept of PropControl types and Dynamicable types
+        // and refactor this out (?)
+        if (clickedBlock instanceof TextBlock) {
+            dynamicable = clickedBlock.textContent;
+            prop_control = new StringPropControl();
+            base_name = 'text';
+        } else if (clickedBlock instanceof ImageBlock) {
+            dynamicable = clickedBlock.image;
+            prop_control = new ImagePropControl();
+            base_name = 'img_src';
+        } else {
+            dynamicable = null;
+        }
 
-        if dynamicable? and (rootComponentSpec = clickedBlock.getRootComponent()?.componentSpec)?
-            # Dynamicize
-            if not dynamicable.isDynamic
-                new_prop_name = find_unused _l.map(rootComponentSpec.propControl.attrTypes, 'name'), (i) ->
-                    if i == 0 then base_name else  "#{base_name}#{i+1}"
-                rootComponentSpec.addSpec(new PropSpec(name: new_prop_name, control: prop_control))
+        if ((dynamicable != null) && ((rootComponentSpec = __guard__(clickedBlock.getRootComponent(), x => x.componentSpec)) != null)) {
+            // Dynamicize
+            if (!dynamicable.isDynamic) {
+                const new_prop_name = find_unused(_l.map(rootComponentSpec.propControl.attrTypes, 'name'), function(i) {
+                    if (i === 0) { return base_name; } else {  return `${base_name}${i+1}`; }
+                });
+                rootComponentSpec.addSpec(new PropSpec({name: new_prop_name, control: prop_control}));
 
-                # ANGULAR TODO: might need to change this
-                dynamicable.code = dynamicable.getPropCode(new_prop_name, @editor.doc.export_lang)
-                dynamicable.isDynamic = true
+                // ANGULAR TODO: might need to change this
+                dynamicable.code = dynamicable.getPropCode(new_prop_name, this.editor.doc.export_lang);
+                dynamicable.isDynamic = true;
 
-            # Undynamicize
-            else
-                # Try to see if there was a PropSpec added by the above mechanism, if so delete it
-                # FIXME: this.props is React specific
-                # FIXME2: The whole heuristic of when to remove a Spec can be improved. One thing we should probably do is
-                # check that prop_name is unused in other things in the code sidebar. Not doing this right now because
-                # getting all possible code things that appear in the code sidebar is a mess today.
-                # ANGULAR TODO: does this always work?
-                if dynamicable.code.startsWith('this.props.')
-                    prop_name = dynamicable.code.substr('this.props.'.length)
-                    added_spec =  _l.find(rootComponentSpec.propControl.attrTypes, (spec) ->
-                        spec.name == prop_name and spec.control.ValueType == prop_control.ValueType)
+            // Undynamicize
+            } else {
+                // Try to see if there was a PropSpec added by the above mechanism, if so delete it
+                // FIXME: this.props is React specific
+                // FIXME2: The whole heuristic of when to remove a Spec can be improved. One thing we should probably do is
+                // check that prop_name is unused in other things in the code sidebar. Not doing this right now because
+                // getting all possible code things that appear in the code sidebar is a mess today.
+                // ANGULAR TODO: does this always work?
+                if (dynamicable.code.startsWith('this.props.')) {
+                    const prop_name = dynamicable.code.substr('this.props.'.length);
+                    const added_spec =  _l.find(rootComponentSpec.propControl.attrTypes, spec => (spec.name === prop_name) && (spec.control.ValueType === prop_control.ValueType));
 
-                    if prop_name.length > 0 and added_spec?
-                        rootComponentSpec.removeSpec(added_spec)
-                        dynamicable.code = ''
-                dynamicable.isDynamic = false
+                    if ((prop_name.length > 0) && (added_spec != null)) {
+                        rootComponentSpec.removeSpec(added_spec);
+                        dynamicable.code = '';
+                    }
+                }
+                dynamicable.isDynamic = false;
+            }
 
-            @editor.handleDocChanged()
-
-
-
-exports.DraggingScreenMode = class DraggingScreenMode extends LayoutEditorMode
-    cursor: -> '-webkit-grab'
-    handleDoubleClick: (where) =>
-        ## State probably got out of sync and user is clicking around to try to get back into Idle mode
-        # so be nice and take them there
-        @editor.setEditorStateToDefault()
-        @minimalDirty()
-
-    handleDrag: (from, onMove, onEnd) =>
-        @activeBlocks = []
-
-        onMove ({delta}) =>
-            currentViewport = @editor.viewportManager.getViewport()
-            @editor.viewportManager.setViewport(_l.extend {}, currentViewport, {top: currentViewport.top - delta.top, left: currentViewport.left - delta.left})
-
-        onEnd (at) =>
-            @editor.handleDocChanged(fast: true, dontUpdateSidebars: true, dont_recalculate_overlapping: true, subsetOfBlocksToRerender: [])
+            return this.editor.handleDocChanged();
+        }
+    }
+});
 
 
 
-ranges_intersect = (a, b) -> b.left <= a.left < b.right \
-                          or a.left <= b.left < a.right
-union_ranges = (a, b) -> {left: Math.min(a.left, b.left), right: Math.max(a.right, b.right)}
+defaultExport.DraggingScreenMode = (DraggingScreenMode = class DraggingScreenMode extends LayoutEditorMode {
+    constructor(...args) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        super(...args);
+    }
 
-exports.VerticalPushdownMode = class VerticalPushdownMode extends LayoutEditorMode
-    cursor: -> 'ns-resize'
-    handleDrag: (from, onMove, onEnd) =>
-        return @reorderDrag(from, onMove, onEnd) if from.evt.shiftKey
-        return @pushdownDrag(from, onMove, onEnd)
+    cursor() { return '-webkit-grab'; }
+    handleDoubleClick(where) {
+        //# State probably got out of sync and user is clicking around to try to get back into Idle mode
+        // so be nice and take them there
+        this.editor.setEditorStateToDefault();
+        return this.minimalDirty();
+    }
 
-    pushdownDrag: (from, onMove, onEnd) ->
-        blocks = @editor.doc.blocks
-        make_line = (block, kind) -> {block, kind, y_axis: block[kind], left: block.left, right: block.right}
+    handleDrag(from, onMove, onEnd) {
+        this.activeBlocks = [];
 
-        lines = [].concat(
-            # look at top lines of blocks below mouse
-            (make_line(block, 'top') for block in blocks when from.top <= block.top),
+        onMove(({delta}) => {
+            const currentViewport = this.editor.viewportManager.getViewport();
+            return this.editor.viewportManager.setViewport(_l.extend({}, currentViewport, {top: currentViewport.top - delta.top, left: currentViewport.left - delta.left}));
+        });
 
-            # look at bottom lines of blocks the mouse is inside, so we can resize them
-            (make_line(block, 'bottom') for block in blocks when block.top < from.top <= block.bottom and 'bottom' in block.resizableEdges)
-        )
-
-        sorted_buckets = (lst, it) ->
-            ret = []
-            unequalable_sentinal = {}
-            [fn, current_bucket, current_value] = [_l.iteratee(it), null, unequalable_sentinal]
-            for elem in _l.sortBy(lst, fn)
-                next_value = fn(elem)
-                if current_value != next_value
-                    [current_bucket, current_value] = [[], next_value]
-                    ret.push(current_bucket)
-                current_bucket.push(elem)
-            return ret
-
-
-        # we're going to scan down to build up the lines_to_push_down
-        lines_to_push_down = []
-
-        # scan from top to bottom
-        scandown_horizontal_range = {left: from.left, right: from.left}
-
-        # scan the lines from top to bottom
-        for bucket_of_lines_at_this_vertical_point in sorted_buckets(lines, 'y_axis')
-            hit_lines = bucket_of_lines_at_this_vertical_point.filter (line) -> ranges_intersect(line, scandown_horizontal_range)
-            continue if _l.isEmpty(hit_lines)
-
-            # when there's multiple lines at the same level, take all the ones that intersect with the scandown range, recursively
-            hit_lines = find_connected hit_lines, (a) -> bucket_of_lines_at_this_vertical_point.filter((b) -> ranges_intersect(a, b))
-
-            lines_to_push_down.push(line) for line in hit_lines
-            scandown_horizontal_range = union_ranges(scandown_horizontal_range, line) for line in hit_lines
-
-        @activeBlocks = _l.uniq _l.map(lines_to_push_down, 'block.uniqueKey')
-        # TODO also set mutated_blocks to just the resizing ones
-
-        onMove ({delta: {top: deltaY}}) =>
-            # FIXME needs better heuristics on drag up
-            # deltaY = 0 if deltaY <= 0
-
-            for {y_axis, block, kind} in lines_to_push_down
-                # y_axis is immutably starting value
-                new_line_position = y_axis + deltaY
-
-                block.top    = new_line_position                            if kind == 'top'
-                block.height = Math.max(0, new_line_position - block.top)   if kind == 'bottom'
-
-        onEnd =>
-            # remove all blocks shrunk to 0 height
-            @editor.doc.removeBlocks(_l.map(lines_to_push_down, 'block').filter((b) -> b.height == 0))
-
-            # leave pushdown 'mode'
-            @editor.setEditorStateToDefault()
-
-            # finish
-            @editor.handleDocChanged()
-
-    reorderDrag: (from, onMove, onEnd) ->
-        # host variables
-        absolute_start = null
-        incomplete_stack = null
-        targeted_blocks = null
-        targeted_blocks_area = null
-        target_slice = null
-        cancel = no
-
-        repositon_blocks_in_slice = (slice) ->
-            delta = slice.start - slice.original_start
-            (block.top = original_start + delta) for {block, original_start} in slice.blocks
+        return onEnd(at => {
+            return this.editor.handleDocChanged({fast: true, dontUpdateSidebars: true, dont_recalculate_overlapping: true, subsetOfBlocksToRerender: []});
+        });
+    }
+});
 
 
-        @editor.doc.inReadonlyMode =>
-            if _l.find(@selectedBlocks, (b) -> b.containsPoint(from))?
-                targeted_blocks = @selectedBlocks
 
-            else if (clicked_block = @editor.getBlockUnderMouseLocation(from))? and not clicked_block.locked
-                targeted_blocks = [clicked_block]
-                @editor.selectBlocks(targeted_blocks)
+var ranges_intersect = (a, b) => (b.left <= a.left && a.left < b.right) 
+                          || (a.left <= b.left && b.left < a.right);
+var union_ranges = (a, b) => ({
+    left: Math.min(a.left, b.left),
+    right: Math.max(a.right, b.right)
+});
 
-            else
-                targeted_blocks = []
-                @editor.selectedBlocks([])
+defaultExport.VerticalPushdownMode = (VerticalPushdownMode = class VerticalPushdownMode extends LayoutEditorMode {
+    constructor(...args) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleDrag = this.handleDrag.bind(this);
+        super(...args);
+    }
 
-            # targeted_blocks has at least one entry; we can refer to targeted_blocks[0]
-            if _l.isEmpty(targeted_blocks)
-                cancel = yes
-                return
+    cursor() { return 'ns-resize'; }
+    handleDrag(from, onMove, onEnd) {
+        if (from.evt.shiftKey) { return this.reorderDrag(from, onMove, onEnd); }
+        return this.pushdownDrag(from, onMove, onEnd);
+    }
 
-            siblings = targeted_blocks[0].getSiblingGroup()
+    pushdownDrag(from, onMove, onEnd) {
+        let block;
+        const {
+            blocks
+        } = this.editor.doc;
+        const make_line = (block, kind) => ({
+            block,
+            kind,
+            y_axis: block[kind],
+            left: block.left,
+            right: block.right
+        });
 
-            # make sure all the targeted blocks are in the same stack, or at least under the same parent...
-            unless _l.every(targeted_blocks, (b) -> b in siblings)
-                cancel = yes
-                return
+        const lines = [].concat(
+            // look at top lines of blocks below mouse
+            ((() => {
+            const result = [];
+            for (block of Array.from(blocks)) {                 if (from.top <= block.top) {
+                    result.push(make_line(block, 'top'));
+                }
+            }
+            return result;
+        })()),
 
-            # get the top of the parent all the targeted_blocks share.  All targeted_blocks have the same parent; see the check above
-            absolute_start = targeted_blocks[0].parent?.top ? 0
+            // look at bottom lines of blocks the mouse is inside, so we can resize them
+            ((() => {
+            const result1 = [];
+            for (block of Array.from(blocks)) {                 if ((block.top < from.top && from.top <= block.bottom) && Array.from(block.resizableEdges).includes('bottom')) {
+                    result1.push(make_line(block, 'bottom'));
+                }
+            }
+            return result1;
+        })())
+        );
 
-            targeted_blocks_area = Block.unionBlock(targeted_blocks)
-
-            stack_blocks = siblings.filter (sib) -> ranges_intersect(sib, targeted_blocks_area)
-            # TODO/FIXME: should probably do stack_blocks.map (b) -> find_connected b, siblings, (a, b) -> a.intersects(b)
-
-            # inject the targeted_blocks_area to force the grouping of the targetd blocks
-            effective_stack_blocks = _l.without(stack_blocks, targeted_blocks...).concat([targeted_blocks_area])
-            stack = core.slice1D(((b) -> b.top), ((b) -> b.bottom))(effective_stack_blocks, absolute_start)
-
-            # the slice with the targeted_blocks_area sentinal is the one with the targeted_blocks
-            target_slice = _l.find stack, ({contents}) -> targeted_blocks_area in contents
-            incomplete_stack = _l.without stack, target_slice
-
-            # replace the targeted_blocks_area sentinal with actual targeted_blocks
-            splice_by_value = (list, val, replacements) ->
-                idx = list.indexOf(val)
-                list.splice(idx, 1, replacements...)
-            splice_by_value(target_slice.contents, targeted_blocks_area, targeted_blocks)
-
-            # annotate historical values into the slices
-            for slice in stack
-                slice.blocks = _l.flatMap(slice.contents, (block) -> block.andChildren()).map (block) ->
-                    {original_start: block.top, block}
-                slice.original_start = slice.start
+        const sorted_buckets = function(lst, it) {
+            const ret = [];
+            const unequalable_sentinal = {};
+            let [fn, current_bucket, current_value] = Array.from([_l.iteratee(it), null, unequalable_sentinal]);
+            for (let elem of Array.from(_l.sortBy(lst, fn))) {
+                const next_value = fn(elem);
+                if (current_value !== next_value) {
+                    [current_bucket, current_value] = Array.from([[], next_value]);
+                    ret.push(current_bucket);
+                }
+                current_bucket.push(elem);
+            }
+            return ret;
+        };
 
 
-        if cancel
-            # probably should do something else
-            @editor.setEditorStateToDefault()
-            return
+        // we're going to scan down to build up the lines_to_push_down
+        const lines_to_push_down = [];
 
-        onMove (to) =>
-            # compute the position in the stack to move the targeted_blocks to
-            # HEURISTIC: look for the stack entry the mouse is over, or if it's over a margin,
-            # pick the slice under the margin.  Insert above the hovered entry.
-            break for slice, idx in incomplete_stack when to.top < slice.end
+        // scan from top to bottom
+        let scandown_horizontal_range = {left: from.left, right: from.left};
 
-            list_with_inserted_value = (lst, loc, value) ->
-                cloned_list = _l.slice(lst)
-                cloned_list.splice(loc, 0, value)
-                return cloned_list
-            new_stack = list_with_inserted_value(incomplete_stack, idx, target_slice)
+        // scan the lines from top to bottom
+        for (var bucket_of_lines_at_this_vertical_point of Array.from(sorted_buckets(lines, 'y_axis'))) {
+            var line;
+            let hit_lines = bucket_of_lines_at_this_vertical_point.filter(line => ranges_intersect(line, scandown_horizontal_range));
+            if (_l.isEmpty(hit_lines)) { continue; }
 
-            # compute slice starts/ends from absolute_start + position in stack
-            cursor = absolute_start
-            for slice in new_stack
-                cursor += slice.margin
-                slice.start = cursor
-                cursor += slice.length
-                slice.end = cursor
+            // when there's multiple lines at the same level, take all the ones that intersect with the scandown range, recursively
+            hit_lines = find_connected(hit_lines, a => bucket_of_lines_at_this_vertical_point.filter(b => ranges_intersect(a, b)));
 
-            if not config.smoothReorderDragging
-                repositon_blocks_in_slice(slice) for slice in new_stack
+            for (line of Array.from(hit_lines)) { lines_to_push_down.push(line); }
+            for (line of Array.from(hit_lines)) { scandown_horizontal_range = union_ranges(scandown_horizontal_range, line); }
+        }
 
-            else
-                # juggle the incomplete stack around
-                repositon_blocks_in_slice(slice) for slice in new_stack when slice != target_slice
+        this.activeBlocks = _l.uniq(_l.map(lines_to_push_down, 'block.uniqueKey'));
+        // TODO also set mutated_blocks to just the resizing ones
 
-                # but drag the target slice smoothly...
-                (block.top = original_start + to.delta.top) for {block, original_start} in target_slice.blocks
+        onMove(({delta: {top: deltaY}}) => {
+            // FIXME needs better heuristics on drag up
+            // deltaY = 0 if deltaY <= 0
 
-                # ...and show where it's going to land.
+            return (() => {
+                let kind, y_axis;
+                const result2 = [];
+                for ({y_axis, block, kind} of Array.from(lines_to_push_down)) {
+                // y_axis is immutably starting value
+                    const new_line_position = y_axis + deltaY;
 
-                # Put an 'underlay' on one of the targeted_blocks by giving it an extra overlay with negative zIndex
-                @specialOverlayForBlock = (block, standard_overlay) =>
-                    return standard_overlay unless block == targeted_blocks[0]
+                    if (kind === 'top') { block.top    = new_line_position; }
+                    if (kind === 'bottom') { result2.push(block.height = Math.max(0, new_line_position - block.top)); } else {
+                        result2.push(undefined);
+                    }
+                }
+                return result2;
+            })();
+        });
+
+        return onEnd(() => {
+            // remove all blocks shrunk to 0 height
+            this.editor.doc.removeBlocks(_l.map(lines_to_push_down, 'block').filter(b => b.height === 0));
+
+            // leave pushdown 'mode'
+            this.editor.setEditorStateToDefault();
+
+            // finish
+            return this.editor.handleDocChanged();
+        });
+    }
+
+    reorderDrag(from, onMove, onEnd) {
+        // host variables
+        let absolute_start = null;
+        let incomplete_stack = null;
+        let targeted_blocks = null;
+        let targeted_blocks_area = null;
+        let target_slice = null;
+        let cancel = false;
+
+        const repositon_blocks_in_slice = function(slice) {
+            const delta = slice.start - slice.original_start;
+            return (() => {
+                const result = [];
+                for (let {block, original_start} of Array.from(slice.blocks)) {                     result.push((block.top = original_start + delta));
+                }
+                return result;
+            })();
+        };
+
+
+        this.editor.doc.inReadonlyMode(() => {
+            let clicked_block;
+            if (_l.find(this.selectedBlocks, b => b.containsPoint(from)) != null) {
+                targeted_blocks = this.selectedBlocks;
+
+            } else if (((clicked_block = this.editor.getBlockUnderMouseLocation(from)) != null) && !clicked_block.locked) {
+                targeted_blocks = [clicked_block];
+                this.editor.selectBlocks(targeted_blocks);
+
+            } else {
+                targeted_blocks = [];
+                this.editor.selectedBlocks([]);
+            }
+
+            // targeted_blocks has at least one entry; we can refer to targeted_blocks[0]
+            if (_l.isEmpty(targeted_blocks)) {
+                cancel = true;
+                return;
+            }
+
+            const siblings = targeted_blocks[0].getSiblingGroup();
+
+            // make sure all the targeted blocks are in the same stack, or at least under the same parent...
+            if (!_l.every(targeted_blocks, b => Array.from(siblings).includes(b))) {
+                cancel = true;
+                return;
+            }
+
+            // get the top of the parent all the targeted_blocks share.  All targeted_blocks have the same parent; see the check above
+            absolute_start = (targeted_blocks[0].parent != null ? targeted_blocks[0].parent.top : undefined) != null ? (targeted_blocks[0].parent != null ? targeted_blocks[0].parent.top : undefined) : 0;
+
+            targeted_blocks_area = Block.unionBlock(targeted_blocks);
+
+            const stack_blocks = siblings.filter(sib => ranges_intersect(sib, targeted_blocks_area));
+            // TODO/FIXME: should probably do stack_blocks.map (b) -> find_connected b, siblings, (a, b) -> a.intersects(b)
+
+            // inject the targeted_blocks_area to force the grouping of the targetd blocks
+            const effective_stack_blocks = _l.without(stack_blocks, ...Array.from(targeted_blocks)).concat([targeted_blocks_area]);
+            const stack = core.slice1D((b => b.top), (b => b.bottom))(effective_stack_blocks, absolute_start);
+
+            // the slice with the targeted_blocks_area sentinal is the one with the targeted_blocks
+            target_slice = _l.find(stack, ({contents}) => Array.from(contents).includes(targeted_blocks_area));
+            incomplete_stack = _l.without(stack, target_slice);
+
+            // replace the targeted_blocks_area sentinal with actual targeted_blocks
+            const splice_by_value = function(list, val, replacements) {
+                const idx = list.indexOf(val);
+                return list.splice(idx, 1, ...Array.from(replacements));
+            };
+            splice_by_value(target_slice.contents, targeted_blocks_area, targeted_blocks);
+
+            // annotate historical values into the slices
+            return (() => {
+                const result = [];
+                for (let slice of Array.from(stack)) {
+                    slice.blocks = _l.flatMap(slice.contents, block => block.andChildren()).map(block => ({
+                        original_start: block.top,
+                        block
+                    }));
+                    result.push(slice.original_start = slice.start);
+                }
+                return result;
+            })();
+        });
+
+
+        if (cancel) {
+            // probably should do something else
+            this.editor.setEditorStateToDefault();
+            return;
+        }
+
+        onMove(to => {
+            // compute the position in the stack to move the targeted_blocks to
+            // HEURISTIC: look for the stack entry the mouse is over, or if it's over a margin,
+            // pick the slice under the margin.  Insert above the hovered entry.
+            let idx, slice;
+            for (idx = 0; idx < incomplete_stack.length; idx++) { slice = incomplete_stack[idx]; if (to.top < slice.end) { break; } }
+
+            const list_with_inserted_value = function(lst, loc, value) {
+                const cloned_list = _l.slice(lst);
+                cloned_list.splice(loc, 0, value);
+                return cloned_list;
+            };
+            const new_stack = list_with_inserted_value(incomplete_stack, idx, target_slice);
+
+            // compute slice starts/ends from absolute_start + position in stack
+            let cursor = absolute_start;
+            for (slice of Array.from(new_stack)) {
+                cursor += slice.margin;
+                slice.start = cursor;
+                cursor += slice.length;
+                slice.end = cursor;
+            }
+
+            if (!config.smoothReorderDragging) {
+                return (() => {
+                    const result = [];
+                    for (slice of Array.from(new_stack)) {                         result.push(repositon_blocks_in_slice(slice));
+                    }
+                    return result;
+                })();
+
+            } else {
+                // juggle the incomplete stack around
+                for (slice of Array.from(new_stack)) { if (slice !== target_slice) { repositon_blocks_in_slice(slice); } }
+
+                // but drag the target slice smoothly...
+                for (let {block, original_start} of Array.from(target_slice.blocks)) { block.top = original_start + to.delta.top; }
+
+                // ...and show where it's going to land.
+
+                // Put an 'underlay' on one of the targeted_blocks by giving it an extra overlay with negative zIndex
+                return this.specialOverlayForBlock = (block, standard_overlay) => {
+                    if (block !== targeted_blocks[0]) { return standard_overlay; }
                     return React.createElement(React.Fragment, null,
                         (standard_overlay),
-                        React.createElement("div", {"style": (
-                            position: 'absolute', zIndex: -1
-                            border: '1px solid blue'
-                            backgroundColor: '#93D3F9'
+                        React.createElement("div", {"style": ({
+                            position: 'absolute', zIndex: -1,
+                            border: '1px solid blue',
+                            backgroundColor: '#93D3F9',
 
-                            # relative to targeted_blocks[0]
+                            // relative to targeted_blocks[0]
                             top: target_slice.start - block.top,
                             left: 0,
 
                             height: target_slice.length,
                             width: targeted_blocks_area.width
-                        )})
-                    )
+                        })})
+                    );
+                };
+            }
+        });
 
-        onEnd =>
-            repositon_blocks_in_slice(target_slice)
+        return onEnd(() => {
+            repositon_blocks_in_slice(target_slice);
 
-            @editor.setEditorStateToDefault()
-            @editor.handleDocChanged()
-
-
-    getOverlayForBlock: (block) ->
-        standard_overlay = super(block)
-        return standard_overlay unless @specialOverlayForBlock?
-        return @specialOverlayForBlock(block, standard_overlay)
-
+            this.editor.setEditorStateToDefault();
+            return this.editor.handleDocChanged();
+        });
+    }
 
 
-
-exports.ReplaceBlocksMode = class ReplaceBlocksMode extends LayoutEditorMode
-    cursor: -> 'copy'
-
-    handleClick: (mouse) =>
-        return unless @selectedBlocks.length == 1
-        original_block = @selectedBlocks[0]
-
-        replacement_root = @editor.getBlockUnderMouseLocation(mouse)
-        return if not replacement_root?
-
-        # Don't do the replace if the replacement blocks are children of the block to be replaced.
-        # Since our implementation removes the blocks to be replaced, taking this action would just
-        # delete the blocks.  This doesn't seem a useful enough case to care about, so I'm just ignoring it.
-        original_blocks = original_block.andChildren()
-        return if replacement_root in original_blocks
-
-        # so ideally their sizes would be identical.  I'm not sure what to do if they're not.  For now, let's just
-        # position the replacement's top-left where the original's was.
-        [dy, dx] = ['top', 'left'].map (pt) -> original_block[pt] - replacement_root[pt]
-
-        @editor.doc.removeBlocks(original_blocks)
-        (replacement.top += dy; replacement.left += dx) for replacement in replacement_root.andChildren()
-
-        @editor.setEditorStateToDefault()
-        @editor.selectBlocks([replacement_root])
-
-        @editor.handleDocChanged()
+    getOverlayForBlock(block) {
+        const standard_overlay = super.getOverlayForBlock(block);
+        if (this.specialOverlayForBlock == null) { return standard_overlay; }
+        return this.specialOverlayForBlock(block, standard_overlay);
+    }
+});
 
 
+
+
+defaultExport.ReplaceBlocksMode = (ReplaceBlocksMode = class ReplaceBlocksMode extends LayoutEditorMode {
+    constructor(...args) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.handleClick = this.handleClick.bind(this);
+        super(...args);
+    }
+
+    cursor() { return 'copy'; }
+
+    handleClick(mouse) {
+        if (this.selectedBlocks.length !== 1) { return; }
+        const original_block = this.selectedBlocks[0];
+
+        const replacement_root = this.editor.getBlockUnderMouseLocation(mouse);
+        if ((replacement_root == null)) { return; }
+
+        // Don't do the replace if the replacement blocks are children of the block to be replaced.
+        // Since our implementation removes the blocks to be replaced, taking this action would just
+        // delete the blocks.  This doesn't seem a useful enough case to care about, so I'm just ignoring it.
+        const original_blocks = original_block.andChildren();
+        if (Array.from(original_blocks).includes(replacement_root)) { return; }
+
+        // so ideally their sizes would be identical.  I'm not sure what to do if they're not.  For now, let's just
+        // position the replacement's top-left where the original's was.
+        const [dy, dx] = Array.from(['top', 'left'].map(pt => original_block[pt] - replacement_root[pt]));
+
+        this.editor.doc.removeBlocks(original_blocks);
+        for (let replacement of Array.from(replacement_root.andChildren())) { replacement.top += dy; replacement.left += dx; }
+
+        this.editor.setEditorStateToDefault();
+        this.editor.selectBlocks([replacement_root]);
+
+        return this.editor.handleDocChanged();
+    }
+});
+
+
+
+export default defaultExport;
+
+
+
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}

@@ -1,40 +1,49 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-_l = require 'lodash'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+import createReactClass from 'create-react-class';
+import _l from 'lodash';
+import { Editor } from '../editor/edit-page';
+import { Doc } from '../doc';
 
-{Editor} = require '../editor/edit-page'
-{Doc} = require '../doc'
 
+const atom_rpc_send = data => // atom can pick up console messages
+console.log("atomrpc:" + JSON.stringify(data));
 
-atom_rpc_send = (data) ->
-    # atom can pick up console messages
-    console.log("atomrpc:" + JSON.stringify(data))
+export default createReactClass({
+    componentWillMount() {
+        this.loaded = false;
+        window.__atom_rpc_recv = this.atom_rpc_recv;
+        return atom_rpc_send({msg: "ready"});
+    },
 
-module.exports = createReactClass
-    componentWillMount: ->
-        @loaded = false
-        window.__atom_rpc_recv = @atom_rpc_recv
-        atom_rpc_send({msg: "ready"})
+    render() {
+        if (!this.loaded) { return React.createElement("div", null); }
+        return React.createElement(Editor, { 
+            "initialDocJson": (this.initialDocjson),  
+            "onChange": (this.handleDocjsonChanged)
+            });
+    },
 
-    render: ->
-        return React.createElement("div", null) unless @loaded
-        React.createElement(Editor, { \
-            "initialDocJson": (@initialDocjson),  \
-            "onChange": (@handleDocjsonChanged)
-            })
+    handleDocjsonChanged(docjson) {
+        return atom_rpc_send({msg: "write", fileContents: JSON.stringify(docjson)});
+    },
 
-    handleDocjsonChanged: (docjson) ->
-        atom_rpc_send({msg: "write", fileContents: JSON.stringify(docjson)})
-
-    atom_rpc_recv: (data) ->
-        switch data.msg
-            when 'load'
-                @loaded = true
-                @initialDocjson =
-                    unless data.fileContents == "" \
-                    then JSON.parse(data.fileContents) \
-                    else new Doc().serialize()
-                @forceUpdate()
+    atom_rpc_recv(data) {
+        switch (data.msg) {
+            case 'load':
+                this.loaded = true;
+                this.initialDocjson =
+                    data.fileContents !== "" 
+                    ? JSON.parse(data.fileContents) 
+                    : new Doc().serialize();
+                return this.forceUpdate();
+        }
+    }
+});
 
 
 

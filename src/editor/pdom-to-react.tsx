@@ -1,145 +1,176 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
-ReactDOM = require 'react-dom'
-createReactClass = require 'create-react-class'
-propTypes = require 'prop-types'
-{assert} = require '../util'
-{isExternalComponent} = require '../libraries'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let editorReactStylesForPdom, pdomToReact, pdomToReactWithPropOverrides;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import createReactClass from 'create-react-class';
+import propTypes from 'prop-types';
+import { assert } from '../util';
+import { isExternalComponent } from '../libraries';
+import Dynamic from '../dynamic';
+import { renderExternalInstance } from '../libraries';
+import { styleForDiv, htmlAttrsForPdom } from '../pdom';
+const defaultExport = {};
 
-Dynamic = require '../dynamic'
+defaultExport.editorReactStylesForPdom = (editorReactStylesForPdom= function(pdom) {
+    const styles = styleForDiv(pdom);
 
-{renderExternalInstance} = require '../libraries'
-{styleForDiv, htmlAttrsForPdom} = require '../pdom'
+    // remove relative urls
+    // we get a fresh object from styleForDiv, so we can safely mutate here
+    // in the editor, only show images in ImageBlocks with absolute URLs
+    // Otherwise we get a lot of 404s on https://pagedraw.io/pages/undefined
+    const URL_VALUE_REGEX = /url\s*\((('.*')|(".*"))\)/;
+    const ABSOLUTE_URL_VALUE_REGEX = /url\s*\((('http(s?):\/\/.*')|("http(s?):\/\/.*"))\)/;
+    for (let key of Array.from(Object.keys(styles))) {
+        const value = styles[key];
+        if (_l.isString(value) && value.match(URL_VALUE_REGEX) && !value.match(ABSOLUTE_URL_VALUE_REGEX)) {
+            delete styles[key];
+        }
+    }
 
-exports.editorReactStylesForPdom = editorReactStylesForPdom= (pdom) ->
-    styles = styleForDiv(pdom)
+    return styles;
+});
 
-    # remove relative urls
-    # we get a fresh object from styleForDiv, so we can safely mutate here
-    # in the editor, only show images in ImageBlocks with absolute URLs
-    # Otherwise we get a lot of 404s on https://pagedraw.io/pages/undefined
-    URL_VALUE_REGEX = /url\s*\((('.*')|(".*"))\)/
-    ABSOLUTE_URL_VALUE_REGEX = /url\s*\((('http(s?):\/\/.*')|("http(s?):\/\/.*"))\)/
-    for key in Object.keys(styles)
-        value = styles[key]
-        if _l.isString(value) and value.match(URL_VALUE_REGEX) and not value.match(ABSOLUTE_URL_VALUE_REGEX)
-            delete styles[key]
+const escapedHTMLForTextContent = function(textContent) {
+    // differs from the implementation of the same in core because in core we have to escape stuff like
+    // spaces into `&nbsp;`, while React takes care of that for us.  Also we're returning ReactElement-ishes
+    // where core's returning a string
+    const escapedLines = textContent.split('\n');
+    if (escapedLines.length === 1) { return escapedLines[0]; }
+    return escapedLines.map(function(line, i) { if (_l.isEmpty(line)) { return React.createElement("br", {"key": (i)}); } else { return React.createElement("div", {"key": (i)}, (line)); } });
+};
 
-    return styles
+// Note: In React 16.4.1
+const ExternalInstanceErrorBoundary = createReactClass({
+    displayName: 'ExternalInstanceErrorBoundary',
 
-escapedHTMLForTextContent = (textContent) ->
-    # differs from the implementation of the same in core because in core we have to escape stuff like
-    # spaces into `&nbsp;`, while React takes care of that for us.  Also we're returning ReactElement-ishes
-    # where core's returning a string
-    escapedLines = textContent.split('\n')
-    return escapedLines[0] if escapedLines.length == 1
-    escapedLines.map((line, i) -> if _l.isEmpty(line) then React.createElement("br", {"key": (i)}) else React.createElement("div", {"key": (i)}, (line)))
+    getInitialState() {
+        return {error: null};
+    },
 
-# Note: In React 16.4.1
-ExternalInstanceErrorBoundary = createReactClass
-    displayName: 'ExternalInstanceErrorBoundary'
+    render() {
+        if (this.state.error != null) {
+            return React.createElement("div", {"style": ({flexGrow: '1', padding: '0.5em', backgroundColor: '#ff7f7f', overflow: 'hidden'})},
+                (this.state.error.message)
+            );
+        }
 
-    getInitialState: ->
-        error: null
+        return this.props.children;
+    },
 
-    render: ->
-        if @state.error?
-            return React.createElement("div", {"style": (flexGrow: '1', padding: '0.5em', backgroundColor: '#ff7f7f', overflow: 'hidden')},
-                (@state.error.message)
-            )
+    componentDidCatch(error) {
+        return this.setState({error});
+    }
+});
 
-        return @props.children
-
-    componentDidCatch: (error) ->
-        @setState({error})
-
-exports.WindowContextProvider = createReactClass
-    displayName: 'WindowContextProvider'
-    childContextTypes:
+defaultExport.WindowContextProvider = createReactClass({
+    displayName: 'WindowContextProvider',
+    childContextTypes: {
         contentWindow: propTypes.object
-    getChildContext: ->
-        contentWindow: @props.window
+    },
+    getChildContext() {
+        return {contentWindow: this.props.window};
+    },
 
-    render: ->
-        @props.children
+    render() {
+        return this.props.children;
+    }
+});
 
 
-ExternalInstanceRenderer = createReactClass
-    displayName: 'ExternalInstanceRenderer'
+const ExternalInstanceRenderer = createReactClass({
+    displayName: 'ExternalInstanceRenderer',
 
-    contextTypes:
+    contextTypes: {
         contentWindow: propTypes.object
+    },
 
-    render: ->
-        # There should be a contentWindow in the context here but if there isn't in prod
-        # we just use regular window and keep going
-        assert => @context.contentWindow?
-        renderExternalInstance((@context.contentWindow ? window), @props.instanceRef, @props.props) # <3 @props.props
+    render() {
+        // There should be a contentWindow in the context here but if there isn't in prod
+        // we just use regular window and keep going
+        assert(() => (this.context.contentWindow != null));
+        return renderExternalInstance((this.context.contentWindow != null ? this.context.contentWindow : window), this.props.instanceRef, this.props.props);
+    }
+}); // <3 @props.props
 
 
-exports.pdomToReact = pdomToReact = (pdom, key = undefined) ->
-    # Does not put editors or contentEditors on screen; ignores backingBlocks
+defaultExport.pdomToReact = (pdomToReact = function(pdom, key) {
+    // Does not put editors or contentEditors on screen; ignores backingBlocks
 
-    props = _l.extend htmlAttrsForPdom(pdom), {style: editorReactStylesForPdom(pdom)}, {key}
-    props.className = props.class
-    delete props.class
+    if (key == null) { key = undefined; }
+    const props = _l.extend(htmlAttrsForPdom(pdom), {style: editorReactStylesForPdom(pdom)}, {key});
+    props.className = props.class;
+    delete props.class;
 
-    Tag = pdom.tag
+    const Tag = pdom.tag;
 
-    if isExternalComponent(Tag)
-        # External component props come through pdom.props, not through the regular htmlAttrs way
-        assert -> _l.isEmpty(htmlAttrsForPdom(pdom)) and _l.isEmpty(editorReactStylesForPdom(pdom)) and _l.isEmpty(props.className)
-        React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
+    if (isExternalComponent(Tag)) {
+        // External component props come through pdom.props, not through the regular htmlAttrs way
+        assert(() => _l.isEmpty(htmlAttrsForPdom(pdom)) && _l.isEmpty(editorReactStylesForPdom(pdom)) && _l.isEmpty(props.className));
+        return React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
             React.createElement(ExternalInstanceRenderer, {"instanceRef": (Tag.componentSpec.ref), "props": (pdom.props)})
-        )
+        );
 
-    # Allowing innerHTML in the editor is a security vulnerability
-    else if pdom.innerHTML?
-        throw new Error("innerHTML is bad")
+    // Allowing innerHTML in the editor is a security vulnerability
+    } else if (pdom.innerHTML != null) {
+        throw new Error("innerHTML is bad");
 
-    else if not _l.isEmpty(pdom.textContent)
-        React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent pdom.textContent))
+    } else if (!_l.isEmpty(pdom.textContent)) {
+        return React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent(pdom.textContent)));
 
-    else if not _.isEmpty(pdom.children)
-        React.createElement(Tag, Object.assign({},  props), (pdom.children.map (child, i) -> pdomToReact(child, i)))
+    } else if (!_.isEmpty(pdom.children)) {
+        return React.createElement(Tag, Object.assign({},  props), (pdom.children.map((child, i) => pdomToReact(child, i))));
 
-    else
-        React.createElement(Tag, Object.assign({},  props ))
+    } else {
+        return React.createElement(Tag, Object.assign({},  props ));
+    }
+});
 
-# Exact same as the above but with prop overrides
-# note that map_props takes ownership of the props object, and thus may mutate or destroy it
-exports.pdomToReactWithPropOverrides = pdomToReactWithPropOverrides = (
+// Exact same as the above but with prop overrides
+// note that map_props takes ownership of the props object, and thus may mutate or destroy it
+defaultExport.pdomToReactWithPropOverrides = (pdomToReactWithPropOverrides = function(
     pdom,
-    key = undefined,
-    map_props = ((pdom, props) -> props)
-) ->
-    # Does not put editors or contentEditors on screen; ignores backingBlocks
+    key,
+    map_props
+) {
+    // Does not put editors or contentEditors on screen; ignores backingBlocks
 
-    props = _l.extend htmlAttrsForPdom(pdom), {style: editorReactStylesForPdom(pdom)}, {key}
-    props.className = props.class
-    delete props.class
+    if (key == null) { key = undefined; }
+    if (map_props == null) { map_props = (pdom, props) => props; }
+    let props = _l.extend(htmlAttrsForPdom(pdom), {style: editorReactStylesForPdom(pdom)}, {key});
+    props.className = props.class;
+    delete props.class;
 
-    props = map_props(pdom, props)
+    props = map_props(pdom, props);
 
-    Tag = pdom.tag
+    const Tag = pdom.tag;
 
-    if isExternalComponent(Tag)
-        # External component props come through pdom.props, not through the regular htmlAttrs way
-        assert -> _l.isEmpty(htmlAttrsForPdom(pdom)) and _l.isEmpty(editorReactStylesForPdom(pdom)) and _l.isEmpty(props.className)
-        React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
+    if (isExternalComponent(Tag)) {
+        // External component props come through pdom.props, not through the regular htmlAttrs way
+        assert(() => _l.isEmpty(htmlAttrsForPdom(pdom)) && _l.isEmpty(editorReactStylesForPdom(pdom)) && _l.isEmpty(props.className));
+        return React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
             React.createElement(ExternalInstanceRenderer, {"instanceRef": (Tag.componentSpec.ref), "props": (pdom.props)})
-        )
+        );
 
-    # Allowing innerHTML in the editor is a security vulnerability
-    else if pdom.innerHTML?
-        throw new Error("innerHTML is bad")
+    // Allowing innerHTML in the editor is a security vulnerability
+    } else if (pdom.innerHTML != null) {
+        throw new Error("innerHTML is bad");
 
-    else if not _l.isEmpty(pdom.textContent)
-        React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent pdom.textContent))
+    } else if (!_l.isEmpty(pdom.textContent)) {
+        return React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent(pdom.textContent)));
 
-    else if not _.isEmpty(pdom.children)
-        React.createElement(Tag, Object.assign({},  props), (pdom.children.map (child, i) -> pdomToReactWithPropOverrides(child, i, map_props)))
+    } else if (!_.isEmpty(pdom.children)) {
+        return React.createElement(Tag, Object.assign({},  props), (pdom.children.map((child, i) => pdomToReactWithPropOverrides(child, i, map_props))));
 
-    else
-        React.createElement(Tag, Object.assign({},  props ))
+    } else {
+        return React.createElement(Tag, Object.assign({},  props ));
+    }
+});
+export default defaultExport;

@@ -1,56 +1,76 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
-Block = require '../block'
-{Dynamicable} = require '../dynamicable'
-{TextControl, NumberControl, CheckboxControl} = require '../editor/sidebar-controls'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let SliderBlock;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import Block from '../block';
+import { Dynamicable } from '../dynamicable';
+import { TextControl, NumberControl, CheckboxControl } from '../editor/sidebar-controls';
 
-module.exports = Block.register 'slider', class SliderBlock extends Block
-    @userVisibleLabel: 'Slider'
-
-    properties:
-        ref: String
-        min: Dynamicable(Number)
-        max: Dynamicable(Number)
-        value: Dynamicable(Number)
-
-    constructor: (json) ->
-        super(arguments...)
-        @min ?= Dynamicable(Number).from 0
-        @max ?= Dynamicable(Number).from 100
-        @value ?= Dynamicable(Number).from 50
-
-    @const_property 'height', 25
-    resizableEdges: ['left', 'right']
-
-    boxStylingSidebarControls: -> []
-
-    specialSidebarControls: -> [
-        ['min', 'min', NumberControl]
-        ['max', 'max', NumberControl]
-        ['value', 'value', NumberControl]
-    ]
-
-    canContainChildren: false
-
-    renderHTML: (pdom, {for_editor, for_component_instance_editor} = {}) ->
-        super(arguments...)
-
-        _l.extend pdom, {
-            tag: 'input'
-            typeAttr: 'range'
-            children: []
-            minAttr: @min.stringified()
-            maxAttr: @max.stringified()
-            valueAttr: @value.stringified()
-            margin: 0
+export default Block.register('slider', (SliderBlock = (function() {
+    SliderBlock = class SliderBlock extends Block {
+        static initClass() {
+            this.userVisibleLabel = 'Slider';
+    
+            this.prototype.properties = {
+                ref: String,
+                min: Dynamicable(Number),
+                max: Dynamicable(Number),
+                value: Dynamicable(Number)
+            };
+    
+            this.const_property('height', 25);
+            this.prototype.resizableEdges = ['left', 'right'];
+    
+            this.prototype.canContainChildren = false;
         }
 
-        if not for_editor then _.extend pdom, {
-            # FIXME name/ref/valueLink is weird and not consistant with other input types
-            nameAttr: @ref
+        constructor(json) {
+            super(...arguments);
+            if (this.min == null) { this.min = Dynamicable(Number).from(0); }
+            if (this.max == null) { this.max = Dynamicable(Number).from(100); }
+            if (this.value == null) { this.value = Dynamicable(Number).from(50); }
         }
 
-        if for_editor or for_component_instance_editor then _.extend pdom, {
-            readOnlyAttr: true
+        boxStylingSidebarControls() { return []; }
+
+        specialSidebarControls() { return [
+            ['min', 'min', NumberControl],
+            ['max', 'max', NumberControl],
+            ['value', 'value', NumberControl]
+        ]; }
+
+        renderHTML(pdom, param) {
+            if (param == null) { param = {}; }
+            const {for_editor, for_component_instance_editor} = param;
+            super.renderHTML(...arguments);
+
+            _l.extend(pdom, {
+                tag: 'input',
+                typeAttr: 'range',
+                children: [],
+                minAttr: this.min.stringified(),
+                maxAttr: this.max.stringified(),
+                valueAttr: this.value.stringified(),
+                margin: 0
+            });
+
+            if (!for_editor) { _.extend(pdom, {
+                // FIXME name/ref/valueLink is weird and not consistant with other input types
+                nameAttr: this.ref
+            }); }
+
+            if (for_editor || for_component_instance_editor) { return _.extend(pdom, {
+                readOnlyAttr: true
+            }); }
         }
+    };
+    SliderBlock.initClass();
+    return SliderBlock;
+})()));

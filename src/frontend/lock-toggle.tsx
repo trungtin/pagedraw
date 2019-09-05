@@ -1,11 +1,18 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-ToggleIcon = require './toggle-icon'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+import createReactClass from 'create-react-class';
+import ToggleIcon from './toggle-icon';
 
-module.exports = createReactClass
-    displayName: 'LockToggle'
+export default createReactClass({
+    displayName: 'LockToggle',
 
-    render: ->
-        checkedIcon = React.createElement("i", {"className": "locker material-icons md-14 md-dark"}, "lock_outline")
-        uncheckedIcon = uncheckedIcon = React.createElement("i", {"className": "locker material-icons md-14 md-dark"}, "lock_open")
-        React.createElement(ToggleIcon, {"valueLink": (@props.valueLink), "checkedIcon": (checkedIcon), "uncheckedIcon": (uncheckedIcon)})
+    render() {
+        const checkedIcon = React.createElement("i", {"className": "locker material-icons md-14 md-dark"}, "lock_outline");
+        var uncheckedIcon = (uncheckedIcon = React.createElement("i", {"className": "locker material-icons md-14 md-dark"}, "lock_open"));
+        return React.createElement(ToggleIcon, {"valueLink": (this.props.valueLink), "checkedIcon": (checkedIcon), "uncheckedIcon": (uncheckedIcon)});
+    }
+});

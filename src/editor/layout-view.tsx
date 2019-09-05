@@ -1,94 +1,130 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-propTypes = require 'prop-types'
-_l = require 'lodash'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let LayoutView, layoutViewForBlock;
+import React from 'react';
+import createReactClass from 'create-react-class';
+import propTypes from 'prop-types';
+import _l from 'lodash';
+import ShouldSubtreeRender from '../frontend/should-subtree-render';
+import { assert } from '../util';
+import { pdomToReact, editorReactStylesForPdom } from './pdom-to-react';
+import core from '../core';
+const defaultExport = {};
 
-ShouldSubtreeRender = require '../frontend/should-subtree-render'
-{assert} = require '../util'
+defaultExport.layoutViewForBlock = (layoutViewForBlock = function(block, instance_compile_opts, editor_compile_opts, editorCache) {
+    let explicit_editor;
+    if ((explicit_editor = typeof block.editor === 'function' ? block.editor({editorCache, instance_compile_opts}) : undefined) != null) { return explicit_editor; }
+    // If a block doesn't define .editor, we default to compiling it, and rendering the pdom to screen.
+    // This probably isn't the best way to express the default.
 
-{pdomToReact, editorReactStylesForPdom} = require './pdom-to-react'
-core = require '../core'
+    const div = {backingBlock: block, tag: 'div', children: [], minHeight: block.height};
+    if (typeof block.renderHTML === 'function') {
+        block.renderHTML(div, editor_compile_opts, editorCache);
+    }
 
-exports.layoutViewForBlock = layoutViewForBlock = (block, instance_compile_opts, editor_compile_opts, editorCache) ->
-    return explicit_editor if (explicit_editor = block.editor?({editorCache, instance_compile_opts}))?
-    # If a block doesn't define .editor, we default to compiling it, and rendering the pdom to screen.
-    # This probably isn't the best way to express the default.
+    // Shallow replace of Dynamicables with their staticValues, even if isDynamic is true.
+    // In the editor, we always show the staticValue, even if it's a fake value.  The editor
+    // always passes through here.
+    return pdomToReact(core.pdomDynamicableToPdomStatic(div));
+});
 
-    div = {backingBlock: block, tag: 'div', children: [], minHeight: block.height}
-    block.renderHTML?(div, editor_compile_opts, editorCache)
-
-    # Shallow replace of Dynamicables with their staticValues, even if isDynamic is true.
-    # In the editor, we always show the staticValue, even if it's a fake value.  The editor
-    # always passes through here.
-    return pdomToReact core.pdomDynamicableToPdomStatic(div)
-
-exports.LayoutView = LayoutView = createReactClass
-    contextTypes:
-        editorCache: propTypes.object
-        getInstanceEditorCompileOptions: propTypes.func
+defaultExport.LayoutView = (LayoutView = createReactClass({
+    contextTypes: {
+        editorCache: propTypes.object,
+        getInstanceEditorCompileOptions: propTypes.func,
         enqueueForceUpdate: propTypes.func
+    },
 
-    # For rendering external code
-    childContextTypes:
+    // For rendering external code
+    childContextTypes: {
         contentWindow: propTypes.object
-    getChildContext: ->
-        contentWindow: window
+    },
+    getChildContext() {
+        return {contentWindow: window};
+    },
 
-    render: ->
-        instance_compile_opts = @context.getInstanceEditorCompileOptions()
-        editor_compile_opts = {
-            templateLang: instance_compile_opts.templateLang
-            for_editor: true
-            for_component_instance_editor: false
+    render() {
+        const instance_compile_opts = this.context.getInstanceEditorCompileOptions();
+        const editor_compile_opts = {
+            templateLang: instance_compile_opts.templateLang,
+            for_editor: true,
+            for_component_instance_editor: false,
             getCompiledComponentByUniqueKey: instance_compile_opts.getCompiledComponentByUniqueKey
-        }
+        };
 
-        React.createElement(ShouldSubtreeRender, {"ref": "children", "shouldUpdate": (
-                # If we have subsetOfBlocksToRerender, componentDidUpdate will take care of .forceUpdate()ing them,
-                # so skip rendering normally
-                @context.editorCache.render_params.subsetOfBlocksToRerender? == false
-            ),  \
-            "subtree": (=>
-                zIndexes = _l.fromPairs @props.doc.getOrderedBlockList().map (block, i) -> [block.uniqueKey, i]
-                React.createElement("div", {"className": "layout-view"},
-                    ( @props.doc.blocks.map (block) =>
-                        # We wrap in a ShouldSubtreeRender so we can have something to .forceUpdate()
-                        React.createElement(ShouldSubtreeRender, {"key": (block.uniqueKey), "ref": (block.uniqueKey), "shouldUpdate": (true), "subtree": (=>
-                            assert => block.doc.isInReadonlyMode()
-                            @renderBlock(block, zIndexes[block.uniqueKey], instance_compile_opts, editor_compile_opts)
-                        )})
-                    )
-                )
-            )})
+        return React.createElement(ShouldSubtreeRender, {"ref": "children", "shouldUpdate": (
+                // If we have subsetOfBlocksToRerender, componentDidUpdate will take care of .forceUpdate()ing them,
+                // so skip rendering normally
+                (this.context.editorCache.render_params.subsetOfBlocksToRerender != null) === false
+            ),  
+            "subtree": (() => {
+                const zIndexes = _l.fromPairs(this.props.doc.getOrderedBlockList().map((block, i) => [block.uniqueKey, i]));
+                return React.createElement("div", {"className": "layout-view"},
+                    ( this.props.doc.blocks.map(block => {
+                        // We wrap in a ShouldSubtreeRender so we can have something to .forceUpdate()
+                        return React.createElement(ShouldSubtreeRender, {"key": (block.uniqueKey), "ref": (block.uniqueKey), "shouldUpdate": (true), "subtree": (() => {
+                            assert(() => block.doc.isInReadonlyMode());
+                            return this.renderBlock(block, zIndexes[block.uniqueKey], instance_compile_opts, editor_compile_opts);
+                        }
+                        )});
+                    }))
+                );
+            }
+            )});
+    },
 
-    componentDidUpdate: ->
-        return if not @context.editorCache.render_params.subsetOfBlocksToRerender
-        return if not @refs.children
-        refs = @refs.children.refs
-        assert => _l.every(@context.editorCache.render_params.subsetOfBlocksToRerender, (uk) => @props.doc.getBlockByKey(uk).getBlock() != null)
-        for blockUniqueKey in @context.editorCache.render_params.subsetOfBlocksToRerender when refs[blockUniqueKey]?
-            @context.enqueueForceUpdate(refs[blockUniqueKey])
+    componentDidUpdate() {
+        if (!this.context.editorCache.render_params.subsetOfBlocksToRerender) { return; }
+        if (!this.refs.children) { return; }
+        const {
+            refs
+        } = this.refs.children;
+        assert(() => _l.every(this.context.editorCache.render_params.subsetOfBlocksToRerender, uk => this.props.doc.getBlockByKey(uk).getBlock() !== null));
+        return (() => {
+            const result = [];
+            for (let blockUniqueKey of Array.from(this.context.editorCache.render_params.subsetOfBlocksToRerender)) {
+                if (refs[blockUniqueKey] != null) {
+                    result.push(this.context.enqueueForceUpdate(refs[blockUniqueKey]));
+                }
+            }
+            return result;
+        })();
+    },
 
-    renderBlock: (block, zIndex, instance_compile_opts, editor_compile_opts) ->
-        # if the doc was swapped, get the current representation for this pointer
-        block = block.getBlock()
+    renderBlock(block, zIndex, instance_compile_opts, editor_compile_opts) {
+        // if the doc was swapped, get the current representation for this pointer
+        block = block.getBlock();
 
-        mutated_blocks = @context.editorCache.render_params.mutated_blocks
-        mutated = if mutated_blocks then mutated_blocks[block.uniqueKey]? else true
+        const {
+            mutated_blocks
+        } = this.context.editorCache.render_params;
+        const mutated = mutated_blocks ? (mutated_blocks[block.uniqueKey] != null) : true;
 
-        React.createElement("div", {"className": "layout-view-block expand-children", "style": (
-            top: block.top
-            left: block.left
-            height: block.height
-            width: block.width
-            zIndex: zIndex
-        )},
-            (React.createElement(ShouldSubtreeRender, {shouldUpdate: mutated, subtree: =>
-                return override if (override = @props.blockOverrides[block.uniqueKey])?
+        return React.createElement("div", {"className": "layout-view-block expand-children", "style": ({
+            top: block.top,
+            left: block.left,
+            height: block.height,
+            width: block.width,
+            zIndex
+        })},
+            (React.createElement(ShouldSubtreeRender, {shouldUpdate: mutated, subtree: () => {
+                let override;
+                if ((override = this.props.blockOverrides[block.uniqueKey]) != null) { return override; }
 
-                return layoutViewForBlock(block, instance_compile_opts, editor_compile_opts, @context.editorCache)
+                return layoutViewForBlock(block, instance_compile_opts, editor_compile_opts, this.context.editorCache);
+            }
             })),
 
-            ( @props.overlayForBlock(block) )
-        )
+            ( this.props.overlayForBlock(block) )
+        );
+    }
+}));
+
+export default defaultExport;
 

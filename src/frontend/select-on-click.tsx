@@ -1,10 +1,19 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let SelectOnClick;
+import React from 'react';
+import createReactClass from 'create-react-class';
 
-module.exports = SelectOnClick = createReactClass
-    displayName: 'ExportView'
-    render: ->
-        React.createElement("div", {"onClick": (@selectSelf), "style": (userSelect: 'auto'), "ref": "children"}, (@props.children))
+export default SelectOnClick = createReactClass({
+    displayName: 'ExportView',
+    render() {
+        return React.createElement("div", {"onClick": (this.selectSelf), "style": ({userSelect: 'auto'}), "ref": "children"}, (this.props.children));
+    },
 
-    selectSelf: ->
-        window.getSelection().selectAllChildren(this.refs.children)
+    selectSelf() {
+        return window.getSelection().selectAllChildren(this.refs.children);
+    }
+});

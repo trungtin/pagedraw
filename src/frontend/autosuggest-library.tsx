@@ -1,89 +1,113 @@
-_l = require 'lodash'
-React = require 'react'
-createReactClass = require 'create-react-class'
-$ = require 'jquery'
-{Library} = require '../libraries'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import _l from 'lodash';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import $ from 'jquery';
+import { Library } from '../libraries';
+import Autosuggest from 'react-autosuggest';
 
-Autosuggest = require 'react-autosuggest'
+const suggestionOfLib = function(lib) {};
 
-suggestionOfLib = (lib) ->
+const defaultExport = {};
 
-exports.LibraryAutoSuggest = createReactClass
-    componentWillMount: ->
-        @value = ''
-        @libraries = []
-        @defaultSuggestions = []
+defaultExport.LibraryAutoSuggest = createReactClass({
+    componentWillMount() {
+        this.value = '';
+        this.libraries = [];
+        this.defaultSuggestions = [];
 
-        $.getJSON "/apps/#{window.pd_params.app_id}/all_libraries", (data) =>
-            @libraries = @defaultSuggestions = data.map (lib) ->
-                _l.extend {}, lib, {lib_name: lib.name}
-            @props.onChange()
-            @input_node.focus()
+        return $.getJSON(`/apps/${window.pd_params.app_id}/all_libraries`, data => {
+            this.libraries = (this.defaultSuggestions = data.map(lib => _l.extend({}, lib, {lib_name: lib.name})));
+            this.props.onChange();
+            return this.input_node.focus();
+        });
+    },
 
-    componentDidMount: ->
-        @input_node.focus() if @props.focusOnMount
+    componentDidMount() {
+        if (this.props.focusOnMount) { return this.input_node.focus(); }
 
-        ### Michael left this here
+        /* Michael left this here
         fetch('https://s3-us-west-1.amazonaws.com/alllibraries/library_cache.json+').then (response) =>
             response.json()
         .then (data) =>
             @libraries = data
             @props.onChange()
-        ###
+        */
+    },
 
-    renderSuggestion: (suggestion) ->
-        if suggestion.isVersion
-            React.createElement("span", null, ("#{suggestion.lib_name} v#{suggestion.name}"))
-        else
-            React.createElement("span", null, ("#{suggestion.name}@#{suggestion.latest_version.name}"))
+    renderSuggestion(suggestion) {
+        if (suggestion.isVersion) {
+            return React.createElement("span", null, (`${suggestion.lib_name} v${suggestion.name}`));
+        } else {
+            return React.createElement("span", null, (`${suggestion.name}@${suggestion.latest_version.name}`));
+        }
+    },
 
-    renderInputComponent: (inputProps) -> React.createElement("input", Object.assign({},  inputProps, {"style": (color: @props.textColor ? 'black'), "ref": ((node) =>
-        @input_node = node)}))
+    renderInputComponent(inputProps) { return React.createElement("input", Object.assign({},  inputProps, {"style": ({color: this.props.textColor != null ? this.props.textColor : 'black'}), "ref": (node => {
+        return this.input_node = node;
+    })})); },
 
-    render: ->
-        React.createElement(Autosuggest, {"suggestions": (@suggestions ? @defaultSuggestions), "alwaysRenderSuggestions": true,  \
-                            "onSuggestionsFetchRequested": (({value}) =>
-                                matchingLibs = @libraries.filter (option) =>
-                                    len = if value.includes('@') then value.split('@')[0].length else value.length
-                                    value == option.name.slice(0, len)
-                                if value.includes('@')
-                                #    Promise.all(matchingLibs.map (lib) =>
-                                #         fetch("/libraries/#{lib.id}/versions").then (res) =>
-                                #             [res.json(), lib]
-                                #     ).then (versionsOfLibs) =>
-                                #         @libraries = _l.flatten(versionsOfLibs.map ([versions, lib]) =>
-                                #             versions.map (version) => _l.extend {}, version, {lib_name: lib.name}
-                                #             )
-                                else
-                                    @suggestions = matchingLibs
-                                @props.onChange()
-                            ),  \
-                            "onSuggestionsClearRequested": (=>
-                                @suggestions = undefined
-                                @props.onChange()
-                            ),  \
-                            "getSuggestionValue": ((suggestion) =>
-                                if suggestion.lib_name
-                                    "#{suggestion.lib_name} v#{suggestion.name}"
-                                else
-                                    suggestion.name
-                            ),  \
-                            "renderInputComponent": (@renderInputComponent),  \
-                            "renderSuggestion": (@renderSuggestion),  \
-                            "inputProps": ({value: @value, onChange: (evt, {newValue}) =>
-                                @value = newValue
-                                @props.onChange()
-                            }),  \
-                            "focusInputOnSuggestionClick": (false),  \
-                            "onSuggestionSelected": ((evt, {suggestion}) =>
-                                if suggestion.id? and suggestion.name? and suggestion.latest_version.name? and suggestion.latest_version.bundle_hash? and suggestion.latest_version.id?
-                                    @props.onAddLibrary(new Library({
-                                        library_id: String(suggestion.id), library_name: suggestion.name, version_name: suggestion.latest_version.name
-                                        version_id: String(suggestion.latest_version.id), npm_path: suggestion.latest_version.npm_path
-                                        local_path: suggestion.latest_version.local_path, is_node_module: suggestion.latest_version.is_node_module
+    render() {
+        return React.createElement(Autosuggest, {"suggestions": (this.suggestions != null ? this.suggestions : this.defaultSuggestions), "alwaysRenderSuggestions": true,  
+                            "onSuggestionsFetchRequested": (({value}) => {
+                                const matchingLibs = this.libraries.filter(option => {
+                                    const len = value.includes('@') ? value.split('@')[0].length : value.length;
+                                    return value === option.name.slice(0, len);
+                                });
+                                if (value.includes('@')) {
+                                //    Promise.all(matchingLibs.map (lib) =>
+                                //         fetch("/libraries/#{lib.id}/versions").then (res) =>
+                                //             [res.json(), lib]
+                                //     ).then (versionsOfLibs) =>
+                                //         @libraries = _l.flatten(versionsOfLibs.map ([versions, lib]) =>
+                                //             versions.map (version) => _l.extend {}, version, {lib_name: lib.name}
+                                //             )
+                                } else {
+                                    this.suggestions = matchingLibs;
+                                }
+                                return this.props.onChange();
+                            }
+                            ),  
+                            "onSuggestionsClearRequested": (() => {
+                                this.suggestions = undefined;
+                                return this.props.onChange();
+                            }
+                            ),  
+                            "getSuggestionValue": (suggestion => {
+                                if (suggestion.lib_name) {
+                                    return `${suggestion.lib_name} v${suggestion.name}`;
+                                } else {
+                                    return suggestion.name;
+                                }
+                            }
+                            ),  
+                            "renderInputComponent": (this.renderInputComponent),  
+                            "renderSuggestion": (this.renderSuggestion),  
+                            "inputProps": ({value: this.value, onChange: (evt, {newValue}) => {
+                                this.value = newValue;
+                                return this.props.onChange();
+                            }
+                            }),  
+                            "focusInputOnSuggestionClick": (false),  
+                            "onSuggestionSelected": ((evt, {suggestion}) => {
+                                if ((suggestion.id != null) && (suggestion.name != null) && (suggestion.latest_version.name != null) && (suggestion.latest_version.bundle_hash != null) && (suggestion.latest_version.id != null)) {
+                                    return this.props.onAddLibrary(new Library({
+                                        library_id: String(suggestion.id), library_name: suggestion.name, version_name: suggestion.latest_version.name,
+                                        version_id: String(suggestion.latest_version.id), npm_path: suggestion.latest_version.npm_path,
+                                        local_path: suggestion.latest_version.local_path, is_node_module: suggestion.latest_version.is_node_module,
                                         bundle_hash: suggestion.latest_version.bundle_hash, inDevMode: false
-                                    }))
-                                else
-                                    throw new Error('Bad library from server')
+                                    }));
+                                } else {
+                                    throw new Error('Bad library from server');
+                                }
+                            }
 
-                            )})
+                            )});
+    }
+});
+export default defaultExport;

@@ -1,262 +1,293 @@
-_l = require 'lodash'
-React = require 'react'
-createReactClass = require 'create-react-class'
-CodeShower = require './frontend/code-shower'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import _l from 'lodash';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import CodeShower from './frontend/code-shower';
+import queryString from 'query-string';
+import { PdButtonOne, Modal, Tabs, Tab } from './editor/component-lib';
+import { track_error, assert } from './util';
+import analytics from './frontend/analytics';
+import { default as Dropzone } from 'react-dropzone';
+import SketchImporterView from './pagedraw/sketch-importer';
+import modal from './frontend/modal';
+import { server } from './editor/server';
+import FormControl from './frontend/form-control';
+import { figma_import } from './figma-import';
+import PagedrawnPricingCards from './pagedraw/pricingcards';
+import config from './config';
+const defaultExport = {};
 
-queryString = require 'query-string'
 
-{PdButtonOne, Modal, Tabs, Tab} = require './editor/component-lib'
-{track_error, assert} = require './util'
-analytics = require './frontend/analytics'
+defaultExport.SketchDropzone = createReactClass({
+    componentWillMount() {
+        this.current_state = 'none'; // | 'loading' | 'error'
+        this.error_message = null; // a string, if @current_state == 'error'
+        return this.import_canceler = null;
+    }, // a function, if @current_state == 'loading'
 
-Dropzone = require('react-dropzone').default
-SketchImporterView = require './pagedraw/sketch-importer'
-modal = require './frontend/modal'
-{server} = require './editor/server'
-FormControl = require './frontend/form-control'
-{figma_import} = require './figma-import'
-PagedrawnPricingCards = require './pagedraw/pricingcards'
+    render() {
+        if (config.disableFigmaSketchImport) {
+            return React.createElement("div", {"onClick"() { return alert("Sketch importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw"); }},
+                (this.props.children)
+            );
+        }
 
-config = require './config'
-
-
-exports.SketchDropzone = createReactClass
-    componentWillMount: ->
-        @current_state = 'none' # | 'loading' | 'error'
-        @error_message = null # a string, if @current_state == 'error'
-        @import_canceler = null # a function, if @current_state == 'loading'
-
-    render: ->
-        if config.disableFigmaSketchImport
-            return React.createElement("div", {"onClick": (-> alert "Sketch importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw")},
-                (@props.children)
-            )
-
-        React.createElement("div", null,
+        return React.createElement("div", null,
             React.createElement("div", {"className": "bootstrap"},
                 React.createElement("div", {"ref": "modal_container"})
             ),
-            (
-                # we do the modal_container shenanigans for bootstrap css...
-                switch @current_state
-                    when 'none'
-                        # no modal
-                        React.createElement(Modal, {"show": (false), "container": (@refs.modal_container)})
+            ((() => { 
+                // we do the modal_container shenanigans for bootstrap css...
+                switch (this.current_state) {
+                    case 'none':
+                        // no modal
+                        return React.createElement(Modal, {"show": (false), "container": (this.refs.modal_container)});
 
-                    when 'loading'
-                        React.createElement(Modal, {"show": true, "container": (@refs.modal_container)},
+                    case 'loading':
+                        return React.createElement(Modal, {"show": true, "container": (this.refs.modal_container)},
                             React.createElement(Modal.Header, null,
                                 React.createElement(Modal.Title, null, "Importing Sketch...")
                             ),
                             React.createElement(Modal.Body, null,
                                 
-                                React.createElement(SketchImporterView, {"importing": (yes)})
+                                React.createElement(SketchImporterView, {"importing": (true)})
                             ),
                             React.createElement(Modal.Footer, null,
-                                React.createElement("div", {"style": (textAlign: 'left')},
-                                    React.createElement(PdButtonOne, {"onClick": (@cancelImport)}, "Cancel")
+                                React.createElement("div", {"style": ({textAlign: 'left'})},
+                                    React.createElement(PdButtonOne, {"onClick": (this.cancelImport)}, "Cancel")
                                 )
                             )
-                        )
+                        );
 
-                    when 'error'
-                        React.createElement(Modal, {"show": true, "container": (@refs.modal_container), "onHide": (@errorOkay)},
+                    case 'error':
+                        return React.createElement(Modal, {"show": true, "container": (this.refs.modal_container), "onHide": (this.errorOkay)},
                             React.createElement(Modal.Header, null,
                                 React.createElement(Modal.Title, null, "Error")
                             ),
                             React.createElement(Modal.Body, null,
-                                React.createElement(SketchImporterView, {"error": (@error_message ? "")})
+                                React.createElement(SketchImporterView, {"error": (this.error_message != null ? this.error_message : "")})
                             ),
                             React.createElement(Modal.Footer, null,
-                                React.createElement(PdButtonOne, {"type": "primary", "onClick": (@errorOkay)}, "Okay")
+                                React.createElement(PdButtonOne, {"type": "primary", "onClick": (this.errorOkay)}, "Okay")
                             )
-                        )
-            ),
+                        );
+            
+                } })()),
 
-            React.createElement(Dropzone, {"onDrop": (@handleDrop), "style": (display: 'flex', flexDirection: 'column')},
-                (@props.children)
+            React.createElement(Dropzone, {"onDrop": (this.handleDrop), "style": ({display: 'flex', flexDirection: 'column'})},
+                (this.props.children)
             )
-        )
+        );
+    },
 
-    handleDrop: (files) ->
-        assert -> files?.length > 0
+    handleDrop(files) {
+        assert(() => (files != null ? files.length : undefined) > 0);
 
-        doc_name = files[0].name
-        doc_name = doc_name.slice(0, -('.sketch'.length)) if doc_name.endsWith('.sketch')
+        let doc_name = files[0].name;
+        if (doc_name.endsWith('.sketch')) { doc_name = doc_name.slice(0, -('.sketch'.length)); }
 
-        assert => @current_state == 'none'
+        assert(() => this.current_state === 'none');
 
-        @current_state = 'loading'
-        @forceUpdate()
+        this.current_state = 'loading';
+        this.forceUpdate();
 
-        # use local variable to track cancellation so it's per-run of import
-        should_cancel = false
-        @import_canceler = ->
-            should_cancel = true
+        // use local variable to track cancellation so it's per-run of import
+        let should_cancel = false;
+        this.import_canceler = () => should_cancel = true;
 
-        server.importFromSketch(files[0], ((doc_json) =>
-            return if should_cancel
+        return server.importFromSketch(files[0], (doc_json => {
+            if (should_cancel) { return; }
 
-            return @showError(@sketchImportErrorMessage, new Error('Returned empty doc')) if Object.keys(doc_json.blocks).length <= 1
+            if (Object.keys(doc_json.blocks).length <= 1) { return this.showError(this.sketchImportErrorMessage, new Error('Returned empty doc')); }
 
-            server.createNewDoc(@props.app.id, doc_name, @props.app.default_language, _l.cloneDeep(doc_json))
-            .then ({docRef, docjson}) =>
-                server.saveLatestSketchImportForDoc(docRef, docjson)
-                .then =>
-                    window.location = "/pages/#{docRef.page_id}"
+            return server.createNewDoc(this.props.app.id, doc_name, this.props.app.default_language, _l.cloneDeep(doc_json))
+            .then(({docRef, docjson}) => {
+                return server.saveLatestSketchImportForDoc(docRef, docjson)
+                .then(() => {
+                    return window.location = `/pages/${docRef.page_id}`;
+                });
+        }).catch(e => {
+                return this.showError(this.metaserverUnreachableErrorMessage, e);
+            });
+        }
 
-            .catch (e) =>
-                @showError(@metaserverUnreachableErrorMessage, e)
-
-        ), ((err) =>
-            # Assume any non 500 error comes with a custom responseText
-            @showError((
-                switch err.status
-                    when 500 then @sketchImportErrorMessage
-                    when 0 then @sketchServerUnavailableErrorMessage
-                    else err.responseText
-            ), new Error("sketch server error #{err.status}"))
-        ))
-
-
-    showError: (msg, err) ->
-        assert => @current_state in ['none', 'loading']
-
-        track_error(err, msg)
-        analytics.track("Sketch importer error", {msg, where: 'dashboard'})
-
-        @current_state = 'error'
-        @error_message = msg
-        @forceUpdate()
+        ), (err => {
+            // Assume any non 500 error comes with a custom responseText
+            return this.showError(((() => { 
+                switch (err.status) {
+                    case 500: return this.sketchImportErrorMessage;
+                    case 0: return this.sketchServerUnavailableErrorMessage;
+                    default: return err.responseText;
+            
+                } })()), new Error(`sketch server error ${err.status}`));
+        }));
+    },
 
 
-    cancelImport: ->
-        assert => @current_state == 'loading'
+    showError(msg, err) {
+        assert(() => ['none', 'loading'].includes(this.current_state));
 
-        # do the cancel
-        @import_canceler?()
+        track_error(err, msg);
+        analytics.track("Sketch importer error", {msg, where: 'dashboard'});
 
-        @current_state = 'none'
-        @forceUpdate()
-
-
-    errorOkay: ->
-        assert => @current_state == 'error'
-
-        @current_state = 'none'
-        @forceUpdate()
+        this.current_state = 'error';
+        this.error_message = msg;
+        return this.forceUpdate();
+    },
 
 
-    sketchImportErrorMessage: """
-        We weren't able to recognize your upload as a Sketch file.
+    cancelImport() {
+        assert(() => this.current_state === 'loading');
 
-        If this problem persists, please contact the Pagedraw team at team@pagedraw.io
-    """
+        // do the cancel
+        if (typeof this.import_canceler === 'function') {
+            this.import_canceler();
+        }
 
-    metaserverUnreachableErrorMessage: """
-        Unable to create a new doc.
-
-        If this problem persists, please contact us at team@pagedraw.io
-    """
-
-    sketchServerUnavailableErrorMessage: """
-        Couldn't reach the server to do a Sketch import.  Please try again.
-
-        If this problem persists, please contact the Pagedraw team at team@pagedraw.io
-    """
+        this.current_state = 'none';
+        return this.forceUpdate();
+    },
 
 
-exports.FigmaModal = createReactClass
-    componentWillMount: ->
-        @show = false
-        @import_in_flight = false
-        @status = 'default' # | 'loading' | 'error'
-        @figma_url = ""
+    errorOkay() {
+        assert(() => this.current_state === 'error');
 
-    componentDidMount: ->
-        if @props.show_figma_modal
-            @show = true
-            @forceUpdate()
-
-    figma_url_vl: ->
-        value: @figma_url
-        requestChange: (newVal) => @figma_url = newVal; @forceUpdate()
-
-    render: ->
-        if config.disableFigmaSketchImport
-            return React.createElement("div", {"onClick": (-> alert "Figma importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw")},
-                (@props.children)
-            )
-
-        if not @props.figma_access_token
-            React.createElement("a", {"href": "/oauth/figma_redirect?app_id=#{@props.app.id}"},
-                (@props.children)
-            )
-        else
-            React.createElement("div", null,
-                React.createElement("form", {"onSubmit": ((evt) =>
-                    evt.preventDefault()
+        this.current_state = 'none';
+        return this.forceUpdate();
+    },
 
 
-                    figma_import(@figma_url_vl().value, @props.figma_access_token)
-                    .then ({doc_json, fileName}) =>
-                        server.createNewDoc(@props.app.id, fileName, @props.app.default_language, _l.cloneDeep(doc_json))
-                        .then ({docRef, docjson}) =>
-                            server.saveLatestFigmaImportForDoc(docRef, docjson)
-                            .then =>
-                                window.location = "/pages/#{docRef.page_id}"
-                        .catch (e) =>
-                            throw new Error()
-                    .catch (e) =>
-                        @status = "error"
-                    .then =>
-                        @import_in_flight = false
-                        @forceUpdate()
+    sketchImportErrorMessage: `\
+We weren't able to recognize your upload as a Sketch file.
 
-                    @import_in_flight = true
-                    @status = "loading"
-                    @forceUpdate()
+If this problem persists, please contact the Pagedraw team at team@pagedraw.io\
+`,
+
+    metaserverUnreachableErrorMessage: `\
+Unable to create a new doc.
+
+If this problem persists, please contact us at team@pagedraw.io\
+`,
+
+    sketchServerUnavailableErrorMessage: `\
+Couldn't reach the server to do a Sketch import.  Please try again.
+
+If this problem persists, please contact the Pagedraw team at team@pagedraw.io\
+`
+});
+
+
+defaultExport.FigmaModal = createReactClass({
+    componentWillMount() {
+        this.show = false;
+        this.import_in_flight = false;
+        this.status = 'default'; // | 'loading' | 'error'
+        return this.figma_url = "";
+    },
+
+    componentDidMount() {
+        if (this.props.show_figma_modal) {
+            this.show = true;
+            return this.forceUpdate();
+        }
+    },
+
+    figma_url_vl() {
+        return {
+            value: this.figma_url,
+            requestChange: newVal => { this.figma_url = newVal; return this.forceUpdate(); }
+        };
+    },
+
+    render() {
+        if (config.disableFigmaSketchImport) {
+            return React.createElement("div", {"onClick"() { return alert("Figma importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw"); }},
+                (this.props.children)
+            );
+        }
+
+        if (!this.props.figma_access_token) {
+            return React.createElement("a", {"href": `/oauth/figma_redirect?app_id=${this.props.app.id}`},
+                (this.props.children)
+            );
+        } else {
+            return React.createElement("div", null,
+                React.createElement("form", {"onSubmit": (evt => {
+                    evt.preventDefault();
+
+
+                    figma_import(this.figma_url_vl().value, this.props.figma_access_token)
+                    .then(({doc_json, fileName}) => {
+                        return server.createNewDoc(this.props.app.id, fileName, this.props.app.default_language, _l.cloneDeep(doc_json))
+                        .then(({docRef, docjson}) => {
+                            return server.saveLatestFigmaImportForDoc(docRef, docjson)
+                            .then(() => {
+                                return window.location = `/pages/${docRef.page_id}`;
+                            });
+                    }).catch(e => {
+                            throw new Error();
+                        });
+                }).catch(e => {
+                        return this.status = "error";
+                    }).then(() => {
+                        this.import_in_flight = false;
+                        return this.forceUpdate();
+                    });
+
+                    this.import_in_flight = true;
+                    this.status = "loading";
+                    return this.forceUpdate();
+                }
 
                 )},
                     React.createElement("div", {"className": "bootstrap"},
                         React.createElement("div", {"ref": "modal_container"})
                     ),
-                    React.createElement(Modal, {"show": (@show), "container": (@refs.modal_container)},
+                    React.createElement(Modal, {"show": (this.show), "container": (this.refs.modal_container)},
                         React.createElement(Modal.Header, null,
                             React.createElement(Modal.Title, null, "Import from Figma")
                         ),
                         React.createElement(Modal.Body, null,
                             (
-                                if @status == "default"
+                                this.status === "default" ?
                                     React.createElement("div", null,
                                         React.createElement("p", null, "Paste the URL of the Figma design you\'d like to import"),
                                         React.createElement("label", {"htmlFor": "figma_url"}, "Figma link"),
-                                        React.createElement(FormControl, {"tag": "input", "valueLink": (@figma_url_vl()),  \
-                                            "name": "figma_url", "style": (width: '100%'),  \
+                                        React.createElement(FormControl, {"tag": "input", "valueLink": (this.figma_url_vl()),  
+                                            "name": "figma_url", "style": ({width: '100%'}),  
                                             "placeholder": "https://figma.com/file/XXXXXXXXXXXXXXXXXXXXXX/Sample-File-Name"})
                                     )
-                                else if @status == "loading"
-                                    React.createElement("img", {"style": (display: 'block', marginLeft: 'auto', marginRight: 'auto'), "src": "https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/"})
-                                else
-                                    React.createElement("p", {"style": (color: 'red')}, """We weren\'t able to recognize your upload as a Figma file.
+                                : this.status === "loading" ?
+                                    React.createElement("img", {"style": ({display: 'block', marginLeft: 'auto', marginRight: 'auto'}), "src": "https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/"})
+                                :
+                                    React.createElement("p", {"style": ({color: 'red'})}, `We weren\'t able to recognize your upload as a Figma file.
 
-                                    If this problem persists, please contact the Pagedraw team at team@pagedraw.io""")
+If this problem persists, please contact the Pagedraw team at team@pagedraw.io`)
                             )
                         ),
                         React.createElement(Modal.Footer, null,
-                            (React.createElement(PdButtonOne, {"onClick": (=> @show = false; @status = "default"; @forceUpdate())}, "Close") if @status in ["default", "error"]),
-                            (React.createElement(PdButtonOne, {"type": "primary", "submit": true, "disabled": (@import_in_flight)}, "Import") if @status == "default")
+                            (["default", "error"].includes(this.status) ? React.createElement(PdButtonOne, {"onClick": (() => { this.show = false; this.status = "default"; return this.forceUpdate(); })}, "Close") : undefined),
+                            (this.status === "default" ? React.createElement(PdButtonOne, {"type": "primary", "submit": true, "disabled": (this.import_in_flight)}, "Import") : undefined)
                         )
                     )
                 ),
-                React.createElement("div", {"onClick": (=> @show = true; @forceUpdate())},
-                    (@props.children)
+                React.createElement("div", {"onClick": (() => { this.show = true; return this.forceUpdate(); })},
+                    (this.props.children)
                 )
-            )
+            );
+        }
+    }
+});
 
-exports.PricingCardsWrapper = (props) ->
-    React.createElement("div", {"style": (position: 'relative', flexGrow: '1')},
-        React.createElement("div", {"style": (position: 'absolute', top: 0, left: 0)},
-            React.createElement(PagedrawnPricingCards, null)
-        )
+defaultExport.PricingCardsWrapper = props => React.createElement("div", {"style": ({position: 'relative', flexGrow: '1'})},
+    React.createElement("div", {"style": ({position: 'absolute', top: 0, left: 0})},
+        React.createElement(PagedrawnPricingCards, null)
     )
+);
+export default defaultExport;

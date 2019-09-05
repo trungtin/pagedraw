@@ -1,24 +1,34 @@
-React = require 'react'
-_l = require 'lodash'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+import _l from 'lodash';
+import CL from './editor/component-lib';
+import createReactClass from 'create-react-class';
 
-CL = require './editor/component-lib'
-createReactClass = require 'create-react-class'
+//FIXME: Having .txt copies of these files just for the sake of webpack loading is a huge hack
+import editor_css from './editor-css.txt';
 
-#FIXME: Having .txt copies of these files just for the sake of webpack loading is a huge hack
-editor_css = require './editor-css.txt'
-bootstrap_css = require './bootstrap-css.txt'
+import bootstrap_css from './bootstrap-css.txt';
 
-Enum = (options) => ({__ty: 'Enum', options})
+const Enum = options => (({__ty: 'Enum', options}));
 
-PdButtonOne = createReactClass
-    render: ->
-        React.createElement("div", {"className": "bootstrap"},
-            React.createElement(CL.PdButtonOne, Object.assign({},  @props, {"stretch": (true)}))
-        )
+const PdButtonOne = createReactClass({
+    render() {
+        return React.createElement("div", {"className": "bootstrap"},
+            React.createElement(CL.PdButtonOne, Object.assign({},  this.props, {"stretch": (true)}))
+        );
+    }
+});
 
-PdButtonOne.pdResizable = ['width']
-PdButtonOne.pdPropControls = {'children': 'Text', disabled: 'Boolean', type: Enum(['default', 'primary', 'success', 'info', 'warning', 'danger', 'link'])}
+PdButtonOne.pdResizable = ['width'];
+PdButtonOne.pdPropControls = {'children': 'Text', disabled: 'Boolean', type: Enum(['default', 'primary', 'success', 'info', 'warning', 'danger', 'link'])};
 
-exports.default = {
+const defaultExport = {};
+
+defaultExport.default = {
     PdButtonOne
-}
+};
+export default defaultExport;

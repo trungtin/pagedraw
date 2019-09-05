@@ -1,66 +1,91 @@
-_l = require 'lodash'
-React = require 'react'
-ReactDOM = require 'react-dom'
-{windowMouseMachine} = require './DraggingCanvas'
-util = require '../util'
-$ = require 'jquery'
-createReactClass = require 'create-react-class'
-propTypes = require 'prop-types'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS104: Avoid inline assignments
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import _l from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { windowMouseMachine } from './DraggingCanvas';
+import util from '../util';
+import $ from 'jquery';
+import createReactClass from 'create-react-class';
+import propTypes from 'prop-types';
 
-InsideWrapper = createReactClass
-    displayName: 'IframeInsideWrapper'
-    render: ->
-        React.createElement(React.Fragment, null, ([
-            React.createElement(React.Fragment, {"key": ('render')}, (@props.render()))
-            ((@props.includeCssUrls ? []).map (url, i) -> React.createElement("link", {"key": (i), "rel": "stylesheet", "href": (url)}))...
-        ]))
+const InsideWrapper = createReactClass({
+    displayName: 'IframeInsideWrapper',
+    render() {
+        return React.createElement(React.Fragment, null, ([
+            React.createElement(React.Fragment, {"key": ('render')}, (this.props.render())),
+            ...Array.from(((this.props.includeCssUrls != null ? this.props.includeCssUrls : []).map((url, i) => React.createElement("link", {"key": (i), "rel": "stylesheet", "href": (url)}))))
+        ]));
+    },
 
-    # FIXME: not abstracted away
-    childContextTypes:
+    // FIXME: not abstracted away
+    childContextTypes: {
         contentWindow: propTypes.object
+    },
 
-    getChildContext: ->
-        _l.extend {}, (@props.getChildContext?() ? {}), {contentWindow: @props.iframeWindow}
+    getChildContext() {
+        let left;
+        return _l.extend({}, ((left = (typeof this.props.getChildContext === 'function' ? this.props.getChildContext() : undefined)) != null ? left : {}), {contentWindow: this.props.iframeWindow});
+    }});
 
-exports.WrapInIframe = createReactClass
-    contextTypes:
+const defaultExport = {};
+
+defaultExport.WrapInIframe = createReactClass({
+    contextTypes: {
         enqueueForceUpdate: propTypes.func
+    },
 
-    displayName: 'WrapInIframe'
-    render: ->
-        React.createElement("iframe", {"style": (_l.extend {border: 'none'}, @props.style), "ref": "iframe"})
+    displayName: 'WrapInIframe',
+    render() {
+        return React.createElement("iframe", {"style": (_l.extend({border: 'none'}, this.props.style)), "ref": "iframe"});
+    },
 
-    enqueueForceUpdate: (element) ->
-        if @context.enqueueForceUpdate?
-            @context.enqueueForceUpdate(element)
-        else
-            element.forceUpdate()
+    enqueueForceUpdate(element) {
+        if (this.context.enqueueForceUpdate != null) {
+            return this.context.enqueueForceUpdate(element);
+        } else {
+            return element.forceUpdate();
+        }
+    },
 
-    componentDidUpdate: ->
-        if @_component?
-            @enqueueForceUpdate(@_component)
-        else
-            @enqueueForceUpdate({forceUpdate: (callback) => @rerenderFromScratch(callback)})
+    componentDidUpdate() {
+        if (this._component != null) {
+            return this.enqueueForceUpdate(this._component);
+        } else {
+            return this.enqueueForceUpdate({forceUpdate: callback => this.rerenderFromScratch(callback)});
+        }
+    },
 
-    componentWillUnmount: ->
-        ReactDOM.unmountComponentAtNode(@refs.iframe.contentWindow.document.getElementById('react-mount-point'))
+    componentWillUnmount() {
+        return ReactDOM.unmountComponentAtNode(this.refs.iframe.contentWindow.document.getElementById('react-mount-point'));
+    },
 
-    componentDidMount: ->
-        iframeWindow = @refs.iframe.contentWindow
+    componentDidMount() {
+        const iframeWindow = this.refs.iframe.contentWindow;
 
-        mount_point = iframeWindow.document.createElement('div')
-        mount_point.id = 'react-mount-point'
+        const mount_point = iframeWindow.document.createElement('div');
+        mount_point.id = 'react-mount-point';
 
-        # Normalize iframe CSS
-        _l.extend mount_point.style, {display: 'flex', height: '100%'}
-        _l.extend iframeWindow.document.body.style, {margin: '0px', height: '100%'}
+        // Normalize iframe CSS
+        _l.extend(mount_point.style, {display: 'flex', height: '100%'});
+        _l.extend(iframeWindow.document.body.style, {margin: '0px', height: '100%'});
 
-        iframeWindow.document.body.appendChild(mount_point)
+        iframeWindow.document.body.appendChild(mount_point);
 
-        @props.registerIframe?(@refs.iframe)
+        return (typeof this.props.registerIframe === 'function' ? this.props.registerIframe(this.refs.iframe) : undefined);
+    },
 
-    rerenderFromScratch: (callback) ->
-        iframeWindow = @refs.iframe.contentWindow
-        elem = React.createElement(InsideWrapper, {"includeCssUrls": (@props.includeCssUrls), "ref": ((o) => @_component = o),  \
-            "iframeWindow": (iframeWindow), "render": (@props.render), "getChildContext": (@props.getChildContext)})
-        ReactDOM.render(elem, iframeWindow.document.getElementById('react-mount-point'), callback)
+    rerenderFromScratch(callback) {
+        const iframeWindow = this.refs.iframe.contentWindow;
+        const elem = React.createElement(InsideWrapper, {"includeCssUrls": (this.props.includeCssUrls), "ref": (o => { return this._component = o; }),  
+            "iframeWindow": (iframeWindow), "render": (this.props.render), "getChildContext": (this.props.getChildContext)});
+        return ReactDOM.render(elem, iframeWindow.document.getElementById('react-mount-point'), callback);
+    }
+});
+export default defaultExport;

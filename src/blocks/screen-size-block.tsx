@@ -1,56 +1,81 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let ScreenSizeBlock;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import { propLink } from '../util';
+import config from '../config';
+import Block from '../block';
 
-{propLink} = require '../util'
-config = require '../config'
+import {
+    SelectControl,
+    propValueLinkTransformer,
+    TextControl,
+    TextControlWithDefault,
+    NumberControl,
+    CheckboxControl,
+    ColorControl,
+    valueLinkTransformer,
+} from '../editor/sidebar-controls';
 
-Block = require '../block'
-{SelectControl, propValueLinkTransformer,
- TextControl, TextControlWithDefault, NumberControl, CheckboxControl, ColorControl, valueLinkTransformer} = require '../editor/sidebar-controls'
+import { Model } from '../model';
+import { PropSpec, StringPropControl } from '../props';
+import { ComponentSpec, sidebarControlsOfComponent } from '../component-spec';
+import MultistateBlock from './multistate-block';
 
-{Model} = require '../model'
+export default Model.register('ssg', (ScreenSizeBlock = (function() {
+    ScreenSizeBlock = class ScreenSizeBlock extends Block {
+        static initClass() {
+            this.userVisibleLabel = 'Screen Size Group';
+    
+            this.prototype.properties =
+                {componentSpec: ComponentSpec};
+    
+            this.property('componentSymbol',
+                {get() { return this.name; }});
+    
+            this.prototype.canContainChildren = true;
+        }
 
-{PropSpec, StringPropControl} = require '../props'
-{ComponentSpec, sidebarControlsOfComponent} = require '../component-spec'
+        constructor(json) {
+            super(json);
+            if (this.componentSpec == null) { this.componentSpec = new ComponentSpec({flexWidth: true, flexHeight: true}); }
+        }
 
-MultistateBlock = require './multistate-block'
+        sidebarControls(linkAttr, onChange) {
+            const componentSpecLinkAttr = specProp => propValueLinkTransformer(specProp, linkAttr('componentSpec'));
+            return this.defaultTopSidebarControls(...arguments);
+        }
 
-module.exports = Model.register 'ssg', class ScreenSizeBlock extends Block
-    @userVisibleLabel: 'Screen Size Group'
+        renderHTML(pdom) {
+            return super.renderHTML(...arguments);
+        }
 
-    properties:
-        componentSpec: ComponentSpec
-
-    @property 'componentSymbol',
-        get: -> @name
-
-    constructor: (json) ->
-        super(json)
-        @componentSpec ?= new ComponentSpec({flexWidth: true, flexHeight: true})
-
-    canContainChildren: true
-
-    sidebarControls: (linkAttr, onChange) ->
-        componentSpecLinkAttr = (specProp) -> propValueLinkTransformer(specProp, linkAttr('componentSpec'))
-        @defaultTopSidebarControls(arguments...)
-
-    renderHTML: (pdom) ->
-        super(arguments...)
-
-    editor: ->
-        # height and width are included in the line below because if my children are all flexible
-        # then I'm gonna be considered flexible as well by the constraint propagation algorithm
-        # and that will collapse me down in content editor. Artboards should never be flexible so
-        # we enforce that here.
-        # FIXME: I don't like this here. Maybe there's a better, more
-        # generalizable way to enforce fixed geometry like this?
-        React.createElement("div", {"style": (position: 'relative', minHeight: @height, minWidth: @width)},
-            React.createElement("div", {"style": (
-                position: 'absolute', top: 20, left: 30
-                fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.3em'
-            )}, (@getLabel())),
-            React.createElement("div", {"style": (
-                border: '10px dashed #DEDEDE', borderRadius: 30,
-                position: 'absolute', top: 0, bottom: 0, left: 0, right: 0)})
-        )
+        editor() {
+            // height and width are included in the line below because if my children are all flexible
+            // then I'm gonna be considered flexible as well by the constraint propagation algorithm
+            // and that will collapse me down in content editor. Artboards should never be flexible so
+            // we enforce that here.
+            // FIXME: I don't like this here. Maybe there's a better, more
+            // generalizable way to enforce fixed geometry like this?
+            return React.createElement("div", {"style": ({position: 'relative', minHeight: this.height, minWidth: this.width})},
+                React.createElement("div", {"style": ({
+                    position: 'absolute', top: 20, left: 30,
+                    fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.3em'
+                })}, (this.getLabel())),
+                React.createElement("div", {"style": ({
+                    border: '10px dashed #DEDEDE', borderRadius: 30,
+                    position: 'absolute', top: 0, bottom: 0, left: 0, right: 0})})
+            );
+        }
+    };
+    ScreenSizeBlock.initClass();
+    return ScreenSizeBlock;
+})())
+);

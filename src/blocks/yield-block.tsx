@@ -1,49 +1,65 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let YieldBlock;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import Block from '../block';
+import { TextControl, NumberControl, CheckboxControl } from '../editor/sidebar-controls';
 
-Block = require '../block'
-{TextControl, NumberControl, CheckboxControl} = require '../editor/sidebar-controls'
+export default Block.register('yield', (YieldBlock = (function() {
+    YieldBlock = class YieldBlock extends Block {
+        static initClass() {
+            this.userVisibleLabel = 'Yield';
+    
+            this.prototype.properties = {};
+    
+            this.prototype.canContainChildren = false;
+        }
 
-module.exports = Block.register 'yield', class YieldBlock extends Block
-    @userVisibleLabel: 'Yield'
+        renderHTML(pdom) {
+            super.renderHTML(...arguments); // really?
 
-    properties: {}
+            // We render ourselves as a div so the compiler actually positions us correctly, and
+            // then we place the actual yield component inside of us
+            pdom.tag = 'div';
+            pdom.children = [{tag: 'yield', children: []}];
 
-    canContainChildren: false
+            // FIXME: Gives the yield block a minHeight. This is temporary because we have no way to fix content to the
+            // bottom of a page, so we need a minHeight in the yield block to force the little pagedog logo
+            // in layout.html.erb to go to the bottom. When we have vertical constraints this should go away
+            pdom['minHeight'] = pdom['height'];
 
-    renderHTML: (pdom) ->
-        super(arguments...) # really?
+            // The height of a yield block is determined by its content
+            return delete pdom['height'];
+        }
 
-        # We render ourselves as a div so the compiler actually positions us correctly, and
-        # then we place the actual yield component inside of us
-        pdom.tag = 'div'
-        pdom.children = [{tag: 'yield', children: []}]
+        editor() {
+            return React.createElement("div", {"style": ({
+                height: "100%",
+                width: "100%",
 
-        # FIXME: Gives the yield block a minHeight. This is temporary because we have no way to fix content to the
-        # bottom of a page, so we need a minHeight in the yield block to force the little pagedog logo
-        # in layout.html.erb to go to the bottom. When we have vertical constraints this should go away
-        pdom['minHeight'] = pdom['height']
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
 
-        # The height of a yield block is determined by its content
-        delete pdom['height']
+                // nice red alt background color: "#E45474"
+                backgroundColor: "#73D488",
+                borderRadius: 8,
 
-    editor: ->
-        React.createElement("div", {"style": (
-            height: "100%"
-            width: "100%"
-
-            display: "flex"
-            alignItems: "center"
-            justifyContent: "center"
-
-            # nice red alt background color: "#E45474"
-            backgroundColor: "#73D488"
-            borderRadius: 8
-
-            fontFamily: "'Open Sans', sans-serif"
-            fontWeight: 600
-            color: "#F4F7F3"
-        )}, """
-            Yield
-""")
+                fontFamily: "'Open Sans', sans-serif",
+                fontWeight: 600,
+                color: "#F4F7F3"
+            })}, `\
+Yield\
+`);
+        }
+    };
+    YieldBlock.initClass();
+    return YieldBlock;
+})())
+);

@@ -1,198 +1,233 @@
-require '../frontend/verify-browser-excludes'
-require '../frontend/requestIdleCallbackPolyfill'
-require 'promise.prototype.finally'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS103: Rewrite code to no longer use __guard__
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let ErrorPage;
+import '../frontend/verify-browser-excludes';
+import '../frontend/requestIdleCallbackPolyfill';
+import 'promise.prototype.finally';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import propTypes from 'prop-types';
+import ReactDOM from 'react-dom';
+import _l from 'lodash';
+import config from '../config';
 
-React = require 'react'
-createReactClass = require 'create-react-class'
-propTypes = require 'prop-types'
-ReactDOM = require 'react-dom'
-_l = require 'lodash'
-config = require '../config'
+// Flip on Electron mode if we detect we're running in Electron
+if (__guard__(window.process != null ? window.process.versions : undefined, x => x.electron) != null) {
+    window.is_electron = true;
+    window.document.body.classList.add('electron');
+    if (window.Rollbar != null) {
+        window.Rollbar.configure({payload: {client: {javascript: {browser: "Electron/1.0"}}}});
+    }
+}
 
-# Flip on Electron mode if we detect we're running in Electron
-if window.process?.versions?.electron?
-    window.is_electron = true
-    window.document.body.classList.add('electron')
-    window.Rollbar?.configure({payload: {client: {javascript: {browser: "Electron/1.0"}}}})
+// be big meanies and not play nicely on all browsers
+const browser = require('browser-detect')();
+window.pd_params.mobile = browser.mobile;
 
-# be big meanies and not play nicely on all browsers
-browser = require('browser-detect')()
-window.pd_params.mobile = browser.mobile
-
-if browser.mobile and window.pd_params.route in ['editor', 'pd_playground']
-    ErrorPage = require '../meta-app/error-page'
-    ReactDOM.render(React.createElement(ErrorPage, { \
-        "message": "Sorry, our editor isn't optimized for mobile yet",  \
+if (browser.mobile && ['editor', 'pd_playground'].includes(window.pd_params.route)) {
+    ErrorPage = require('../meta-app/error-page');
+    ReactDOM.render(React.createElement(ErrorPage, { 
+        "message": "Sorry, our editor isn't optimized for mobile yet",  
         "detail": "Try opening this link in Chrome on a laptop or desktop!"
-    }), document.getElementById('app'))
+    }), document.getElementById('app'));
 
 
-else if not browser.mobile and browser.name != 'chrome' and window.pd_params.route in ['editor', 'pd_playground', 'stackblitz']
-    ErrorPage = require '../meta-app/error-page'
-    ReactDOM.render(React.createElement(ErrorPage, { \
-        "message": "Sorry, our editor is optimized for Chrome",  \
+} else if (!browser.mobile && (browser.name !== 'chrome') && ['editor', 'pd_playground', 'stackblitz'].includes(window.pd_params.route)) {
+    ErrorPage = require('../meta-app/error-page');
+    ReactDOM.render(React.createElement(ErrorPage, { 
+        "message": "Sorry, our editor is optimized for Chrome",  
         "detail": (
             React.createElement("span", null, "Try opening this link in Chrome! Alternatively, you can also get ", React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "the desktop app"), ".")
         )
-    }), document.getElementById('app'))
+    }), document.getElementById('app'));
 
 
-else if window.pd_params.route == 'play'
-    require('./play-prototype').run()
+} else if (window.pd_params.route === 'play') {
+    require('./play-prototype').run();
 
-else
-    {Tabs, Tab, Modal, PdButtonOne} = require './component-lib'
-    modal = {ModalComponent, registerModalSingleton} = require '../frontend/modal'
-    analytics = require '../frontend/analytics'
+} else {
+    let ModalComponent, registerModalSingleton;
+    const {Tabs, Tab, Modal, PdButtonOne} = require('./component-lib');
+    const modal = ({ModalComponent, registerModalSingleton} = require('../frontend/modal'));
+    const analytics = require('../frontend/analytics');
 
-    # NOTE: Requiring './edit-page' has to happen inside the functions below
-    # otherwise we require that code for - say - the meta-app as well,
-    # which doesn't need it
-    pages = {
-        editor: -> require('./edit-page').Editor
-        pd_playground: -> require('./pd-playground')
-        stackblitz: -> require('../meta-app/blitz')
-        dashboard: -> require('../meta-app/dashboard')
-        new_project: -> require('../meta-app/new-project')
-        atom_integration: -> require('../ide-integrations/pd-atom')
-        electron_app: -> require('../ide-integrations/electron-app')
-    }
+    // NOTE: Requiring './edit-page' has to happen inside the functions below
+    // otherwise we require that code for - say - the meta-app as well,
+    // which doesn't need it
+    const pages = {
+        editor() { return require('./edit-page').Editor; },
+        pd_playground() { return require('./pd-playground'); },
+        stackblitz() { return require('../meta-app/blitz'); },
+        dashboard() { return require('../meta-app/dashboard'); },
+        new_project() { return require('../meta-app/new-project'); },
+        atom_integration() { return require('../ide-integrations/pd-atom'); },
+        electron_app() { return require('../ide-integrations/electron-app'); }
+    };
 
-    AppWrapper = createReactClass
-        render: ->
-            Route = pages[@props.route]()
-            React.createElement("div", null,
+    const AppWrapper = createReactClass({
+        render() {
+            const Route = pages[this.props.route]();
+            return React.createElement("div", null,
                 React.createElement(ModalComponent, {"ref": "modal"}),
                 React.createElement(Route, Object.assign({},  window.pd_params ))
-            )
+            );
+        },
 
-        componentDidMount: ->
-            registerModalSingleton(@refs.modal)
+        componentDidMount() {
+            return registerModalSingleton(this.refs.modal);
+        }
+    });
 
-    CrashView = createReactClass
-        render: ->
-            React.createElement("div", null,
+    const CrashView = createReactClass({
+        render() {
+            return React.createElement("div", null,
                 React.createElement("div", {"className": "bootstrap"},
                     React.createElement("div", {"ref": "container"})
                 ),
-                ( if @state.mounted
-                    React.createElement(Modal, {"show": true, "container": (@refs.container)},
+                ( this.state.mounted ?
+                    React.createElement(Modal, {"show": true, "container": (this.refs.container)},
                         React.createElement(Modal.Header, null,
                             React.createElement(Modal.Title, null, "Pagedraw crashed")
                         ),
                         React.createElement(Modal.Body, null,
                             React.createElement("p", null, "Pagedraw crashed and we were unable to recover.  You can try reloading the page."),
-                            (if not @props.logged_crash
-                                React.createElement("p", null, """
-                                    We weren’t able to log the crash, likely because an ad blocker is stopping our analytics.  Please describe the crash to us over Intercom in as much detail as possible, or consider disabling your ad blocker. (We’re obviously never going to show you ads)
-""")
+                            (!this.props.logged_crash ?
+                                React.createElement("p", null, `\
+We weren’t able to log the crash, likely because an ad blocker is stopping our analytics.  Please describe the crash to us over Intercom in as much detail as possible, or consider disabling your ad blocker. (We’re obviously never going to show you ads)\
+`) : undefined
                             ),
-                            (if not window.electron
-                                React.createElement("p", null, """
-                                    This problem might be due to one of your browser plugins or extensions interacting with our app. Consider using our """, React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "desktop app"), """ to avoid these issues.
-
-""")
+                            (!window.electron ?
+                                React.createElement("p", null, `\
+This problem might be due to one of your browser plugins or extensions interacting with our app. Consider using our `, React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "desktop app"), ` to avoid these issues.
+\
+`) : undefined
                             )
                         ),
                         React.createElement(Modal.Footer, null,
-                            React.createElement(PdButtonOne, {"type": "primary", "onClick": (=> window.location = window.location)}, "Refresh")
+                            React.createElement(PdButtonOne, {"type": "primary", "onClick": (() => { return window.location = window.location; })}, "Refresh")
                         )
-                    )
+                    ) : undefined
                 )
-            )
+            );
+        },
 
-        getInitialState: ->
-            mounted: false
+        getInitialState() {
+            return {mounted: false};
+        },
 
-        componentDidMount: ->
-            @setState mounted: true
+        componentDidMount() {
+            return this.setState({mounted: true});
+        }
+    });
 
-    already_unrecoverably_failed = false
-
-
-    blocked_analytics_msg = """
-        Pagedraw crashed, but your ad blocker is preventing us from tracking it.
-        Please let us know about it via intercom, or consider disabling your ad blocker
-        for this domain (we're obviously never going to show you ads).
-    """
-
-    unrecoverably_fail = ->
-        logged_crash = analytics.track("Hard crashed", window.pd_params)
-        already_unrecoverably_failed = true
-        modalRoot = document.createElement('div')
-        document.body.appendChild(modalRoot)
-        ReactDOM.render(React.createElement(CrashView, {"logged_crash": (logged_crash)}), modalRoot)
+    let already_unrecoverably_failed = false;
 
 
-    # last_crash_timestamp :: unix timestamp | null
-    last_crash_timestamp = null
+    const blocked_analytics_msg = `\
+Pagedraw crashed, but your ad blocker is preventing us from tracking it.
+Please let us know about it via intercom, or consider disabling your ad blocker
+for this domain (we're obviously never going to show you ads).\
+`;
 
-    crash_count = 0
+    const unrecoverably_fail = function() {
+        const logged_crash = analytics.track("Hard crashed", window.pd_params);
+        already_unrecoverably_failed = true;
+        const modalRoot = document.createElement('div');
+        document.body.appendChild(modalRoot);
+        return ReactDOM.render(React.createElement(CrashView, {"logged_crash": (logged_crash)}), modalRoot);
+    };
 
-    # if we ever get an uncaught error, throw up this modal that we've crashed
-    onError = (handler) ->
-        unless process.env.NODE_ENV == 'development'
-            window.addEventListener('error', handler)
 
-        else
-            # react@16 in dev mode will take issue with the unmounting our handler does.
-            # React16's re-throwing happens synchronously, and there's a concurrency
-            # issue with unmounting a component during it's render (or something).
-            # We avoid this by defering the unmount.
-            # React@16 dev mode also does this weird re-throwing thing.  We counter by
-            # ignoring all but the first error.
-            # While this is okay for now because we're eating the errors anyway,
-            # I would never allow this outside dev mode.
-            pending_error = false
-            window.addEventListener 'error', (evt) ->
-                return if pending_error
-                pending_error = true
-                window.setTimeout ->
-                    pending_error = false
-                    handler(evt)
+    // last_crash_timestamp :: unix timestamp | null
+    let last_crash_timestamp = null;
 
-    onError (evt) ->
-        if evt?.error?.stack.search('__evalBundleWrapperForErrorDetector') >= 0
-            console.warn "User code error: #{evt.error.message}"
-            return
+    let crash_count = 0;
 
-        return unless config.refreshOnUncaughtErrors
-        return if already_unrecoverably_failed
+    // if we ever get an uncaught error, throw up this modal that we've crashed
+    const onError = function(handler) {
+        if (process.env.NODE_ENV !== 'development') {
+            return window.addEventListener('error', handler);
 
-        # note the failure.  Rollbar should pick it up as well, elsewhere.
-        crash_count += 1
-        console.log blocked_analytics_msg if not analytics.track("Soft crashed", _l.extend({}, window.pd_params, {crash_count}))
-        console.error("pagedraw crashed x#{crash_count}")
-        window.didEditorCrashBeforeLoading?(true)
+        } else {
+            // react@16 in dev mode will take issue with the unmounting our handler does.
+            // React16's re-throwing happens synchronously, and there's a concurrency
+            // issue with unmounting a component during it's render (or something).
+            // We avoid this by defering the unmount.
+            // React@16 dev mode also does this weird re-throwing thing.  We counter by
+            // ignoring all but the first error.
+            // While this is okay for now because we're eating the errors anyway,
+            // I would never allow this outside dev mode.
+            let pending_error = false;
+            return window.addEventListener('error', function(evt) {
+                if (pending_error) { return; }
+                pending_error = true;
+                return window.setTimeout(function() {
+                    pending_error = false;
+                    return handler(evt);
+                });
+            });
+        }
+    };
 
-        # If we get in an asynchronous crash-recover-crash loop, try to catch it
-        # based on if the crashes are less than 3 seconds apart.  If we catch it,
-        # hard crash.
-        now = (new Date()).getTime()
-        if last_crash_timestamp and now < last_crash_timestamp + config.milisecondsBetweenCrashesBeforeWeHardCrash
-            unrecoverably_fail()
-            return
-        last_crash_timestamp = now
+    onError(function(evt) {
+        if (__guard__(evt != null ? evt.error : undefined, x1 => x1.stack.search('__evalBundleWrapperForErrorDetector')) >= 0) {
+            console.warn(`User code error: ${evt.error.message}`);
+            return;
+        }
 
-        try
-            window.crash_recovery_state = window.get_recovery_state_after_crash?()
+        if (!config.refreshOnUncaughtErrors) { return; }
+        if (already_unrecoverably_failed) { return; }
 
-        try # recovering
-            # get the app dom root
-            domRoot = document.getElementById('app')
+        // note the failure.  Rollbar should pick it up as well, elsewhere.
+        crash_count += 1;
+        if (!analytics.track("Soft crashed", _l.extend({}, window.pd_params, {crash_count}))) { console.log(blocked_analytics_msg); }
+        console.error(`pagedraw crashed x${crash_count}`);
+        if (typeof window.didEditorCrashBeforeLoading === 'function') {
+            window.didEditorCrashBeforeLoading(true);
+        }
 
-            # teardown the app
-            ReactDOM.unmountComponentAtNode(domRoot)
+        // If we get in an asynchronous crash-recover-crash loop, try to catch it
+        // based on if the crashes are less than 3 seconds apart.  If we catch it,
+        // hard crash.
+        const now = (new Date()).getTime();
+        if (last_crash_timestamp && (now < (last_crash_timestamp + config.milisecondsBetweenCrashesBeforeWeHardCrash))) {
+            unrecoverably_fail();
+            return;
+        }
+        last_crash_timestamp = now;
 
-            # clear potentially lingering state
-            require('../frontend/DraggingCanvas').windowMouseMachine.reset()
+        try {
+            window.crash_recovery_state = typeof window.get_recovery_state_after_crash === 'function' ? window.get_recovery_state_after_crash() : undefined;
+        } catch (error) {}
 
-            # try to recover
-            ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), domRoot)
+        try { // recovering
+            // get the app dom root
+            const domRoot = document.getElementById('app');
 
-        catch # a failure to recover
-            unrecoverably_fail()
+            // teardown the app
+            ReactDOM.unmountComponentAtNode(domRoot);
 
-        delete window.crash_recovery_state
+            // clear potentially lingering state
+            require('../frontend/DraggingCanvas').windowMouseMachine.reset();
 
-    ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), document.getElementById('app'))
+            // try to recover
+            ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), domRoot);
+
+        } catch (error1) { // a failure to recover
+            unrecoverably_fail();
+        }
+
+        return delete window.crash_recovery_state;
+    });
+
+    ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), document.getElementById('app'));
+}
+
+function __guard__(value, transform) {
+  return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;
+}

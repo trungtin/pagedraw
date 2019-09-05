@@ -1,11 +1,18 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-propTypes = require 'prop-types'
-ReactDOM = require 'react-dom'
-PagedrawnPricing = require '../pagedraw/pricing'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+import createReactClass from 'create-react-class';
+import propTypes from 'prop-types';
+import ReactDOM from 'react-dom';
+import PagedrawnPricing from '../pagedraw/pricing';
 
-PricingDesktop = createReactClass
-    render: ->
-        React.createElement(PagedrawnPricing, null)
+const PricingDesktop = createReactClass({
+    render() {
+        return React.createElement(PagedrawnPricing, null);
+    }
+});
 
-module.exports = PricingDesktop
+export default PricingDesktop;

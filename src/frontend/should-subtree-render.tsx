@@ -1,7 +1,9 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
+let ShouldSubtreeRender;
+import React from 'react';
+import createReactClass from 'create-react-class';
 
-module.exports = ShouldSubtreeRender = createReactClass
-    displayName: 'ShouldSubtreeRender'
-    shouldComponentUpdate: (nextProps) -> nextProps.shouldUpdate
-    render: -> @props.subtree()
+export default ShouldSubtreeRender = createReactClass({
+    displayName: 'ShouldSubtreeRender',
+    shouldComponentUpdate(nextProps) { return nextProps.shouldUpdate; },
+    render() { return this.props.subtree(); }
+});

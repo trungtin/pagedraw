@@ -1,35 +1,47 @@
-_l = require 'lodash'
-React = require 'react'
-createReactClass = require 'create-react-class'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import _l from 'lodash';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import util from '../util';
+import { server } from './server';
+import { default as Dropzone } from 'react-dropzone';
+import SketchImporterView from '../pagedraw/sketch-importer';
+import analytics from '../frontend/analytics';
 
-util = require '../util'
-{server} = require './server'
+export default createReactClass({
+    getInitialState() {
+        return {
+            importing: false,
+            error: undefined
+        };
+    },
 
-Dropzone = require('react-dropzone').default
-SketchImporterView = require '../pagedraw/sketch-importer'
-analytics = require '../frontend/analytics'
+    render() {
+        return React.createElement(Dropzone, {"onDrop": (this.handleDrop), "style": ({display: 'flex', flexDirection: 'column'})},
+            React.createElement(SketchImporterView, {"error": (this.state.error), "importing": (this.state.importing)})
+        );
+    },
 
-module.exports = createReactClass
-    getInitialState: ->
-        importing: no
-        error: undefined
+    handleDrop(files) {
+        util.assert(() => (files != null ? files.length : undefined) > 0);
+        this.setState({importing: true});
 
-    render: ->
-        React.createElement(Dropzone, {"onDrop": (@handleDrop), "style": (display: 'flex', flexDirection: 'column')},
-            React.createElement(SketchImporterView, {"error": (@state.error), "importing": (@state.importing)})
-        )
+        return server.importFromSketch(files[0], (doc_json => {
+            if (Object.keys(doc_json.blocks).length <= 1) { return this.showError(); }
+            this.setState({importing: false});
+            return this.props.onImport(doc_json);
+        }),
+        err => this.showError());
+    },
 
-    handleDrop: (files) ->
-        util.assert -> files?.length > 0
-        @setState({importing: yes})
-
-        server.importFromSketch(files[0], ((doc_json) =>
-            return @showError() if Object.keys(doc_json.blocks).length <= 1
-            @setState({importing: no})
-            @props.onImport(doc_json)),
-        (err) => @showError())
-
-    showError: ->
-        analytics.track("Sketch importer error", {where: 'editor'})
-        @setState({error: yes})
+    showError() {
+        analytics.track("Sketch importer error", {where: 'editor'});
+        return this.setState({error: true});
+    }
+});
 

@@ -1,394 +1,481 @@
-_l = require 'lodash'
-React = require 'react'
-ReactDOM = require 'react-dom'
-{PropSpec, ObjectPropValue, PropInstance, ColorPropControl, DropdownPropControl, FunctionPropControl, PropSpec, CheckboxPropControl, ListPropControl, StringPropControl, NumberPropControl, ObjectPropControl} = require './props'
-{Model, setsOfModelsAreEqual, rebaseSetsOfModels} = require './model'
-config = require './config'
-{server} = require './editor/server'
-{loadProdLibrary, loadDevLibrary, publishDevLibrary} = require './lib-cli-client'
-assert = (require './util').log_assert
-non_prod_assert = (require './util').assert
-{track_error} = require './util'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS104: Avoid inline assignments
+ * DS201: Simplify complex destructure assignments
+ * DS203: Remove `|| {}` from converted for-own loops
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let CheckboxPropControl, ColorPropControl, componentOfExternalSpec, DropdownPropControl, ExternalCodeSpec, FunctionPropControl, isExternalComponent, Library, ListPropControl, NumberPropControl, ObjectPropControl, ObjectPropValue, PropInstance, PropSpec, StringPropControl;
+import _l from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+({PropSpec, ObjectPropValue, PropInstance, ColorPropControl, DropdownPropControl, FunctionPropControl, PropSpec, CheckboxPropControl, ListPropControl, StringPropControl, NumberPropControl, ObjectPropControl} = require('./props'));
+import { Model, setsOfModelsAreEqual, rebaseSetsOfModels } from './model';
+import config from './config';
+import { server } from './editor/server';
+import { loadProdLibrary, loadDevLibrary, publishDevLibrary } from './lib-cli-client';
+import { log_assert as assert } from './util';
+import { assert as non_prod_assert } from './util';
+import { track_error } from './util';
 
-modelIsEqualModuloUniqueKeys = (one, other) ->
-    throw Error('One cant be undefined') if not one?
-    # models are never equal to null or undefined
-    return false unless other?
+const modelIsEqualModuloUniqueKeys = function(one, other) {
+    if ((one == null)) { throw Error('One cant be undefined'); }
+    // models are never equal to null or undefined
+    if (other == null) { return false; }
 
-    # verify they're the same type type
-    return false if other.constructor != one.constructor
+    // verify they're the same type type
+    if (other.constructor !== one.constructor) { return false; }
 
-    # verify all their properties match by isEqual, or a custom check if it's overridden
-    customEqualityChecks = one.getCustomEqualityChecks()
-    for own prop, ty of one.constructor.__properties
-        continue if prop == 'uniqueKey'
-        if not (customEqualityChecks[prop] ? isEqualModuloUniqueKeys)(one[prop], other?[prop])
-            # get that short circuiting behavior
-            return false
+    // verify all their properties match by isEqual, or a custom check if it's overridden
+    const customEqualityChecks = one.getCustomEqualityChecks();
+    for (let prop of Object.keys(one.constructor.__properties || {})) {
+        const ty = one.constructor.__properties[prop];
+        if (prop === 'uniqueKey') { continue; }
+        if (!(customEqualityChecks[prop] != null ? customEqualityChecks[prop] : isEqualModuloUniqueKeys)(one[prop], other != null ? other[prop] : undefined)) {
+            // get that short circuiting behavior
+            return false;
+        }
+    }
 
-    # all checks passed; they're equal
-    return true
+    // all checks passed; they're equal
+    return true;
+};
 
-# FIXME: Until we fix the model system unique key stuff...
-isEqualModuloUniqueKeys = (a, b) ->
-    if a == null or a == undefined or _.isString(a) or _.isNumber(a) or _.isBoolean(a) then a == b
-    else if _l.isArray(a) then _l.isArray(b) and a.length == b.length and _l.every _l.zip(a, b), ([ea, eb]) -> isEqualModuloUniqueKeys(ea, eb)
-    else if a instanceof Model then modelIsEqualModuloUniqueKeys(a, b)
-    else throw new Error 'Unexpected type'
+// FIXME: Until we fix the model system unique key stuff...
+var isEqualModuloUniqueKeys = function(a, b) {
+    if ((a === null) || (a === undefined) || _.isString(a) || _.isNumber(a) || _.isBoolean(a)) { return a === b;
+    } else if (_l.isArray(a)) { return _l.isArray(b) && (a.length === b.length) && _l.every(_l.zip(a, b), function(...args) { const [ea, eb] = Array.from(args[0]); return isEqualModuloUniqueKeys(ea, eb); });
+    } else if (a instanceof Model) { return modelIsEqualModuloUniqueKeys(a, b);
+    } else { throw new Error('Unexpected type'); }
+};
 
-## NOTES: TODOS for external code
-# - A plan for supporting bundled code updates forever
-# - serialize_pdom should work on dynamic pdoms and should deserialize on the other end so evalPdom works since it uses
-# instanceof Dynamic
-# - normalizeAsync should setup the doc.ExternalCodeSpecTrees and stuff
-#
-# - Move users to mycompany.pagedraw.io (Huge for security)
-# - Decide where the iframe boundary should go
-# - Performance (?)
+//# NOTES: TODOS for external code
+// - A plan for supporting bundled code updates forever
+// - serialize_pdom should work on dynamic pdoms and should deserialize on the other end so evalPdom works since it uses
+// instanceof Dynamic
+// - normalizeAsync should setup the doc.ExternalCodeSpecTrees and stuff
+//
+// - Move users to mycompany.pagedraw.io (Huge for security)
+// - Decide where the iframe boundary should go
+// - Performance (?)
 
-controlForType = (type) =>
-    if type == 'Text'                               then StringPropControl
-    else if type == 'Number'                        then NumberPropControl
-    else if type == 'Boolean' or type == 'Checkbox' then CheckboxPropControl
-    else if type == 'Function'                      then FunctionPropControl
-    else if type == 'Enum' or type == 'Dropdown'    then DropdownPropControl
-    else if type == 'Color'                         then ColorPropControl
-    else if _l.isArray(type)                        then ListPropControl
-    else if _l.isObject(type)                       then ObjectPropControl
+const controlForType = type => {
+    if (type === 'Text') {                               return StringPropControl;
+    } else if (type === 'Number') {                        return NumberPropControl;
+    } else if ((type === 'Boolean') || (type === 'Checkbox')) { return CheckboxPropControl;
+    } else if (type === 'Function') {                      return FunctionPropControl;
+    } else if ((type === 'Enum') || (type === 'Dropdown')) {    return DropdownPropControl;
+    } else if (type === 'Color') {                         return ColorPropControl;
+    } else if (_l.isArray(type)) {                        return ListPropControl;
+    } else if (_l.isObject(type)) {                       return ObjectPropControl; }
+};
 
-# NOTE: This is not passing down key to supportLegacy and that's weird but that shouldn't change the .type of the output
-stringifyPropType = (propType) -> supportLegacyPropType(propType).type
+// NOTE: This is not passing down key to supportLegacy and that's weird but that shouldn't change the .type of the output
+const stringifyPropType = propType => supportLegacyPropType(propType).type;
 
-supportLegacyPropType = (propType, key) ->
-    if _l.isString(propType)            then {type: propType, name: key}
-    else if propType.__ty == 'Enum'     then {type: 'Enum', options: propType.options}
-    else                                propType
+var supportLegacyPropType = function(propType, key) {
+    if (_l.isString(propType)) {            return {type: propType, name: key};
+    } else if (propType.__ty === 'Enum') {     return {type: 'Enum', options: propType.options};
+    } else {                                return propType; }
+};
 
-propSpecOfExternalPropTypes = (key, propType, prefix = '') =>
-    propType = supportLegacyPropType(propType, key)
+var propSpecOfExternalPropTypes = (key, propType, prefix) => {
+    if (prefix == null) { prefix = ''; }
+    propType = supportLegacyPropType(propType, key);
 
-    {type, name, defaultValue} = propType
-    required = _l.defaultTo(propType.required, false)
-    hasUnpresentValue = not defaultValue?
-    presentByDefault = defaultValue?
-    Control = controlForType(type)
+    const {type, name, defaultValue} = propType;
+    const required = _l.defaultTo(propType.required, false);
+    const hasUnpresentValue = (defaultValue == null);
+    const presentByDefault = (defaultValue != null);
+    const Control = controlForType(type);
 
-    if type == 'Enum'
-        {options} = propType
-        if not _l.isArray(options)
-            throw new Error('Enum type should specify "options" as an Array')
-        if not _l.every(options, _l.isString)
-            throw new Error('Enum type only supports string in "options" Array')
-
-        new PropSpec({
-            name: key
-            title: name
-            hasUnpresentValue
-            presentByDefault
-            required
-            uniqueKey: "#{prefix}->#{key}:En"
-            control: new Control({options, defaultValue})
-        })
-
-    else if _l.isArray(type)
-        if _l.isEmpty(type)
-            throw new Error('List type should define at least one element as the list shape')
-
-        new PropSpec({
-            name: key
-            title: name
-            hasUnpresentValue
-            required
-            uniqueKey: "#{prefix}->#{key}:[]"
-            control: new Control({
-                elemType: propSpecOfExternalPropTypes(null, type[0], "#{prefix}->#{key}:[]").control
-            })
-        })
-
-    else if _l.isObject(type)
-        new PropSpec({
-            name: key
-            title: name
-            hasUnpresentValue
-            presentByDefault
-            required
-            uniqueKey: "#{prefix}->#{key}:{}"
-            control: new Control({
-                attrTypes: _l.map type, (memberType, k) ->
-                    propSpecOfExternalPropTypes(k, memberType, "#{prefix}.#{k}->#{stringifyPropType(memberType)}")
-            })
-        })
-
-    else if Control?
-        new PropSpec({
-            name: key
-            title: name
-            required
-            hasUnpresentValue
-            presentByDefault
-            uniqueKey: "#{prefix}->#{key}:#{type}"
-            control: new Control({defaultValue})
-        })
-
-    else
-        throw new Error("Invalid control type '#{type}' for key '#{key}'")
-
-# UserSpec :: {
-#   pdUniqueKey: String?
-#
-#   pdIsDefaultExport: Boolean?
-#
-#   # like prop types, but for controls
-#   pdPropControls: PropControlsObject?
-#
-#   # array containing 'width' and/or 'height'
-#   pdResizable: [String]?
-#
-#   # Like [['css_a_id', full_css_string_for_a], ['css_b_id', full_css_string_for_b]]
-#   pdIncludeCSS: [(String, String)]?
-# }
-# and UserSpec instanceof React.Component
-#
-# user_specs :: {
-#   [component_name]: UserSpec
-# }
-parseUserSpecs = (user_specs, lib_name) ->
-    _l.map user_specs, (UserSpec, component_name) ->
-        #throw new Error("User exported `#{name}` is not a React Component") if UserSpec not instanceof React.Component
-
-        ref = (UserSpec.pdUniqueKey ? component_name + lib_name)
-        resizable = UserSpec.pdResizable ? ['width', 'height']
-        propControl = propSpecOfExternalPropTypes(
-            null, type: UserSpec.pdPropControls ? {},
-            "#{ref}:Component"
-        ).control
-
-        return {
-            ref, name: component_name
-            render: ((props) -> React.createElement(UserSpec, Object.assign({},  props )))
-            flexWidth: 'width' in resizable
-            flexHeight: 'height' in resizable
-            propControl
+    if (type === 'Enum') {
+        const {options} = propType;
+        if (!_l.isArray(options)) {
+            throw new Error('Enum type should specify "options" as an Array');
+        }
+        if (!_l.every(options, _l.isString)) {
+            throw new Error('Enum type only supports string in "options" Array');
         }
 
-exports.isExternalComponent = isExternalComponent = (component) ->
-    component?.componentSpec instanceof ExternalCodeSpec
+        return new PropSpec({
+            name: key,
+            title: name,
+            hasUnpresentValue,
+            presentByDefault,
+            required,
+            uniqueKey: `${prefix}->${key}:En`,
+            control: new Control({options, defaultValue})
+        });
 
-parseLibLoad = ({status, error, data, userError}, uniqueKeyToAppend) ->
-    if status == 'user-err'
-        assert => userError?
-        return {err: userError, status}
+    } else if (_l.isArray(type)) {
+        if (_l.isEmpty(type)) {
+            throw new Error('List type should define at least one element as the list shape');
+        }
 
-    assert => not userError?
+        return new PropSpec({
+            name: key,
+            title: name,
+            hasUnpresentValue,
+            required,
+            uniqueKey: `${prefix}->${key}:[]`,
+            control: new Control({
+                elemType: propSpecOfExternalPropTypes(null, type[0], `${prefix}->${key}:[]`).control
+            })
+        });
 
-    if status == 'net-err'
-        return {err: error, status}
+    } else if (_l.isObject(type)) {
+        return new PropSpec({
+            name: key,
+            title: name,
+            hasUnpresentValue,
+            presentByDefault,
+            required,
+            uniqueKey: `${prefix}->${key}:{}`,
+            control: new Control({
+                attrTypes: _l.map(type, (memberType, k) => propSpecOfExternalPropTypes(k, memberType, `${prefix}.${k}->${stringifyPropType(memberType)}`))
+            })
+        });
 
-    if status != 'ok' and status != 'no-op'
-        throw new Error("Unknown status while loading library: #{status}")
+    } else if (Control != null) {
+        return new PropSpec({
+            name: key,
+            title: name,
+            required,
+            hasUnpresentValue,
+            presentByDefault,
+            uniqueKey: `${prefix}->${key}:${type}`,
+            control: new Control({defaultValue})
+        });
 
-    return {err: new Error('pagedraw develop exported something that is not an object')} if not _l.isObject(data)
+    } else {
+        throw new Error(`Invalid control type '${type}' for key '${key}'`);
+    }
+};
 
-    return {err: new Error('pagedraw develop exported empty object')} if _l.isEmpty(_l.keys(data))
+// UserSpec :: {
+//   pdUniqueKey: String?
+//
+//   pdIsDefaultExport: Boolean?
+//
+//   # like prop types, but for controls
+//   pdPropControls: PropControlsObject?
+//
+//   # array containing 'width' and/or 'height'
+//   pdResizable: [String]?
+//
+//   # Like [['css_a_id', full_css_string_for_a], ['css_b_id', full_css_string_for_b]]
+//   pdIncludeCSS: [(String, String)]?
+// }
+// and UserSpec instanceof React.Component
+//
+// user_specs :: {
+//   [component_name]: UserSpec
+// }
+const parseUserSpecs = (user_specs, lib_name) => _l.map(user_specs, function(UserSpec, component_name) {
+    //throw new Error("User exported `#{name}` is not a React Component") if UserSpec not instanceof React.Component
 
-    # FIXME: This should probably not mutate the library
-    # We should just compute the specs and asser that it didnt change wrt the "official"
-    # library load (upon publish)
-    try
-        user_specs = parseUserSpecs(data, uniqueKeyToAppend)
-    catch err
-        return {err}
+    const ref = (UserSpec.pdUniqueKey != null ? UserSpec.pdUniqueKey : component_name + lib_name);
+    const resizable = UserSpec.pdResizable != null ? UserSpec.pdResizable : ['width', 'height'];
+    const propControl = propSpecOfExternalPropTypes(
+        null, {type: UserSpec.pdPropControls != null ? UserSpec.pdPropControls : {}},
+        `${ref}:Component`
+    ).control;
 
-    return {err: new Error('Library has 0 components')} if _l.isEmpty(user_specs)
+    return {
+        ref, name: component_name,
+        render(props) { return React.createElement(UserSpec, Object.assign({},  props )); },
+        flexWidth: Array.from(resizable).includes('width'),
+        flexHeight: Array.from(resizable).includes('height'),
+        propControl
+    };
+});
 
-    try
-        externalCodeSpecs = user_specs.map (spec) -> ExternalCodeSpec.from(spec)
-    catch e
-        return {err}
+const defaultExport = {};
 
-    non_prod_assert => _l.every user_specs, ({ref, render}) => render? and _l.find(externalCodeSpecs, {ref})?
+defaultExport.isExternalComponent = (isExternalComponent = component => (component != null ? component.componentSpec : undefined) instanceof ExternalCodeSpec);
 
-    return {err: null, externalCodeSpecs, renderByRef: _l.fromPairs user_specs.map ({ref, render}) -> [ref, render]}
+const parseLibLoad = function({status, error, data, userError}, uniqueKeyToAppend) {
+    let err, externalCodeSpecs, user_specs;
+    if (status === 'user-err') {
+        assert(() => (userError != null));
+        return {err: userError, status};
+    }
 
-parseLibLoadNonStrict = ({status, error, data, userError}, uniqueKeyToAppend) ->
-    try
-        user_specs = parseUserSpecs(data, uniqueKeyToAppend)
-        externalCodeSpecs = user_specs.map (spec) -> ExternalCodeSpec.from(spec)
-    catch err
-        return {err}
+    assert(() => (userError == null));
 
-    non_prod_assert => _l.every user_specs, ({ref, render}) => render? and _l.find(externalCodeSpecs, {ref})?
+    if (status === 'net-err') {
+        return {err: error, status};
+    }
 
-    return {err: null, externalCodeSpecs, renderByRef: _l.fromPairs user_specs.map ({ref, render}) -> [ref, render]}
+    if ((status !== 'ok') && (status !== 'no-op')) {
+        throw new Error(`Unknown status while loading library: ${status}`);
+    }
 
-# Gives something of type component :: {componentSpec} out of an external code spec.
-# This is useful so we can have external components which are compatible with regular components
-exports.componentOfExternalSpec = componentOfExternalSpec = (spec) ->
-    {componentSpec: spec, isComponent: true, componentSymbol: spec.name}
+    if (!_l.isObject(data)) { return {err: new Error('pagedraw develop exported something that is not an object')}; }
 
-# NOTE: This whole model is not really needed
-exports.ExternalCodeSpec = Model.register 'ext-code-spec', class ExternalCodeSpec extends Model
-    properties:
-        ref: String
+    if (_l.isEmpty(_l.keys(data))) { return {err: new Error('pagedraw develop exported empty object')}; }
 
-        name: String
-        propControl: ObjectPropControl
+    // FIXME: This should probably not mutate the library
+    // We should just compute the specs and asser that it didnt change wrt the "official"
+    // library load (upon publish)
+    try {
+        user_specs = parseUserSpecs(data, uniqueKeyToAppend);
+    } catch (error1) {
+        err = error1;
+        return {err};
+    }
 
-        flexWidth: Boolean
-        flexHeight: Boolean
+    if (_l.isEmpty(user_specs)) { return {err: new Error('Library has 0 components')}; }
 
-    @from: (user_spec) -> new ExternalCodeSpec(_l.extend {}, user_spec, {uniqueKey: user_spec.ref})
+    try {
+        externalCodeSpecs = user_specs.map(spec => ExternalCodeSpec.from(spec));
+    } catch (e) {
+        return {err};
+    }
 
-    constructor: (json) ->
-        super(json)
-        @name ?= ''
-        @flexWidth ?= false
-        @flexHeight ?= false
+    non_prod_assert(() => _l.every(user_specs, ({ref, render}) => (render != null) && (_l.find(externalCodeSpecs, {ref}) != null)));
 
-exports.Library = Library = Model.register 'ext-lib', class Library extends Model
-    properties:
-        version_id: String
+    return {err: null, externalCodeSpecs, renderByRef: _l.fromPairs(user_specs.map(({ref, render}) => [ref, render]))};
+};
 
-        inDevMode: Boolean
-        devModeRequirePath: String
-        devModeIsNodeModule: Boolean
+const parseLibLoadNonStrict = function({status, error, data, userError}, uniqueKeyToAppend) {
+    let err, externalCodeSpecs, user_specs;
+    try {
+        user_specs = parseUserSpecs(data, uniqueKeyToAppend);
+        externalCodeSpecs = user_specs.map(spec => ExternalCodeSpec.from(spec));
+    } catch (error1) {
+        err = error1;
+        return {err};
+    }
 
-        # Everything below this line is a cache and could be computed from version_id.
-        # Today we only change any of the below when we publish a new version. Be very careful to stay in sync w/
-        # metaserver and the like when you change these
-        cachedExternalCodeSpecs: [ExternalCodeSpec] # This one is required to be in the model by compileserver
-        cachedDevExternalCodeSpecs: [ExternalCodeSpec] # This one is required to be in the model by compileserver
+    non_prod_assert(() => _l.every(user_specs, ({ref, render}) => (render != null) && (_l.find(externalCodeSpecs, {ref}) != null)));
 
-        is_node_module: Boolean
-        npm_path: String
-        local_path: String
+    return {err: null, externalCodeSpecs, renderByRef: _l.fromPairs(user_specs.map(({ref, render}) => [ref, render]))};
+};
 
-        library_id: String
-        bundle_hash: String
-        library_name: String
-        version_name: String
+// Gives something of type component :: {componentSpec} out of an external code spec.
+// This is useful so we can have external components which are compatible with regular components
+defaultExport.componentOfExternalSpec = (componentOfExternalSpec = spec => ({
+    componentSpec: spec,
+    isComponent: true,
+    componentSymbol: spec.name
+}));
 
-    getCustomEqualityChecks: -> _l.extend {}, super(), {cachedExternalCodeSpecs: setsOfModelsAreEqual}
-    getCustomRebaseMechanisms: -> _l.extend {}, super(), {cachedExternalCodeSpecs: rebaseSetsOfModels}
+// NOTE: This whole model is not really needed
+defaultExport.ExternalCodeSpec = Model.register('ext-code-spec', (ExternalCodeSpec = (function() {
+    ExternalCodeSpec = class ExternalCodeSpec extends Model {
+        static initClass() {
+            this.prototype.properties = {
+                ref: String,
+    
+                name: String,
+                propControl: ObjectPropControl,
+    
+                flexWidth: Boolean,
+                flexHeight: Boolean
+            };
+        }
 
-    constructor: (json) ->
-        super(json)
-        @inDevMode ?= false
-        @devModeRequirePath ?= 'src/pagedraw-specs.js'
-        @devModeIsNodeModule ?= false
+        static from(user_spec) { return new ExternalCodeSpec(_l.extend({}, user_spec, {uniqueKey: user_spec.ref})); }
 
-    name: -> "#{@library_name}@#{@version_name}"
-    requirePath: -> if @inDevMode then @devModeRequirePath else if @is_node_module then @npm_path else @local_path
-    isNodeModule: -> if @inDevMode then @devModeIsNodeModule else @is_node_module
+        constructor(json) {
+            super(json);
+            if (this.name == null) { this.name = ''; }
+            if (this.flexWidth == null) { this.flexWidth = false; }
+            if (this.flexHeight == null) { this.flexHeight = false; }
+        }
+    };
+    ExternalCodeSpec.initClass();
+    return ExternalCodeSpec;
+})())
+);
 
-    matches: (other_lib) -> @library_id == other_lib.library_id # should also include the version
+defaultExport.Library = (Library = Model.register('ext-lib', (Library = (function() {
+    Library = class Library extends Model {
+        static initClass() {
+            this.prototype.properties = {
+                version_id: String,
+    
+                inDevMode: Boolean,
+                devModeRequirePath: String,
+                devModeIsNodeModule: Boolean,
+    
+                // Everything below this line is a cache and could be computed from version_id.
+                // Today we only change any of the below when we publish a new version. Be very careful to stay in sync w/
+                // metaserver and the like when you change these
+                cachedExternalCodeSpecs: [ExternalCodeSpec], // This one is required to be in the model by compileserver
+                cachedDevExternalCodeSpecs: [ExternalCodeSpec], // This one is required to be in the model by compileserver
+    
+                is_node_module: Boolean,
+                npm_path: String,
+                local_path: String,
+    
+                library_id: String,
+                bundle_hash: String,
+                library_name: String,
+                version_name: String
+            };
+        }
 
-    publish: (contentWindow) ->
-        assert => @inDevMode
-        assert => @didLoad(contentWindow)
+        getCustomEqualityChecks() { return _l.extend({}, super.getCustomEqualityChecks(), {cachedExternalCodeSpecs: setsOfModelsAreEqual}); }
+        getCustomRebaseMechanisms() { return _l.extend({}, super.getCustomRebaseMechanisms(), {cachedExternalCodeSpecs: rebaseSetsOfModels}); }
 
-        # Make up a random ID here otherwise the loadProdLibrary below will hit every time the same cache for the same
-        # version id. Once a hash comes back from the CLI we set it in stone metaserver
-        publish_id = @version_id + String(Math.random()).slice(2)
+        constructor(json) {
+            super(json);
+            if (this.inDevMode == null) { this.inDevMode = false; }
+            if (this.devModeRequirePath == null) { this.devModeRequirePath = 'src/pagedraw-specs.js'; }
+            if (this.devModeIsNodeModule == null) { this.devModeIsNodeModule = false; }
+        }
 
-        publishDevLibrary(publish_id).then(({status, error, hash}) =>
-            if status == 'net-err'
-                assert -> error?
-                return {err: error}
+        name() { return `${this.library_name}@${this.version_name}`; }
+        requirePath() { if (this.inDevMode) { return this.devModeRequirePath; } else if (this.is_node_module) { return this.npm_path; } else { return this.local_path; } }
+        isNodeModule() { if (this.inDevMode) { return this.devModeIsNodeModule; } else { return this.is_node_module; } }
 
-            throw new Error("Unknown status while publishing library: #{status}") if status != 'ok'
+        matches(other_lib) { return this.library_id === other_lib.library_id; } // should also include the version
 
-            loadProdLibrary(contentWindow, hash).then (data) =>
-                {err, status, externalCodeSpecs} = parseLibLoad(data, @library_id)
-                # FIXME: Both of the below could happen because of lingering load state of the dev library. Maybe the
-                # loadProdLibrary above should be done inside of an isolated iframe
-                throw new Error("Unable to load prod version of library. Make sure your library can cleanly load twice in the same window context. Error: #{err.message}") if err?
+        publish(contentWindow) {
+            assert(() => this.inDevMode);
+            assert(() => this.didLoad(contentWindow));
 
-                if not isEqualModuloUniqueKeys(externalCodeSpecs, @cachedDevExternalCodeSpecs)
-                    return {err: new Error("Prod version of the library resulted in a different state from the dev version. Make sure your library can cleanly load twice in the same window context.")}
+            // Make up a random ID here otherwise the loadProdLibrary below will hit every time the same cache for the same
+            // version id. Once a hash comes back from the CLI we set it in stone metaserver
+            const publish_id = this.version_id + String(Math.random()).slice(2);
 
-                assert -> hash?
-                return {err: null, hash}
-        ).catch (err) -> return {err} # NOTE: People above us assume this doesn't throw. Maybe that should change
+            return publishDevLibrary(publish_id).then(({status, error, hash}) => {
+                if (status === 'net-err') {
+                    assert(() => error != null);
+                    return {err: error};
+                }
 
-    failToLoad: (contentWindow, err, retStatus) ->
-        console.warn "Library #{@name()} failed to load", err
-        renderByRef = _l.fromPairs (@getCachedExternalCodeSpecs() ? []).map (spec) -> [spec.ref, -> throw new Error("Don't call this. Failed to load")]
-        err.__pdStatus = retStatus
-        contentWindow.pd__loaded_libraries[@version_id] = {err, lib: this, renderByRef}
+                if (status !== 'ok') { throw new Error(`Unknown status while publishing library: ${status}`); }
 
-    load: (contentWindow) ->
-        initExternalLibraries(contentWindow) if not contentWindow.pd__initted?
-        return Promise.resolve() if @didLoad(contentWindow)
+                return loadProdLibrary(contentWindow, hash).then(data => {
+                    let err, externalCodeSpecs;
+                    ({err, status, externalCodeSpecs} = parseLibLoad(data, this.library_id));
+                    // FIXME: Both of the below could happen because of lingering load state of the dev library. Maybe the
+                    // loadProdLibrary above should be done inside of an isolated iframe
+                    if (err != null) { throw new Error(`Unable to load prod version of library. Make sure your library can cleanly load twice in the same window context. Error: ${err.message}`); }
 
-        if @inDevMode
-            loadDevLibrary(contentWindow).then (data) =>
-                {err, status, externalCodeSpecs, renderByRef} = parseLibLoad(data, @library_id)
-                return @failToLoad(contentWindow, err, status) if err?
-                assert => externalCodeSpecs?
+                    if (!isEqualModuloUniqueKeys(externalCodeSpecs, this.cachedDevExternalCodeSpecs)) {
+                        return {err: new Error("Prod version of the library resulted in a different state from the dev version. Make sure your library can cleanly load twice in the same window context.")};
+                    }
 
-                @cachedDevExternalCodeSpecs = externalCodeSpecs
-                contentWindow.pd__loaded_libraries[@version_id] = {err: null, lib: this, externalCodeSpecs, renderByRef}
+                    assert(() => hash != null);
+                    return {err: null, hash};
+            });
+            }).catch(err => ({
+                err
+            })); // NOTE: People above us assume this doesn't throw. Maybe that should change
+        }
 
-        else
-            loadProdLibrary(contentWindow, @bundle_hash).then (data) =>
-                # NOTE POLICY: We parse nonStrict here because if we add new check errors
-                # to parseLibLoad we don't want to break existing published libs. We always do the strict
-                # checks in dev mode and upon publishing the lib, however.
-                {err, status, externalCodeSpecs, renderByRef} = parseLibLoadNonStrict(data, @library_id)
-                return @failToLoad(contentWindow, err, status) if err?
+        failToLoad(contentWindow, err, retStatus) {
+            let left;
+            console.warn(`Library ${this.name()} failed to load`, err);
+            const renderByRef = _l.fromPairs(((left = this.getCachedExternalCodeSpecs()) != null ? left : []).map(spec => [spec.ref, function() { throw new Error("Don't call this. Failed to load"); }]));
+            err.__pdStatus = retStatus;
+            return contentWindow.pd__loaded_libraries[this.version_id] = {err, lib: this, renderByRef};
+        }
 
-                # FIXME: We should actually probably crash here, but changin parseUserSpecs today makes this fail so we
-                # need a better strategy
-                if @cachedExternalCodeSpecs? and not isEqualModuloUniqueKeys(@cachedExternalCodeSpecs, externalCodeSpecs)
-                    msg = "Library load resulted in a different state than at lib install. Lib: #{@name()}"
-                    track_error(new Error(msg), msg)
+        load(contentWindow) {
+            if ((contentWindow.pd__initted == null)) { initExternalLibraries(contentWindow); }
+            if (this.didLoad(contentWindow)) { return Promise.resolve(); }
 
-                contentWindow.pd__loaded_libraries[@version_id] = {err: null, lib: this, externalCodeSpecs, renderByRef}
+            if (this.inDevMode) {
+                return loadDevLibrary(contentWindow).then(data => {
+                    const {err, status, externalCodeSpecs, renderByRef} = parseLibLoad(data, this.library_id);
+                    if (err != null) { return this.failToLoad(contentWindow, err, status); }
+                    assert(() => (externalCodeSpecs != null));
+
+                    this.cachedDevExternalCodeSpecs = externalCodeSpecs;
+                    return contentWindow.pd__loaded_libraries[this.version_id] = {err: null, lib: this, externalCodeSpecs, renderByRef};
+            });
+
+            } else {
+                return loadProdLibrary(contentWindow, this.bundle_hash).then(data => {
+                    // NOTE POLICY: We parse nonStrict here because if we add new check errors
+                    // to parseLibLoad we don't want to break existing published libs. We always do the strict
+                    // checks in dev mode and upon publishing the lib, however.
+                    const {err, status, externalCodeSpecs, renderByRef} = parseLibLoadNonStrict(data, this.library_id);
+                    if (err != null) { return this.failToLoad(contentWindow, err, status); }
+
+                    // FIXME: We should actually probably crash here, but changin parseUserSpecs today makes this fail so we
+                    // need a better strategy
+                    if ((this.cachedExternalCodeSpecs != null) && !isEqualModuloUniqueKeys(this.cachedExternalCodeSpecs, externalCodeSpecs)) {
+                        const msg = `Library load resulted in a different state than at lib install. Lib: ${this.name()}`;
+                        track_error(new Error(msg), msg);
+                    }
+
+                    return contentWindow.pd__loaded_libraries[this.version_id] = {err: null, lib: this, externalCodeSpecs, renderByRef};
+            });
+            }
+        }
 
 
-    didLoad: (contentWindow) -> contentWindow.pd__loaded_libraries?[@version_id]? and _l.isEmpty(@loadErrors(contentWindow))
+        didLoad(contentWindow) { return ((contentWindow.pd__loaded_libraries != null ? contentWindow.pd__loaded_libraries[this.version_id] : undefined) != null) && _l.isEmpty(this.loadErrors(contentWindow)); }
 
-    loadedSpecs: (contentWindow) -> _l.map contentWindow.pd__loaded_libraries?[@version_id].externalCodeSpecs
+        loadedSpecs(contentWindow) { return _l.map(contentWindow.pd__loaded_libraries != null ? contentWindow.pd__loaded_libraries[this.version_id].externalCodeSpecs : undefined); }
 
-    loadErrors: (contentWindow) ->
-        assert => contentWindow.pd__loaded_libraries[@version_id]
-        return _l.compact [contentWindow.pd__loaded_libraries[@version_id].err]
+        loadErrors(contentWindow) {
+            assert(() => contentWindow.pd__loaded_libraries[this.version_id]);
+            return _l.compact([contentWindow.pd__loaded_libraries[this.version_id].err]);
+        }
 
-    getCachedExternalCodeSpecs: -> if @inDevMode then @cachedDevExternalCodeSpecs else @cachedExternalCodeSpecs
+        getCachedExternalCodeSpecs() { if (this.inDevMode) { return this.cachedDevExternalCodeSpecs; } else { return this.cachedExternalCodeSpecs; } }
+    };
+    Library.initClass();
+    return Library;
+})())
+));
 
-exports.renderExternalInstance = (contentWindow, ref, props) ->
-    assert => contentWindow.pd__loaded_libraries?
-    if not (entry = _l.find(contentWindow.pd__loaded_libraries, (l) -> l.renderByRef[ref]?))?
-        throw new Error("External component with ref #{ref} not loaded by any library.")
-    else if entry.err?
-        throw new Error("Library #{entry.lib.name()} failed to load. " + entry.err.message)
+defaultExport.renderExternalInstance = function(contentWindow, ref, props) {
+    let entry;
+    assert(() => (contentWindow.pd__loaded_libraries != null));
+    if (((entry = _l.find(contentWindow.pd__loaded_libraries, l => l.renderByRef[ref] != null)) == null)) {
+        throw new Error(`External component with ref ${ref} not loaded by any library.`);
+    } else if (entry.err != null) {
+        throw new Error(`Library ${entry.lib.name()} failed to load. ` + entry.err.message);
+    }
 
-    entry.renderByRef[ref](props)
+    return entry.renderByRef[ref](props);
+};
 
-initExternalLibraries = (contentWindow) ->
-    unless contentWindow.pd__initted
-        contentWindow.__pdReactHook = React
-        contentWindow.__pdReactDOMHook = ReactDOM
-        contentWindow.pd__loaded_libraries = {}
-        contentWindow.pd__initted = yes
+var initExternalLibraries = function(contentWindow) {
+    if (!contentWindow.pd__initted) {
+        contentWindow.__pdReactHook = React;
+        contentWindow.__pdReactDOMHook = ReactDOM;
+        contentWindow.pd__loaded_libraries = {};
+        return contentWindow.pd__initted = true;
+    }
+};
 
-exports.makeLibAtVersion = (contentWindow, lib_id, version_id) ->
-    server.getLibraryMetadata(lib_id, version_id).then ({version, name}) ->
-        # Typecheck...
-        throw new Error('Invalid lib') if !lib_id? or !name? or !version.id? or !version.name? \
-        or !version.bundle_hash? or (!version.npm_path? and !version.local_path?) or !version.is_node_module?
+defaultExport.makeLibAtVersion = (contentWindow, lib_id, version_id) => server.getLibraryMetadata(lib_id, version_id).then(function({version, name}) {
+    // Typecheck...
+    if ((lib_id == null) || (name == null) || (version.id == null) || (version.name == null) 
+    || (version.bundle_hash == null) || ((version.npm_path == null) && (version.local_path == null)) || (version.is_node_module == null)) { throw new Error('Invalid lib'); }
 
-        lib = new Library({
-            library_id: String(lib_id), library_name: name
-            version_id: String(version_id), version_name: version.name
-            npm_path: version.npm_path, local_path: version.local_path, is_node_module: version.is_node_module
-            bundle_hash: version.bundle_hash, inDevMode: false
-        })
-        lib.load(contentWindow).then ->
-            throw new Error("Could not load lib #{lib.name()}") if not lib.didLoad(contentWindow)
-            lib.cachedExternalCodeSpecs = lib.loadedSpecs(contentWindow)
-            return lib
+    const lib = new Library({
+        library_id: String(lib_id), library_name: name,
+        version_id: String(version_id), version_name: version.name,
+        npm_path: version.npm_path, local_path: version.local_path, is_node_module: version.is_node_module,
+        bundle_hash: version.bundle_hash, inDevMode: false
+    });
+    return lib.load(contentWindow).then(function() {
+        if (!lib.didLoad(contentWindow)) { throw new Error(`Could not load lib ${lib.name()}`); }
+        lib.cachedExternalCodeSpecs = lib.loadedSpecs(contentWindow);
+        return lib;
+    });
+});
+
+
+
+
+
+export default defaultExport;
 
 
 

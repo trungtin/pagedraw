@@ -1,6 +1,5 @@
-React = require 'react'
-ReactDOM = require 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Pricing from './pricing';
 
-Pricing = require './pricing'
-
-ReactDOM.render(React.createElement(Pricing, null), document.getElementById('app'))
+ReactDOM.render(React.createElement(Pricing, null), document.getElementById('app'));

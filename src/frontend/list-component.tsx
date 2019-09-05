@@ -1,31 +1,41 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
-{ SidebarHeaderAddButton } = require '../editor/component-lib'
+/*
+ * decaffeinate suggestions:
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let ListComponent;
+import React from 'react';
+import createReactClass from 'create-react-class';
+import { SidebarHeaderAddButton } from '../editor/component-lib';
 
-module.exports = ListComponent = createReactClass
-    render: ->
-        React.createElement("div", {"style": (@props.labelRowStyle)},
-            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', alignItems: 'center')},
-                React.createElement("span", {"style": (flex: 1)}, (@props.label)),
-                React.createElement(SidebarHeaderAddButton, {"onClick": (@handleAdd)})
+export default ListComponent = createReactClass({
+    render() {
+        return React.createElement("div", {"style": (this.props.labelRowStyle)},
+            React.createElement("div", {"style": ({display: 'flex', flexDirection: 'row', alignItems: 'center'})},
+                React.createElement("span", {"style": ({flex: 1})}, (this.props.label)),
+                React.createElement(SidebarHeaderAddButton, {"onClick": (this.handleAdd)})
             ),
             React.createElement("div", null,
-                ( @props.valueLink.value.map (elem, i) =>
-                    React.createElement(React.Fragment, {"key": (i)},
-                        (@props.elem({value: elem, requestChange: @handleUpdate(i)}, (=> @handleRemove(i)), i))
-                    )
-                )
+                ( this.props.valueLink.value.map((elem, i) => {
+                    return React.createElement(React.Fragment, {"key": (i)},
+                        (this.props.elem({value: elem, requestChange: this.handleUpdate(i)}, (() => this.handleRemove(i)), i))
+                    );
+                }))
             )
-        )
+        );
+    },
 
-    handleAdd: -> @update @getVal().concat([@props.newElement()])
-    handleRemove: (i) -> @splice(i, 1)
-    handleUpdate: (i) -> (nv) => @splice(i, 1, nv)
+    handleAdd() { return this.update(this.getVal().concat([this.props.newElement()])); },
+    handleRemove(i) { return this.splice(i, 1); },
+    handleUpdate(i) { return nv => this.splice(i, 1, nv); },
 
-    getVal: -> @props.valueLink.value
-    update: (nv) -> @props.valueLink.requestChange(nv)
+    getVal() { return this.props.valueLink.value; },
+    update(nv) { return this.props.valueLink.requestChange(nv); },
 
-    splice: (args...) ->
-        list_copy = @props.valueLink.value.slice()
-        list_copy.splice(args...)
-        @props.valueLink.requestChange(list_copy)
+    splice(...args) {
+        const list_copy = this.props.valueLink.value.slice();
+        list_copy.splice(...Array.from(args || []));
+        return this.props.valueLink.requestChange(list_copy);
+    }
+});

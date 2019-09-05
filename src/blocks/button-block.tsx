@@ -1,107 +1,131 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
-Block = require '../block'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS104: Avoid inline assignments
+ * DS206: Consider reworking classes to avoid initClass
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let ButtonBlock;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import Block from '../block';
+import { Font, fontsByName } from '../fonts';
 
-{Font, fontsByName} = require '../fonts'
-
-module.exports = Block.register 'button', class ButtonBlock extends Block
-    @userVisibleLabel: 'Button'
-    properties:
-        text: String
-        textGutter: Number
-        textTopAndBottomMargins: Number
-
-        fontColor: String
-        fontSize: Number
-        fontFamily: Font
-        textShadow: String
-        lineHeight: Number
-        textAlign: String
-
-        isBold: Boolean
-        isItalics: Boolean
-        isUnderline: Boolean
-
-        # background image
-        image: String
-
-    constructor: (json) ->
-        super(json)
-
-        # needs to override default values for UndeterminedBlock
-        @borderRadius ?= 4
-
-        @fontColor ?= '#fff'
-        @fontSize ?= 16
-        @fontFamily ?= fontsByName['Helvetica Neue']
-        @textAlign ?= 'center'
-        @text ?= 'Click me'
-
-        @borderThickness ?= 0
-
-    getDefaultColor: -> '#337ab7'
-
-    sidebarControls: -> [
-        React.createElement("div", null,
-            React.createElement("h5", null, "Deprecation Notice"),
-            React.createElement("p", null, """
-            This block is a Button Block, which has been deprecated.  Instead, you should make your
-            own button component, and use it throughout your app.
-"""),
-            React.createElement("p", null, """
-            You\'ll notice that the block type listed above is incorrect.  This is because the Button
-            Block type has been hidden in Pagedraw as part of the deprecation process.
-""")
-        )
-    ]
-
-    canContainChildren: false
-
-    renderHTML: (pdom) ->
-        super(arguments...)
-
-        _.extend pdom, {
-            tag: 'button'
-            typeAttr: 'submit'
-            children: [{tag: 'span', children: [], textContent: @text}]
-
-            paddingLeft: @textGutter
-            paddingRight: @textGutter
-            paddingTop: @textTopAndBottomMargins
-            paddingBottom: @textTopAndBottomMargins
-
-            fontFamily: @fontFamily
-            color: @fontColor
-            fontSize: @fontSize
-            textShadow: @textShadow
-
-            # We need to explicitly give lineHeight units, or in the editor,
-            # React will, in a special case, treat it as a unitless multiple,
-            # while we compile it with "px"
-            lineHeight: @lineHeight?.px() ? 'normal'
-
-            fontWeight: if @isBold then '700' else '400'
-            fontStyle: if @isItalics then 'italic' else 'normal'
-            textDecoration: if @isUnderline then 'underline' else 'none'
-
-            textAlign: @textAlign
-
-            # wrap word across multiple lines if it's too long to fit on one
-            wordWrap: 'break-word'
-
-            # Force reset some defaults.  See core.percolate_inherited_css_properties to understand why
-            letterSpacing: 'normal'
+export default Block.register('button', (ButtonBlock = (function() {
+    ButtonBlock = class ButtonBlock extends Block {
+        static initClass() {
+            this.userVisibleLabel = 'Button';
+            this.prototype.properties = {
+                text: String,
+                textGutter: Number,
+                textTopAndBottomMargins: Number,
+    
+                fontColor: String,
+                fontSize: Number,
+                fontFamily: Font,
+                textShadow: String,
+                lineHeight: Number,
+                textAlign: String,
+    
+                isBold: Boolean,
+                isItalics: Boolean,
+                isUnderline: Boolean,
+    
+                // background image
+                image: String
+            };
+    
+            this.prototype.canContainChildren = false;
         }
 
-        # the default is an ugly "inset" border
-        if @borderThickness == 0
-            pdom.border = 'none'
+        constructor(json) {
+            super(json);
 
-        if @image
-            _.extend pdom,
-                'backgroundImage': "url('#{@image}')"
-                'backgroundSize': 'cover'
-                'backgroundPositionX': '50%'
+            // needs to override default values for UndeterminedBlock
+            if (this.borderRadius == null) { this.borderRadius = 4; }
+
+            if (this.fontColor == null) { this.fontColor = '#fff'; }
+            if (this.fontSize == null) { this.fontSize = 16; }
+            if (this.fontFamily == null) { this.fontFamily = fontsByName['Helvetica Neue']; }
+            if (this.textAlign == null) { this.textAlign = 'center'; }
+            if (this.text == null) { this.text = 'Click me'; }
+
+            if (this.borderThickness == null) { this.borderThickness = 0; }
+        }
+
+        getDefaultColor() { return '#337ab7'; }
+
+        sidebarControls() { return [
+            React.createElement("div", null,
+                React.createElement("h5", null, "Deprecation Notice"),
+                React.createElement("p", null, `\
+This block is a Button Block, which has been deprecated.  Instead, you should make your
+own button component, and use it throughout your app.\
+`),
+                React.createElement("p", null, `\
+You\'ll notice that the block type listed above is incorrect.  This is because the Button
+Block type has been hidden in Pagedraw as part of the deprecation process.\
+`)
+            )
+        ]; }
+
+        renderHTML(pdom) {
+            let left;
+            super.renderHTML(...arguments);
+
+            _.extend(pdom, {
+                tag: 'button',
+                typeAttr: 'submit',
+                children: [{tag: 'span', children: [], textContent: this.text}],
+
+                paddingLeft: this.textGutter,
+                paddingRight: this.textGutter,
+                paddingTop: this.textTopAndBottomMargins,
+                paddingBottom: this.textTopAndBottomMargins,
+
+                fontFamily: this.fontFamily,
+                color: this.fontColor,
+                fontSize: this.fontSize,
+                textShadow: this.textShadow,
+
+                // We need to explicitly give lineHeight units, or in the editor,
+                // React will, in a special case, treat it as a unitless multiple,
+                // while we compile it with "px"
+                lineHeight: (left = (this.lineHeight != null ? this.lineHeight.px() : undefined)) != null ? left : 'normal',
+
+                fontWeight: this.isBold ? '700' : '400',
+                fontStyle: this.isItalics ? 'italic' : 'normal',
+                textDecoration: this.isUnderline ? 'underline' : 'none',
+
+                textAlign: this.textAlign,
+
+                // wrap word across multiple lines if it's too long to fit on one
+                wordWrap: 'break-word',
+
+                // Force reset some defaults.  See core.percolate_inherited_css_properties to understand why
+                letterSpacing: 'normal'
+            });
+
+            // the default is an ugly "inset" border
+            if (this.borderThickness === 0) {
+                pdom.border = 'none';
+            }
+
+            if (this.image) {
+                return _.extend(pdom, {
+                    'backgroundImage': `url('${this.image}')`,
+                    'backgroundSize': 'cover',
+                    'backgroundPositionX': '50%'
+                }
+                );
+            }
+        }
+    };
+    ButtonBlock.initClass();
+    return ButtonBlock;
+})())
+);
 
 

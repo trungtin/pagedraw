@@ -1,6 +1,5 @@
-React = require 'react'
-ReactDOM = require 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Landing from './landing';
 
-Landing = require './landing'
-
-ReactDOM.render(React.createElement(Landing, null), document.getElementById('app'))
+ReactDOM.render(React.createElement(Landing, null), document.getElementById('app'));

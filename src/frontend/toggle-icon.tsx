@@ -1,14 +1,22 @@
-React = require 'react'
-createReactClass = require 'create-react-class'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+import createReactClass from 'create-react-class';
 
-module.exports = createReactClass
-    displayName: 'ToggleIcon'
+export default createReactClass({
+    displayName: 'ToggleIcon',
 
-    render: ->
-        icon = if @props.valueLink.value == true then @props.checkedIcon else @props.uncheckedIcon
-        React.cloneElement(icon, {onClick: @toggle})
+    render() {
+        const icon = this.props.valueLink.value === true ? this.props.checkedIcon : this.props.uncheckedIcon;
+        return React.cloneElement(icon, {onClick: this.toggle});
+    },
 
-    toggle: (e) ->
-        @props.valueLink.requestChange(not @props.valueLink.value)
-        e.stopPropagation()
-        e.preventDefault()
+    toggle(e) {
+        this.props.valueLink.requestChange(!this.props.valueLink.value);
+        e.stopPropagation();
+        return e.preventDefault();
+    }
+});

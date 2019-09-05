@@ -1,188 +1,247 @@
-_ = require 'underscore'
-_l = require 'lodash'
-React = require 'react'
-ReactDOM = require 'react-dom'
+/*
+ * decaffeinate suggestions:
+ * DS001: Remove Babel/TypeScript constructor workaround
+ * DS101: Remove unnecessary use of Array.from
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS205: Consider reworking code to avoid use of IIFEs
+ * DS207: Consider shorter variations of null checks
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let StressTesterInteraction;
+import _ from 'underscore';
+import _l from 'lodash';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Block from '../block';
+import core from '../core';
+import config from '../config';
+import { DraggingCanvas } from '../frontend/DraggingCanvas';
+import { ResizingFrame } from '../frontend/resizing-grip';
+import { InstanceBlock } from '../blocks/instance-block';
+import Zoomable from '../frontend/zoomable';
+import ViewportManager from '../editor/viewport-manager';
+import Topbar from '../pagedraw/topbar';
+import { EditorMode } from './editor-mode';
+import { pdomToReactWithPropOverrides } from '../editor/pdom-to-react';
+import { inferConstraints } from '../programs';
 
-Block = require '../block'
-core = require '../core'
-config = require '../config'
-{DraggingCanvas} = require '../frontend/DraggingCanvas'
-{ResizingFrame} = require '../frontend/resizing-grip'
-{InstanceBlock} = require '../blocks/instance-block'
-Zoomable = require '../frontend/zoomable'
-ViewportManager = require '../editor/viewport-manager'
-Topbar = require '../pagedraw/topbar'
+const link = (txt, href) => React.createElement("a", {"style": ({textDecoration: 'underline'}), "target": "_blank", "href": (href)}, (txt));
+const warningStyles = {fontFamily: 'Helvetica neue', padding: 5, borderBottom: '1px solid grey', backgroundColor: '#EEE8AA', color: '#333300'};
+const uselessStressTesterWarning = () => React.createElement("div", {"style": (warningStyles)},
+    React.createElement("img", {"style": ({marginRight: 3}), "src": `${config.static_server}/assets/warning-icon.png`}), `\
+To use stress tester mode, use the sidebar to specify that this component is\
+`, (link('resizable', 'https://documentation.pagedraw.io/layout/')), ", or add some ", (link('data bindings', 'https://documentation.pagedraw.io/data-binding/')), ` to it.\
+`);
 
-{EditorMode} = require './editor-mode'
+export default StressTesterInteraction = class StressTesterInteraction extends EditorMode {
+    constructor(artboard) {
+        {
+          // Hack: trick Babel/TypeScript into allowing this before super.
+          if (false) { super(); }
+          let thisFn = (() => { return this; }).toString();
+          let thisName = thisFn.match(/return (?:_assertThisInitialized\()*(\w+)\)*;/)[1];
+          eval(`${thisName} = this;`);
+        }
+        this.willMount = this.willMount.bind(this);
+        this.canvas = this.canvas.bind(this);
+        this.topbar = this.topbar.bind(this);
+        this.randomizeSize = this.randomizeSize.bind(this);
+        this.randomizeData = this.randomizeData.bind(this);
+        this.ensureMinGeometries = this.ensureMinGeometries.bind(this);
+        this.inferConstraints = this.inferConstraints.bind(this);
+        this.exitMode = this.exitMode.bind(this);
+        this.handleDrag = this.handleDrag.bind(this);
+        this.artboard = artboard;
+        this.instanceBlock = new InstanceBlock({sourceRef: this.artboard.getRootComponent().componentSpec.componentRef});
+        this.instanceBlock.doc = this.artboard.doc;
+        this.instanceBlock.propValues = this.instanceBlock.getSourceComponent().componentSpec.propControl.random();
 
-{pdomToReactWithPropOverrides} = require '../editor/pdom-to-react'
+        this.previewGeometry = new Block({top: this.artboard.top, left: this.artboard.left, height: this.artboard.height, width: this.artboard.width});
+        this.viewportManager = new ViewportManager();
+        this.viewportManager.setViewport(_l.pick(this.previewGeometry, ['top', 'left', 'width', 'height']));
+    }
 
-{inferConstraints} = require '../programs'
+    willMount(editor) {
+        this.editor = editor;
+        return this.ensureMinGeometries();
+    }
 
-link = (txt, href) -> React.createElement("a", {"style": (textDecoration: 'underline'), "target": "_blank", "href": (href)}, (txt))
-warningStyles = {fontFamily: 'Helvetica neue', padding: 5, borderBottom: '1px solid grey', backgroundColor: '#EEE8AA', color: '#333300'}
-uselessStressTesterWarning = ->
-    React.createElement("div", {"style": (warningStyles)},
-        React.createElement("img", {"style": (marginRight: 3), "src": "#{config.static_server}/assets/warning-icon.png"}), """
-        To use stress tester mode, use the sidebar to specify that this component is
-""", (link('resizable', 'https://documentation.pagedraw.io/layout/')), ", or add some ", (link('data bindings', 'https://documentation.pagedraw.io/data-binding/')), """ to it.
-""")
+    canvas(editor) {
+        let evaled_pdom;
+        const component = this.instanceBlock.getSourceComponent();
 
-module.exports = class StressTesterInteraction extends EditorMode
-    constructor: (@artboard) ->
-        @instanceBlock = new InstanceBlock({sourceRef: @artboard.getRootComponent().componentSpec.componentRef})
-        @instanceBlock.doc = @artboard.doc
-        @instanceBlock.propValues = @instanceBlock.getSourceComponent().componentSpec.propControl.random()
+        if ((component == null)) {
+            // the component was deleted
+            window.setTimeout(() => this.exitMode());
+            return React.createElement("div", null);
+        }
 
-        @previewGeometry = new Block(top: @artboard.top, left: @artboard.left, height: @artboard.height, width: @artboard.width)
-        @viewportManager = new ViewportManager()
-        @viewportManager.setViewport(_l.pick(@previewGeometry, ['top', 'left', 'width', 'height']))
-
-    willMount: (@editor) =>
-        @ensureMinGeometries()
-
-    canvas: (editor) =>
-        component = @instanceBlock.getSourceComponent()
-
-        if not component?
-            # the component was deleted
-            window.setTimeout => @exitMode()
-            return React.createElement("div", null)
-
-        try
-            evaled_pdom = core.evalInstanceBlock(@instanceBlock, @editor.getInstanceEditorCompileOptions())
-        catch e
-            console.warn e if config.warnOnEvalPdomErrors
-            return React.createElement("div", {"style": (padding: '0.5em', backgroundColor: '#ff7f7f')},
+        try {
+            evaled_pdom = core.evalInstanceBlock(this.instanceBlock, this.editor.getInstanceEditorCompileOptions());
+        } catch (e) {
+            if (config.warnOnEvalPdomErrors) { console.warn(e); }
+            return React.createElement("div", {"style": ({padding: '0.5em', backgroundColor: '#ff7f7f'})},
                 (e.message)
-            )
+            );
+        }
 
-        component_blocks = component.andChildren()
-        selected_blocks = @editor.getSelectedBlocks()
-        rendered_pdom = pdomToReactWithPropOverrides evaled_pdom, undefined, (pdom, props) =>
-            return props if not pdom.backingBlock? or pdom.backingBlock == @instanceBlock or pdom.backingBlock not in component_blocks
+        const component_blocks = component.andChildren();
+        const selected_blocks = this.editor.getSelectedBlocks();
+        const rendered_pdom = pdomToReactWithPropOverrides(evaled_pdom, undefined, (pdom, props) => {
+            if ((pdom.backingBlock == null) || (pdom.backingBlock === this.instanceBlock) || !Array.from(component_blocks).includes(pdom.backingBlock)) { return props; }
 
-            classes = [props.className, 'stress-tester-block']
-            classes.push('stress-tester-selected-block') if pdom.backingBlock in selected_blocks
+            const classes = [props.className, 'stress-tester-block'];
+            if (Array.from(selected_blocks).includes(pdom.backingBlock)) { classes.push('stress-tester-selected-block'); }
 
-            return _l.extend {}, props,
-                # Add class names for hovering + selecting outlines
-                className: classes.join(' ')
+            return _l.extend({}, props, {
+                // Add class names for hovering + selecting outlines
+                className: classes.join(' '),
 
-                # onClick selects the block
-                onClick: (evt) =>
-                    evt.stopPropagation() # we don't want other parents that have blocks to be selected if an inner child was clicked
+                // onClick selects the block
+                onClick: evt => {
+                    evt.stopPropagation(); // we don't want other parents that have blocks to be selected if an inner child was clicked
 
-                    toggleSelected = evt.shiftKey
-                    @editor.selectBlocks([pdom.backingBlock], additive: toggleSelected)
-                    @editor.handleDocChanged(fast: true)
+                    const toggleSelected = evt.shiftKey;
+                    this.editor.selectBlocks([pdom.backingBlock], {additive: toggleSelected});
+                    return this.editor.handleDocChanged({fast: true});
+                }
+            }
+            );
+        });
 
-        dynamics = _l.flatMap @artboard.andChildren(), (block) -> block.getDynamicsForUI()
-        canvasGeometry = {height: @previewGeometry.height + window.innerHeight, width: @previewGeometry.width + window.innerWidth}
+        const dynamics = _l.flatMap(this.artboard.andChildren(), block => block.getDynamicsForUI());
+        const canvasGeometry = {height: this.previewGeometry.height + window.innerHeight, width: this.previewGeometry.width + window.innerWidth};
 
-        # We add DraggingCanvas here just for the ResizingGrip functionality
-        React.createElement("div", {"style": (display: 'flex', flexDirection: 'column', flex: 1)},
-            (uselessStressTesterWarning() if _l.isEmpty(dynamics) and _l.isEmpty(@instanceBlock.resizableEdges)),
-            React.createElement(Zoomable, {"viewportManager": (@viewportManager), "style": (flex: 1, backgroundColor: '#333')},
-                React.createElement(DraggingCanvas, { \
-                    "className": "stress-tester", "style": (height: canvasGeometry.height, width: canvasGeometry.width),  \
-                    "onDrag": (@handleDrag), "onClick": (->), "onDoubleClick": (->), "onInteractionHappened": (->)},
-                    React.createElement("div", {"className": "expand-children", "style": (_l.extend({position: 'absolute'}, _l.pick(@previewGeometry, ['top', 'left', 'width', 'height'])))},
-                        React.createElement(ResizingFrame, {"resizable_edges": (@instanceBlock.resizableEdges),  \
-                            "style": (position: 'absolute', top: 0, left: 0, right: 0, bottom: 0),  \
-                            "flag": ((grip) => {control: 'resizer', edges: grip.sides, grip_label: grip.label})
+        // We add DraggingCanvas here just for the ResizingGrip functionality
+        return React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column', flex: 1})},
+            (_l.isEmpty(dynamics) && _l.isEmpty(this.instanceBlock.resizableEdges) ? uselessStressTesterWarning() : undefined),
+            React.createElement(Zoomable, {"viewportManager": (this.viewportManager), "style": ({flex: 1, backgroundColor: '#333'})},
+                React.createElement(DraggingCanvas, { 
+                    "className": "stress-tester", "style": ({height: canvasGeometry.height, width: canvasGeometry.width}),  
+                    "onDrag": (this.handleDrag), "onClick"() {}, "onDoubleClick"() {}, "onInteractionHappened"() {}},
+                    React.createElement("div", {"className": "expand-children", "style": (_l.extend({position: 'absolute'}, _l.pick(this.previewGeometry, ['top', 'left', 'width', 'height'])))},
+                        React.createElement(ResizingFrame, {"resizable_edges": (this.instanceBlock.resizableEdges),  
+                            "style": ({position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}),  
+                            "flag": (grip => ({control: 'resizer', edges: grip.sides, grip_label: grip.label}))
                             }),
-                        React.createElement("div", {"className": "expand-children", "style": (overflow: 'auto')}, (rendered_pdom))
+                        React.createElement("div", {"className": "expand-children", "style": ({overflow: 'auto'})}, (rendered_pdom))
                     )
                 )
             )
-        )
+        );
+    }
 
-    topbar: => React.createElement("div", null, React.createElement(Topbar, {"editor": (_l.extend({}, @editor, this)), "whichTopbar": ('stress-tester')}))
+    topbar() { return React.createElement("div", null, React.createElement(Topbar, {"editor": (_l.extend({}, this.editor, this)), "whichTopbar": ('stress-tester')})); }
 
-    ## Topbar methods
-    randomizeSize: =>
-        @previewGeometry.height = Math.floor(Math.random() * 2000)
-        @previewGeometry.width = Math.floor(Math.random() * 2000)
-        @ensureMinGeometries()
-        @editor.handleDocChanged(fast: true)
+    //# Topbar methods
+    randomizeSize() {
+        this.previewGeometry.height = Math.floor(Math.random() * 2000);
+        this.previewGeometry.width = Math.floor(Math.random() * 2000);
+        this.ensureMinGeometries();
+        return this.editor.handleDocChanged({fast: true});
+    }
 
-    randomizeData: =>
-        @instanceBlock.propValues = @instanceBlock.getSourceComponent().componentSpec.propControl.random()
-        @ensureMinGeometries()
-        @editor.handleDocChanged(fast: true)
+    randomizeData() {
+        this.instanceBlock.propValues = this.instanceBlock.getSourceComponent().componentSpec.propControl.random();
+        this.ensureMinGeometries();
+        return this.editor.handleDocChanged({fast: true});
+    }
 
-    ensureMinGeometries: =>
-        try
-            {minWidth, minHeight} = @editor.getBlockMinGeometry(@instanceBlock)
-        catch e
-            console.warn e
-            [minWidth, minHeight] = [0, 0]
-        @previewGeometry.width = Math.max(minWidth, @previewGeometry.width)
-        @previewGeometry.height = Math.max(minHeight, @previewGeometry.height)
+    ensureMinGeometries() {
+        let minHeight, minWidth;
+        try {
+            ({minWidth, minHeight} = this.editor.getBlockMinGeometry(this.instanceBlock));
+        } catch (e) {
+            console.warn(e);
+            [minWidth, minHeight] = Array.from([0, 0]);
+        }
+        this.previewGeometry.width = Math.max(minWidth, this.previewGeometry.width);
+        return this.previewGeometry.height = Math.max(minHeight, this.previewGeometry.height);
+    }
 
-    inferConstraints: =>
-        inferConstraints(@artboard)
-        @editor.handleDocChanged()
+    inferConstraints() {
+        inferConstraints(this.artboard);
+        return this.editor.handleDocChanged();
+    }
 
-    exitMode: =>
-        @editor.setEditorStateToDefault()
-        @editor.handleDocChanged(fast: true)
+    exitMode() {
+        this.editor.setEditorStateToDefault();
+        return this.editor.handleDocChanged({fast: true});
+    }
 
-    handleDrag: (from, onMove, onEnd) =>
-        @editor.setInteractionInProgress(true)
+    handleDrag(from, onMove, onEnd) {
+        this.editor.setInteractionInProgress(true);
 
-        after = (handler, extra) ->
-            newHandler = null
-            handler (args...) ->
-                newHandler?(args...)
-                extra(args...)
-            return ((nh) -> newHandler = nh)
+        const after = function(handler, extra) {
+            let newHandler = null;
+            handler(function(...args) {
+                if (typeof newHandler === 'function') {
+                    newHandler(...Array.from(args || []));
+                }
+                return extra(...Array.from(args || []));
+            });
+            return nh => newHandler = nh;
+        };
 
-        onMove = after onMove, =>
-            @editor.handleDocChanged({
+        onMove = after(onMove, () => {
+            return this.editor.handleDocChanged({
                 fast: true,
                 dontUpdateSidebars: true,
                 dont_recalculate_overlapping: true,
-                subsetOfBlocksToRerender: @activeBlocks
-            })
+                subsetOfBlocksToRerender: this.activeBlocks
+            });
+        });
 
-        onEnd = after onEnd, =>
-            @activeBlocks = undefined
-            @editor.setInteractionInProgress(false)
+        onEnd = after(onEnd, () => {
+            this.activeBlocks = undefined;
+            return this.editor.setInteractionInProgress(false);
+        });
 
-        if from.ctx?.control == 'resizer'
-            @resizeViewport(from.ctx.edges, from, onMove, onEnd)
+        if ((from.ctx != null ? from.ctx.control : undefined) === 'resizer') {
+            return this.resizeViewport(from.ctx.edges, from, onMove, onEnd);
+        }
+    }
 
-    resizeViewport: (edges, from, onMove, onEnd) ->
-        # The below does evalPdom so we need to wrap it in a try catch
-        try
-            {minWidth, minHeight} = @editor.getBlockMinGeometry(@instanceBlock)
-        catch e
-            console.warn e
-            [minWidth, minHeight] = [0, 0]
+    resizeViewport(edges, from, onMove, onEnd) {
+        // The below does evalPdom so we need to wrap it in a try catch
+        let minHeight, minWidth;
+        try {
+            ({minWidth, minHeight} = this.editor.getBlockMinGeometry(this.instanceBlock));
+        } catch (e) {
+            console.warn(e);
+            [minWidth, minHeight] = Array.from([0, 0]);
+        }
 
-        block = @previewGeometry
-        originalEdges = _l.pick block, edges
+        const block = this.previewGeometry;
+        const originalEdges = _l.pick(block, edges);
 
-        onMove ({delta}) =>
-            for edge in edges
-                newPosition = originalEdges[edge] + delta[Block.axisOfEdge[edge]]
+        onMove(({delta}) => {
+            return (() => {
+                const result = [];
+                for (let edge of Array.from(edges)) {
+                    let newPosition = originalEdges[edge] + delta[Block.axisOfEdge[edge]];
 
-                # Don't let user push edges under their min values
-                if edge == 'left'
-                    newPosition = block.right - minWidth if block.right - newPosition < minWidth
-                else if edge == 'right'
-                    newPosition = block.left + minWidth if newPosition - block.left < minWidth
-                else if edge == 'top'
-                    newPosition = block.bottom - minHeight if block.bottom - newPosition < minHeight
-                else if edge == 'bottom'
-                    newPosition = block.top + minHeight if newPosition - block.top < minHeight
-                else
-                    throw new Error('Unkown edge')
+                    // Don't let user push edges under their min values
+                    if (edge === 'left') {
+                        if ((block.right - newPosition) < minWidth) { newPosition = block.right - minWidth; }
+                    } else if (edge === 'right') {
+                        if ((newPosition - block.left) < minWidth) { newPosition = block.left + minWidth; }
+                    } else if (edge === 'top') {
+                        if ((block.bottom - newPosition) < minHeight) { newPosition = block.bottom - minHeight; }
+                    } else if (edge === 'bottom') {
+                        if ((newPosition - block.top) < minHeight) { newPosition = block.top + minHeight; }
+                    } else {
+                        throw new Error('Unkown edge');
+                    }
 
-                block.edges[edge] = newPosition
+                    result.push(block.edges[edge] = newPosition);
+                }
+                return result;
+            })();
+        });
 
-        onEnd (at) =>
-            return
+        return onEnd(at => {
+        });
+    }
+};
 

@@ -1,29 +1,44 @@
-_ = require 'underscore'
-React = require 'react'
-Block = require '../block'
-{TextControl, NumberControl, CheckboxControl} = require '../editor/sidebar-controls'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * DS206: Consider reworking classes to avoid initClass
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let FileInputBlock;
+import _ from 'underscore';
+import React from 'react';
+import Block from '../block';
+import { TextControl, NumberControl, CheckboxControl } from '../editor/sidebar-controls';
 
-module.exports = Block.register 'file-input', class FileInputBlock extends Block
-    @userVisibleLabel: 'File Input'
+export default Block.register('file-input', (FileInputBlock = (function() {
+    FileInputBlock = class FileInputBlock extends Block {
+        static initClass() {
+            this.userVisibleLabel = 'File Input';
+    
+            this.prototype.properties =
+                {ref: String};
+    
+            this.prototype.resizableEdges = [];
+            // FIXME: I don't know if these numbers should ever change in different scenarios
+            this.const_property('width', 163);
+            this.const_property('height', 21);
+    
+            this.prototype.canContainChildren = false;
+        }
 
-    properties:
-        ref: String
+        boxStylingSidebarControls() { return []; }
 
-    boxStylingSidebarControls: -> []
+        renderHTML(dom) {
+            super.renderHTML(...arguments);
 
-    resizableEdges: []
-    # FIXME: I don't know if these numbers should ever change in different scenarios
-    @const_property 'width', 163
-    @const_property 'height', 21
-
-    canContainChildren: false
-
-    renderHTML: (dom) ->
-        super(arguments...)
-
-        dom.children = [{
-            tag: 'input'
-            typeAttr: 'file'
-            nameAttr: @ref
-            children: []
-        }]
+            return dom.children = [{
+                tag: 'input',
+                typeAttr: 'file',
+                nameAttr: this.ref,
+                children: []
+            }];
+        }
+    };
+    FileInputBlock.initClass();
+    return FileInputBlock;
+})()));
