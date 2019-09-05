@@ -47,13 +47,13 @@ exports.LibraryAutoSuggest = createReactClass
                                     len = if value.includes('@') then value.split('@')[0].length else value.length
                                     value == option.name.slice(0, len)
                                 if value.includes('@')
-                                   Promise.all(matchingLibs.map (lib) =>
-                                        fetch("/libraries/#{lib.id}/versions").then (res) =>
-                                            [res.json(), lib]
-                                    ).then (versionsOfLibs) =>
-                                        @libraries = _l.flatten(versionsOfLibs.map ([versions, lib]) =>
-                                            versions.map (version) => _l.extend {}, version, {lib_name: lib.name}
-                                            )
+                                #    Promise.all(matchingLibs.map (lib) =>
+                                #         fetch("/libraries/#{lib.id}/versions").then (res) =>
+                                #             [res.json(), lib]
+                                #     ).then (versionsOfLibs) =>
+                                #         @libraries = _l.flatten(versionsOfLibs.map ([versions, lib]) =>
+                                #             versions.map (version) => _l.extend {}, version, {lib_name: lib.name}
+                                #             )
                                 else
                                     @suggestions = matchingLibs
                                 @props.onChange()

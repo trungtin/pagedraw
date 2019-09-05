@@ -179,14 +179,14 @@ exports.Editor = Editor = createReactClass
                 )
              )
 
-        if @isLoaded() == false
-            return React.createElement("div", {"style": (backgroundColor: 'rgb(251, 251, 251)')},
-                (###
-                Nothing in particular to do with loading, but we have the same offscreen div as below.
-                We need it in the boot sequence before the editor isLoaded()
-                ###),
-                React.createElement("div", {"style": (visibility: 'hidden'), "key": "off_screen_div", "ref": "off_screen_div"})
-            )
+        # if @isLoaded() == false
+        #     return React.createElement("div", {"style": (backgroundColor: 'rgb(251, 251, 251)')},
+        #         (###
+        #         Nothing in particular to do with loading, but we have the same offscreen div as below.
+        #         We need it in the boot sequence before the editor isLoaded()
+        #         ###),
+        #         React.createElement("div", {"style": (visibility: 'hidden'), "key": "off_screen_div", "ref": "off_screen_div"})
+        #     )
 
         assert => @doc.isInReadonlyMode()
 
@@ -274,10 +274,10 @@ exports.Editor = Editor = createReactClass
                 )
             ),
 
-            (###
-            @refs.off_screen_div is used for when we need access to a DOM node but don't want
-            to interfere with the Editor, for example with getSizeOfPdom().
-            ###),
+            # (###
+            # @refs.off_screen_div is used for when we need access to a DOM node but don't want
+            # to interfere with the Editor, for example with getSizeOfPdom().
+            # ###),
             React.createElement("div", {"style": (visibility: 'hidden'), "key": "off_screen_div", "ref": "off_screen_div"})
         )
 

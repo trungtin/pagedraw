@@ -33,25 +33,25 @@ module.exports = createReactClass
         selectionChanged = not isPermutation(nextProps.selectedBlocks, @props.selectedBlocks.map((b) -> b.getBlock()))
         if selectionChanged then @openFoldersForBlocks(nextProps.doc, nextProps.selectedBlocks)
 
-    openFoldersForBlocks: (doc, blocks) ->
-        # we're doing a lot of .parent calculations— probably want to be in readonly mode to reuse a blockTree
-        doc.inReadonlyMode =>
+    # openFoldersForBlocks: (doc, blocks) ->
+    #     # we're doing a lot of .parent calculations— probably want to be in readonly mode to reuse a blockTree
+    #     doc.inReadonlyMode =>
 
-            # takes a list of blocks since we're usually passing in selectedBlocks, but we're just doing the same
-            # thing over each block
-            for block in blocks
+    #         # takes a list of blocks since we're usually passing in selectedBlocks, but we're just doing the same
+    #         # thing over each block
+    #         for block in blocks
 
-                @setCollapsed(block, false) if config.layerListExpandSelectedBlock
+    #             @setCollapsed(block, false) if config.layerListExpandSelectedBlock
 
-                # expand all ancestors of block starting with block.parent
-                ancestor = block.parent
-                while ancestor?
+    #             # expand all ancestors of block starting with block.parent
+    #             ancestor = block.parent
+    #             while ancestor?
 
-                  # open the folder for the ancestor
-                  @setCollapsed(ancestor, false)
+    #               # open the folder for the ancestor
+    #               @setCollapsed(ancestor, false)
 
-                  # move on to the next ancestor
-                  ancestor = ancestor.parent
+    #               # move on to the next ancestor
+    #               ancestor = ancestor.parent
 
 
     getTreeList: ->
