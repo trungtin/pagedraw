@@ -8,8 +8,8 @@ SelectOnClick = require './select-on-click'
 module.exports = CodeShower = createReactClass
     displayName: 'CodeShower'
     render: ->
-        <SelectOnClick>
-            <pre {...@props}>
-                {@props.content}
-            </pre>
-        </SelectOnClick>
+        React.createElement(SelectOnClick, null,
+            React.createElement("pre", Object.assign({},  @props),
+                (@props.content)
+            )
+        )

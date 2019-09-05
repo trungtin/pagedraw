@@ -32,17 +32,17 @@ LocalStorageValueLink = (key, dfault, onchange) ->
     }
 
 DemoContainer = (props) ->
-    <div style={_l.extend {width: 800, margin: 'auto'}, props.style}>
-        {props.children}
-    </div>
+    React.createElement("div", {"style": (_l.extend {width: 800, margin: 'auto'}, props.style)},
+        (props.children)
+    )
 
 ##
 
 Demos.Blank = -> createReactClass
     render: ->
-        <DemoContainer>
-            <div>Use me for a temporary test</div>
-        </DemoContainer>
+        React.createElement(DemoContainer, null,
+            React.createElement("div", null, "Use me for a temporary test")
+        )
 
 
 Demos.JSONExplorer = ->
@@ -64,8 +64,8 @@ Demos.JSONExplorer = ->
 
     JSONTable = createReactClass
         render: ->
-            <div className="JSONTable">
-                <style dangerouslySetInnerHTML={__html: """
+            React.createElement("div", {"className": "JSONTable"},
+                React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
                     .JSONTable table {
                         border-collapse: collapse;
                     }
@@ -79,55 +79,55 @@ Demos.JSONExplorer = ->
                         position: sticky;
                         top: 0;
                     }
-                """}/>
-                {
+                """)}),
+                (
                     try
                         if _l.isArray(@props.json)
                             @renderList(@props.json)
                         else if isPrimitive(@props.json)
-                            <div>{JSON.stringify(@props.json)}</div>
+                            React.createElement("div", null, (JSON.stringify(@props.json)))
                         else
                             @renderHash(@props.json)
                     catch e
                         "JSONExplorer error: #{e.message}"
-                }
-            </div>
+                )
+            )
 
 
         renderHash: (hash) ->
-            <table>
-                <tbody>
-                {
+            React.createElement("table", null,
+                React.createElement("tbody", null,
+                (
                     flattened = _l.toPairs flatten_hash(hash)
 
                     flattened = _l.sortBy flattened, [(([k,v]) -> _l.isArray(v)), '0']
 
                     for [key, value], i in flattened
-                        <tr key={i}>
-                            <td>
-                                <div style={position: 'sticky', top: 10, bottom: 10}>
-                                    {key}
-                                </div>
-                            </td>
-                            <td>{
+                        React.createElement("tr", {"key": (i)},
+                            React.createElement("td", null,
+                                React.createElement("div", {"style": (position: 'sticky', top: 10, bottom: 10)},
+                                    (key)
+                                )
+                            ),
+                            React.createElement("td", null, (
                                 if _l.isArray(value)
                                     @renderList(value)
                                 else if isPrimitive(value)
-                                    <div>{JSON.stringify(value)}</div>
+                                    React.createElement("div", null, (JSON.stringify(value)))
                                 else
                                     try
                                         "Unknown object kind #{JSON.stringify(value)}"
                                     catch e
                                         "Unknown object [un-JSONable] #{e.message}"
-                            }</td>
-                        </tr>
-                }
-                </tbody>
-            </table>
+                            ))
+                        )
+                )
+                )
+            )
 
         renderList: (list) ->
             if _l.isEmpty(list)         #0
-                return <div>[]</div>
+                return React.createElement("div", null, "[]")
 
             hasSublists = _l.some list, (elem) -> _l.isArray(elem)
             hasPrims    = _l.some list, (elem) -> isPrimitive(elem)
@@ -136,49 +136,49 @@ Demos.JSONExplorer = ->
             if hasObjs and not hasSublists and not hasPrims     #1
                 keys = _l.union(list.map((hash) -> _l.keys flatten_hash hash)...)
 
-                <table>
-                    <thead>
-                        <tr>{for key, i in keys
-                            <td key={i}>{key}</td>
-                        }
-                        </tr>
-                    </thead>
+                React.createElement("table", null,
+                    React.createElement("thead", null,
+                        React.createElement("tr", null, (for key, i in keys
+                            React.createElement("td", {"key": (i)}, (key))
+                        )
+                        )
+                    ),
 
-                    <tbody>
-                        {
+                    React.createElement("tbody", null,
+                        (
                             for hash, i in list
-                                <tr key={i}>
-                                    {
+                                React.createElement("tr", {"key": (i)},
+                                    (
                                         for value, j in _l.at(hash, keys)
-                                            <td key={j}>
-                                            {
+                                            React.createElement("td", {"key": (j)},
+                                            (
                                                 if _l.isArray(value)
                                                     # sort of the least we can do
                                                     # FIXME pull their headers a level up
                                                     @renderList(value)
                                                 else if isPrimitive(value)
-                                                    <div>{JSON.stringify(value)}</div>
+                                                    React.createElement("div", null, (JSON.stringify(value)))
                                                 else
                                                     # FIXME for this key, some elements have a non-object type and others have an object type
-                                                    <div>{"{Object}"}</div>
-                                            }
-                                            </td>
-                                    }
-                                </tr>
-                        }
-                    </tbody>
-                </table>
+                                                    React.createElement("div", null, ("{Object}"))
+                                            )
+                                            )
+                                    )
+                                )
+                        )
+                    )
+                )
 
             else if not hasObjs and not hasSublists and hasPrims    #2
-                <table>
-                    <tbody>
-                        { for value, i in list
-                            <tr key={i}>
-                                <td>{JSON.stringify(value)}</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                React.createElement("table", null,
+                    React.createElement("tbody", null,
+                        ( for value, i in list
+                            React.createElement("tr", {"key": (i)},
+                                React.createElement("td", null, (JSON.stringify(value)))
+                            )
+                        )
+                    )
+                )
 
             else
                 ###
@@ -196,30 +196,30 @@ Demos.JSONExplorer = ->
 
                 ###
                 # UNIMPLEMENTED / DEFAULT
-                <table>
-                    <tbody>
-                        { for value, i in list
-                            <tr key={i}>
-                                <td>{JSON.stringify(value)}</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                React.createElement("table", null,
+                    React.createElement("tbody", null,
+                        ( for value, i in list
+                            React.createElement("tr", {"key": (i)},
+                                React.createElement("td", null, (JSON.stringify(value)))
+                            )
+                        )
+                    )
+                )
 
 
 
     createReactClass
         render: ->
-            <div>
-                <DemoContainer>
-                    <FormControl tag="textarea" valueLink={@getJSVL()} style={width: '100%', height: '5em'} />
-                    <FormControl tag="select" valueLink={@getLanguageVL()}>
-                        <option value="Javascript">Javascript</option>
-                        <option value="YAML">YAML</option>
-                    </FormControl>
-                </DemoContainer>
-                <JSONTable json={@state.data} />
-            </div>
+            React.createElement("div", null,
+                React.createElement(DemoContainer, null,
+                    React.createElement(FormControl, {"tag": "textarea", "valueLink": (@getJSVL()), "style": (width: '100%', height: '5em')}),
+                    React.createElement(FormControl, {"tag": "select", "valueLink": (@getLanguageVL())},
+                        React.createElement("option", {"value": "Javascript"}, "Javascript"),
+                        React.createElement("option", {"value": "YAML"}, "YAML")
+                    )
+                ),
+                React.createElement(JSONTable, {"json": (@state.data)})
+            )
 
         getJSVL: -> LocalStorageValueLink('JSONExplorerData', "", (=> @updateJS()))
         getLanguageVL: -> LocalStorageValueLink('JSONExplorerLanguage', "Javascript", (=> @updateJS()))
@@ -245,17 +245,17 @@ Demos.InstanceRenderer = ->
 
     createReactClass
         render: ->
-            <div style={margin: 'auto'}>
-                <p>
-                    DocID: <FormControl type="text" valueLink={@getPageIdValueLink()} />
-                    <PdDropdownTwo title={@selectedInstance?.name}
-                        onSelect={(val, evt) => @selectedInstance = _l.find @doc.blocks, {uniqueKey: val}}
-                        options={@doc?.blocks.filter((b) -> b instanceof BaseInstanceBlock).map((instance) -> {label: instance.getLabel(), value: instance.uniqueKey}) ? []} />
-                    <button onClick={@mount}>Mount</button>
-                </p>
+            React.createElement("div", {"style": (margin: 'auto')},
+                React.createElement("p", null, """
+                    DocID: """, React.createElement(FormControl, {"type": "text", "valueLink": (@getPageIdValueLink())}),
+                    React.createElement(PdDropdownTwo, {"title": (@selectedInstance?.name),  \
+                        "onSelect": ((val, evt) => @selectedInstance = _l.find @doc.blocks, {uniqueKey: val}),  \
+                        "options": (@doc?.blocks.filter((b) -> b instanceof BaseInstanceBlock).map((instance) -> {label: instance.getLabel(), value: instance.uniqueKey}) ? [])}),
+                    React.createElement("button", {"onClick": (@mount)}, "Mount")
+                ),
 
-                <div ref="mount_point" />
-            </div>
+                React.createElement("div", {"ref": "mount_point"})
+            )
 
         componentWillMount: ->
             @selectedInstance = null
@@ -309,23 +309,23 @@ Demos.LocalCompiler = ->
 
     createReactClass
         render: ->
-            <div style={margin: 'auto'}>
-                <p>
-                    DocID: <FormControl type="text" valueLink={@getPageIdValueLink()} />
-                    Hide CSS: <FormControl type="checkbox" valueLink={@getIgnoreCSSValueLink()} />
-                </p>
+            React.createElement("div", {"style": (margin: 'auto')},
+                React.createElement("p", null, """
+                    DocID: """, React.createElement(FormControl, {"type": "text", "valueLink": (@getPageIdValueLink())}), """
+                    Hide CSS: """, React.createElement(FormControl, {"type": "checkbox", "valueLink": (@getIgnoreCSSValueLink())})
+                ),
 
-                <div style={display: 'flex'}>
-                    {@getCompiled().map ({filePath, contents}, i) ->
-                        <div key={i}>
-                            <span style={fontWeight: 'bold'}>{filePath}</span>
-                            <pre style={overflow: 'auto', width: 750, border: '1px solid gray'}>
-                                {contents}
-                            </pre>
-                        </div>
-                    }
-                </div>
-            </div>
+                React.createElement("div", {"style": (display: 'flex')},
+                    (@getCompiled().map ({filePath, contents}, i) ->
+                        React.createElement("div", {"key": (i)},
+                            React.createElement("span", {"style": (fontWeight: 'bold')}, (filePath)),
+                            React.createElement("pre", {"style": (overflow: 'auto', width: 750, border: '1px solid gray')},
+                                (contents)
+                            )
+                        )
+                    )
+                )
+            )
 
         getCompiled: ->
             if @getIgnoreCSSValueLink().value == true
@@ -377,27 +377,27 @@ Demos.RefactorTesting = ->
 
     createReactClass
         render: ->
-            <div style={margin: 'auto'}>
-                <div>
-                    DocID: <FormControl type="text" valueLink={@getPageIdValueLink()} />
-                    {if @matches
-                        <span style={backgroundColor: 'green', color: 'white'}>Matches</span>
+            React.createElement("div", {"style": (margin: 'auto')},
+                React.createElement("div", null, """
+                    DocID: """, React.createElement(FormControl, {"type": "text", "valueLink": (@getPageIdValueLink())}),
+                    (if @matches
+                        React.createElement("span", {"style": (backgroundColor: 'green', color: 'white')}, "Matches")
                     else
-                        <span style={backgroundColor: 'red', color: 'white'}>Fails</span>
-                    }
-                </div>
+                        React.createElement("span", {"style": (backgroundColor: 'red', color: 'white')}, "Fails")
+                    )
+                ),
 
-                <div style={display: 'flex'}>
-                    {@compiled.map ({filePath, contents}, i) ->
-                        <div key={i}>
-                            <span style={fontWeight: 'bold'}>{filePath}</span>
-                            <pre style={overflow: 'auto', width: 750, border: '1px solid gray'}>
-                                {contents}
-                            </pre>
-                        </div>
-                    }
-                </div>
-            </div>
+                React.createElement("div", {"style": (display: 'flex')},
+                    (@compiled.map ({filePath, contents}, i) ->
+                        React.createElement("div", {"key": (i)},
+                            React.createElement("span", {"style": (fontWeight: 'bold')}, (filePath)),
+                            React.createElement("pre", {"style": (overflow: 'auto', width: 750, border: '1px solid gray')},
+                                (contents)
+                            )
+                        )
+                    )
+                )
+            )
 
         componentWillMount: ->
             @unsubscribe = null
@@ -439,10 +439,10 @@ Demos.RefactorTesting = ->
 
 Demos.BlockRenderingExperiment = ->  createReactClass
     render: ->
-        <div>
-            <button onClick={@start}>start</button>
-            <span ref="dom"></span>
-        </div>
+        React.createElement("div", null,
+            React.createElement("button", {"onClick": (@start)}, "start"),
+            React.createElement("span", {"ref": "dom"})
+        )
 
     componentWillMount: ->
         @message = 0
@@ -459,14 +459,14 @@ Demos.BlockRenderingExperiment = ->  createReactClass
 
 Demos.IframeExperiment = -> createReactClass
     render: ->
-        <iframe ref="iframe">
+        React.createElement("iframe", {"ref": "iframe"}, """
             I have content!
-        </iframe>
+""")
 
 
 Demos.MouseDragExperiment = -> createReactClass
     render: ->
-        <button onClick={@start}>start</button>
+        React.createElement("button", {"onClick": (@start)}, "start")
 
     start: ->
         $(window).on 'mousemove', (e) ->
@@ -475,9 +475,9 @@ Demos.MouseDragExperiment = -> createReactClass
 
 Demos.CopyPasteExperiment = -> createReactClass
     render: ->
-        <div tabIndex="100">
+        React.createElement("div", {"tabIndex": "100"}, """
             Some content
-        </div>
+""")
 
     componentDidMount: ->
         elem = $(ReactDOM.findDOMNode(this))
@@ -489,14 +489,14 @@ Demos.CopyPasteExperiment = -> createReactClass
 Demos.SpinExperiment = -> createReactClass
     render: ->
         boxSize = 100
-        <DraggingCanvas style={height: 1000, position: 'relative'} onDrag={@handleDrag} onClick={->}>
-            <div style={
+        React.createElement(DraggingCanvas, {"style": (height: 1000, position: 'relative'), "onDrag": (@handleDrag), "onClick": (->)},
+            React.createElement("div", {"style": (
                 position: 'absolute', backgroundColor: 'red'
                 width: boxSize, height: boxSize
                 top: @state.top - boxSize/2, left: @state.left - boxSize/2
                 transform: "rotate(#{@state.top+@state.left}deg)"
-            }/>
-        </DraggingCanvas>
+            )})
+        )
 
     getInitialState: ->
         top: 500
@@ -510,23 +510,23 @@ Demos.SpinExperiment = -> createReactClass
 
 Demos.DynamicStyleTagExperiment1 = -> createReactClass
     render: ->
-        <div>
-            <div>
-                <button onClick={@start}>Start dynamic style tag animation</button>
-            </div>
-            <div style={height: 100, position: 'relative'}>
-                <style dangerouslySetInnerHTML={{__html: """
+        React.createElement("div", null,
+            React.createElement("div", null,
+                React.createElement("button", {"onClick": (@start)}, "Start dynamic style tag animation")
+            ),
+            React.createElement("div", {"style": (height: 100, position: 'relative')},
+                React.createElement("style", {"dangerouslySetInnerHTML": ({__html: """
                 #dste_box {
                     left: #{@offset}px;
                 }
-                """}}/>
-                <div id="dste_box" ref="box"
-                    style={
+                """})}),
+                React.createElement("div", {"id": "dste_box", "ref": "box",  \
+                    "style": (
                         position: 'absolute', backgroundColor: 'red'
                         width: 80, height: 80
-                    } />
-            </div>
-        </div>
+                    )})
+            )
+        )
 
     start: ->
         @offset = 0
@@ -542,19 +542,19 @@ Demos.DynamicStyleTagExperiment1 = -> createReactClass
 
 Demos.DynamicStyleTagExperiment2 = -> createReactClass
     render: ->
-        <div>
-            <div>
-                <button onClick={@start}>Start style animation</button>
-            </div>
-            <div style={height: 100, position: 'relative'}>
-                <div ref="box"
-                    style={
+        React.createElement("div", null,
+            React.createElement("div", null,
+                React.createElement("button", {"onClick": (@start)}, "Start style animation")
+            ),
+            React.createElement("div", {"style": (height: 100, position: 'relative')},
+                React.createElement("div", {"ref": "box",  \
+                    "style": (
                         position: 'absolute', backgroundColor: 'red'
                         width: 80, height: 80,
                         left: @offset
-                    } />
-            </div>
-        </div>
+                    )})
+            )
+        )
 
     start: ->
         @offset = 0
@@ -577,32 +577,32 @@ Demos.SideScrollerExperiment = -> createReactClass
         cards = @state.cards
         card_count = cards.length
 
-        <div style={overflow: 'auto', height: 500, width: '100%'}>
-            <div style={height: '100%', width: (card_count*card_width + (card_count-1)*card_margin + extra_right_space)}>
-                {cards.map (card, i) =>
-                    <div key={i} style={
+        React.createElement("div", {"style": (overflow: 'auto', height: 500, width: '100%')},
+            React.createElement("div", {"style": (height: '100%', width: (card_count*card_width + (card_count-1)*card_margin + extra_right_space))},
+                (cards.map (card, i) =>
+                    React.createElement("div", {"key": (i), "style": (
                         display: 'inline-block',
                         width: card_width,
                         height: '100%',
                         marginLeft: unless i == 0 then card_margin else 0,
-                        backgroundColor: 'red'}>
-                        {['foo', 'bar', 'baz', 'qoux', 'lorem', 'ipsum'].map (item) =>
-                            <div key={item}
-                                onClick={ =>
+                        backgroundColor: 'red')},
+                        (['foo', 'bar', 'baz', 'qoux', 'lorem', 'ipsum'].map (item) =>
+                            React.createElement("div", {"key": (item),  \
+                                "onClick": ( =>
                                     @setState cards: cards[...i].concat([item, undefined])
-                                }
-                                style={
+                                ),  \
+                                "style": (
                                     margin: 5, padding: 10, borderRadius: 5
                                     backgroundColor: unless item == card then 'aliceblue' else 'blue'
-                                }
-                            >
-                                {item}
-                            </div>
-                        }
-                    </div>
-                }
-            </div>
-        </div>
+                                )
+                            },
+                                (item)
+                            )
+                        )
+                    )
+                )
+            )
+        )
 
 
 
@@ -644,18 +644,18 @@ Demos.VnetExperiment = ->
 
     return createReactClass
         render: ->
-            <DemoContainer>
-                <div style={border: '1px solid #888', display: 'inline-block', margin: 10, fontSize: 0} onKeyDown={@handleKey}>
-                    <FocusController>
-                        <DraggingCanvas onDrag={@handleDrag} onClick={@handleClick}>
-                            <canvas width={WIDTH} height={HEIGHT} style={
+            React.createElement(DemoContainer, null,
+                React.createElement("div", {"style": (border: '1px solid #888', display: 'inline-block', margin: 10, fontSize: 0), "onKeyDown": (@handleKey)},
+                    React.createElement(FocusController, null,
+                        React.createElement(DraggingCanvas, {"onDrag": (@handleDrag), "onClick": (@handleClick)},
+                            React.createElement("canvas", {"width": (WIDTH), "height": (HEIGHT), "style": (
                                 width: WIDTH/2, height: HEIGHT/2
                                 display: 'inline-block'
-                            } ref="canvas" />
-                        </DraggingCanvas>
-                    </FocusController>
-                </div>
-            </DemoContainer>
+                            ), "ref": "canvas"})
+                        )
+                    )
+                )
+            )
 
         componentDidMount: ->
             document.addEventListener 'keydown', @handleKey
@@ -778,17 +778,17 @@ Demos.VnetExperiment = ->
 Demos.ShadowDomExperiment = ->
     return createReactClass
         render: ->
-            <DemoContainer>
-                <style dangerouslySetInnerHTML={__html: """
+            React.createElement(DemoContainer, null,
+                React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
                     .make-red { color: red }
-                    """} />
-                <div className="make-red">This should be red</div>
-                <div ref="shadowHost" />
-            </DemoContainer>
+                    """)}),
+                React.createElement("div", {"className": "make-red"}, "This should be red"),
+                React.createElement("div", {"ref": "shadowHost"})
+            )
 
         componentDidMount: ->
             shadowRoot = @refs.shadowHost.attachShadow({mode: 'open'})
-            shadowTree = <div className="make-red" onClick={-> window.alert('hello')}>This should be black</div>
+            shadowTree = React.createElement("div", {"className": "make-red", "onClick": (-> window.alert('hello'))}, "This should be black")
             ReactDOM.render(shadowTree, shadowRoot)
 
 
@@ -796,18 +796,18 @@ Demos.ColorPickerExperiment = ->
     ColorPicker = require '../frontend/react-input-color'
     return createReactClass
         render: ->
-            <div key={"key#{@key}"}>
-                <ColorPicker valueLink={
+            React.createElement("div", {"key": ("key#{@key}")},
+                React.createElement(ColorPicker, {"valueLink": (
                     value: @value
                     requestChange: (newval) =>
                         console.log newval
                         @value = newval
-                } />
-                <button onClick={=>
+                )}),
+                React.createElement("button", {"onClick": (=>
                     @key += 1
                     @forceUpdate()
-                }>Change key</button>
-            </div>
+                )}, "Change key")
+            )
 
         componentWillMount: ->
             @value = '#aa0000'
@@ -817,7 +817,7 @@ Demos.ErrorBoundaryExperiment = ->
     ErrorSource = createReactClass
         displayName: 'ErrorSource'
         render: ->
-            <div>Hello {undefined['world']}</div>
+            React.createElement("div", null, "Hello ", (undefined['world']))
 
     return createReactClass
         displayName: 'ErrorBoundaryHolder'
@@ -831,12 +831,12 @@ Demos.ErrorBoundaryExperiment = ->
 
         render: ->
             if @state.errorFound
-                return <DemoContainer><div>Error found. We shouldn't need to crash</div></DemoContainer>
+                return React.createElement(DemoContainer, null, React.createElement("div", null, "Error found. We shouldn\'t need to crash"))
 
-            <DemoContainer>
-                <div>No error found</div>
-                <ErrorSource />
-            </DemoContainer>
+            React.createElement(DemoContainer, null,
+                React.createElement("div", null, "No error found"),
+                React.createElement(ErrorSource, null)
+            )
 
         componentDidCatch: ->
             @setState {errorFound: true}
@@ -900,55 +900,55 @@ Demos.RebaseExperiment = ->
                 value: vl.value == "true"
                 requestChange: (new_val) -> vl.requestChange String(new_val)
 
-            <div style={display: 'flex', flexDirection: 'column', flex: 1}>
-                <DemoContainer>
-                    <div style={display: 'flex', justifyContent: 'space-between'}>
-                        <div>
-                            base: <FormControl placeholder="Enter doc id" valueLink={LocalStorageValueLink('RebaserBase', "", @handleUpdate)} />
-                        </div>
-                        <div>
-                            left: <FormControl placeholder="Enter doc id" valueLink={LocalStorageValueLink('RebaserLeft', "", @handleUpdate)} />
-                        </div>
-                        <div>
-                            right: <FormControl placeholder="Enter doc id" valueLink={LocalStorageValueLink('RebaserRight', "", @handleUpdate)} />
-                        </div>
-                        <div>
-                            output: <FormControl placeholder="Enter doc id" valueLink={LocalStorageValueLink('RebaserOut', "", @handleUpdate)} />
-                        </div>
+            React.createElement("div", {"style": (display: 'flex', flexDirection: 'column', flex: 1)},
+                React.createElement(DemoContainer, null,
+                    React.createElement("div", {"style": (display: 'flex', justifyContent: 'space-between')},
+                        React.createElement("div", null, """
+                            base: """, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserBase', "", @handleUpdate))})
+                        ),
+                        React.createElement("div", null, """
+                            left: """, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserLeft', "", @handleUpdate))})
+                        ),
+                        React.createElement("div", null, """
+                            right: """, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserRight', "", @handleUpdate))})
+                        ),
+                        React.createElement("div", null, """
+                            output: """, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserOut', "", @handleUpdate))})
+                        ),
 
-                        {
-                            [show, hide] = [<button>Show iFrames</button>, <button>Hide iFrames</button>]
-                            <ToggleIcon valueLink={StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (=> @forceUpdate())))}
-                                checkedIcon={hide} uncheckedIcon={show} />
-                        }
-                    </div>
-                </DemoContainer>
-                { if StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (=> @forceUpdate()))).value
+                        (
+                            [show, hide] = [React.createElement("button", null, "Show iFrames"), React.createElement("button", null, "Hide iFrames")]
+                            React.createElement(ToggleIcon, {"valueLink": (StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (=> @forceUpdate())))),  \
+                                "checkedIcon": (hide), "uncheckedIcon": (show)})
+                        )
+                    )
+                ),
+                ( if StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (=> @forceUpdate()))).value
                     Embed = ({docid, style}) ->
                         unless _l.isEmpty(docid)
-                            <iframe src={"http://localhost:4000/pages/#{docid}"} frameBorder="0" style={style} />
+                            React.createElement("iframe", {"src": ("http://localhost:4000/pages/#{docid}"), "frameBorder": "0", "style": (style)})
                         else
-                            <div style={style} />
+                            React.createElement("div", {"style": (style)})
 
-                    <div style={flex: 1, display: 'flex', flexDirection: 'column'}>
-                            <div style={display: 'flex', flex: 1}>
-                                <Embed docid={LocalStorageValueLink('RebaserBase', "", @handleUpdate).value} style={flexGrow: '1'} />
-                                <Embed docid={LocalStorageValueLink('RebaserLeft', "", @handleUpdate).value} style={flexGrow: '1'} />
-                            </div>
-                            <div style={display: 'flex', flex: 1}>
-                                <Embed docid={LocalStorageValueLink('RebaserRight', "", @handleUpdate).value} style={flexGrow: '1'} />
-                                <Embed docid={LocalStorageValueLink('RebaserOut', "", @handleUpdate).value} style={flexGrow: '1'} />
-                            </div>
-                    </div>
-                }
-            </div>
+                    React.createElement("div", {"style": (flex: 1, display: 'flex', flexDirection: 'column')},
+                            React.createElement("div", {"style": (display: 'flex', flex: 1)},
+                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserBase', "", @handleUpdate).value), "style": (flexGrow: '1')}),
+                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserLeft', "", @handleUpdate).value), "style": (flexGrow: '1')})
+                            ),
+                            React.createElement("div", {"style": (display: 'flex', flex: 1)},
+                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserRight', "", @handleUpdate).value), "style": (flexGrow: '1')}),
+                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserOut', "", @handleUpdate).value), "style": (flexGrow: '1')})
+                            )
+                    )
+                )
+            )
 
 Demos.DatabaseExplorer = ->
     Embed = ({docserver_id, style}) ->
         unless _l.isEmpty(docserver_id)
-            <iframe src={"http://localhost:4000/dashboard/#{docserver_id}"} frameBorder="0" style={style} />
+            React.createElement("iframe", {"src": ("http://localhost:4000/dashboard/#{docserver_id}"), "frameBorder": "0", "style": (style)})
         else
-            <div style={style} />
+            React.createElement("div", {"style": (style)})
 
     createReactClass
         getInitialState: -> {rows: [], docserver_id: ''}
@@ -958,43 +958,43 @@ Demos.DatabaseExplorer = ->
                 @setState({rows: data})
 
         render: ->
-            <div style={display: 'flex', flex: 1}>
-                <div style={display: 'flex', flexDirection: 'column'}>
-                    <div>
-                        <FormControl valueLink={LocalStorageValueLink('Script', "", (=> @forceUpdate()))}
-                            tag="textarea"
-                            placeholder="Enter JS script"
-                            style={
+            React.createElement("div", {"style": (display: 'flex', flex: 1)},
+                React.createElement("div", {"style": (display: 'flex', flexDirection: 'column')},
+                    React.createElement("div", null,
+                        React.createElement(FormControl, {"valueLink": (LocalStorageValueLink('Script', "", (=> @forceUpdate()))),  \
+                            "tag": "textarea",  \
+                            "placeholder": "Enter JS script",  \
+                            "style": (
                                 fontFamily: 'Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace'
                                 fontSize: 13
                                 color: '#441173'
 
                                 width: '100%', height: '5em'
                                 WebkitAppearance: 'textfield'
-                            } />
-                        <button onClick={=>
+                            )}),
+                        React.createElement("button", {"onClick": (=>
                             @executeAcrossDocset(LocalStorageValueLink('Script', "", (=> @forceUpdate())).value)
-                        }>Submit</button>
-                    </div>
-                    <table style={overflow: 'auto', flex: 1}>
-                        <thead>
-                            <tr>
-                                {[
+                        )}, "Submit")
+                    ),
+                    React.createElement("table", {"style": (overflow: 'auto', flex: 1)},
+                        React.createElement("thead", null,
+                            React.createElement("tr", null,
+                                ([
                                     'doc id', 'docserver id', 'doc name', 'app id', 'app name', 'user id', 'first name', 'last name'
-                                ].map (item) => <th key={item}>{item}</th>}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {@state.rows.map (row, i) =>
-                                <tr key={"#{row[0]}-#{i}"} onClick={=> @setState({docserver_id: "#{row[1]}"})}>
-                                    {row.map (item, ind) => <td key={"#{item}-#{i}-#{ind}"}>{item}</td>}
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <Embed docserver_id={@state.docserver_id} style={width: '50%'} />
-            </div>
+                                ].map (item) => React.createElement("th", {"key": (item)}, (item)))
+                            )
+                        ),
+                        React.createElement("tbody", null,
+                            (@state.rows.map (row, i) =>
+                                React.createElement("tr", {"key": ("#{row[0]}-#{i}"), "onClick": (=> @setState({docserver_id: "#{row[1]}"}))},
+                                    (row.map (item, ind) => React.createElement("td", {"key": ("#{item}-#{i}-#{ind}")}, (item)))
+                                )
+                            )
+                        )
+                    )
+                ),
+                React.createElement(Embed, {"docserver_id": (@state.docserver_id), "style": (width: '50%')})
+            )
 
 Demos.LayoutPreviewToggle = ->
     {previewOfArtboard, layoutEditorOfArtboard} = require './preview-for-puppeteer'
@@ -1052,23 +1052,23 @@ Demos.LayoutPreviewToggle = ->
                     console.error e
                     error = "error logged to console"
 
-            <DemoContainer style={flex: 1}>
-                <div>
-                    <div style={margin: '0 auto', width: '400px'}>
-                        <FormControl placeholder="Doc id" valueLink={docidValueLink} />
-                        <button onClick={=>
+            React.createElement(DemoContainer, {"style": (flex: 1)},
+                React.createElement("div", null,
+                    React.createElement("div", {"style": (margin: '0 auto', width: '400px')},
+                        React.createElement(FormControl, {"placeholder": "Doc id", "valueLink": (docidValueLink)}),
+                        React.createElement("button", {"onClick": (=>
                             @setState({mode: if @state.mode == 'layout' then 'content' else 'layout'})
-                            }>{"Toggle to #{if @state.mode == 'layout' then 'content' else 'layout'} mode"}</button>
-                    </div>
+                            )}, ("Toggle to #{if @state.mode == 'layout' then 'content' else 'layout'} mode"))
+                    ),
 
-                    <div className="bootstrap" style={marginBottom: '2em'}>
-                        { unless error?
-                            <PdDropdown title={selectedArtboard.name}
-                                onSelect={(val, evt) => selectedArtboardVL.requestChange(val)}
-                                options={artboards.map (artboard) -> {label: artboard.name, value: artboard.uniqueKey}} />
-                        }
-                    </div>
-                    {
+                    React.createElement("div", {"className": "bootstrap", "style": (marginBottom: '2em')},
+                        ( unless error?
+                            React.createElement(PdDropdown, {"title": (selectedArtboard.name),  \
+                                "onSelect": ((val, evt) => selectedArtboardVL.requestChange(val)),  \
+                                "options": (artboards.map (artboard) -> {label: artboard.name, value: artboard.uniqueKey})})
+                        )
+                    ),
+                    (
                         try
                             if error?
                                 error
@@ -1082,9 +1082,9 @@ Demos.LayoutPreviewToggle = ->
                         catch e
                             console.error e
                             "error logged to console"
-                    }
-                </div>
-            </DemoContainer>
+                    )
+                )
+            )
 
 
 ##
@@ -1098,57 +1098,57 @@ DemoPage = createReactClass
         {value: demo_name} = demoNameValueLink = @getDemoNameValueLink()
         CurrentDemo = (LoadedDemos[demo_name] ?= Demos[demo_name]?() ? @DefaultDemo)
 
-        <div style={flex: 1, display: 'flex', flexDirection: 'column'}>
-            <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"style": (flex: 1, display: 'flex', flexDirection: 'column')},
+            React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
                 @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700,900');
                 #app {
                     min-height: 100vh;
                     display: flex;
                     flex-direction: column;
                 }
-            """} />
-            {
+            """)}),
+            (
                 if demo_name == "RebaseExperiment"
-                        <FormControl tag="select" valueLink={demoNameValueLink}>
-                        {
+                        React.createElement(FormControl, {"tag": "select", "valueLink": (demoNameValueLink)},
+                        (
                             _l.keys(Demos).map (demo_name, i) ->
-                                <option key={i} value={demo_name}>{demo_name}</option>
-                        }
-                        </FormControl>
+                                React.createElement("option", {"key": (i), "value": (demo_name)}, (demo_name))
+                        )
+                        )
 
                 else
-                    <DemoContainer style={marginTop: '4em'}>
-                        <h1 style={fontFamily: 'Roboto'}>
-                            <span style={letterSpacing: 0.5}>PAGE</span>
-                            <span style={fontWeight: '100'}>DEMOS</span>
-                        </h1>
-                        <p style={
+                    React.createElement(DemoContainer, {"style": (marginTop: '4em')},
+                        React.createElement("h1", {"style": (fontFamily: 'Roboto')},
+                            React.createElement("span", {"style": (letterSpacing: 0.5)}, "PAGE"),
+                            React.createElement("span", {"style": (fontWeight: '100')}, "DEMOS")
+                        ),
+                        React.createElement("p", {"style": (
                             fontFamily: 'Open Sans'
                             marginTop: -19
                             marginBottom: '2em'
                             fontWeight: '300'
                             fontSize: '0.8em'
-                        }>
-                            {"If you're not working for Pagedraw, you probbably didn't mean to be here!  Cool find, don't tell anyone about it ;)"}
-                        </p>
+                        )},
+                            ("If you're not working for Pagedraw, you probbably didn't mean to be here!  Cool find, don't tell anyone about it ;)")
+                        ),
 
-                        <p>
-                            <FormControl tag="select" valueLink={demoNameValueLink}>
-                            {
+                        React.createElement("p", null,
+                            React.createElement(FormControl, {"tag": "select", "valueLink": (demoNameValueLink)},
+                            (
                                 _l.keys(Demos).map (demo_name, i) ->
-                                    <option key={i} value={demo_name}>{demo_name}</option>
-                            }
-                            </FormControl>
-                        </p>
-                    </DemoContainer>
-            }
-            <CurrentDemo />
-        </div>
+                                    React.createElement("option", {"key": (i), "value": (demo_name)}, (demo_name))
+                            )
+                            )
+                        )
+                    )
+            ),
+            React.createElement(CurrentDemo, null)
+        )
 
     DefaultDemo: ->
-        <div>Select a demo</div>
+        React.createElement("div", null, "Select a demo")
 
     getDemoNameValueLink: ->
         LocalStorageValueLink('default_demo', 'Blank', => @forceUpdate())
 
-ReactDOM.render(<DemoPage />, document.getElementById('app'))
+ReactDOM.render(React.createElement(DemoPage, null), document.getElementById('app'))

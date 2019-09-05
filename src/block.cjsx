@@ -553,12 +553,12 @@ module.exports = Model.register 'block', class Block extends Model
         specials = @specialSidebarControls(args...)
         ((arrs) -> _.compact _.flatten(arrs, true)) [
             @defaultTopSidebarControls(args...)
-            <hr />
+            React.createElement("hr", null)
             @customCodeWarning() if @hasCustomCode
             specials
-            <hr /> unless _.isEmpty(specials)
+            React.createElement("hr", null) unless _.isEmpty(specials)
             @defaultSidebarControls(args...)
-            <hr />
+            React.createElement("hr", null)
             @constraintControls(args...)
         ]
 
@@ -590,17 +590,17 @@ module.exports = Model.register 'block', class Block extends Model
             ["name", 'name', DebouncedTextControlWithDefault(@getLabel())]
 
             # Compact X/Y controls
-            <div style={display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'} key="positon-controls">
-                <CompactNumberControl label={'X'} valueLink={NumberToStringTransformer linkAttr 'leftOffsetToParent'} />
-                <CompactNumberControl label={'Y'} valueLink={NumberToStringTransformer linkAttr 'topOffsetToParent'} />
-            </div>
+            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'), "key": "positon-controls"},
+                React.createElement(CompactNumberControl, {"label": ('X'), "valueLink": (NumberToStringTransformer linkAttr 'leftOffsetToParent')}),
+                React.createElement(CompactNumberControl, {"label": ('Y'), "valueLink": (NumberToStringTransformer linkAttr 'topOffsetToParent')})
+            )
 
             # Compact H/W controls
-            <div style={display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'} key="size-controls">
-                <CompactNumberControl label={'W'} valueLink={sizeValueLink('width', SizeToWidthValueLinkTransformer)} />
-                <div style={flexShrink: 0, marginTop: 5}><LockToggle valueLink={linkAttr('aspectRatioLocked')} /></div>
-                <CompactNumberControl label={'H'} valueLink={sizeValueLink('height', SizeToHeightValueLinkTransformer)} />
-            </div>
+            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'), "key": "size-controls"},
+                React.createElement(CompactNumberControl, {"label": ('W'), "valueLink": (sizeValueLink('width', SizeToWidthValueLinkTransformer))}),
+                React.createElement("div", {"style": (flexShrink: 0, marginTop: 5)}, React.createElement(LockToggle, {"valueLink": (linkAttr('aspectRatioLocked'))})),
+                React.createElement(CompactNumberControl, {"label": ('H'), "valueLink": (sizeValueLink('height', SizeToHeightValueLinkTransformer))})
+            )
 
         ]
 
@@ -636,27 +636,27 @@ module.exports = Model.register 'block', class Block extends Model
     resizabilitySidebarControls: -> []
 
     constraintControls: (linkAttr, onChange) -> [
-        <span style={fontSize: '12px'}>Flexible size</span>
-        <div style={display: 'flex'}>
-            {LeftCheckboxControl('Width', linkAttr('flexWidth'), onChange)}
-            {LeftCheckboxControl('Height', linkAttr('flexHeight'), onChange)}
-        </div>
-        <span style={fontSize: '12px'}>Flexible margin</span>
-        <div style={display: 'flex'}>
-            <div style={flex: '1'}>
-                {LeftCheckboxControl("left", linkAttr('flexMarginLeft'), onChange)}
-                {LeftCheckboxControl("right", linkAttr('flexMarginRight'), onChange)}
-            </div>
-            <div style={flex: '1'}>
-                {LeftCheckboxControl("top", linkAttr('flexMarginTop'), onChange)}
-                {LeftCheckboxControl("bottom", linkAttr('flexMarginBottom'), onChange)}
-            </div>
-        </div>
-        <span style={fontSize: '12px'}>Center</span>
-        <div style={display: 'flex'}>
-            {LeftCheckboxControl("Horizontally", linkAttr('centerHorizontal'), onChange)}
-            {LeftCheckboxControl("Vertically", linkAttr('centerVertical'), onChange)}
-        </div>
+        React.createElement("span", {"style": (fontSize: '12px')}, "Flexible size")
+        React.createElement("div", {"style": (display: 'flex')},
+            (LeftCheckboxControl('Width', linkAttr('flexWidth'), onChange)),
+            (LeftCheckboxControl('Height', linkAttr('flexHeight'), onChange))
+        )
+        React.createElement("span", {"style": (fontSize: '12px')}, "Flexible margin")
+        React.createElement("div", {"style": (display: 'flex')},
+            React.createElement("div", {"style": (flex: '1')},
+                (LeftCheckboxControl("left", linkAttr('flexMarginLeft'), onChange)),
+                (LeftCheckboxControl("right", linkAttr('flexMarginRight'), onChange))
+            ),
+            React.createElement("div", {"style": (flex: '1')},
+                (LeftCheckboxControl("top", linkAttr('flexMarginTop'), onChange)),
+                (LeftCheckboxControl("bottom", linkAttr('flexMarginBottom'), onChange))
+            )
+        )
+        React.createElement("span", {"style": (fontSize: '12px')}, "Center")
+        React.createElement("div", {"style": (display: 'flex')},
+            (LeftCheckboxControl("Horizontally", linkAttr('centerHorizontal'), onChange)),
+            (LeftCheckboxControl("Vertically", linkAttr('centerVertical'), onChange))
+        )
     ]
 
     commentControl: ->
@@ -677,15 +677,15 @@ module.exports = Model.register 'block', class Block extends Model
             ["border style", 'borderStyle', SelectControl({style: 'dropdown'}, borderStyles.map (s) -> [s, s])] if @borderThickness > 0
             ["corner roundness", 'borderRadius', NumberControl]
 
-            <hr />
+            React.createElement("hr", null)
             ["shadows", 'outerBoxShadows', BoxShadowsControl]
-            <hr />
+            React.createElement("hr", null)
             ["inner shadows", 'innerBoxShadows', BoxShadowsControl]
-            <hr />
+            React.createElement("hr", null)
         ]
 
     customCodeWarning: ->
-        <div style={color: 'darkred'}>This block's code was overwritten by the developer.  It might look different in the final product.</div>
+        React.createElement("div", {"style": (color: 'darkred')}, "This block\'s code was overwritten by the developer.  It might look different in the final product.")
 
 
     specialCodeSidebarControls: -> []   # good override point

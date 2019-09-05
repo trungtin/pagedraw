@@ -3,4 +3,4 @@ ReactDOM = require 'react-dom'
 
 Pricing = require './pricing'
 
-ReactDOM.render(<Pricing />, document.getElementById('app'))
+ReactDOM.render(React.createElement(Pricing, null), document.getElementById('app'))

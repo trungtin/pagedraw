@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Pageitem = createReactClass {
     displayName: 'Pageitem'
     render: ->
-        <div className="pd-onhover-parent pageitem">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "pd-onhover-parent pageitem"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Roboto:|Lato:');
               
               .pageitem {
@@ -163,28 +163,28 @@ module.exports = Pageitem = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if (this.props.state == "A")
-              <div className="pageitem-a-5">
-                  <div className="pageitem-0-0-0">
-                      <a href="#{@props.link}" target="_blank" className="pageitem-0-0-0-0">
-                          <div className="pageitem-text_1">{ this.props.text }</div>
-                      </a>
-                      <div onClick={@props.handleDelete} className="pageitem-text_9">
-                          {"╳"}
-                      </div>
-                  </div>
-              </div>
-          }
-          <div className="pd-onhover pageitem-b_hover-9">
-              <div className="pageitem-1-0">
-                  <a href="#{@props.link}" target="_blank" className="pageitem-1-0-0">
-                      <div className="pageitem-text_8">{ this.props.text }</div>
-                  </a>
-                  <div onClick={@props.handleDelete} className="pageitem-text_7">
-                      {"╳"}
-                  </div>
-              </div>
-          </div>
-      </div>
+          """)}),  
+          ( if (this.props.state == "A")
+              React.createElement("div", {"className": "pageitem-a-5"},
+                  React.createElement("div", {"className": "pageitem-0-0-0"},
+                      React.createElement("a", {"href": "#{@props.link}", "target": "_blank", "className": "pageitem-0-0-0-0"},
+                          React.createElement("div", {"className": "pageitem-text_1"}, ( this.props.text ))
+                      ),
+                      React.createElement("div", {"onClick": (@props.handleDelete), "className": "pageitem-text_9"},
+                          ("╳")
+                      )
+                  )
+              )
+          ),
+          React.createElement("div", {"className": "pd-onhover pageitem-b_hover-9"},
+              React.createElement("div", {"className": "pageitem-1-0"},
+                  React.createElement("a", {"href": "#{@props.link}", "target": "_blank", "className": "pageitem-1-0-0"},
+                      React.createElement("div", {"className": "pageitem-text_8"}, ( this.props.text ))
+                  ),
+                  React.createElement("div", {"onClick": (@props.handleDelete), "className": "pageitem-text_7"},
+                      ("╳")
+                  )
+              )
+          )
+      )
 }

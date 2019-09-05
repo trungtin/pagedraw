@@ -7,8 +7,8 @@ Errormessage = require './errormessage'
 module.exports = Errorsidebar = createReactClass {
     displayName: 'Errorsidebar'
     render: ->
-        <div className="errorsidebar-errorsidebar-9">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "errorsidebar-errorsidebar-9"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .errorsidebar-errorsidebar-9 {
                   display: flex;
                   flex-direction: column;
@@ -255,65 +255,65 @@ module.exports = Errorsidebar = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="errorsidebar-0">
-              <div className="errorsidebar-line_2" /> 
-          </div>
-          <div className="errorsidebar-1">
-              { if (@props.errors.length > 0)
-                  <div className="errorsidebar-rectangle_6">
-                      <div className="errorsidebar-1-0-0-0">
-                          <div className="errorsidebar-text_3">
-                              { @props.errors.length }
-                          </div>
-                      </div>
-                  </div>
-              }
-              { if (@props.warnings.length > 0)
-                  <div className="errorsidebar-rectangle_6-7">
-                      <div className="errorsidebar-1-1-0-0">
-                          <div className="errorsidebar-text_3-3">
-                              { @props.warnings.length }
-                          </div>
-                      </div>
-                  </div>
-              }
-          </div>
-          <div className="errorsidebar-2">
-              <div className="errorsidebar-line_2-7" /> 
-          </div>
-          <div className="errorsidebar-3">
-              <div className="errorsidebar-rectangle_4">
-                  <div className="errorsidebar-3-0-0">
-                      <div className="errorsidebar-3-0-0-0">
-                          <div className="errorsidebar-3-0-0-0-0">
-                              { (@props.errors).map (error, i) =>
-                                  <div key={i} className="errorsidebar-rectangle_5">
-                                      <div className="errorsidebar-3-0-0-0-0-0-0-0">
-                                          <div className="errorsidebar-errormessage_instance-3">
-                                              <Errormessage content={error.content} type={"error"} handleClick={error.handleClick} /> 
-                                          </div>
-                                      </div>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                      <div className="errorsidebar-3-0-0-1">
-                          <div className="errorsidebar-3-0-0-1-0">
-                              { (@props.warnings).map (warning, i) =>
-                                  <div key={i} className="errorsidebar-rectangle_5-3">
-                                      <div className="errorsidebar-3-0-0-1-0-0-0-0">
-                                          <div className="errorsidebar-errormessage_instance-0">
-                                              <Errormessage content={warning.content} type={"warning"} handleClick={warning.handleClick} /> 
-                                          </div>
-                                      </div>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                      <div className="errorsidebar-3-0-0-2" /> 
-                  </div>
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"className": "errorsidebar-0"},
+              React.createElement("div", {"className": "errorsidebar-line_2"}) 
+          ),
+          React.createElement("div", {"className": "errorsidebar-1"},
+              ( if (@props.errors.length > 0)
+                  React.createElement("div", {"className": "errorsidebar-rectangle_6"},
+                      React.createElement("div", {"className": "errorsidebar-1-0-0-0"},
+                          React.createElement("div", {"className": "errorsidebar-text_3"},
+                              ( @props.errors.length )
+                          )
+                      )
+                  )
+              ),
+              ( if (@props.warnings.length > 0)
+                  React.createElement("div", {"className": "errorsidebar-rectangle_6-7"},
+                      React.createElement("div", {"className": "errorsidebar-1-1-0-0"},
+                          React.createElement("div", {"className": "errorsidebar-text_3-3"},
+                              ( @props.warnings.length )
+                          )
+                      )
+                  )
+              )
+          ),
+          React.createElement("div", {"className": "errorsidebar-2"},
+              React.createElement("div", {"className": "errorsidebar-line_2-7"}) 
+          ),
+          React.createElement("div", {"className": "errorsidebar-3"},
+              React.createElement("div", {"className": "errorsidebar-rectangle_4"},
+                  React.createElement("div", {"className": "errorsidebar-3-0-0"},
+                      React.createElement("div", {"className": "errorsidebar-3-0-0-0"},
+                          React.createElement("div", {"className": "errorsidebar-3-0-0-0-0"},
+                              ( (@props.errors).map (error, i) =>
+                                  React.createElement("div", {"key": (i), "className": "errorsidebar-rectangle_5"},
+                                      React.createElement("div", {"className": "errorsidebar-3-0-0-0-0-0-0-0"},
+                                          React.createElement("div", {"className": "errorsidebar-errormessage_instance-3"},
+                                              React.createElement(Errormessage, {"content": (error.content), "type": ("error"), "handleClick": (error.handleClick)}) 
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "errorsidebar-3-0-0-1"},
+                          React.createElement("div", {"className": "errorsidebar-3-0-0-1-0"},
+                              ( (@props.warnings).map (warning, i) =>
+                                  React.createElement("div", {"key": (i), "className": "errorsidebar-rectangle_5-3"},
+                                      React.createElement("div", {"className": "errorsidebar-3-0-0-1-0-0-0-0"},
+                                          React.createElement("div", {"className": "errorsidebar-errormessage_instance-0"},
+                                              React.createElement(Errormessage, {"content": (warning.content), "type": ("warning"), "handleClick": (warning.handleClick)}) 
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "errorsidebar-3-0-0-2"}) 
+                  )
+              )
+          )
+      )
 }

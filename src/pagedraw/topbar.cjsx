@@ -8,8 +8,8 @@ Textbutton = require './textbutton'
 module.exports = Topbar = createReactClass {
     displayName: 'Topbar'
     render: ->
-        <div className="topbar">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "topbar"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .topbar {
                   display: flex;
                   flex-grow: 1;
@@ -919,263 +919,263 @@ module.exports = Topbar = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if ((@props.whichTopbar) == "stress-tester")
-              <div className="topbar-stress-tester-0">
-                  <div className="topbar-0-0-0">
-                      <div className="topbar-0-0-0-0" /> 
-                      <div className="topbar-topbarbutton-3">
-                          <Topbarbutton state={"A"} text={"Infer constraints"} onClick={(@props.editor.inferConstraints)} image={"https://ucarecdn.com/c393cf1c-56f7-4885-9c84-b0f892be754e/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-0-0-0-2" /> 
-                      <div className="topbar-topbarbutton-1">
-                          <Topbarbutton state={"A"} text={"Random Size"} onClick={(@props.editor.randomizeSize)} image={"https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton-7">
-                          <Topbarbutton state={"A"} text={"Random Data"} onClick={(@props.editor.randomizeData)} image={"https://ucarecdn.com/5be2f265-ef52-4864-ba86-077238bc2890/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-0-0-0-5" /> 
-                      <div className="topbar-topbarbutton-77">
-                          <Topbarbutton state={"A"} text={"Zoom In"} onClick={(@props.editor.viewportManager.handleZoomIn)} image={"https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton-4">
-                          <Topbarbutton state={"A"} text={"Zoom Out"} onClick={(@props.editor.viewportManager.handleZoomOut)} image={"https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-0-0-0-8" /> 
-                      <div className="topbar-0-0-0-9">
-                          <div className="topbar-0-0-0-9-0">
-                              <div className="topbar-0-0-0-9-0-0">
-                                  { if (@props.editor.hasUncommitedChanges())
-                                      <div onClick={@props.editor.showCommitView} className="topbar-rectangle_3">
-                                          <div className="topbar-0-0-0-9-0-0-0-0-0">
-                                              <div className="topbar-oval-3" /> 
-                                          </div>
-                                          <div className="topbar-0-0-0-9-0-0-0-0-1">
-                                              <div className="topbar-text-8">Uncommited Changes</div>
-                                          </div>
-                                      </div>
-                                  }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="topbar-0-0-1">
-                      <div className="topbar-rectangle_2" /> 
-                  </div>
-              </div>
-          }
-          { if ((@props.whichTopbar) == "tutorial")
-              <div className="topbar-tutorial-4">
-                  <div className="topbar-1-0-0">
-                      <div className="topbar-topbarbutton_instance_1">
-                          {@props.editor.topbarBlockAdder()}
-                      </div>
-                      <div className="topbar-1-0-0-1" /> 
-                      <div className="topbar-topbarbutton_instance_3">
-                          <Topbarbutton state={"A"} text={"Zoom In"} onClick={(@props.editor.viewportManager.handleZoomIn)} image={"https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton_instance-9">
-                          <Topbarbutton state={"A"} text={"Zoom Out"} onClick={(@props.editor.viewportManager.handleZoomOut)} image={"https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"} disabled={false} /> 
-                      </div>
-                  </div>
-                  <div className="topbar-1-0-1">
-                      <div className="topbar-rectangle_24" /> 
-                  </div>
-              </div>
-          }
-          { if ((@props.whichTopbar) == "stackblitz-default")
-              <div className="topbar-stackblitz-default-5">
-                  <div className="topbar-2-0-0">
-                      <div className="topbar-topbarbutton_instance_13">
-                          {@props.editor.topbarBlockAdder()}
-                      </div>
-                      <div className="topbar-2-0-0-1" /> 
-                      <div className="topbar-topbarbutton_instance_2">
-                          <Topbarbutton state={"A"} text={"Shortcuts"} onClick={(@props.editor.handleShortcuts)} image={"https://ucarecdn.com/646bf1f4-d2b8-4697-ba79-6a40b45dd223/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton_instance_4">
-                          <Topbarbutton state={"A"} text={"Make Reusable"} onClick={(@props.editor.handleNewComponent)} image={"https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"} disabled={(@props.editor.getSelectedBlocks().length == 0)} /> 
-                      </div>
-                      <div className="topbar-2-0-0-4" /> 
-                      <div className="topbar-rectangle_9">
-                          <div className="topbar-2-0-0-5-0">
-                              <div className="topbar-text_4">Pagedraw Demo</div>
-                          </div>
-                          <div className="topbar-2-0-0-5-1">
-                              <div className="topbar-rectangle_8">
-                                  <div className="topbar-2-0-0-5-1-0-0">
-                                      <a href="https://documentation.pagedraw.io/the-editor/" target="_blank" className="topbar-2-0-0-5-1-0-0-0">
-                                          <div className="topbar-text_4-0">Documentation</div>
-                                      </a>
-                                      <div className="topbar-text_4-6">{"•"}</div>
-                                      <a href="https://documentation.pagedraw.io/install_existing/" className="topbar-2-0-0-5-1-0-0-2">
-                                          <div className="topbar-text_4-5">
+          """)}),  
+          ( if ((@props.whichTopbar) == "stress-tester")
+              React.createElement("div", {"className": "topbar-stress-tester-0"},
+                  React.createElement("div", {"className": "topbar-0-0-0"},
+                      React.createElement("div", {"className": "topbar-0-0-0-0"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton-3"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Infer constraints"), "onClick": ((@props.editor.inferConstraints)), "image": ("https://ucarecdn.com/c393cf1c-56f7-4885-9c84-b0f892be754e/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-0-0-0-2"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton-1"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Random Size"), "onClick": ((@props.editor.randomizeSize)), "image": ("https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton-7"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Random Data"), "onClick": ((@props.editor.randomizeData)), "image": ("https://ucarecdn.com/5be2f265-ef52-4864-ba86-077238bc2890/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-0-0-0-5"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton-77"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom In"), "onClick": ((@props.editor.viewportManager.handleZoomIn)), "image": ("https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton-4"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom Out"), "onClick": ((@props.editor.viewportManager.handleZoomOut)), "image": ("https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-0-0-0-8"}),  
+                      React.createElement("div", {"className": "topbar-0-0-0-9"},
+                          React.createElement("div", {"className": "topbar-0-0-0-9-0"},
+                              React.createElement("div", {"className": "topbar-0-0-0-9-0-0"},
+                                  ( if (@props.editor.hasUncommitedChanges())
+                                      React.createElement("div", {"onClick": (@props.editor.showCommitView), "className": "topbar-rectangle_3"},
+                                          React.createElement("div", {"className": "topbar-0-0-0-9-0-0-0-0-0"},
+                                              React.createElement("div", {"className": "topbar-oval-3"}) 
+                                          ),
+                                          React.createElement("div", {"className": "topbar-0-0-0-9-0-0-0-0-1"},
+                                              React.createElement("div", {"className": "topbar-text-8"}, "Uncommited Changes")
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbar-0-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_2"}) 
+                  )
+              )
+          ),
+          ( if ((@props.whichTopbar) == "tutorial")
+              React.createElement("div", {"className": "topbar-tutorial-4"},
+                  React.createElement("div", {"className": "topbar-1-0-0"},
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_1"},
+                          (@props.editor.topbarBlockAdder())
+                      ),
+                      React.createElement("div", {"className": "topbar-1-0-0-1"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_3"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom In"), "onClick": ((@props.editor.viewportManager.handleZoomIn)), "image": ("https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance-9"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom Out"), "onClick": ((@props.editor.viewportManager.handleZoomOut)), "image": ("https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"), "disabled": (false)}) 
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbar-1-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_24"}) 
+                  )
+              )
+          ),
+          ( if ((@props.whichTopbar) == "stackblitz-default")
+              React.createElement("div", {"className": "topbar-stackblitz-default-5"},
+                  React.createElement("div", {"className": "topbar-2-0-0"},
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_13"},
+                          (@props.editor.topbarBlockAdder())
+                      ),
+                      React.createElement("div", {"className": "topbar-2-0-0-1"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_2"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Shortcuts"), "onClick": ((@props.editor.handleShortcuts)), "image": ("https://ucarecdn.com/646bf1f4-d2b8-4697-ba79-6a40b45dd223/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_4"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Make Reusable"), "onClick": ((@props.editor.handleNewComponent)), "image": ("https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"), "disabled": ((@props.editor.getSelectedBlocks().length == 0))}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-2-0-0-4"}),  
+                      React.createElement("div", {"className": "topbar-rectangle_9"},
+                          React.createElement("div", {"className": "topbar-2-0-0-5-0"},
+                              React.createElement("div", {"className": "topbar-text_4"}, "Pagedraw Demo")
+                          ),
+                          React.createElement("div", {"className": "topbar-2-0-0-5-1"},
+                              React.createElement("div", {"className": "topbar-rectangle_8"},
+                                  React.createElement("div", {"className": "topbar-2-0-0-5-1-0-0"},
+                                      React.createElement("a", {"href": "https://documentation.pagedraw.io/the-editor/", "target": "_blank", "className": "topbar-2-0-0-5-1-0-0-0"},
+                                          React.createElement("div", {"className": "topbar-text_4-0"}, "Documentation")
+                                      ),
+                                      React.createElement("div", {"className": "topbar-text_4-6"}, ("•")),
+                                      React.createElement("a", {"href": "https://documentation.pagedraw.io/install_existing/", "className": "topbar-2-0-0-5-1-0-0-2"},
+                                          React.createElement("div", {"className": "topbar-text_4-5"}, """
                                               Install in an existing codebase
-                                          </div>
-                                      </a>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div className="topbar-2-0-0-6" /> 
-                      <div className="topbar-topbarbutton_instance_3-3">
-                          <Topbarbutton state={"A"} text={"Zoom In"} onClick={(@props.editor.viewportManager.handleZoomIn)} image={"https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton_instance-0">
-                          <Topbarbutton state={"A"} text={"Zoom Out"} onClick={(@props.editor.viewportManager.handleZoomOut)} image={"https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-2-0-0-9">
-                          <div className="topbar-2-0-0-9-0">
-                              <div className="topbar-textbutton_instance-8">
-                                  <Textbutton text={"SHARE"} onClick={(@props.editor.handleStackBlitzSave)} disabled={false} /> 
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="topbar-2-0-1">
-                      <div className="topbar-rectangle_24-3" /> 
-                  </div>
-              </div>
-          }
-          { if ((@props.whichTopbar) == "default")
-              <div className="topbar-default-7">
-                  <div className="topbar-3-0-0">
-                      <div className="topbar-topbarbutton_instance_13-6">
-                          {@props.editor.topbarBlockAdder()}
-                      </div>
-                      <div className="topbar-3-0-0-1" /> 
-                      <div className="topbar-topbarbutton_instance_13-8">
-                          <Topbarbutton state={"A"} text={"Shortcuts"} onClick={(@props.editor.handleShortcuts)} image={"https://ucarecdn.com/646bf1f4-d2b8-4697-ba79-6a40b45dd223/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-3-0-0-3" /> 
-                      <div className="topbar-topbarbutton_instance_15">
-                          <Topbarbutton state={"A"} text={"Make Reusable"} onClick={(@props.editor.handleNewComponent)} image={"https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"} disabled={(@props.editor.getSelectedBlocks().length == 0)} /> 
-                      </div>
-                      <div className="topbar-topbarbutton_instance_16">
-                          <Topbarbutton state={"A"} text={"Sync Code"} onClick={(@props.editor.handleExport)} image={"https://ucarecdn.com/54591ad3-7fea-4d20-aa86-f238ca03aeac/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-3-0-0-6" /> 
-                      <div className="topbar-topbarbutton_instance_11">
-                          <Topbarbutton state={"A"} text={"Preview"} onClick={(@props.editor.handlePlay)} image={"https://ucarecdn.com/96f40588-00f2-453a-89b8-6df4287ab39a/"} disabled={(not @props.editor.topbarPlayButtonIsEnabled())} /> 
-                      </div>
-                      <div className="topbar-3-0-0-8" /> 
-                      <div className="topbar-topbarbutton_instance_14">
-                          <Topbarbutton state={"A"} text={"Zoom In"} onClick={(@props.editor.viewportManager.handleZoomIn)} image={"https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton_instance_12">
-                          <Topbarbutton state={"A"} text={"Zoom Out"} onClick={(@props.editor.viewportManager.handleZoomOut)} image={"https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-3-0-0-11" /> 
-                      <div className="topbar-3-0-0-12">
-                          <div className="topbar-3-0-0-12-0">
-                              <div className="topbar-3-0-0-12-0-0">
-                                  { if (@props.editor.hasUncommitedChanges())
-                                      <div onClick={@props.editor.showCommitView} className="topbar-rectangle_3-1">
-                                          <div className="topbar-3-0-0-12-0-0-0-0-0">
-                                              <div className="topbar-oval-7" /> 
-                                          </div>
-                                          <div className="topbar-3-0-0-12-0-0-0-0-1">
-                                              <div className="topbar-text-89">Uncommited Changes</div>
-                                          </div>
-                                      </div>
-                                  }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="topbar-3-0-1">
-                      <div className="topbar-rectangle_24-1" /> 
-                  </div>
-              </div>
-          }
-          { if ((@props.whichTopbar) == "merge-conflict")
-              <div className="topbar-merge-conflict-8">
-                  <div className="topbar-4-0-0">
-                      <div className="topbar-rectangle_1">
-                          <div className="topbar-4-0-0-0-0">
-                              <div className="topbar-topbarbutton_instance_7">
-                                  <Topbarbutton state={"A"} text={"Choose Left"} onClick={(@props.editor.chooseLeft)} image={"https://ucarecdn.com/368d9d5e-4107-4e76-b466-dde635be1a1a/"} disabled={false} /> 
-                              </div>
-                              <div className="topbar-topbarbutton_instance_7-4">
-                                  <Topbarbutton state={"A"} text={"Choose Right"} onClick={(@props.editor.chooseRight)} image={"https://ucarecdn.com/a3ff854e-d14c-44c1-af63-5ef71235dbf1/"} disabled={false} /> 
-                              </div>
-                              <div className="topbar-topbarbutton_instance_7-8">
-                                  <Topbarbutton state={"A"} text={"Abort Merge"} onClick={(@props.editor.abort)} image={"https://ucarecdn.com/5b0f0c48-acdc-40bf-a287-e81b4eb37520/"} disabled={false} /> 
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="topbar-4-0-1">
-                      <div className="topbar-rectangle_24-9" /> 
-                  </div>
-              </div>
-          }
-          { if ((@props.whichTopbar) == "with-mk-multi")
-              <div className="topbar-with-mk-multi-9">
-                  <div className="topbar-5-0-0">
-                      <div className="topbar-topbarbutton_instance_13-82">
-                          {@props.editor.topbarBlockAdder()}
-                      </div>
-                      <div className="topbar-5-0-0-1" /> 
-                      <div className="topbar-topbarbutton-49">
-                          <Topbarbutton state={"A"} text={"Shortcuts"} onClick={(@props.editor.handleShortcuts)} image={"https://ucarecdn.com/646bf1f4-d2b8-4697-ba79-6a40b45dd223/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-5-0-0-3" /> 
-                      <div className="topbar-topbarbutton-32">
-                          <Topbarbutton state={"A"} text={"Make Reusable"} onClick={(@props.editor.handleNewComponent)} image={"https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"} disabled={(@props.editor.getSelectedBlocks().length == 0)} /> 
-                      </div>
-                      <div className="topbar-5-0-0-5" /> 
-                      <div className="topbar-topbarbutton_instance_9">
-                          <Topbarbutton state={"A"} text={"Make Multistate"} onClick={(@props.editor.handleMakeMultistate)} image={"https://ucarecdn.com/874818bf-3f3b-4928-835b-061218fc26bf/"} disabled={(@props.editor.getSelectedBlocks().length == 0)} /> 
-                      </div>
-                      <div className="topbar-topbarbutton-2">
-                          <Topbarbutton state={"A"} text={"Sync Code"} onClick={(@props.editor.handleExport)} image={"https://ucarecdn.com/54591ad3-7fea-4d20-aa86-f238ca03aeac/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-5-0-0-8" /> 
-                      <div className="topbar-topbarbutton_instance_11-4">
-                          <Topbarbutton state={"A"} text={"Preview"} onClick={(@props.editor.handlePlay)} image={"https://ucarecdn.com/96f40588-00f2-453a-89b8-6df4287ab39a/"} disabled={(not @props.editor.topbarPlayButtonIsEnabled())} /> 
-                      </div>
-                      <div className="topbar-5-0-0-10" /> 
-                      <div className="topbar-topbarbutton-15">
-                          <Topbarbutton state={"A"} text={"Zoom In"} onClick={(@props.editor.viewportManager.handleZoomIn)} image={"https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-topbarbutton-6">
-                          <Topbarbutton state={"A"} text={"Zoom Out"} onClick={(@props.editor.viewportManager.handleZoomOut)} image={"https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"} disabled={false} /> 
-                      </div>
-                      <div className="topbar-5-0-0-13" /> 
-                      <div className="topbar-5-0-0-14">
-                          <div className="topbar-5-0-0-14-0">
-                              <div className="topbar-5-0-0-14-0-0">
-                                  { if (@props.editor.hasUncommitedChanges())
-                                      <div onClick={@props.editor.showCommitView} className="topbar-rectangle_3-7">
-                                          <div className="topbar-5-0-0-14-0-0-0-0-0">
-                                              <div className="topbar-oval-6" /> 
-                                          </div>
-                                          <div className="topbar-5-0-0-14-0-0-0-0-1">
-                                              <div className="topbar-text-2">Uncommited Changes</div>
-                                          </div>
-                                      </div>
-                                  }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="topbar-5-0-1">
-                      <div className="topbar-rectangle_24-4" /> 
-                  </div>
-              </div>
-          }
-          { if ((@props.whichTopbar) == "diff-viewer")
-              <div className="topbar-diff-viewer-9">
-                  <div className="topbar-6-0-0">
-                      <div className="topbar-6-0-0-0" /> 
-                      <div className="topbar-text_4-2">Diff Mode</div>
-                      <div className="topbar-6-0-0-2" /> 
-                  </div>
-                  <div className="topbar-6-0-1">
-                      <div className="topbar-rectangle_24-34" /> 
-                  </div>
-              </div>
-          }
-      </div>
+""")
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "topbar-2-0-0-6"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_3-3"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom In"), "onClick": ((@props.editor.viewportManager.handleZoomIn)), "image": ("https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance-0"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom Out"), "onClick": ((@props.editor.viewportManager.handleZoomOut)), "image": ("https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-2-0-0-9"},
+                          React.createElement("div", {"className": "topbar-2-0-0-9-0"},
+                              React.createElement("div", {"className": "topbar-textbutton_instance-8"},
+                                  React.createElement(Textbutton, {"text": ("SHARE"), "onClick": ((@props.editor.handleStackBlitzSave)), "disabled": (false)}) 
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbar-2-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_24-3"}) 
+                  )
+              )
+          ),
+          ( if ((@props.whichTopbar) == "default")
+              React.createElement("div", {"className": "topbar-default-7"},
+                  React.createElement("div", {"className": "topbar-3-0-0"},
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_13-6"},
+                          (@props.editor.topbarBlockAdder())
+                      ),
+                      React.createElement("div", {"className": "topbar-3-0-0-1"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_13-8"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Shortcuts"), "onClick": ((@props.editor.handleShortcuts)), "image": ("https://ucarecdn.com/646bf1f4-d2b8-4697-ba79-6a40b45dd223/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-3-0-0-3"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_15"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Make Reusable"), "onClick": ((@props.editor.handleNewComponent)), "image": ("https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"), "disabled": ((@props.editor.getSelectedBlocks().length == 0))}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_16"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Sync Code"), "onClick": ((@props.editor.handleExport)), "image": ("https://ucarecdn.com/54591ad3-7fea-4d20-aa86-f238ca03aeac/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-3-0-0-6"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_11"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Preview"), "onClick": ((@props.editor.handlePlay)), "image": ("https://ucarecdn.com/96f40588-00f2-453a-89b8-6df4287ab39a/"), "disabled": ((not @props.editor.topbarPlayButtonIsEnabled()))}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-3-0-0-8"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_14"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom In"), "onClick": ((@props.editor.viewportManager.handleZoomIn)), "image": ("https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_12"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom Out"), "onClick": ((@props.editor.viewportManager.handleZoomOut)), "image": ("https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-3-0-0-11"}),  
+                      React.createElement("div", {"className": "topbar-3-0-0-12"},
+                          React.createElement("div", {"className": "topbar-3-0-0-12-0"},
+                              React.createElement("div", {"className": "topbar-3-0-0-12-0-0"},
+                                  ( if (@props.editor.hasUncommitedChanges())
+                                      React.createElement("div", {"onClick": (@props.editor.showCommitView), "className": "topbar-rectangle_3-1"},
+                                          React.createElement("div", {"className": "topbar-3-0-0-12-0-0-0-0-0"},
+                                              React.createElement("div", {"className": "topbar-oval-7"}) 
+                                          ),
+                                          React.createElement("div", {"className": "topbar-3-0-0-12-0-0-0-0-1"},
+                                              React.createElement("div", {"className": "topbar-text-89"}, "Uncommited Changes")
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbar-3-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_24-1"}) 
+                  )
+              )
+          ),
+          ( if ((@props.whichTopbar) == "merge-conflict")
+              React.createElement("div", {"className": "topbar-merge-conflict-8"},
+                  React.createElement("div", {"className": "topbar-4-0-0"},
+                      React.createElement("div", {"className": "topbar-rectangle_1"},
+                          React.createElement("div", {"className": "topbar-4-0-0-0-0"},
+                              React.createElement("div", {"className": "topbar-topbarbutton_instance_7"},
+                                  React.createElement(Topbarbutton, {"state": ("A"), "text": ("Choose Left"), "onClick": ((@props.editor.chooseLeft)), "image": ("https://ucarecdn.com/368d9d5e-4107-4e76-b466-dde635be1a1a/"), "disabled": (false)}) 
+                              ),
+                              React.createElement("div", {"className": "topbar-topbarbutton_instance_7-4"},
+                                  React.createElement(Topbarbutton, {"state": ("A"), "text": ("Choose Right"), "onClick": ((@props.editor.chooseRight)), "image": ("https://ucarecdn.com/a3ff854e-d14c-44c1-af63-5ef71235dbf1/"), "disabled": (false)}) 
+                              ),
+                              React.createElement("div", {"className": "topbar-topbarbutton_instance_7-8"},
+                                  React.createElement(Topbarbutton, {"state": ("A"), "text": ("Abort Merge"), "onClick": ((@props.editor.abort)), "image": ("https://ucarecdn.com/5b0f0c48-acdc-40bf-a287-e81b4eb37520/"), "disabled": (false)}) 
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbar-4-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_24-9"}) 
+                  )
+              )
+          ),
+          ( if ((@props.whichTopbar) == "with-mk-multi")
+              React.createElement("div", {"className": "topbar-with-mk-multi-9"},
+                  React.createElement("div", {"className": "topbar-5-0-0"},
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_13-82"},
+                          (@props.editor.topbarBlockAdder())
+                      ),
+                      React.createElement("div", {"className": "topbar-5-0-0-1"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton-49"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Shortcuts"), "onClick": ((@props.editor.handleShortcuts)), "image": ("https://ucarecdn.com/646bf1f4-d2b8-4697-ba79-6a40b45dd223/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-5-0-0-3"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton-32"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Make Reusable"), "onClick": ((@props.editor.handleNewComponent)), "image": ("https://ucarecdn.com/1d46e25f-2b59-47c9-8f1d-9b6de444386a/"), "disabled": ((@props.editor.getSelectedBlocks().length == 0))}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-5-0-0-5"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_9"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Make Multistate"), "onClick": ((@props.editor.handleMakeMultistate)), "image": ("https://ucarecdn.com/874818bf-3f3b-4928-835b-061218fc26bf/"), "disabled": ((@props.editor.getSelectedBlocks().length == 0))}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton-2"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Sync Code"), "onClick": ((@props.editor.handleExport)), "image": ("https://ucarecdn.com/54591ad3-7fea-4d20-aa86-f238ca03aeac/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-5-0-0-8"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton_instance_11-4"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Preview"), "onClick": ((@props.editor.handlePlay)), "image": ("https://ucarecdn.com/96f40588-00f2-453a-89b8-6df4287ab39a/"), "disabled": ((not @props.editor.topbarPlayButtonIsEnabled()))}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-5-0-0-10"}),  
+                      React.createElement("div", {"className": "topbar-topbarbutton-15"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom In"), "onClick": ((@props.editor.viewportManager.handleZoomIn)), "image": ("https://ucarecdn.com/9a3fa941-ba37-4bcf-b071-6e4ff0e5a66d/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-topbarbutton-6"},
+                          React.createElement(Topbarbutton, {"state": ("A"), "text": ("Zoom Out"), "onClick": ((@props.editor.viewportManager.handleZoomOut)), "image": ("https://ucarecdn.com/4b48a72f-40e4-4110-a90f-15319b22814f/"), "disabled": (false)}) 
+                      ),
+                      React.createElement("div", {"className": "topbar-5-0-0-13"}),  
+                      React.createElement("div", {"className": "topbar-5-0-0-14"},
+                          React.createElement("div", {"className": "topbar-5-0-0-14-0"},
+                              React.createElement("div", {"className": "topbar-5-0-0-14-0-0"},
+                                  ( if (@props.editor.hasUncommitedChanges())
+                                      React.createElement("div", {"onClick": (@props.editor.showCommitView), "className": "topbar-rectangle_3-7"},
+                                          React.createElement("div", {"className": "topbar-5-0-0-14-0-0-0-0-0"},
+                                              React.createElement("div", {"className": "topbar-oval-6"}) 
+                                          ),
+                                          React.createElement("div", {"className": "topbar-5-0-0-14-0-0-0-0-1"},
+                                              React.createElement("div", {"className": "topbar-text-2"}, "Uncommited Changes")
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbar-5-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_24-4"}) 
+                  )
+              )
+          ),
+          ( if ((@props.whichTopbar) == "diff-viewer")
+              React.createElement("div", {"className": "topbar-diff-viewer-9"},
+                  React.createElement("div", {"className": "topbar-6-0-0"},
+                      React.createElement("div", {"className": "topbar-6-0-0-0"}),  
+                      React.createElement("div", {"className": "topbar-text_4-2"}, "Diff Mode"),
+                      React.createElement("div", {"className": "topbar-6-0-0-2"}) 
+                  ),
+                  React.createElement("div", {"className": "topbar-6-0-1"},
+                      React.createElement("div", {"className": "topbar-rectangle_24-34"}) 
+                  )
+              )
+          )
+      )
 }

@@ -47,25 +47,25 @@ exports.getExternalComponentSpecFromInstance = getExternalComponentSpecFromInsta
 exports.sidebarControlOfExternalComponentSpec = (extComponentSpecValueLink) ->
     # FIXME: propControl.customSpecControl stuff should probably be less object oriented
     propControl = extComponentSpecValueLink.value.propControl
-    <div>
-        {TextControl('component name', dotVlt(extComponentSpecValueLink, 'name'))}
-        {TextControl('import path', dotVlt(extComponentSpecValueLink, 'requirePath'))}
-        {CheckboxControl('relative import', dotVlt(extComponentSpecValueLink, 'relativeImport'))}
-        {CheckboxControl('default export', dotVlt(extComponentSpecValueLink, 'defaultExport'))}
-        {propControl.customSpecControl(dotVlt(extComponentSpecValueLink, 'propControl'), 'Component arguments')}
-    </div>
+    React.createElement("div", null,
+        (TextControl('component name', dotVlt(extComponentSpecValueLink, 'name'))),
+        (TextControl('import path', dotVlt(extComponentSpecValueLink, 'requirePath'))),
+        (CheckboxControl('relative import', dotVlt(extComponentSpecValueLink, 'relativeImport'))),
+        (CheckboxControl('default export', dotVlt(extComponentSpecValueLink, 'defaultExport'))),
+        (propControl.customSpecControl(dotVlt(extComponentSpecValueLink, 'propControl'), 'Component arguments'))
+    )
 
 exports.sidebarControlOfExternalComponentInstance = (doc, extComponentInstanceVl) ->
     sourceComponent = getExternalComponentSpecFromInstance(extComponentInstanceVl.value, doc)
-    return <div>deleted</div> if not sourceComponent?
-    <div>
-        <FormControl tag="select" valueLink={dotVlt(extComponentInstanceVl, 'srcRef')} style={width: '100%'}>
-        {
+    return React.createElement("div", null, "deleted") if not sourceComponent?
+    React.createElement("div", null,
+        React.createElement(FormControl, {"tag": "select", "valueLink": (dotVlt(extComponentInstanceVl, 'srcRef')), "style": (width: '100%')},
+        (
             doc.externalComponentSpecs.map (spec, i) ->
-                <option key={i} value={spec.ref}>{spec.name}</option>
-        }
-        </FormControl>
-        { if sourceComponent.propControl.attrTypes.length > 0
+                React.createElement("option", {"key": (i), "value": (spec.ref)}, (spec.name))
+        )
+        ),
+        ( if sourceComponent.propControl.attrTypes.length > 0
             sourceComponent.propControl.sidebarControl('props', dotVlt(extComponentInstanceVl, ['propValues', 'innerValue', 'staticValue']))
-        }
-    </div>
+        )
+    )

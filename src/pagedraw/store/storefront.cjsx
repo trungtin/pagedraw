@@ -5,8 +5,8 @@ Createlibrarycard = require './createlibrarycard'
 
 
 render = ->
-    <div className="storefront-storefront-5">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "storefront-storefront-5"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .storefront-storefront-5 {
@@ -390,101 +390,101 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="storefront-0">
-            <div className="storefront-0-0">
-                <div className="storefront-0-0-0">
-                    <div className="storefront-icon-7" /> 
-                </div>
-            </div>
-            <div className="storefront-library_store_-5">
+        """)}),  
+        React.createElement("div", {"className": "storefront-0"},
+            React.createElement("div", {"className": "storefront-0-0"},
+                React.createElement("div", {"className": "storefront-0-0-0"},
+                    React.createElement("div", {"className": "storefront-icon-7"}) 
+                )
+            ),
+            React.createElement("div", {"className": "storefront-library_store_-5"}, """
                 Library Store
-            </div>
-        </div>
-        <div className="storefront-1">
-            <div className="storefront-pagedraw_libraries_allow_you_to_import_existing_react_libraries_straight_into_pagedraw_just_find_a_widget_or_component_library_you_like_add_the_library_to_your_project_and_you_are_ready_to_go_-1">
+""")
+        ),
+        React.createElement("div", {"className": "storefront-1"},
+            React.createElement("div", {"className": "storefront-pagedraw_libraries_allow_you_to_import_existing_react_libraries_straight_into_pagedraw_just_find_a_widget_or_component_library_you_like_add_the_library_to_your_project_and_you_are_ready_to_go_-1"}, """
                 Pagedraw Libraries allow you to import existing React libraries straight into Pagedraw. Just find a widget or component library you like, add the library to your project and you are ready to go.
-            </div>
-        </div>
-        <div className="storefront-2">
-            <div className="storefront-popular_libraries_-5">
+""")
+        ),
+        React.createElement("div", {"className": "storefront-2"},
+            React.createElement("div", {"className": "storefront-popular_libraries_-5"}, """
                 Popular Libraries
-            </div>
-        </div>
-        <div className="storefront-3">
-            <div className="storefront-rectangle_1">
-                <div className="storefront-3-0-0">
-                    <div className="storefront-3-0-0-0">
-                        <div className="storefront-3-0-0-0-0">
-                            { if (@props.popularLibraries.length > 0)
-                                <div className="storefront-3-0-0-0-0-0-0">
-                                    { (@props.popularLibraries).map (lib, i) =>
-                                        <div key={i} className="storefront-repeat_popular_libraries-0">
-                                            <div className="storefront-3-0-0-0-0-0-0-0-0-0">
-                                                <div className="storefront-popular_libraries-3">
-                                                    <Publiclibrary title={lib.title} version={lib.version} owner={lib.owner} installCount={lib.installCount} starCount={lib.starCount} installed={lib.installed} repository={lib.repository} onDetails={lib.onDetails} onInstall={lib.onInstall} starred={lib.starred} /> 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            }
-                        </div>
-                        <div className="storefront-3-0-0-0-1" /> 
-                    </div>
-                    <div className="storefront-3-0-0-1" /> 
-                </div>
-            </div>
-        </div>
-        <div className="storefront-4">
-            <div className="storefront-libraries_from_your_team_-7">
+""")
+        ),
+        React.createElement("div", {"className": "storefront-3"},
+            React.createElement("div", {"className": "storefront-rectangle_1"},
+                React.createElement("div", {"className": "storefront-3-0-0"},
+                    React.createElement("div", {"className": "storefront-3-0-0-0"},
+                        React.createElement("div", {"className": "storefront-3-0-0-0-0"},
+                            ( if (@props.popularLibraries.length > 0)
+                                React.createElement("div", {"className": "storefront-3-0-0-0-0-0-0"},
+                                    ( (@props.popularLibraries).map (lib, i) =>
+                                        React.createElement("div", {"key": (i), "className": "storefront-repeat_popular_libraries-0"},
+                                            React.createElement("div", {"className": "storefront-3-0-0-0-0-0-0-0-0-0"},
+                                                React.createElement("div", {"className": "storefront-popular_libraries-3"},
+                                                    React.createElement(Publiclibrary, {"title": (lib.title), "version": (lib.version), "owner": (lib.owner), "installCount": (lib.installCount), "starCount": (lib.starCount), "installed": (lib.installed), "repository": (lib.repository), "onDetails": (lib.onDetails), "onInstall": (lib.onInstall), "starred": (lib.starred)}) 
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        React.createElement("div", {"className": "storefront-3-0-0-0-1"}) 
+                    ),
+                    React.createElement("div", {"className": "storefront-3-0-0-1"}) 
+                )
+            )
+        ),
+        React.createElement("div", {"className": "storefront-4"},
+            React.createElement("div", {"className": "storefront-libraries_from_your_team_-7"}, """
                 Libraries from your team
-            </div>
-        </div>
-        <div className="storefront-5">
-            <div className="storefront-rectangle_11">
-                <div className="storefront-5-0-0">
-                    <div className="storefront-5-0-0-0">
-                        { if (@props.teamLibraries.length > 0)
-                            <div className="storefront-5-0-0-0-0-0">
-                                { (@props.teamLibraries).map (lib, i) =>
-                                    <div key={i} className="storefront-repeat_team_libraries-3">
-                                        <div className="storefront-5-0-0-0-0-0-0-0-0">
-                                            <div className="storefront-publiclibrary-7">
-                                                <Publiclibrary title={lib.title} version={lib.version} owner={lib.owner} installCount={lib.installCount} starCount={lib.starCount} installed={lib.installed} repository={lib.repository} onDetails={lib.onDetails} onInstall={lib.onInstall} starred={lib.starred} /> 
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
-                        <div className="storefront-5-0-0-0-1" /> 
-                        <div className="storefront-optional_build_your_own-7">
-                            <div className="storefront-5-0-0-0-2-0">
-                                <div className="storefront-createlibrarycard_instance-5">
-                                    <Createlibrarycard onClick={(@props.onCreateNewLibrary)} /> 
-                                </div>
-                            </div>
-                        </div>
-                        <div className="storefront-5-0-0-0-3" /> 
-                    </div>
-                    <div className="storefront-5-0-0-1" /> 
-                </div>
-            </div>
-        </div>
-        <div className="storefront-6">
-            <div className="storefront-design_develop_publish_-1">
-                {"Design, Develop & Publish"}
-            </div>
-        </div>
-        <div className="storefront-7">
-            <div className="storefront-_you_can_design_and_develop_components_either_in_code_or_inside_pagedraw_take_a_look_at_developer_documentation_for_more_details_-8">
-                <div> You can design and develop components either in code or inside Pagedraw.</div>
-                <br/>
-                <div>Take a look at developer documentation for more details.</div>
-            </div>
-        </div>
-        <div className="storefront-8" /> 
-    </div>
+""")
+        ),
+        React.createElement("div", {"className": "storefront-5"},
+            React.createElement("div", {"className": "storefront-rectangle_11"},
+                React.createElement("div", {"className": "storefront-5-0-0"},
+                    React.createElement("div", {"className": "storefront-5-0-0-0"},
+                        ( if (@props.teamLibraries.length > 0)
+                            React.createElement("div", {"className": "storefront-5-0-0-0-0-0"},
+                                ( (@props.teamLibraries).map (lib, i) =>
+                                    React.createElement("div", {"key": (i), "className": "storefront-repeat_team_libraries-3"},
+                                        React.createElement("div", {"className": "storefront-5-0-0-0-0-0-0-0-0"},
+                                            React.createElement("div", {"className": "storefront-publiclibrary-7"},
+                                                React.createElement(Publiclibrary, {"title": (lib.title), "version": (lib.version), "owner": (lib.owner), "installCount": (lib.installCount), "starCount": (lib.starCount), "installed": (lib.installed), "repository": (lib.repository), "onDetails": (lib.onDetails), "onInstall": (lib.onInstall), "starred": (lib.starred)}) 
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        ),
+                        React.createElement("div", {"className": "storefront-5-0-0-0-1"}),  
+                        React.createElement("div", {"className": "storefront-optional_build_your_own-7"},
+                            React.createElement("div", {"className": "storefront-5-0-0-0-2-0"},
+                                React.createElement("div", {"className": "storefront-createlibrarycard_instance-5"},
+                                    React.createElement(Createlibrarycard, {"onClick": ((@props.onCreateNewLibrary))}) 
+                                )
+                            )
+                        ),
+                        React.createElement("div", {"className": "storefront-5-0-0-0-3"}) 
+                    ),
+                    React.createElement("div", {"className": "storefront-5-0-0-1"}) 
+                )
+            )
+        ),
+        React.createElement("div", {"className": "storefront-6"},
+            React.createElement("div", {"className": "storefront-design_develop_publish_-1"},
+                ("Design, Develop & Publish")
+            )
+        ),
+        React.createElement("div", {"className": "storefront-7"},
+            React.createElement("div", {"className": "storefront-_you_can_design_and_develop_components_either_in_code_or_inside_pagedraw_take_a_look_at_developer_documentation_for_more_details_-8"},
+                React.createElement("div", null, " You can design and develop components either in code or inside Pagedraw."),
+                React.createElement("br", null),
+                React.createElement("div", null, "Take a look at developer documentation for more details.")
+            )
+        ),
+        React.createElement("div", {"className": "storefront-8"}) 
+    )
 
 module.exports = (props) -> render.apply({props})

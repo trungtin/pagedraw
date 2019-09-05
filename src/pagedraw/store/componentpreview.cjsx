@@ -4,8 +4,8 @@ Componenttitle = require './componenttitle'
 
 
 render = ->
-    <div className="componentpreview-componentpreview-5">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "componentpreview-componentpreview-5"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             .componentpreview-componentpreview-5 {
                 display: flex;
                 flex-direction: column;
@@ -84,17 +84,17 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="componentpreview-0">
-            <div className="componentpreview-componenttitle_instance-8">
-                <Componenttitle title={(@props.title)} /> 
-            </div>
-        </div>
-        <div className="componentpreview-1">
-            <div className="componentpreview-rectangle_6">
-                {@props.renderPreview()}
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "componentpreview-0"},
+            React.createElement("div", {"className": "componentpreview-componenttitle_instance-8"},
+                React.createElement(Componenttitle, {"title": ((@props.title))}) 
+            )
+        ),
+        React.createElement("div", {"className": "componentpreview-1"},
+            React.createElement("div", {"className": "componentpreview-rectangle_6"},
+                (@props.renderPreview())
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

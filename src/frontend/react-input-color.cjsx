@@ -25,7 +25,7 @@ module.exports = createReactClass
     # changes until we get the firing event (animation frame).
 
     render: ->
-        <input ref="native_ctrl" />
+        React.createElement("input", {"ref": "native_ctrl"})
 
     componentWillMount: ->
         @changeRequestsed = false

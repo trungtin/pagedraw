@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Topbarbutton = createReactClass {
     displayName: 'Topbarbutton'
     render: ->
-        <div className="topbarbutton">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "topbarbutton"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .topbarbutton {
                   display: flex;
                   flex-grow: 1;
@@ -295,68 +295,68 @@ module.exports = Topbarbutton = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if ((if @props.disabled then 'Disabled' else 'Enabled') == "Enabled")
-              <div className="pd-onactive-parent pd-onhover-parent topbarbutton-0-0">
-                  <div className="pd-onactive topbarbutton-_active-6">
-                      <div className="topbarbutton-0-0-0-0">
-                          <div onMouseUp={@props.onClick} className="topbarbutton-rectangle_4">
-                              <div className="topbarbutton-0-0-0-0-0-0">
-                                  <img src={@props.image} className="topbarbutton-image-5" /> 
-                              </div>
-                          </div>
-                      </div>
-                      <div className="topbarbutton-0-0-0-1">
-                          <div className="topbarbutton-push_to_github_-9">
-                              { @props.text }
-                          </div>
-                      </div>
-                  </div>
-                  <div className="pd-onhover topbarbutton-_hover-6">
-                      <div className="topbarbutton-0-0-1-0">
-                          <div className="topbarbutton-rectangle_43">
-                              <div className="topbarbutton-0-0-1-0-0-0">
-                                  <img src={@props.image} className="topbarbutton-image-2" /> 
-                              </div>
-                          </div>
-                      </div>
-                      <div className="topbarbutton-0-0-1-1">
-                          <div className="topbarbutton-push_to_github_-0">
-                              { @props.text }
-                          </div>
-                      </div>
-                  </div>
-                  { if (('A') == "A")
-                      <div className="topbarbutton-a-6">
-                          <div className="topbarbutton-0-0-2-0-0">
-                              <div onMouseDown={@props.onClick} className="topbarbutton-rectangle_43-0">
-                                  <div className="topbarbutton-0-0-2-0-0-0-0">
-                                      <img src={@props.image} className="topbarbutton-image-6" /> 
-                                  </div>
-                              </div>
-                          </div>
-                          <div className="topbarbutton-0-0-2-0-1">
-                              <div className="topbarbutton-push_to_github_-1">
-                                  { @props.text }
-                              </div>
-                          </div>
-                      </div>
-                  }
-              </div>
-          }
-          { if ((if @props.disabled then 'Disabled' else 'Enabled') == "Disabled")
-              <div className="topbarbutton-disabled-8">
-                  <div className="topbarbutton-1-0-0">
-                      <div className="topbarbutton-rectangle_43-6">
-                          <div className="topbarbutton-1-0-0-0-0">
-                              <img src={@props.image} className="topbarbutton-image-7" /> 
-                          </div>
-                      </div>
-                  </div>
-                  <div className="topbarbutton-1-0-1">
-                      <div className="topbarbutton-text_2">{ @props.text }</div>
-                  </div>
-              </div>
-          }
-      </div>
+          """)}),  
+          ( if ((if @props.disabled then 'Disabled' else 'Enabled') == "Enabled")
+              React.createElement("div", {"className": "pd-onactive-parent pd-onhover-parent topbarbutton-0-0"},
+                  React.createElement("div", {"className": "pd-onactive topbarbutton-_active-6"},
+                      React.createElement("div", {"className": "topbarbutton-0-0-0-0"},
+                          React.createElement("div", {"onMouseUp": (@props.onClick), "className": "topbarbutton-rectangle_4"},
+                              React.createElement("div", {"className": "topbarbutton-0-0-0-0-0-0"},
+                                  React.createElement("img", {"src": (@props.image), "className": "topbarbutton-image-5"}) 
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "topbarbutton-0-0-0-1"},
+                          React.createElement("div", {"className": "topbarbutton-push_to_github_-9"},
+                              ( @props.text )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onhover topbarbutton-_hover-6"},
+                      React.createElement("div", {"className": "topbarbutton-0-0-1-0"},
+                          React.createElement("div", {"className": "topbarbutton-rectangle_43"},
+                              React.createElement("div", {"className": "topbarbutton-0-0-1-0-0-0"},
+                                  React.createElement("img", {"src": (@props.image), "className": "topbarbutton-image-2"}) 
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "topbarbutton-0-0-1-1"},
+                          React.createElement("div", {"className": "topbarbutton-push_to_github_-0"},
+                              ( @props.text )
+                          )
+                      )
+                  ),
+                  ( if (('A') == "A")
+                      React.createElement("div", {"className": "topbarbutton-a-6"},
+                          React.createElement("div", {"className": "topbarbutton-0-0-2-0-0"},
+                              React.createElement("div", {"onMouseDown": (@props.onClick), "className": "topbarbutton-rectangle_43-0"},
+                                  React.createElement("div", {"className": "topbarbutton-0-0-2-0-0-0-0"},
+                                      React.createElement("img", {"src": (@props.image), "className": "topbarbutton-image-6"}) 
+                                  )
+                              )
+                          ),
+                          React.createElement("div", {"className": "topbarbutton-0-0-2-0-1"},
+                              React.createElement("div", {"className": "topbarbutton-push_to_github_-1"},
+                                  ( @props.text )
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if ((if @props.disabled then 'Disabled' else 'Enabled') == "Disabled")
+              React.createElement("div", {"className": "topbarbutton-disabled-8"},
+                  React.createElement("div", {"className": "topbarbutton-1-0-0"},
+                      React.createElement("div", {"className": "topbarbutton-rectangle_43-6"},
+                          React.createElement("div", {"className": "topbarbutton-1-0-0-0-0"},
+                              React.createElement("img", {"src": (@props.image), "className": "topbarbutton-image-7"}) 
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "topbarbutton-1-0-1"},
+                      React.createElement("div", {"className": "topbarbutton-text_2"}, ( @props.text ))
+                  )
+              )
+          )
+      )
 }

@@ -25,16 +25,16 @@ core = require '../core'
 
 module.exports = createReactClass
     render: ->
-        return <ErrorPage message="404 not found" /> if @loadError
+        return React.createElement(ErrorPage, {"message": "404 not found"}) if @loadError
         return @renderLoading() unless @loaded
 
         return @renderReadme() if @props.mobile and @readme?
 
         if @props.mobile # and we don't have a readme
-            return <ErrorPage
-                message="Sorry, our editor isn't optimized for mobile yet"
-                detail="Try opening this link in Chrome on a laptop or desktop!"
-                />
+            return React.createElement(ErrorPage, { \
+                "message": "Sorry, our editor isn't optimized for mobile yet",  \
+                "detail": "Try opening this link in Chrome on a laptop or desktop!"
+                })
 
         return @renderReadmeOnTheSide() if @readme?
         return @renderPDandBlitz()
@@ -47,44 +47,44 @@ module.exports = createReactClass
             top: -2, left: 0, right: 0, bottom: 0
             zIndex: 5000
 
-        <SplitPane split="horizontal" defaultSize={"55%"}>
-            <div style={position: 'relative', width: '100%', height: '100%'}>
-                {if @overlay
+        React.createElement(SplitPane, {"split": "horizontal", "defaultSize": ("55%")},
+            React.createElement("div", {"style": (position: 'relative', width: '100%', height: '100%')},
+                (if @overlay
                     [
-                        <div onClick={@hideOverlay} style={_l.extend {}, overlayFontStyles, {cursor: 'pointer', zIndex: 5001, position: 'absolute', top: 30, right: 30}}>x</div>
-                        <div onClick={@hideOverlay} style={_l.extend {}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <div>Pagedraw Editor</div>
-                        </div>
+                        React.createElement("div", {"onClick": (@hideOverlay), "style": (_l.extend {}, overlayFontStyles, {cursor: 'pointer', zIndex: 5001, position: 'absolute', top: 30, right: 30})}, "x")
+                        React.createElement("div", {"onClick": (@hideOverlay), "style": (_l.extend {}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'center'})},
+                            React.createElement("div", null, "Pagedraw Editor")
+                        )
                     ]
-                }
-                <ShouldSubtreeRender shouldUpdate={false} subtree={=>
-                    <Editor
-                        initialDocJson={@latest_pagedraw_docjson}
-                        onChange={@handlePagedrawChanged}
-                        editorOuterStyle={height: '100%', width: '100%'}
-                        defaultTopbar={if @props.tutorial then 'tutorial' else 'stackblitz-default'}
-                        onStackBlitzShare={@handleShare}
-                        />
-                } />
-            </div>
+                ),
+                React.createElement(ShouldSubtreeRender, {"shouldUpdate": (false), "subtree": (=>
+                    React.createElement(Editor, { \
+                        "initialDocJson": (@latest_pagedraw_docjson),  \
+                        "onChange": (@handlePagedrawChanged),  \
+                        "editorOuterStyle": (height: '100%', width: '100%'),  \
+                        "defaultTopbar": (if @props.tutorial then 'tutorial' else 'stackblitz-default'),  \
+                        "onStackBlitzShare": (@handleShare)
+                        })
+                )})
+            ),
 
-            <div className="blitz-sb-mount-parent" style={position: 'relative', width: '100%', height: '100%'}>
-                {if @overlay
-                    <div onClick={@hideOverlay} style={_l.extend {}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
-                        <div>Your code</div>
-                        <div>Live App</div>
-                    </div>
-                }
+            React.createElement("div", {"className": "blitz-sb-mount-parent", "style": (position: 'relative', width: '100%', height: '100%')},
+                (if @overlay
+                    React.createElement("div", {"onClick": (@hideOverlay), "style": (_l.extend {}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'space-around'})},
+                        React.createElement("div", null, "Your code"),
+                        React.createElement("div", null, "Live App")
+                    )
+                ),
 
-                <StackBlitz ref="stackblitz"
-                    style={height: '100%', width: '100%'}
-                    sb_template={@sb_template}
-                    overlayFS={@latest_compiled_fs}
-                    initialFS={@initial_stackblitz_fs}
-                    dependencies={@blitz_dependencies}
-                    />
-            </div>
-        </SplitPane>
+                React.createElement(StackBlitz, {"ref": "stackblitz",  \
+                    "style": (height: '100%', width: '100%'),  \
+                    "sb_template": (@sb_template),  \
+                    "overlayFS": (@latest_compiled_fs),  \
+                    "initialFS": (@initial_stackblitz_fs),  \
+                    "dependencies": (@blitz_dependencies)
+                    })
+            )
+        )
 
     componentWillMount: ->
         @enableSoftUrlChangingWithoutBreakingBackButton()
@@ -154,31 +154,31 @@ module.exports = createReactClass
                 @softChangeUrl(new_blitz_link)
 
                 modal.show (closeHandler) => [
-                    <div style={userSelect: 'text', lineHeight: '2.4em'}>
-                        <Modal.Header style={textAlign: 'center'}>
-                            <Modal.Title>Your Fiddle was saved</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Link to this Fiddle:</p>
-                            <div style={marginBottom: 15}>
-                                <CodeShower content="https://pagedraw.io#{new_blitz_link}"/>
-                            </div>
-                            <hr />
-                            <p>
-                                {"Ready to start using Pagedraw in real a codebase? "}
-                                <a href="https://documentation.pagedraw.io/install_existing/">
+                    React.createElement("div", {"style": (userSelect: 'text', lineHeight: '2.4em')},
+                        React.createElement(Modal.Header, {"style": (textAlign: 'center')},
+                            React.createElement(Modal.Title, null, "Your Fiddle was saved")
+                        ),
+                        React.createElement(Modal.Body, null,
+                            React.createElement("p", null, "Link to this Fiddle:"),
+                            React.createElement("div", {"style": (marginBottom: 15)},
+                                React.createElement(CodeShower, {"content": "https://pagedraw.io#{new_blitz_link}"})
+                            ),
+                            React.createElement("hr", null),
+                            React.createElement("p", null,
+                                ("Ready to start using Pagedraw in real a codebase? "),
+                                React.createElement("a", {"href": "https://documentation.pagedraw.io/install_existing/"}, """
                                     Learn how to use Pagedraw with git and your regular IDE or text editor.
-                                </a>
-                            </p>
-                        </Modal.Body>
-                        <Modal.Footer style={textAlign: 'center'}>
-                            <p>
+""")
+                            )
+                        ),
+                        React.createElement(Modal.Footer, {"style": (textAlign: 'center')},
+                            React.createElement("p", null, """
                                 Continue working and collaborate with other users in real time
-                                by <a href="/apps">signing up</a> or <a href="/apps">logging in</a>.
-                            </p>
-                            <a href="/apps"><PdButtonOne stretch={true} type="primary">Login</PdButtonOne></a>
-                        </Modal.Footer>
-                    </div>
+                                by """, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.createElement("a", {"href": "/apps"}, "logging in"), """.
+"""),
+                            React.createElement("a", {"href": "/apps"}, React.createElement(PdButtonOne, {"stretch": (true), "type": "primary"}, "Login"))
+                        )
+                    )
                 ]
 
         .catch (err) ->
@@ -188,7 +188,7 @@ module.exports = createReactClass
 
 
     renderLoading: ->
-        <div />
+        React.createElement("div", null)
 
     ##
 
@@ -203,10 +203,10 @@ module.exports = createReactClass
     ##
 
     renderReadmeOnTheSide: ->
-        <SplitPane split="vertical" defaultSize="400px">
-            {@renderReadme()}
-            {@renderPDandBlitz()}
-        </SplitPane>
+        React.createElement(SplitPane, {"split": "vertical", "defaultSize": "400px"},
+            (@renderReadme()),
+            (@renderPDandBlitz())
+        )
 
     renderReadme: ->
         readme = @readme.trim()
@@ -214,62 +214,62 @@ module.exports = createReactClass
         next_url_regex = /\nnext-url: (.*)$/
 
         inner_next_content =
-            <div style={display: 'flex', alignItems: 'center'}>
-                <span style={fontSize: 16, marginRight: 12}>NEXT</span>
-                <span style={fontSize: 22, fontWeight: 100}>→</span>
-            </div>
+            React.createElement("div", {"style": (display: 'flex', alignItems: 'center')},
+                React.createElement("span", {"style": (fontSize: 16, marginRight: 12)}, "NEXT"),
+                React.createElement("span", {"style": (fontSize: 22, fontWeight: 100)}, "→")
+            )
 
         [readme, next_button] =
             if (next_fiddle_id = readme.match(next_fiddle_regex)?[1])?
                 next_button =
-                    <a href={next_fiddle_id} style={marginTop: 50, display: 'block'}>
-                        <TextButton text={inner_next_content} />
-                    </a>
+                    React.createElement("a", {"href": (next_fiddle_id), "style": (marginTop: 50, display: 'block')},
+                        React.createElement(TextButton, {"text": (inner_next_content)})
+                    )
 
                 [readme.replace(next_fiddle_regex, "").trim(), next_button]
             else if (next_url = readme.match(next_url_regex)?[1])?
                 next_button =
-                    <a href={next_url} style={marginTop: 50, display: 'block'}>
-                        <TextButton text={inner_next_content} />
-                    </a>
+                    React.createElement("a", {"href": (next_url), "style": (marginTop: 50, display: 'block')},
+                        React.createElement(TextButton, {"text": (inner_next_content)})
+                    )
 
                 [readme.replace(next_url_regex, "").trim(), next_button]
 
             else
                 [readme, undefined]
 
-        <div className="fiddle-readme-bar">
-            <header>
-                <img className="pagedog-logo" src={"#{config.static_server}/assets/favicon.png"} />
-                <div>
-                    <span className="logotype">Pagedraw</span>
-                    {" "}
-                    <span className="productname">Intro</span>
-                </div>
-            </header>
-            <div className="scroll-pane">
-                <div className="content">
-                    {<h2>Visit this link on a computer to try the Pagedraw editor out</h2> if @props.mobile}
-                    <ReactMarkdown
-                        source={readme}
-                        escapeHtml={false}
-                        renderers={{
+        React.createElement("div", {"className": "fiddle-readme-bar"},
+            React.createElement("header", null,
+                React.createElement("img", {"className": "pagedog-logo", "src": ("#{config.static_server}/assets/favicon.png")}),
+                React.createElement("div", null,
+                    React.createElement("span", {"className": "logotype"}, "Pagedraw"),
+                    (" "),
+                    React.createElement("span", {"className": "productname"}, "Intro")
+                )
+            ),
+            React.createElement("div", {"className": "scroll-pane"},
+                React.createElement("div", {"className": "content"},
+                    (React.createElement("h2", null, "Visit this link on a computer to try the Pagedraw editor out") if @props.mobile),
+                    React.createElement(ReactMarkdown, { \
+                        "source": (readme),  \
+                        "escapeHtml": (false),  \
+                        "renderers": ({
                             code: CodeBlock
                             link: ReadmeLink
-                        }} />
-                </div>
-                {next_button if next_button?}
-            </div>
-        </div>
+                        })})
+                ),
+                (next_button if next_button?)
+            )
+        )
 
 ##
 
 hljs = require 'highlight.js'
 
 ReadmeLink = createReactClass
-    render: -> <a href={@props.href} target="_blank">{@props.children}</a>
+    render: -> React.createElement("a", {"href": (@props.href), "target": "_blank"}, (@props.children))
 
 CodeBlock = createReactClass
-    render: -> <pre><code ref="code" className={this.props.language}>{@props.value}</code></pre>
+    render: -> React.createElement("pre", null, React.createElement("code", {"ref": "code", "className": (this.props.language)}, (@props.value)))
     componentDidMount: -> hljs.highlightBlock(@refs.code)
     shouldComponentUpdate: -> false

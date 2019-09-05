@@ -14,7 +14,7 @@ module.exports = Tooltip = createReactClass
             else throw new Error('Wrong props.position')
 
         return @props.children if _l.isEmpty @props.content
-        <div className="pd-tooltip">
-            <div className="pd-tooltiptext #{positionClass}">{this.props.content}</div>
-            {this.props.children}
-        </div>
+        React.createElement("div", {"className": "pd-tooltip"},
+            React.createElement("div", {"className": "pd-tooltiptext #{positionClass}"}, (this.props.content)),
+            (this.props.children)
+        )

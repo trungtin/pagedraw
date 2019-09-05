@@ -72,50 +72,50 @@ module.exports = createReactClass
         prod_assert => @props.doc.isInReadonlyMode()
 
         treeListView = @getTreeList().map ({block, depth, hasChildren}) =>
-            <LayerListItem
-              key={block.uniqueKey}
-              ref={"item-#{block.uniqueKey}"}
-              block={block}
-              parentLayerList={this}
+            React.createElement(LayerListItem, { \
+              "key": (block.uniqueKey),  \
+              "ref": ("item-#{block.uniqueKey}"),  \
+              "block": (block),  \
+              "parentLayerList": (this),  \
 
-              labelValueLink={@linkAttr(block, 'label')}
-              depth={depth}
-              hasChildren={hasChildren}
-              isSelected={block in @props.selectedBlocks}
-              isCollapsed={@isCollapsed(block)}
-              isBeingRenamed={block == @blockBeingRenamed}
-              isLockedValueLink={@linkAttr(block, 'locked')}
-              />
+              "labelValueLink": (@linkAttr(block, 'label')),  \
+              "depth": (depth),  \
+              "hasChildren": (hasChildren),  \
+              "isSelected": (block in @props.selectedBlocks),  \
+              "isCollapsed": (@isCollapsed(block)),  \
+              "isBeingRenamed": (block == @blockBeingRenamed),  \
+              "isLockedValueLink": (@linkAttr(block, 'locked'))
+              })
 
 
-        <div className="layer-list editor-scrollbar scrollbar-show-on-hover bootstrap">
-            {<div onClick={=> @props.onBlocksSelected([], additive: false); @props.onChange(fast: true)}
-                style={paddingLeft: 15, display: 'flex', justifyContent: 'space-between'}
-                className="layer-list-item #{if _l.isEmpty(@props.selectedBlocks) then 'selected' else ''}">
-                <div>Doc</div>
-                <div style={maxWidth: 100, whiteSpace: 'nowrap', overflowX: 'hidden', textOverflow: 'ellipsis'}>{@props.doc.url}</div>
-            </div> unless _l.isEmpty(@props.doc.blocks)}
-            { if _l.isEmpty @props.doc.blocks
-                <div className="sidebar-default-content">
-                    <div style={padding: 15, fontSize: 14, fontFamily: 'Lato'}>
-                        <h3>Welcome to Pagedraw!</h3>
-                        <p>Few things you can try:</p>
-                        <ul>
-                            <li>Press 'a' and draw an artboard that can later become your page or React component</li>
-                            <li>Press 'r' to draw a rectangle or 't' to add text element</li>
-                            <li>Press 'd' to switch to Dynamic Data mode and select elements you want to make dynamic</li>
-                            <li>Sync code with your codebase by pressing 'Sync Code' and following the setup instuctions</li>
-                        </ul>
-                    </div>
-                </div>
+        React.createElement("div", {"className": "layer-list editor-scrollbar scrollbar-show-on-hover bootstrap"},
+            (React.createElement("div", {"onClick": (=> @props.onBlocksSelected([], additive: false); @props.onChange(fast: true)),  \
+                "style": (paddingLeft: 15, display: 'flex', justifyContent: 'space-between'),  \
+                "className": "layer-list-item #{if _l.isEmpty(@props.selectedBlocks) then 'selected' else ''}"},
+                React.createElement("div", null, "Doc"),
+                React.createElement("div", {"style": (maxWidth: 100, whiteSpace: 'nowrap', overflowX: 'hidden', textOverflow: 'ellipsis')}, (@props.doc.url))
+            ) unless _l.isEmpty(@props.doc.blocks)),
+            ( if _l.isEmpty @props.doc.blocks
+                React.createElement("div", {"className": "sidebar-default-content"},
+                    React.createElement("div", {"style": (padding: 15, fontSize: 14, fontFamily: 'Lato')},
+                        React.createElement("h3", null, "Welcome to Pagedraw!"),
+                        React.createElement("p", null, "Few things you can try:"),
+                        React.createElement("ul", null,
+                            React.createElement("li", null, "Press \'a\' and draw an artboard that can later become your page or React component"),
+                            React.createElement("li", null, "Press \'r\' to draw a rectangle or \'t\' to add text element"),
+                            React.createElement("li", null, "Press \'d\' to switch to Dynamic Data mode and select elements you want to make dynamic"),
+                            React.createElement("li", null, "Sync code with your codebase by pressing \'Sync Code\' and following the setup instuctions")
+                        )
+                    )
+                )
 
              else if config.layerListFlipMoveAnimation
-                <FlipMove duration={100}>{treeListView}</FlipMove>
+                React.createElement(FlipMove, {"duration": (100)}, (treeListView))
 
               else
                 treeListView
-            }
-        </div>
+            )
+        )
 
     linkAttr: (block, attr) ->
         value: block[attr]
@@ -177,39 +177,39 @@ module.exports = createReactClass
 LayerListItem = createReactClass
   render: ->
     {labelValueLink, depth, hasChildren, isSelected, isCollapsed, isBeingRenamed, isLockedValueLink, block, parentLayerList} = @props
-    <div className={"layer-list-item #{if isSelected then 'selected' else ''} #{if depth == 0 then 'top-level' else ''}"}
-      style={
+    React.createElement("div", {"className": ("layer-list-item #{if isSelected then 'selected' else ''} #{if depth == 0 then 'top-level' else ''}"),  \
+      "style": (
         paddingLeft: 25 + 15 * depth
-      }
-      onMouseDown={(e) -> parentLayerList.handleLayerItemMouseDown(e, block)}
-      onMouseOver={-> parentLayerList.handleMouseOver(block)}
-      onMouseLeave={-> parentLayerList.handleMouseLeave(block)}>
-        <div className="layer-list-item-line">
-          { if hasChildren
+      ),  \
+      "onMouseDown": ((e) -> parentLayerList.handleLayerItemMouseDown(e, block)),  \
+      "onMouseOver": (-> parentLayerList.handleMouseOver(block)),  \
+      "onMouseLeave": (-> parentLayerList.handleMouseLeave(block))},
+        React.createElement("div", {"className": "layer-list-item-line"},
+          ( if hasChildren
              # Allows user to collapse layer
              # collapser draws a triangle, using the css border hack
-             <div onMouseDown={(e) -> parentLayerList.handleToggleCollapsed(e, block)} className="layer-list-collapser">
-                  <div className="layer-list-collapser-triangle" style={
+             React.createElement("div", {"onMouseDown": ((e) -> parentLayerList.handleToggleCollapsed(e, block)), "className": "layer-list-collapser"},
+                  React.createElement("div", {"className": "layer-list-collapser-triangle", "style": (
                       borderColor: "transparent transparent transparent #{if isSelected then '#fff' else '#8c8c8c'}"
                       transform: if not isCollapsed then 'rotate(90deg)' else ''
-                  } />
-                </div>
-          }
+                  )})
+                )
+          ),
 
-          <EditableText
-             valueLink={labelValueLink}
-             isEditable={isSelected}
-             isEditing={isBeingRenamed}
-             onSwitchToEditMode={(isEditMode) -> parentLayerList.handleEditableTextSwitchToEditMode(block, isEditMode)}
-             editingStyle={width: '100%'} />
+          React.createElement(EditableText, { \
+             "valueLink": (labelValueLink),  \
+             "isEditable": (isSelected),  \
+             "isEditing": (isBeingRenamed),  \
+             "onSwitchToEditMode": ((isEditMode) -> parentLayerList.handleEditableTextSwitchToEditMode(block, isEditMode)),  \
+             "editingStyle": (width: '100%')}),
 
-          { unless isBeingRenamed
-              <div className={"locked" if block.locked} style={flexShrink: 0, marginLeft: 5}>
-                <LockToggle valueLink={isLockedValueLink} />
-              </div>
-          }
-        </div>
-    </div>
+          ( unless isBeingRenamed
+              React.createElement("div", {"className": ("locked" if block.locked), "style": (flexShrink: 0, marginLeft: 5)},
+                React.createElement(LockToggle, {"valueLink": (isLockedValueLink)})
+              )
+          )
+        )
+    )
 
   shouldComponentUpdate: (nextProps) ->
     return not (

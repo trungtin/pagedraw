@@ -58,7 +58,7 @@ defined_if_nonempty = (val) -> if _l.isEmpty(val) then undefined else val
 exports.sidebarControlsOfComponent = sidebarControlsOfComponent = (component, specLinkAttr, onChange) ->
     assert -> component.isComponent and component.componentSpec?
     [
-        <hr />
+        React.createElement("hr", null)
         CheckboxControl("instances have resizable width", specLinkAttr('flexWidth'))
         CheckboxControl("instances have resizable height", specLinkAttr('flexHeight'))
     ]

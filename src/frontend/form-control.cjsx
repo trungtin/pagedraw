@@ -15,13 +15,13 @@ module.exports = FormControl = createReactClass
             label = passthrough_props['label']
             delete passthrough_props['label']
 
-            return <input type="checkbox" value={label} title={label}
-                checked={@props.valueLink.value ? false}
-                onChange={@onCheckedChanged}
-                {...passthrough_props} />
+            return React.createElement("input", Object.assign({"type": "checkbox", "value": (label), "title": (label),  \
+                "checked": (@props.valueLink.value ? false),  \
+                "onChange": (@onCheckedChanged)
+                }, passthrough_props ))
 
         Tag = @props.tag ? 'input'
-        return <Tag value={@_internalValue ? ''} onChange={@onChange} {...passthrough_props} />
+        return React.createElement(Tag, Object.assign({"value": (@_internalValue ? ''), "onChange": (@onChange)}, passthrough_props ))
 
     onCheckedChanged: (evt) ->
         @props.valueLink.requestChange(evt.target.checked)

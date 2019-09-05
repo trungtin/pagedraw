@@ -6,14 +6,14 @@ _l = require 'lodash'
 exports.ResizingGrip = ResizingGrip = createReactClass
     displayName: 'ResizingGrip'
     render: ->
-        <div style={_l.extend {}, @props.positioning, {
+        React.createElement("div", {"style": (_l.extend {}, @props.positioning, {
             position: 'absolute'
             width: 0, height: 0
-        }}>
-            <div className="gabe-grip unzoomed-control"
-                onMouseDown={@flagEvent}
-                style={{cursor: "#{@props.cursor}-resize"}} />
-        </div>
+        })},
+            React.createElement("div", {"className": "gabe-grip unzoomed-control",  \
+                "onMouseDown": (@flagEvent),  \
+                "style": ({cursor: "#{@props.cursor}-resize"})})
+        )
 
     flagEvent: (evt) ->
         evt.nativeEvent.context = @props.clickFlag
@@ -34,12 +34,12 @@ exports.resizingGrips = resizingGrips = [
 
 exports.ResizingFrame = ResizingFrame = ({style, resizable_edges, flag}) ->
     # style must include either position:absolute or position:relative
-    <div className="resizing-frame" style={style}>
-    {
+    React.createElement("div", {"className": "resizing-frame", "style": (style)},
+    (
         for grip in resizingGrips when _l.every(grip.sides, (grip) => grip in resizable_edges)
-            <ResizingGrip key={grip.label}
-                positioning={grip.positioning}
-                cursor={grip.cursor}
-                clickFlag={flag(grip)} />
-    }
-    </div>
+            React.createElement(ResizingGrip, {"key": (grip.label),  \
+                "positioning": (grip.positioning),  \
+                "cursor": (grip.cursor),  \
+                "clickFlag": (flag(grip))})
+    )
+    )

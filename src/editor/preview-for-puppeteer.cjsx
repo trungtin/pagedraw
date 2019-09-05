@@ -33,7 +33,7 @@ window.normalizeDocjson = (docjson, skipBrowserDependentCode = false) ->
         assert = (fn) -> reject(new Error("Assertion failed in normalize check")) if not fn()
 
         ReactDOM.render(
-            <Editor normalizeCheckMode={{docjson, callback: resolve, assert}} skipBrowserDependentCode={skipBrowserDependentCode} />
+            React.createElement(Editor, {"normalizeCheckMode": ({docjson, callback: resolve, assert}), "skipBrowserDependentCode": (skipBrowserDependentCode)})
             document.getElementById('app'))
 
 
@@ -55,7 +55,7 @@ window.loadEditor = (docjson) ->
 
         editorInstance = null
         ReactDOM.render(
-            <Editor ref={(_instance) -> editorInstance = _instance} initialDocJson={docjson} />
+            React.createElement(Editor, {"ref": ((_instance) -> editorInstance = _instance), "initialDocJson": (docjson)})
             document.getElementById('app'))
 
 ## FIXME previewOfInstance and previewOfArtboard are **very** similar
@@ -89,10 +89,10 @@ window.previewOfInstance = previewOfInstance = (instanceUniqueKey, docjson) ->
         compile_options.templateLang,
         window.innerWidth)
 
-    <div>
-        {font_loading_head_tags_for_doc(doc)}
-        {pdomToReact(evaled_pdom)}
-    </div>
+    React.createElement("div", null,
+        (font_loading_head_tags_for_doc(doc)),
+        (pdomToReact(evaled_pdom))
+    )
 
 
 window.previewOfArtboard = exports.previewOfArtboard = (artboardUniqueKey, docjson) ->
@@ -135,10 +135,10 @@ window.previewOfArtboard = exports.previewOfArtboard = (artboardUniqueKey, docjs
         # FIXME should this be artboard.width?
         window.innerWidth)
 
-    <div className="expand-children" style={height: artboard.height, width: artboard.width}>
-        {font_loading_head_tags_for_doc(doc)}
-        {pdomToReact(evaled_pdom)}
-    </div>
+    React.createElement("div", {"className": "expand-children", "style": (height: artboard.height, width: artboard.width)},
+        (font_loading_head_tags_for_doc(doc)),
+        (pdomToReact(evaled_pdom))
+    )
 
 
 
@@ -146,8 +146,8 @@ window.layoutEditorOfArtboard = exports.layoutEditorOfArtboard = (artboardUnique
     doc = Doc.deserialize(docjson)
     doc.enterReadonlyMode()
     artboard = doc.getBlockByKey(artboardUniqueKey)
-    <LayoutEditorContextProvider doc={doc}>
-        {
+    React.createElement(LayoutEditorContextProvider, {"doc": (doc)},
+        (
             # Pick from the existing doc instead of getting a freshRepresentation because they're not going to
             # be mutated.  Think about that if you refactor this code.
             shifted_doc = new Doc(_l.pick(doc, ['export_lang', 'fonts', 'custom_fonts']))
@@ -167,21 +167,21 @@ window.layoutEditorOfArtboard = exports.layoutEditorOfArtboard = (artboardUnique
             shifted_doc.enterReadonlyMode()
 
             # UNCLEAR what's the pointerEvents 'none' for?  @michael wrote it in the original code
-            <div style={{width: artboard.width, height: artboard.height, pointerEvents: 'none'}}>
-                {font_loading_head_tags_for_doc(shifted_doc)}
-                <LayoutView doc={shifted_doc} blockOverrides={{}} overlayForBlock={=> null} />
-            </div>
-        }
-    </LayoutEditorContextProvider>
+            React.createElement("div", {"style": ({width: artboard.width, height: artboard.height, pointerEvents: 'none'})},
+                (font_loading_head_tags_for_doc(shifted_doc)),
+                React.createElement(LayoutView, {"doc": (shifted_doc), "blockOverrides": ({}), "overlayForBlock": (=> null)})
+            )
+        )
+    )
 
 
 ##
 
 ComponentDidLoad = createReactClass
     render: ->
-        <div ref="wrapper">
-            {@props.elem}
-        </div>
+        React.createElement("div", {"ref": "wrapper"},
+            (@props.elem)
+        )
 
     componentDidMount: ->
         # Wait for images to load before considering this component "Loaded"
@@ -192,7 +192,7 @@ window.loadForScreenshotting = (loader_params) ->
         window.load_for_screenshotting_params = loader_params # leak in case you need to debug
         [loader, args...] = loader_params
         elem = window[loader](args...)
-        ReactDOM.render(<ComponentDidLoad elem={elem} callback={resolve} />, document.getElementById('app'))
+        ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (elem), "callback": (resolve)}), document.getElementById('app'))
     )
 
 window.loadPreviewOfInstance = (instanceUniqueKey, docjson) ->
@@ -201,5 +201,5 @@ window.loadPreviewOfInstance = (instanceUniqueKey, docjson) ->
 
 window.loadPdom = (pdom) ->
     new Promise((resolve, reject) ->
-        ReactDOM.render(<ComponentDidLoad elem={pdomToReact(pdom)} callback={resolve} />, document.getElementById('app'))
+        ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (pdomToReact(pdom)), "callback": (resolve)}), document.getElementById('app'))
     )

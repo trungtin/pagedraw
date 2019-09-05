@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="searchinput-searchinput-8">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "searchinput-searchinput-8"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .searchinput-searchinput-8 {
@@ -132,24 +132,24 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="searchinput-0">
-            <div className="searchinput-rectangle-6">
-                <div className="searchinput-0-0-0">
-                    <div className="searchinput-0-0-0-0">
-                        <input type="text" placeholder="Search for libraries" className="searchinput-text_input-8" /> 
-                    </div>
-                    <div className="searchinput-0-0-0-1">
-                        <div className="searchinput-0-0-0-1-0">
-                            <div className="searchinput-enter_to_search_-9">
-                                <div>Enter</div>
-                                <div>to search</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "searchinput-0"},
+            React.createElement("div", {"className": "searchinput-rectangle-6"},
+                React.createElement("div", {"className": "searchinput-0-0-0"},
+                    React.createElement("div", {"className": "searchinput-0-0-0-0"},
+                        React.createElement("input", {"type": "text", "placeholder": "Search for libraries", "className": "searchinput-text_input-8"}) 
+                    ),
+                    React.createElement("div", {"className": "searchinput-0-0-0-1"},
+                        React.createElement("div", {"className": "searchinput-0-0-0-1-0"},
+                            React.createElement("div", {"className": "searchinput-enter_to_search_-9"},
+                                React.createElement("div", null, "Enter"),
+                                React.createElement("div", null, "to search")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

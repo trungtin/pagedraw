@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Comparisontable = createReactClass {
     displayName: 'Comparisontable'
     render: ->
-        <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:');
               
               * {
@@ -54,83 +54,83 @@ module.exports = Comparisontable = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div style={{"display": "flex", "flexShrink": "0"}}>
-              <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "borderRadius": 5, "border": "1px solid rgb(216, 216, 216)"}}>
-                  <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 18, "paddingRight": 4}}>
-                      <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 10, "paddingBottom": 15}}>
-                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                              <div style={{"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"}}>
-                                  { this.props.header1 }
-                              </div>
-                          </div>
-                      </div>
-                      <div style={{"width": 1, "height": 41, "flexShrink": "0", "marginLeft": 4, "background": "#D8D8D8"}} /> 
-                      <div style={{"display": "flex", "flexDirection": "column", "marginLeft": 10, "paddingTop": 10, "paddingBottom": 15}}>
-                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                              <div style={{"width": 165, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"}}>
-                                  { this.props.header2 }
-                              </div>
-                          </div>
-                      </div>
-                      <div style={{"width": 1, "height": 41, "flexShrink": "0", "marginLeft": 5, "background": "#D8D8D8"}} /> 
-                      <div style={{"display": "flex", "flexDirection": "column", "marginLeft": 10, "paddingTop": 10, "paddingBottom": 15}}>
-                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                              <div style={{"width": 165, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"}}>
-                                  { this.props.header3 }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"flexGrow": "1", "flexBasis": 0, "display": "flex", "flexDirection": "column"}}>
-                          { this.props.rows.map (elem, i) =>
-                              <div key={i} style={{"display": "flex", "flexDirection": "column", "minHeight": "fit-content", "background": "rgba(216, 216, 216, 0)", "flexGrow": "1"}}>
-                                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                                      <div style={{"height": 1, "flexGrow": "1", "flexBasis": 0, "background": "#D8D8D8"}} /> 
-                                  </div>
-                                  <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 19, "paddingRight": 61}}>
-                                      <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 12, "paddingBottom": 9}}>
-                                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                                              <div style={{"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"}}>
-                                                  { elem.col1 }
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div style={{"width": 1, "height": 37, "flexShrink": "0", "marginLeft": 4, "background": "#D8D8D8"}} /> 
-                                      <div style={{"display": "flex", "flexDirection": "column", "marginLeft": 66, "paddingTop": 4}}>
-                                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                                              <div style={{"display": "flex", "width": 53, "height": 33}}>
-                                                  { if (elem.col2)
-                                                      <div style={{"display": "flex", "flexDirection": "column", "paddingTop": 6, "paddingBottom": 9, "background": "rgba(216, 216, 216, 0)", "flexGrow": "1"}}>
-                                                          <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 19, "paddingRight": 16}}>
-                                                              <img src="https://ucarecdn.com/df004460-3710-490f-86fa-30ac52ef8a09/" style={{"width": 18, "height": 18, "flexShrink": "0", "borderWidth": 0}} /> 
-                                                          </div>
-                                                      </div>
-                                                  }
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div style={{"width": 1, "height": 37, "flexShrink": "0", "marginLeft": 61, "background": "#D8D8D8"}} /> 
-                                      <div style={{"display": "flex", "flexDirection": "column", "marginLeft": 65, "paddingTop": 4}}>
-                                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                                              <div style={{"display": "flex", "width": 53, "height": 33}}>
-                                                  { if (elem.col3)
-                                                      <div style={{"display": "flex", "flexDirection": "column", "paddingTop": 6, "paddingBottom": 9, "background": "rgba(216, 216, 216, 0)", "flexGrow": "1"}}>
-                                                          <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 19, "paddingRight": 16}}>
-                                                              <img src="https://ucarecdn.com/df004460-3710-490f-86fa-30ac52ef8a09/" style={{"width": 18, "height": 18, "flexShrink": "0", "borderWidth": 0}} /> 
-                                                          </div>
-                                                      </div>
-                                                  }
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          }
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "borderRadius": 5, "border": "1px solid rgb(216, 216, 216)"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 18, "paddingRight": 4})},
+                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 10, "paddingBottom": 15})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                              React.createElement("div", {"style": ({"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"})},
+                                  ( this.props.header1 )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"style": ({"width": 1, "height": 41, "flexShrink": "0", "marginLeft": 4, "background": "#D8D8D8"})}),  
+                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "marginLeft": 10, "paddingTop": 10, "paddingBottom": 15})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                              React.createElement("div", {"style": ({"width": 165, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"})},
+                                  ( this.props.header2 )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"style": ({"width": 1, "height": 41, "flexShrink": "0", "marginLeft": 5, "background": "#D8D8D8"})}),  
+                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "marginLeft": 10, "paddingTop": 10, "paddingBottom": 15})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                              React.createElement("div", {"style": ({"width": 165, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"})},
+                                  ( this.props.header3 )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"flexGrow": "1", "flexBasis": 0, "display": "flex", "flexDirection": "column"})},
+                          ( this.props.rows.map (elem, i) =>
+                              React.createElement("div", {"key": (i), "style": ({"display": "flex", "flexDirection": "column", "minHeight": "fit-content", "background": "rgba(216, 216, 216, 0)", "flexGrow": "1"})},
+                                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                                      React.createElement("div", {"style": ({"height": 1, "flexGrow": "1", "flexBasis": 0, "background": "#D8D8D8"})}) 
+                                  ),
+                                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 19, "paddingRight": 61})},
+                                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 12, "paddingBottom": 9})},
+                                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                                              React.createElement("div", {"style": ({"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgba(0, 0, 0, 0.8)", "fontSize": 14, "lineHeight": "16px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"})},
+                                                  ( elem.col1 )
+                                              )
+                                          )
+                                      ),
+                                      React.createElement("div", {"style": ({"width": 1, "height": 37, "flexShrink": "0", "marginLeft": 4, "background": "#D8D8D8"})}),  
+                                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "marginLeft": 66, "paddingTop": 4})},
+                                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                                              React.createElement("div", {"style": ({"display": "flex", "width": 53, "height": 33})},
+                                                  ( if (elem.col2)
+                                                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "paddingTop": 6, "paddingBottom": 9, "background": "rgba(216, 216, 216, 0)", "flexGrow": "1"})},
+                                                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 19, "paddingRight": 16})},
+                                                              React.createElement("img", {"src": "https://ucarecdn.com/df004460-3710-490f-86fa-30ac52ef8a09/", "style": ({"width": 18, "height": 18, "flexShrink": "0", "borderWidth": 0})}) 
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      ),
+                                      React.createElement("div", {"style": ({"width": 1, "height": 37, "flexShrink": "0", "marginLeft": 61, "background": "#D8D8D8"})}),  
+                                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "marginLeft": 65, "paddingTop": 4})},
+                                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                                              React.createElement("div", {"style": ({"display": "flex", "width": 53, "height": 33})},
+                                                  ( if (elem.col3)
+                                                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "paddingTop": 6, "paddingBottom": 9, "background": "rgba(216, 216, 216, 0)", "flexGrow": "1"})},
+                                                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 19, "paddingRight": 16})},
+                                                              React.createElement("img", {"src": "https://ucarecdn.com/df004460-3710-490f-86fa-30ac52ef8a09/", "style": ({"width": 18, "height": 18, "flexShrink": "0", "borderWidth": 0})}) 
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

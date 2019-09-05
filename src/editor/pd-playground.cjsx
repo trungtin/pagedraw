@@ -64,10 +64,10 @@ module.exports = PdPlayground = createReactClass
     render: ->
         scope =
             unless @refs.editor?
-                {MyPagedrawComponent: (props) => <div></div>} # loading
+                {MyPagedrawComponent: (props) => React.createElement("div", null)} # loading
 
             else if _l.isEmpty((componentBlockTrees = componentBlockTreesOfDoc(@refs.editor.doc)))
-                {MyPagedrawComponent: (props) => <div>No components found in drawing</div>}
+                {MyPagedrawComponent: (props) => React.createElement("div", null, "No components found in drawing")}
 
             else
                 component = componentBlockTrees[0].block
@@ -114,22 +114,22 @@ module.exports = PdPlayground = createReactClass
             analytics.track('Edited Playground code', {code: nv})
             @playgroundCode = nv
 
-        editor = <Editor ref="editor"
-            playground={true}
-            initialDocJson={require('./default-playground-doc')}
-            onChange={=>
+        editor = React.createElement(Editor, {"ref": "editor",  \
+            "playground": (true),  \
+            "initialDocJson": (require('./default-playground-doc')),  \
+            "onChange": (=>
                 analytics.track('Interacted with Playground Doc')
                 @dirty()
-            }/>
+            )})
 
-        <div>
-            <LiveProvider scope={scope} code={@playgroundCode} transformCode={transformCode}>
-                <PagedrawnPdPlayground
-                    codeEditor={<LiveEditor style={codeEditorStyle} onChange={onCodeChange} />}
-                    pdEditor={editor}
-                    preview={<div>
-                        <LiveError />
-                        <LivePreview style={height: 300, overflow: 'scroll', display: 'flex', border: '1px solid gray', boxShadow: boxShadow} />
-                    </div>} />
-            </LiveProvider>
-        </div>
+        React.createElement("div", null,
+            React.createElement(LiveProvider, {"scope": (scope), "code": (@playgroundCode), "transformCode": (transformCode)},
+                React.createElement(PagedrawnPdPlayground, { \
+                    "codeEditor": (React.createElement(LiveEditor, {"style": (codeEditorStyle), "onChange": (onCodeChange)})),  \
+                    "pdEditor": (editor),  \
+                    "preview": (React.createElement("div", null,
+                        React.createElement(LiveError, null),
+                        React.createElement(LivePreview, {"style": (height: 300, overflow: 'scroll', display: 'flex', border: '1px solid gray', boxShadow: boxShadow)})
+                    ))})
+            )
+        )

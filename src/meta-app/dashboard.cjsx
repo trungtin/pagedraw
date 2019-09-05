@@ -23,7 +23,7 @@ module.exports = createReactClass
             pagedrawJsonBody: recommended_pagedraw_json_for_app_id(@state.app.id, 'src/pagedraw')
             figma_importing: true
         }
-        <PagedrawnDashboard {...props} />
+        React.createElement(PagedrawnDashboard, Object.assign({},  props ))
 
     handleAppChanged: (id) ->
         $.get "/apps/#{id}.json", (data) =>
@@ -67,19 +67,19 @@ module.exports = createReactClass
 
     handlePageDelete: (page) ->
         modal.show (closeHandler) => [
-            <Modal.Header>
-                <Modal.Title>Confirm Deletion</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>Are you sure you want to delete the page <code>{page.url}</code></p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button style={float: 'left'} onClick={closeHandler}>Cancel</Button>
-                <Button bsStyle="danger" children="Delete" onClick={=>
+            React.createElement(Modal.Header, null,
+                React.createElement(Modal.Title, null, "Confirm Deletion")
+            )
+            React.createElement(Modal.Body, null,
+                React.createElement("p", null, "Are you sure you want to delete the page ", React.createElement("code", null, (page.url)))
+            )
+            React.createElement(Modal.Footer, null,
+                React.createElement(Button, {"style": (float: 'left'), "onClick": (closeHandler)}, "Cancel"),
+                React.createElement(Button, {"bsStyle": "danger", "children": "Delete", "onClick": (=>
                     $.ajax({url: "/pages/#{page.id}.json", method:"DELETE", data: {app_id: @state.app.id}}).done (data) =>
                         analytics.track('Deleted doc', {app: {name: @state.app.name, id: @state.app.id}, doc: {name: page.url, id: page.id}})
                         @setState app: _l.extend {}, @state.app, {pages: data}
                         closeHandler()
-                } />
-            </Modal.Footer>
+                )})
+            )
         ]

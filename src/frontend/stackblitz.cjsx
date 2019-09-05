@@ -8,13 +8,13 @@ StackBlitzSDK = require('@stackblitz/sdk').default # ES6 `export default` makes 
 
 module.exports = StackBlitz = createReactClass
     render: ->
-        <div ref="sb_mount_node" style={_l.extend {}, @props.style, {
+        React.createElement("div", {"ref": "sb_mount_node", "style": (_l.extend {}, @props.style, {
                 overflow: 'hidden',
                 height: '100%'
                 # overflow:hidden + funky height are to hide stackblitz bar on the bottom
-            }}>
-            <div ref={(node) => this.node = node} />
-        </div>
+            })},
+            React.createElement("div", {"ref": ((node) => this.node = node)})
+        )
 
     componentWillMount: ->
         @stackBlitzConnector = null # null if not loaded | StackBlitzVM

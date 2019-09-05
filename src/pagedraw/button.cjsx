@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Button = createReactClass {
     displayName: 'Button'
     render: ->
-        <div style={{"display": "flex", "flexGrow": "1"}}>
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"style": ({"display": "flex", "flexGrow": "1"})},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:');
               
               * {
@@ -54,32 +54,32 @@ module.exports = Button = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if (this.props.state == "Secondary")
-              <div style={{"display": "flex", "flexDirection": "column", "background": "#FFFFFF", "flexGrow": "1"}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 5, "paddingBottom": 5, "borderRadius": 4, "boxShadow": "0px 5px 15px 0px rgba(0,0,0,0.07), 0px 15px 35px 0px rgba(50,50,93,0.10)", "background": "rgb(255, 255, 255)"}}>
-                          <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 54, "paddingRight": 55}}>
-                              <div style={{"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(81, 75, 201)", "fontSize": 17, "lineHeight": "40px", "letterSpacing": 0.3308823, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"}}>
-                                  { this.props.content }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-          { if (this.props.state == "Primary")
-              <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 5, "paddingBottom": 5, "borderRadius": 4, "boxShadow": "0px 5px 15px 0px rgba(0,0,0,0.07), 0px 15px 35px 0px rgba(50,50,93,0.10)", "background": "rgb(100, 100, 211)"}}>
-                          <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 74, "paddingRight": 74}}>
-                              <div style={{"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 17, "lineHeight": "40px", "letterSpacing": 0.3308823, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"}}>
-                                  { this.props.content }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-      </div>
+          """)}),  
+          ( if (this.props.state == "Secondary")
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "background": "#FFFFFF", "flexGrow": "1"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 5, "paddingBottom": 5, "borderRadius": 4, "boxShadow": "0px 5px 15px 0px rgba(0,0,0,0.07), 0px 15px 35px 0px rgba(50,50,93,0.10)", "background": "rgb(255, 255, 255)"})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 54, "paddingRight": 55})},
+                              React.createElement("div", {"style": ({"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(81, 75, 201)", "fontSize": 17, "lineHeight": "40px", "letterSpacing": 0.3308823, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"})},
+                                  ( this.props.content )
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if (this.props.state == "Primary")
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "paddingTop": 5, "paddingBottom": 5, "borderRadius": 4, "boxShadow": "0px 5px 15px 0px rgba(0,0,0,0.07), 0px 15px 35px 0px rgba(50,50,93,0.10)", "background": "rgb(100, 100, 211)"})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 74, "paddingRight": 74})},
+                              React.createElement("div", {"style": ({"flexGrow": "1", "flexBasis": 0, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 17, "lineHeight": "40px", "letterSpacing": 0.3308823, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word"})},
+                                  ( this.props.content )
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

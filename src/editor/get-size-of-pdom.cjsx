@@ -37,4 +37,4 @@ getSizeOfReactElement = (element, mount_point) ->
 
 
 exports.getSizeOfPdom = getSizeOfPdom = (pdom, offscreen_node) ->
-    getSizeOfReactElement(<WindowContextProvider window={window}>{pdomToReact(pdom)}</WindowContextProvider>, offscreen_node)
+    getSizeOfReactElement(React.createElement(WindowContextProvider, {"window": (window)}, (pdomToReact(pdom))), offscreen_node)

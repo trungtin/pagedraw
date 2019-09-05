@@ -27,37 +27,37 @@ module.exports = LibraryPage = createReactClass
         }
 
     render: ->
-        <LibraryTheme current_user={@props.current_user}>
-            <div style={width: '80%', margin: '50px auto'}>
-                <div style={display: 'flex', justifyContent: 'space-between'}>
-                    <div style={display: 'flex', alignItems: 'baseline'}>
-                        <p style={fontSize: 43, color:'rgb(4, 4, 4, .88)', margin: 0}>{@props.name}</p>
-                        <p style={color: 'rgb(49, 49, 49, .88)'}>{@props.version_name}</p>
-                    </div>
-                    { if not @props.is_public
-                        <div style={width: 140, height: 40, backgroundColor: '#F1F1F1', borderRadius: 3, color: 'rgb(4, 4, 4, .7)', fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center'}>
-                            <span>Private</span>
-                        </div>
-                    }
-                </div>
-                <p style={color: 'rgb(49, 49, 49, .6)'}>{@props.description}</p>
-                <div style={display: 'flex', justifyContent: 'space-between'}>
-                    <div>
-                        <button className={'library-btn'} onClick={=>}>TRY IT OUT</button>
-                        <button className={'library-btn'} onClick={=> @changelogOpen = not @changelogOpen; @forceUpdate()}>CHANGELOG</button>
-                    </div>
-                    <div>
-                        <button className={'library-btn'} onClick={=>
+        React.createElement(LibraryTheme, {"current_user": (@props.current_user)},
+            React.createElement("div", {"style": (width: '80%', margin: '50px auto')},
+                React.createElement("div", {"style": (display: 'flex', justifyContent: 'space-between')},
+                    React.createElement("div", {"style": (display: 'flex', alignItems: 'baseline')},
+                        React.createElement("p", {"style": (fontSize: 43, color:'rgb(4, 4, 4, .88)', margin: 0)}, (@props.name)),
+                        React.createElement("p", {"style": (color: 'rgb(49, 49, 49, .88)')}, (@props.version_name))
+                    ),
+                    ( if not @props.is_public
+                        React.createElement("div", {"style": (width: 140, height: 40, backgroundColor: '#F1F1F1', borderRadius: 3, color: 'rgb(4, 4, 4, .7)', fontSize: 22, display: 'flex', alignItems: 'center', justifyContent: 'center')},
+                            React.createElement("span", null, "Private")
+                        )
+                    )
+                ),
+                React.createElement("p", {"style": (color: 'rgb(49, 49, 49, .6)')}, (@props.description)),
+                React.createElement("div", {"style": (display: 'flex', justifyContent: 'space-between')},
+                    React.createElement("div", null,
+                        React.createElement("button", {"className": ('library-btn'), "onClick": (=>)}, "TRY IT OUT"),
+                        React.createElement("button", {"className": ('library-btn'), "onClick": (=> @changelogOpen = not @changelogOpen; @forceUpdate())}, "CHANGELOG")
+                    ),
+                    React.createElement("div", null,
+                        React.createElement("button", {"className": ('library-btn'), "onClick": (=>
                             modal.show((closeHandler) => [
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Edit README</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <FormControl tag="textarea" style={height: 400, width: '100%'} valueLink={@linkAttr('readmeState', modal.forceUpdate)} />
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <button className={'library-btn'} style={width: 100, margin: 5} onClick={closeHandler}>Close</button>
-                                    <button className={'library-btn-primary'} style={width: 100, margin: 5} onClick={=>
+                                React.createElement(Modal.Header, {"closeButton": true},
+                                    React.createElement(Modal.Title, null, "Edit README")
+                                )
+                                React.createElement(Modal.Body, null,
+                                    React.createElement(FormControl, {"tag": "textarea", "style": (height: 400, width: '100%'), "valueLink": (@linkAttr('readmeState', modal.forceUpdate))})
+                                )
+                                React.createElement(Modal.Footer, null,
+                                    React.createElement("button", {"className": ('library-btn'), "style": (width: 100, margin: 5), "onClick": (closeHandler)}, "Close"),
+                                    React.createElement("button", {"className": ('library-btn-primary'), "style": (width: 100, margin: 5), "onClick": (=>
                                         $.ajax(
                                             url: "/libraries/#{@props.library_id}/versions/#{@props.version_id}"
                                             method: 'PUT'
@@ -66,78 +66,78 @@ module.exports = LibraryPage = createReactClass
                                         ).done (data) =>
                                             @readmeState = data.readme
                                             @forceUpdate()
-                                            closeHandler()}>
-                                        Publish</button>
-                                </Modal.Footer>
-                            ])}>EDIT README</button>
-                        <button className={'library-btn-primary'} onClick={=>
+                                            closeHandler())}, """
+                                        Publish""")
+                                )
+                            ]))}, "EDIT README"),
+                        React.createElement("button", {"className": ('library-btn-primary'), "onClick": (=>
                             modal.show((closeHandler) -> [
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Publish New Version</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <div className="bootstrap">
-                                        <div className="form-group">
-                                            <label htmlFor="versionName">Version Name</label>
-                                            <FormControl type="text" style={width: '100%'} valueLink={value: null, requestChange: =>} id="versionName" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="uploadCode">Upload Code</label>
-                                            <input type="text" className="form-control" style={width: '100%'} id="uploadCode" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="changelog">Changelog</label>
-                                            <textarea type="text" className="form-control" style={width: '100%'} id="changelog" placeholder="What's new in this update?" />
-                                        </div>
+                                React.createElement(Modal.Header, {"closeButton": true},
+                                    React.createElement(Modal.Title, null, "Publish New Version")
+                                )
+                                React.createElement(Modal.Body, null,
+                                    React.createElement("div", {"className": "bootstrap"},
+                                        React.createElement("div", {"className": "form-group"},
+                                            React.createElement("label", {"htmlFor": "versionName"}, "Version Name"),
+                                            React.createElement(FormControl, {"type": "text", "style": (width: '100%'), "valueLink": (value: null, requestChange: =>), "id": "versionName"})
+                                        ),
+                                        React.createElement("div", {"className": "form-group"},
+                                            React.createElement("label", {"htmlFor": "uploadCode"}, "Upload Code"),
+                                            React.createElement("input", {"type": "text", "className": "form-control", "style": (width: '100%'), "id": "uploadCode"})
+                                        ),
+                                        React.createElement("div", {"className": "form-group"},
+                                            React.createElement("label", {"htmlFor": "changelog"}, "Changelog"),
+                                            React.createElement("textarea", {"type": "text", "className": "form-control", "style": (width: '100%'), "id": "changelog", "placeholder": "What's new in this update?"})
+                                        ),
 
-                                        <hr />
+                                        React.createElement("hr", null),
 
-                                        <div className="form-group">
-                                            <label htmlFor="description">Description</label>
-                                            <input type="text" className="form-control" style={width: '100%'} id="description" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="homepage">Homepage</label>
-                                            <input type="text" className="form-control" style={width: '100%'} id="homepage" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="readme">README</label>
-                                            <textarea type="text" className="form-control" style={width: '100%'} id="readme" />
-                                        </div>
-                                    </div>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <button className={'library-btn'} style={width: 100, margin: 5} onClick={closeHandler}>Close</button>
-                                    <button className={'library-btn-primary'} style={width: 100, margin: 5} onClick={=>}>Publish</button>
-                                </Modal.Footer>
-                            ])}>PUBLISH UPDATE</button>
-                    </div>
-                </div>
-                {<p style={float: 'right'}>A part of your private project <a href={"/apps/#{@props.app_id}"}>{@props.app_name}</a></p> if not @props.is_public}
-            </div>
+                                        React.createElement("div", {"className": "form-group"},
+                                            React.createElement("label", {"htmlFor": "description"}, "Description"),
+                                            React.createElement("input", {"type": "text", "className": "form-control", "style": (width: '100%'), "id": "description"})
+                                        ),
+                                        React.createElement("div", {"className": "form-group"},
+                                            React.createElement("label", {"htmlFor": "homepage"}, "Homepage"),
+                                            React.createElement("input", {"type": "text", "className": "form-control", "style": (width: '100%'), "id": "homepage"})
+                                        ),
+                                        React.createElement("div", {"className": "form-group"},
+                                            React.createElement("label", {"htmlFor": "readme"}, "README"),
+                                            React.createElement("textarea", {"type": "text", "className": "form-control", "style": (width: '100%'), "id": "readme"})
+                                        )
+                                    )
+                                )
+                                React.createElement(Modal.Footer, null,
+                                    React.createElement("button", {"className": ('library-btn'), "style": (width: 100, margin: 5), "onClick": (closeHandler)}, "Close"),
+                                    React.createElement("button", {"className": ('library-btn-primary'), "style": (width: 100, margin: 5), "onClick": (=>)}, "Publish")
+                                )
+                            ]))}, "PUBLISH UPDATE")
+                    )
+                ),
+                (React.createElement("p", {"style": (float: 'right')}, "A part of your private project ", React.createElement("a", {"href": ("/apps/#{@props.app_id}")}, (@props.app_name))) if not @props.is_public)
+            ),
 
-            { if @changelogOpen
-                <div style={width: '85%', maxHeight: 400, height: '100%', backgroundColor: '#F1F1F1', margin: '20px auto', borderRadius: 3, overflowY: 'scroll'}>
-                    <p style={fontSize: 27, color: 'rgb(4, 4, 4, .77)', padding: 4}>Changelog</p>
-                    {@props.changelog.map (item, i) =>
-                        <div style={width: '90%', display: 'flex', margin: '0 auto'} key={i}>
-                            <div>
-                                <p style={fontWeight: 'bold'}>{item.name}</p>
-                                <p style={fontSize: 14}>{moment(item.created_at).format('MMM DD YYYY')}</p>
-                            </div>
-                            <ReactMarkdown source={item.updates} escapeHtml={false} />
-                        </div>
-                    }
-                </div>
-            }
+            ( if @changelogOpen
+                React.createElement("div", {"style": (width: '85%', maxHeight: 400, height: '100%', backgroundColor: '#F1F1F1', margin: '20px auto', borderRadius: 3, overflowY: 'scroll')},
+                    React.createElement("p", {"style": (fontSize: 27, color: 'rgb(4, 4, 4, .77)', padding: 4)}, "Changelog"),
+                    (@props.changelog.map (item, i) =>
+                        React.createElement("div", {"style": (width: '90%', display: 'flex', margin: '0 auto'), "key": (i)},
+                            React.createElement("div", null,
+                                React.createElement("p", {"style": (fontWeight: 'bold')}, (item.name)),
+                                React.createElement("p", {"style": (fontSize: 14)}, (moment(item.created_at).format('MMM DD YYYY')))
+                            ),
+                            React.createElement(ReactMarkdown, {"source": (item.updates), "escapeHtml": (false)})
+                        )
+                    )
+                )
+            ),
 
-            <div style={width: '85%', height: '100%', backgroundColor: '#F1F1F1', margin: '0 auto', borderRadius: 3}>
-                <div style={padding: 5}>
-                    <p style={color: 'rgb(49, 49, 49, .88)'}>How to install</p>
-                    <p style={color: 'rgb(49, 49, 49, .6)'}>Some installation content here.  Not sure what it is yet.  Probably fairly in-depth.  Lorem, ipsum, dolor et m is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page</p>
-                </div>
-            </div>
-            <div style={width: '80%', margin: '0 auto'}>
-                <ReactMarkdown source={@props.readme} escapeHtml={false} />
-            </div>
-        </LibraryTheme>
+            React.createElement("div", {"style": (width: '85%', height: '100%', backgroundColor: '#F1F1F1', margin: '0 auto', borderRadius: 3)},
+                React.createElement("div", {"style": (padding: 5)},
+                    React.createElement("p", {"style": (color: 'rgb(49, 49, 49, .88)')}, "How to install"),
+                    React.createElement("p", {"style": (color: 'rgb(49, 49, 49, .6)')}, "Some installation content here.  Not sure what it is yet.  Probably fairly in-depth.  Lorem, ipsum, dolor et m is that it has a more-or-less normal distribution of letters, as opposed to using \'Content here, content here\', making it look like readable English. Many desktop publishing packages and web page")
+                )
+            ),
+            React.createElement("div", {"style": (width: '80%', margin: '0 auto')},
+                React.createElement(ReactMarkdown, {"source": (@props.readme), "escapeHtml": (false)})
+            )
+        )

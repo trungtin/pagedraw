@@ -11,34 +11,34 @@ exports.AlignmentControls = AlignmentControls = createReactClass
     displayName: 'AlignmentControls'
     render: ->
         # assume we're already in a .bootstrap so namespaced-bootstrap things work
-        <div className="ctrl">
-            <div className="sidebar-select-control btn-group btn-group-sm" style={borderColor: "rgb(228, 228, 228)", borderWidth: '0px 0px 1px 0px', borderStyle: 'solid'}>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('left')} disabled={not @canPositionBlock()} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-left" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="left" data-tip-disable={not @canPositionBlock()}></span>
-                    <ReactTooltip id="left">Align Left</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={@handleCenterHorizontally} disabled={not @canPositionBlock()} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-vertical" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="horizontal" data-tip-disable={not @canPositionBlock()}></span>
-                    <ReactTooltip id="horizontal">Align Horizontally</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('right')} disabled={not @canPositionBlock()} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-right" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="right" data-tip-disable={not @canPositionBlock()}></span>
-                    <ReactTooltip id="right">Align Right</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('top')} disabled={not @canPositionBlock()} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-top" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="top" data-tip-disable={not @canPositionBlock()}></span>
-                    <ReactTooltip id="top">Align Top</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={@handleCenterVertically} disabled={not @canPositionBlock()} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-horizontal" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="vertical" data-tip-disable={not @canPositionBlock()}></span>
-                    <ReactTooltip id="vertical">Align Vertically</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('bottom')} disabled={not @canPositionBlock()} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon glyphicon-object-align-bottom" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="bottom" data-tip-disable={not @canPositionBlock()}></span>
-                    <ReactTooltip id="bottom">Align Bottom</ReactTooltip>
-                </button>
-            </div>
-        </div>
+        React.createElement("div", {"className": "ctrl"},
+            React.createElement("div", {"className": "sidebar-select-control btn-group btn-group-sm", "style": (borderColor: "rgb(228, 228, 228)", borderWidth: '0px 0px 1px 0px', borderStyle: 'solid')},
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('left')), "disabled": (not @canPositionBlock()), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-left", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "left", "data-tip-disable": (not @canPositionBlock())}),
+                    React.createElement(ReactTooltip, {"id": "left"}, "Align Left")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (@handleCenterHorizontally), "disabled": (not @canPositionBlock()), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-vertical", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "horizontal", "data-tip-disable": (not @canPositionBlock())}),
+                    React.createElement(ReactTooltip, {"id": "horizontal"}, "Align Horizontally")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('right')), "disabled": (not @canPositionBlock()), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-right", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "right", "data-tip-disable": (not @canPositionBlock())}),
+                    React.createElement(ReactTooltip, {"id": "right"}, "Align Right")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('top')), "disabled": (not @canPositionBlock()), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-top", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "top", "data-tip-disable": (not @canPositionBlock())}),
+                    React.createElement(ReactTooltip, {"id": "top"}, "Align Top")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (@handleCenterVertically), "disabled": (not @canPositionBlock()), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-horizontal", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "vertical", "data-tip-disable": (not @canPositionBlock())}),
+                    React.createElement(ReactTooltip, {"id": "vertical"}, "Align Vertically")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('bottom')), "disabled": (not @canPositionBlock()), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon glyphicon-object-align-bottom", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "bottom", "data-tip-disable": (not @canPositionBlock())}),
+                    React.createElement(ReactTooltip, {"id": "bottom"}, "Align Bottom")
+                )
+            )
+        )
 
     handleAlign: (side) ->
         blocks = @props.blocks
@@ -73,34 +73,34 @@ exports.ExpandAlignmentControls = ExpandAlignmentControls = createReactClass
     displayName: 'ExpandAlignmentControls'
     render: ->
         # assume we're already in a .bootstrap so namespaced-bootstrap things work
-        <div className="ctrl">
-            <div className="sidebar-select-control btn-group btn-group-sm" style={borderColor: "rgb(228, 228, 228)", borderWidth: '0px 0px 1px 0px', borderStyle: 'solid'}>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('left')} disabled={@props.blocks.length < 2} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-left" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="expand-left" data-tip-disable={@props.blocks.length < 2}></span>
-                    <ReactTooltip id="expand-left" ref={(node) => @tooltip = node}>Expand Align Left</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('left'); @handleAlign('right')} disabled={@props.blocks.length < 2} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-vertical" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="expand-vertical" data-tip-disable={@props.blocks.length < 2}></span>
-                    <ReactTooltip id="expand-vertical">Expand Align Vertically</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('right')} disabled={@props.blocks.length < 2} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-right" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="expand-right" data-tip-disable={@props.blocks.length < 2}></span>
-                    <ReactTooltip id="expand-right">Expand Align Right</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('top')} disabled={@props.blocks.length < 2} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-top" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="expand-top" data-tip-disable={@props.blocks.length < 2}></span>
-                    <ReactTooltip id="expand-top">Expand Align Top</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('top'); @handleAlign('bottom')} disabled={@props.blocks.length < 2} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon-object-align-horizontal" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="expand-horizontal" data-tip-disable={@props.blocks.length < 2}></span>
-                    <ReactTooltip id="expand-horizontal">Expand Align Horizontally</ReactTooltip>
-                </button>
-                <button type="button" className="btn btn-alignment" onClick={=> @handleAlign('bottom')} disabled={@props.blocks.length < 2} style={borderRadius: '0px'}>
-                    <span className="glyphicon glyphicon glyphicon-object-align-bottom" style={color: "dodgerblue"} aria-hidden="true" data-tip data-for="expand-bottom" data-tip-disable={@props.blocks.length < 2}></span>
-                    <ReactTooltip id="expand-bottom">Expand Align Bottom</ReactTooltip>
-                </button>
-            </div>
-        </div>
+        React.createElement("div", {"className": "ctrl"},
+            React.createElement("div", {"className": "sidebar-select-control btn-group btn-group-sm", "style": (borderColor: "rgb(228, 228, 228)", borderWidth: '0px 0px 1px 0px', borderStyle: 'solid')},
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('left')), "disabled": (@props.blocks.length < 2), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-left", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "expand-left", "data-tip-disable": (@props.blocks.length < 2)}),
+                    React.createElement(ReactTooltip, {"id": "expand-left", "ref": ((node) => @tooltip = node)}, "Expand Align Left")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('left'); @handleAlign('right')), "disabled": (@props.blocks.length < 2), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-vertical", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "expand-vertical", "data-tip-disable": (@props.blocks.length < 2)}),
+                    React.createElement(ReactTooltip, {"id": "expand-vertical"}, "Expand Align Vertically")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('right')), "disabled": (@props.blocks.length < 2), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-right", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "expand-right", "data-tip-disable": (@props.blocks.length < 2)}),
+                    React.createElement(ReactTooltip, {"id": "expand-right"}, "Expand Align Right")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('top')), "disabled": (@props.blocks.length < 2), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-top", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "expand-top", "data-tip-disable": (@props.blocks.length < 2)}),
+                    React.createElement(ReactTooltip, {"id": "expand-top"}, "Expand Align Top")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('top'); @handleAlign('bottom')), "disabled": (@props.blocks.length < 2), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon-object-align-horizontal", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "expand-horizontal", "data-tip-disable": (@props.blocks.length < 2)}),
+                    React.createElement(ReactTooltip, {"id": "expand-horizontal"}, "Expand Align Horizontally")
+                ),
+                React.createElement("button", {"type": "button", "className": "btn btn-alignment", "onClick": (=> @handleAlign('bottom')), "disabled": (@props.blocks.length < 2), "style": (borderRadius: '0px')},
+                    React.createElement("span", {"className": "glyphicon glyphicon glyphicon-object-align-bottom", "style": (color: "dodgerblue"), "aria-hidden": "true", "data-tip": true, "data-for": "expand-bottom", "data-tip-disable": (@props.blocks.length < 2)}),
+                    React.createElement(ReactTooltip, {"id": "expand-bottom"}, "Expand Align Bottom")
+                )
+            )
+        )
 
     handleAlign: (side) ->
         blocks = @props.blocks

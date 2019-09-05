@@ -29,7 +29,7 @@ module.exports = Block.register 'yield', class YieldBlock extends Block
         delete pdom['height']
 
     editor: ->
-        <div style={
+        React.createElement("div", {"style": (
             height: "100%"
             width: "100%"
 
@@ -44,6 +44,6 @@ module.exports = Block.register 'yield', class YieldBlock extends Block
             fontFamily: "'Open Sans', sans-serif"
             fontWeight: 600
             color: "#F4F7F3"
-        }>
+        )}, """
             Yield
-        </div>
+""")

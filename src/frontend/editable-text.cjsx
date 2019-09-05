@@ -8,23 +8,23 @@ module.exports = EditableText = createReactClass
 
     render: ->
         if @props.isEditing
-            <input type="text"
-                   autoFocus={true}
-                   value={@newValue}
-                   onChange={@handleChange}
-                   style={_.extend({color:'black'}, @props.editingStyle)}
-                   onKeyDown={@inputKeyDown}
-                   onBlur={@finish}
-                   onFocus={@inputHandleFocus} />
+            React.createElement("input", {"type": "text",  \
+                   "autoFocus": (true),  \
+                   "value": (@newValue),  \
+                   "onChange": (@handleChange),  \
+                   "style": (_.extend({color:'black'}, @props.editingStyle)),  \
+                   "onKeyDown": (@inputKeyDown),  \
+                   "onBlur": (@finish),  \
+                   "onFocus": (@inputHandleFocus)})
         else
-            <span style={_.extend({
+            React.createElement("span", {"style": (_.extend({
                     display:'block',
                     width:'100%',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
-                  }, @props.readOnlyStyle)}
-                  onMouseDown={@textMouseDown}>{@props.valueLink.value}</span>
+                  }, @props.readOnlyStyle)),  \
+                  "onMouseDown": (@textMouseDown)}, (@props.valueLink.value))
 
     handleChange: (e) ->
         # store value from input field for our internal usage

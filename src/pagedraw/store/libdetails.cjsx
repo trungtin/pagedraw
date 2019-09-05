@@ -9,8 +9,8 @@ Componentpreview = require './componentpreview'
 
 
 render = ->
-    <div className="libdetails-libdetails-2">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "libdetails-libdetails-2"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .libdetails-libdetails-2 {
@@ -422,89 +422,89 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="libdetails-0">
-            <div className="libdetails-rectangle_9">
-                <div className="libdetails-0-0-0">
-                    <div className="libdetails-0-0-0-0">
-                        <div className="libdetails-0-0-0-0-0">
-                            <div className="libdetails-component_1">
-                                <Backbutton onClick={(@props.onNavigateBack)} /> 
-                            </div>
-                        </div>
-                    </div>
-                    <div className="libdetails-material_ui_-3">
-                        { @props.title }
-                    </div>
-                </div>
-            </div>
-            <div className="libdetails-0-1">
-                <div className="libdetails-0-1-0">
-                    <div className="libdetails-v_0">
-                        { "v.#{@props.version}" }
-                    </div>
-                </div>
-                <div className="libdetails-0-1-1">
-                    <div className="libdetails-by_john_appleseed_-8">
-                        { "by #{@props.owner}" }
-                    </div>
-                </div>
-            </div>
-            <div className="libdetails-rectangle_8">
-                <div className="libdetails-0-2-0">
-                    <div className="libdetails-image_3" /> 
-                    <div className="libdetails-0-2-0-1">
-                        <div className="libdetails-0-2-0-1-0">
-                            <div className="libdetails-2">
-                                { "#{@props.components.length} components" }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="libdetails-0-2-1">
-                    <div className="libdetails-image_2" /> 
-                    <div className="libdetails-0-2-1-1">
-                        <div className="libdetails-0-2-1-1-0">
-                            <div className="libdetails-11">
-                                { "#{@props.installCount} installs" }
-                            </div>
-                        </div>
-                    </div>
-                    <div onClick={@props.onToggleStar} className="libdetails-star-7">
-                        <Star starCount={(@props.starCount)} starred={(@props.starred)} /> 
-                    </div>
-                </div>
-            </div>
-            <div className="libdetails-0-3" /> 
-            <div className="libdetails-0-4">
-                <div className="libdetails-0-4-0">
-                    <div className="libdetails-installationhuge-2">
-                        <Installationhuge installed={(@props.installed)} onClick={(@props.onInstall)} /> 
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div className="libdetails-1">
-            <div className="libdetails-1-0">
-                <div className="libdetails-1-0-0">
-                    <div className="libdetails-rectangle_4">
-                        <div className="libdetails-1-0-0-0-0">
-                            <div className="libdetails-componenttitle-0">
-                                <Componenttitle title={"Components"} /> 
-                            </div>
-                        </div>
-                        <div className="libdetails-1-0-0-0-1">
-                            <div className="libdetails-componentlist_instance-2">
-                                <Componentlist components={(@props.components)} /> 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="libdetails-rectangle_1">
-                {@props.renderPreviews()}
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "libdetails-0"},
+            React.createElement("div", {"className": "libdetails-rectangle_9"},
+                React.createElement("div", {"className": "libdetails-0-0-0"},
+                    React.createElement("div", {"className": "libdetails-0-0-0-0"},
+                        React.createElement("div", {"className": "libdetails-0-0-0-0-0"},
+                            React.createElement("div", {"className": "libdetails-component_1"},
+                                React.createElement(Backbutton, {"onClick": ((@props.onNavigateBack))}) 
+                            )
+                        )
+                    ),
+                    React.createElement("div", {"className": "libdetails-material_ui_-3"},
+                        ( @props.title )
+                    )
+                )
+            ),
+            React.createElement("div", {"className": "libdetails-0-1"},
+                React.createElement("div", {"className": "libdetails-0-1-0"},
+                    React.createElement("div", {"className": "libdetails-v_0"},
+                        ( "v.#{@props.version}" )
+                    )
+                ),
+                React.createElement("div", {"className": "libdetails-0-1-1"},
+                    React.createElement("div", {"className": "libdetails-by_john_appleseed_-8"},
+                        ( "by #{@props.owner}" )
+                    )
+                )
+            ),
+            React.createElement("div", {"className": "libdetails-rectangle_8"},
+                React.createElement("div", {"className": "libdetails-0-2-0"},
+                    React.createElement("div", {"className": "libdetails-image_3"}),  
+                    React.createElement("div", {"className": "libdetails-0-2-0-1"},
+                        React.createElement("div", {"className": "libdetails-0-2-0-1-0"},
+                            React.createElement("div", {"className": "libdetails-2"},
+                                ( "#{@props.components.length} components" )
+                            )
+                        )
+                    )
+                ),
+                React.createElement("div", {"className": "libdetails-0-2-1"},
+                    React.createElement("div", {"className": "libdetails-image_2"}),  
+                    React.createElement("div", {"className": "libdetails-0-2-1-1"},
+                        React.createElement("div", {"className": "libdetails-0-2-1-1-0"},
+                            React.createElement("div", {"className": "libdetails-11"},
+                                ( "#{@props.installCount} installs" )
+                            )
+                        )
+                    ),
+                    React.createElement("div", {"onClick": (@props.onToggleStar), "className": "libdetails-star-7"},
+                        React.createElement(Star, {"starCount": ((@props.starCount)), "starred": ((@props.starred))}) 
+                    )
+                )
+            ),
+            React.createElement("div", {"className": "libdetails-0-3"}),  
+            React.createElement("div", {"className": "libdetails-0-4"},
+                React.createElement("div", {"className": "libdetails-0-4-0"},
+                    React.createElement("div", {"className": "libdetails-installationhuge-2"},
+                        React.createElement(Installationhuge, {"installed": ((@props.installed)), "onClick": ((@props.onInstall))}) 
+                    )
+                )
+            )
+        ),
+        React.createElement("div", {"className": "libdetails-1"},
+            React.createElement("div", {"className": "libdetails-1-0"},
+                React.createElement("div", {"className": "libdetails-1-0-0"},
+                    React.createElement("div", {"className": "libdetails-rectangle_4"},
+                        React.createElement("div", {"className": "libdetails-1-0-0-0-0"},
+                            React.createElement("div", {"className": "libdetails-componenttitle-0"},
+                                React.createElement(Componenttitle, {"title": ("Components")}) 
+                            )
+                        ),
+                        React.createElement("div", {"className": "libdetails-1-0-0-0-1"},
+                            React.createElement("div", {"className": "libdetails-componentlist_instance-2"},
+                                React.createElement(Componentlist, {"components": ((@props.components))}) 
+                            )
+                        )
+                    )
+                )
+            ),
+            React.createElement("div", {"className": "libdetails-rectangle_1"},
+                (@props.renderPreviews())
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

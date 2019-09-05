@@ -10,10 +10,10 @@ propTypes = require 'prop-types'
 InsideWrapper = createReactClass
     displayName: 'IframeInsideWrapper'
     render: ->
-        <React.Fragment>{[
-            <React.Fragment key={'render'}>{@props.render()}</React.Fragment>
-            ((@props.includeCssUrls ? []).map (url, i) -> <link key={i} rel="stylesheet" href={url} />)...
-        ]}</React.Fragment>
+        React.createElement(React.Fragment, null, ([
+            React.createElement(React.Fragment, {"key": ('render')}, (@props.render()))
+            ((@props.includeCssUrls ? []).map (url, i) -> React.createElement("link", {"key": (i), "rel": "stylesheet", "href": (url)}))...
+        ]))
 
     # FIXME: not abstracted away
     childContextTypes:
@@ -28,7 +28,7 @@ exports.WrapInIframe = createReactClass
 
     displayName: 'WrapInIframe'
     render: ->
-        <iframe style={_l.extend {border: 'none'}, @props.style} ref="iframe" />
+        React.createElement("iframe", {"style": (_l.extend {border: 'none'}, @props.style), "ref": "iframe"})
 
     enqueueForceUpdate: (element) ->
         if @context.enqueueForceUpdate?
@@ -61,6 +61,6 @@ exports.WrapInIframe = createReactClass
 
     rerenderFromScratch: (callback) ->
         iframeWindow = @refs.iframe.contentWindow
-        elem = <InsideWrapper includeCssUrls={@props.includeCssUrls} ref={(o) => @_component = o}
-            iframeWindow={iframeWindow} render={@props.render} getChildContext={@props.getChildContext} />
+        elem = React.createElement(InsideWrapper, {"includeCssUrls": (@props.includeCssUrls), "ref": ((o) => @_component = o),  \
+            "iframeWindow": (iframeWindow), "render": (@props.render), "getChildContext": (@props.getChildContext)})
         ReactDOM.render(elem, iframeWindow.document.getElementById('react-mount-point'), callback)

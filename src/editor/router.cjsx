@@ -21,20 +21,20 @@ window.pd_params.mobile = browser.mobile
 
 if browser.mobile and window.pd_params.route in ['editor', 'pd_playground']
     ErrorPage = require '../meta-app/error-page'
-    ReactDOM.render(<ErrorPage
-        message="Sorry, our editor isn't optimized for mobile yet"
-        detail="Try opening this link in Chrome on a laptop or desktop!"
-    />, document.getElementById('app'))
+    ReactDOM.render(React.createElement(ErrorPage, { \
+        "message": "Sorry, our editor isn't optimized for mobile yet",  \
+        "detail": "Try opening this link in Chrome on a laptop or desktop!"
+    }), document.getElementById('app'))
 
 
 else if not browser.mobile and browser.name != 'chrome' and window.pd_params.route in ['editor', 'pd_playground', 'stackblitz']
     ErrorPage = require '../meta-app/error-page'
-    ReactDOM.render(<ErrorPage
-        message="Sorry, our editor is optimized for Chrome"
-        detail={
-            <span>Try opening this link in Chrome! Alternatively, you can also get <a href="https://documentation.pagedraw.io/electron">the desktop app</a>.</span>
-        }
-    />, document.getElementById('app'))
+    ReactDOM.render(React.createElement(ErrorPage, { \
+        "message": "Sorry, our editor is optimized for Chrome",  \
+        "detail": (
+            React.createElement("span", null, "Try opening this link in Chrome! Alternatively, you can also get ", React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "the desktop app"), ".")
+        )
+    }), document.getElementById('app'))
 
 
 else if window.pd_params.route == 'play'
@@ -61,45 +61,45 @@ else
     AppWrapper = createReactClass
         render: ->
             Route = pages[@props.route]()
-            <div>
-                <ModalComponent ref="modal" />
-                <Route {...window.pd_params} />
-            </div>
+            React.createElement("div", null,
+                React.createElement(ModalComponent, {"ref": "modal"}),
+                React.createElement(Route, Object.assign({},  window.pd_params ))
+            )
 
         componentDidMount: ->
             registerModalSingleton(@refs.modal)
 
     CrashView = createReactClass
         render: ->
-            <div>
-                <div className="bootstrap">
-                    <div ref="container" />
-                </div>
-                { if @state.mounted
-                    <Modal show container={@refs.container}>
-                        <Modal.Header>
-                            <Modal.Title>Pagedraw crashed</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Pagedraw crashed and we were unable to recover.  You can try reloading the page.</p>
-                            {if not @props.logged_crash
-                                <p>
+            React.createElement("div", null,
+                React.createElement("div", {"className": "bootstrap"},
+                    React.createElement("div", {"ref": "container"})
+                ),
+                ( if @state.mounted
+                    React.createElement(Modal, {"show": true, "container": (@refs.container)},
+                        React.createElement(Modal.Header, null,
+                            React.createElement(Modal.Title, null, "Pagedraw crashed")
+                        ),
+                        React.createElement(Modal.Body, null,
+                            React.createElement("p", null, "Pagedraw crashed and we were unable to recover.  You can try reloading the page."),
+                            (if not @props.logged_crash
+                                React.createElement("p", null, """
                                     We weren’t able to log the crash, likely because an ad blocker is stopping our analytics.  Please describe the crash to us over Intercom in as much detail as possible, or consider disabling your ad blocker. (We’re obviously never going to show you ads)
-                                </p>
-                            }
-                            {if not window.electron
-                                <p>
-                                    This problem might be due to one of your browser plugins or extensions interacting with our app. Consider using our <a href="https://documentation.pagedraw.io/electron">desktop app</a> to avoid these issues.
+""")
+                            ),
+                            (if not window.electron
+                                React.createElement("p", null, """
+                                    This problem might be due to one of your browser plugins or extensions interacting with our app. Consider using our """, React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "desktop app"), """ to avoid these issues.
 
-                                </p>
-                            }
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <PdButtonOne type="primary" onClick={=> window.location = window.location}>Refresh</PdButtonOne>
-                        </Modal.Footer>
-                    </Modal>
-                }
-            </div>
+""")
+                            )
+                        ),
+                        React.createElement(Modal.Footer, null,
+                            React.createElement(PdButtonOne, {"type": "primary", "onClick": (=> window.location = window.location)}, "Refresh")
+                        )
+                    )
+                )
+            )
 
         getInitialState: ->
             mounted: false
@@ -121,7 +121,7 @@ else
         already_unrecoverably_failed = true
         modalRoot = document.createElement('div')
         document.body.appendChild(modalRoot)
-        ReactDOM.render(<CrashView logged_crash={logged_crash} />, modalRoot)
+        ReactDOM.render(React.createElement(CrashView, {"logged_crash": (logged_crash)}), modalRoot)
 
 
     # last_crash_timestamp :: unix timestamp | null
@@ -188,11 +188,11 @@ else
             require('../frontend/DraggingCanvas').windowMouseMachine.reset()
 
             # try to recover
-            ReactDOM.render(<AppWrapper route={window.pd_params.route} />, domRoot)
+            ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), domRoot)
 
         catch # a failure to recover
             unrecoverably_fail()
 
         delete window.crash_recovery_state
 
-    ReactDOM.render(<AppWrapper route={window.pd_params.route} />, document.getElementById('app'))
+    ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), document.getElementById('app'))

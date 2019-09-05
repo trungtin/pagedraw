@@ -15,9 +15,9 @@ module.exports = createReactClass
         error: undefined
 
     render: ->
-        <Dropzone onDrop={@handleDrop} style={display: 'flex', flexDirection: 'column'}>
-            <SketchImporterView error={@state.error} importing={@state.importing} />
-        </Dropzone>
+        React.createElement(Dropzone, {"onDrop": (@handleDrop), "style": (display: 'flex', flexDirection: 'column')},
+            React.createElement(SketchImporterView, {"error": (@state.error), "importing": (@state.importing)})
+        )
 
     handleDrop: (files) ->
         util.assert -> files?.length > 0

@@ -7,8 +7,8 @@ Addlistitemlist = require './add-list-item-list'
 module.exports = Addlist = createReactClass {
     displayName: 'Addlist'
     render: ->
-        <div className="addlist-addlist-3">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "addlist-addlist-3"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .addlist-addlist-3 {
                   display: flex;
                   flex-direction: column;
@@ -94,19 +94,19 @@ module.exports = Addlist = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="addlist-0">
-              <div className="addlist-defaultcomponentlist-9">
-                  <Addlistitemlist items={this.props.defaultComponents} /> 
-              </div>
-          </div>
-          <div className="addlist-1">
-              <div className="addlist-line-6" /> 
-          </div>
-          <div className="addlist-2">
-              <div className="addlist-customcomponentlist-0">
-                  <Addlistitemlist items={this.props.customComponents} /> 
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"className": "addlist-0"},
+              React.createElement("div", {"className": "addlist-defaultcomponentlist-9"},
+                  React.createElement(Addlistitemlist, {"items": (this.props.defaultComponents)}) 
+              )
+          ),
+          React.createElement("div", {"className": "addlist-1"},
+              React.createElement("div", {"className": "addlist-line-6"}) 
+          ),
+          React.createElement("div", {"className": "addlist-2"},
+              React.createElement("div", {"className": "addlist-customcomponentlist-0"},
+                  React.createElement(Addlistitemlist, {"items": (this.props.customComponents)}) 
+              )
+          )
+      )
 }

@@ -12,9 +12,9 @@ Enum = (options) => ({__ty: 'Enum', options})
 
 PdButtonOne = createReactClass
     render: ->
-        <div className="bootstrap">
-            <CL.PdButtonOne {...@props} stretch={true} />
-        </div>
+        React.createElement("div", {"className": "bootstrap"},
+            React.createElement(CL.PdButtonOne, Object.assign({},  @props, {"stretch": (true)}))
+        )
 
 PdButtonOne.pdResizable = ['width']
 PdButtonOne.pdPropControls = {'children': 'Text', disabled: 'Boolean', type: Enum(['default', 'primary', 'success', 'info', 'warning', 'danger', 'link'])}

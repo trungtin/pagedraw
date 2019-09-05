@@ -7,8 +7,8 @@ Logo = require './logo'
 module.exports = Banner = createReactClass {
     displayName: 'Banner'
     render: ->
-        <div className="banner-banner-7">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "banner-banner-7"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:300|Lato:');
               
               .banner-banner-7 {
@@ -274,56 +274,56 @@ module.exports = Banner = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="banner-0">
-              <div className="banner-fixed-content-wrapper-5">
-                  <div className="banner-0-0-0">
-                      <div className="banner-0-0-0-0">
-                          <div className="banner-0-0-0-0-0">
-                              <a href="https://pagedraw.io/" className="banner-0-0-0-0-0-0">
-                                  <div className="banner-logo_instance-1"><Logo /> </div>
-                              </a>
-                          </div>
-                      </div>
-                      <div className="banner-0-0-0-1">
-                          <div className="banner-0-0-0-1-0">
-                              <a href="https://pagedraw.io/tutorials/basics" className="banner-0-0-0-1-0-0">
-                                  <div className="banner-text-7">Get started</div>
-                              </a>
-                          </div>
-                      </div>
-                      <div className="banner-0-0-0-2">
-                          <div className="banner-0-0-0-2-0">
-                              <a href="https://pagedraw.io/tutorials/basics" className="banner-0-0-0-2-0-0">
-                                  <div className="banner-text-3">Tutorial</div>
-                              </a>
-                          </div>
-                      </div>
-                      <div className="banner-0-0-0-3">
-                          <div className="banner-0-0-0-3-0">
-                              <a href="https://documentation.pagedraw.io/" className="banner-0-0-0-3-0-0">
-                                  <div className="banner-text-8">Documentation</div>
-                              </a>
-                          </div>
-                      </div>
-                      <div className="banner-0-0-0-4">
-                          <div className="banner-0-0-0-4-0">
-                              <div className="banner-text_1">
-                                  { this.props.username }
-                              </div>
-                          </div>
-                      </div>
-                      <div className="banner-0-0-0-5">
-                          <div className="banner-0-0-0-5-0">
-                              <div onClick={@props.logout} className="banner-rectangle_3">
-                                  <div className="banner-0-0-0-5-0-0-0">
-                                      <div className="banner-text_2">LOG OUT</div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"className": "banner-0"},
+              React.createElement("div", {"className": "banner-fixed-content-wrapper-5"},
+                  React.createElement("div", {"className": "banner-0-0-0"},
+                      React.createElement("div", {"className": "banner-0-0-0-0"},
+                          React.createElement("div", {"className": "banner-0-0-0-0-0"},
+                              React.createElement("a", {"href": "https://pagedraw.io/", "className": "banner-0-0-0-0-0-0"},
+                                  React.createElement("div", {"className": "banner-logo_instance-1"}, React.createElement(Logo, null), " ")
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "banner-0-0-0-1"},
+                          React.createElement("div", {"className": "banner-0-0-0-1-0"},
+                              React.createElement("a", {"href": "https://pagedraw.io/tutorials/basics", "className": "banner-0-0-0-1-0-0"},
+                                  React.createElement("div", {"className": "banner-text-7"}, "Get started")
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "banner-0-0-0-2"},
+                          React.createElement("div", {"className": "banner-0-0-0-2-0"},
+                              React.createElement("a", {"href": "https://pagedraw.io/tutorials/basics", "className": "banner-0-0-0-2-0-0"},
+                                  React.createElement("div", {"className": "banner-text-3"}, "Tutorial")
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "banner-0-0-0-3"},
+                          React.createElement("div", {"className": "banner-0-0-0-3-0"},
+                              React.createElement("a", {"href": "https://documentation.pagedraw.io/", "className": "banner-0-0-0-3-0-0"},
+                                  React.createElement("div", {"className": "banner-text-8"}, "Documentation")
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "banner-0-0-0-4"},
+                          React.createElement("div", {"className": "banner-0-0-0-4-0"},
+                              React.createElement("div", {"className": "banner-text_1"},
+                                  ( this.props.username )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "banner-0-0-0-5"},
+                          React.createElement("div", {"className": "banner-0-0-0-5-0"},
+                              React.createElement("div", {"onClick": (@props.logout), "className": "banner-rectangle_3"},
+                                  React.createElement("div", {"className": "banner-0-0-0-5-0-0-0"},
+                                      React.createElement("div", {"className": "banner-text_2"}, "LOG OUT")
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Footer = createReactClass {
     displayName: 'Footer'
     render: ->
-        <div className="footer-footer-0">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "footer-footer-0"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:');
               
               .footer-footer-0 {
@@ -140,22 +140,22 @@ module.exports = Footer = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="footer-0">
-              <div className="footer-hr-9" /> 
-          </div>
-          <div className="footer-1">
-              <div className="footer-1-0">
-                  <div className="footer-1-0-0">
-                      <div className="footer-text_2">
+          """)}),  
+          React.createElement("div", {"className": "footer-0"},
+              React.createElement("div", {"className": "footer-hr-9"}) 
+          ),
+          React.createElement("div", {"className": "footer-1"},
+              React.createElement("div", {"className": "footer-1-0"},
+                  React.createElement("div", {"className": "footer-1-0-0"},
+                      React.createElement("div", {"className": "footer-text_2"}, """
                           Making programming more powerful
-                      </div>
-                  </div>
-                  <div className="footer-1-0-1">
-                      <div className="footer-text_22">{"©2018 Pagedraw"}</div>
-                  </div>
-              </div>
-              <img src="https://ucarecdn.com/dcc8b8a1-72a3-4eeb-b397-cf0306fcf8fd/" className="footer-image_4" /> 
-          </div>
-      </div>
+""")
+                  ),
+                  React.createElement("div", {"className": "footer-1-0-1"},
+                      React.createElement("div", {"className": "footer-text_22"}, ("©2018 Pagedraw"))
+                  )
+              ),
+              React.createElement("img", {"src": "https://ucarecdn.com/dcc8b8a1-72a3-4eeb-b397-cf0306fcf8fd/", "className": "footer-image_4"}) 
+          )
+      )
 }

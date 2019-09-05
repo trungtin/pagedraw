@@ -4,7 +4,7 @@ config = require '../config'
 
 if config.debugExportOption
     module.exports = (props) ->
-        <PdVlDropdownTwo valueLink={props.valueLink} options={[
+        React.createElement(PdVlDropdownTwo, {"valueLink": (props.valueLink), "options": ([
             {value: 'debug', label: 'debug'}
             {value: "html", label: 'HTML'}
             {value: "PHP", label: 'PHP'}
@@ -17,20 +17,20 @@ if config.debugExportOption
             {value: "Handlebars", label: 'Handlebars'}
             {value: "Jade", label: 'Jade'}
             {value: "Jinja2", label: 'Flask (Jinja2)'}
-            {value: "html-email", label: 'HTML Email'}]} />
+            {value: "html-email", label: 'HTML Email'}])})
 
 else if config.angular_support
     module.exports = (props) ->
-        <PdVlDropdownTwo tag="select" valueLink={props.valueLink} options ={[
+        React.createElement(PdVlDropdownTwo, {"tag": "select", "valueLink": (props.valueLink), "options": ([
             {value: "JSX", label: 'React (JSX)'}
             {value: "CJSX", label: 'CJSX'}
             {value: "TSX", label: 'TSX'}
-            {value: "Angular2", label: 'Angular'}]} />
+            {value: "Angular2", label: 'Angular'}])})
 
 else
     module.exports = (props) ->
-        <PdVlDropdownTwo valueLink={props.valueLink} options={[
+        React.createElement(PdVlDropdownTwo, {"valueLink": (props.valueLink), "options": ([
             {value: "JSX", label: 'React (JSX)'}
             {value: "CJSX", label: 'CJSX'}
-            {value: "TSX", label: 'TSX'}]} />
+            {value: "TSX", label: 'TSX'}])})
 

@@ -4,8 +4,8 @@ Listitem = require './componentlistitem'
 
 
 render = ->
-    <div className="componentlist-componentlist-8">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "componentlist-componentlist-8"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             .componentlist-componentlist-8 {
                 display: flex;
                 flex-direction: column;
@@ -90,20 +90,20 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="componentlist-0">
-            <div className="componentlist-0-0">
-                { this.props.components.map (component, i) =>
-                    <div key={i} className="componentlist-rectangle_5">
-                        <div className="componentlist-0-0-0-0-0">
-                            <div className="componentlist-componentlistitem_instance-7">
-                                <Listitem active={component.active} title={component.title} /> 
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "componentlist-0"},
+            React.createElement("div", {"className": "componentlist-0-0"},
+                ( this.props.components.map (component, i) =>
+                    React.createElement("div", {"key": (i), "className": "componentlist-rectangle_5"},
+                        React.createElement("div", {"className": "componentlist-0-0-0-0-0"},
+                            React.createElement("div", {"className": "componentlist-componentlistitem_instance-7"},
+                                React.createElement(Listitem, {"active": (component.active), "title": (component.title)}) 
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

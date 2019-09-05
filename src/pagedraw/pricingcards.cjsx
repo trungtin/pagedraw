@@ -6,8 +6,8 @@ Companycard = require './companycard'
 
 
 render = ->
-    <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             
             
             * {
@@ -54,18 +54,18 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div style={{"display": "flex", "flexShrink": "0"}}>
-            <div style={{"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 348}}>
-                <Studentscard /> 
-            </div>
-            <div style={{"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348}}>
-                <Individualcard /> 
-            </div>
-            <div style={{"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348}}>
-                <Companycard /> 
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+            React.createElement("div", {"style": ({"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 348})},
+                React.createElement(Studentscard, null) 
+            ),
+            React.createElement("div", {"style": ({"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348})},
+                React.createElement(Individualcard, null) 
+            ),
+            React.createElement("div", {"style": ({"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348})},
+                React.createElement(Companycard, null) 
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

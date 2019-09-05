@@ -165,7 +165,7 @@ parseUserSpecs = (user_specs, lib_name) ->
 
         return {
             ref, name: component_name
-            render: ((props) -> <UserSpec {...props} />)
+            render: ((props) -> React.createElement(UserSpec, Object.assign({},  props )))
             flexWidth: 'width' in resizable
             flexHeight: 'height' in resizable
             propControl

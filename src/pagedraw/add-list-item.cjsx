@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Addlistitem = createReactClass {
     displayName: 'Addlistitem'
     render: ->
-        <div className="pd-onactive-parent pd-onhover-parent addlistitem">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "pd-onactive-parent pd-onhover-parent addlistitem"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .addlistitem {
                   display: flex;
                   flex-grow: 1;
@@ -342,86 +342,86 @@ module.exports = Addlistitem = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="pd-onactive addlistitem-_active-1">
-              <div className="addlistitem-0-0">
-                  <div className="addlistitem-pointer-8">
-                      <div className="addlistitem-0-0-0-0">
-                          <div className="addlistitem-0-0-0-0-0">
-                              <div className="addlistitem-0-0-0-0-0-0">
-                                  <div className="addlistitem-label-6">
-                                      { this.props.label }
-                                  </div>
-                              </div>
-                          </div>
-                          <div className="addlistitem-0-0-0-0-1">
-                              { if (this.props.keyCommand? and this.props.keyCommand != '')
-                                  <div className="addlistitem-rectangle_2">
-                                      <div className="addlistitem-0-0-0-0-1-0-0-0">
-                                          <div className="addlistitem-a_-1">
-                                              { this.props.keyCommand }
-                                          </div>
-                                      </div>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          { if (("A") == "A")
-              <div className="addlistitem-a-6">
-                  <div className="addlistitem-1-0-0">
-                      <div className="addlistitem-pointer-7">
-                          <div className="addlistitem-1-0-0-0-0">
-                              <div className="addlistitem-1-0-0-0-0-0">
-                                  <div className="addlistitem-1-0-0-0-0-0-0">
-                                      <div className="addlistitem-label-9">
-                                          { this.props.label }
-                                      </div>
-                                  </div>
-                              </div>
-                              <div className="addlistitem-1-0-0-0-0-1">
-                                  { if (this.props.keyCommand? and this.props.keyCommand != '')
-                                      <div className="addlistitem-rectangle_2-9">
-                                          <div className="addlistitem-1-0-0-0-0-1-0-0-0">
-                                              <div className="addlistitem-a_-9">
-                                                  { this.props.keyCommand }
-                                              </div>
-                                          </div>
-                                      </div>
-                                  }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-          <div className="pd-onhover addlistitem-_hover-9">
-              <div className="addlistitem-2-0">
-                  <div className="addlistitem-pointer-1">
-                      <div className="addlistitem-2-0-0-0">
-                          <div className="addlistitem-2-0-0-0-0">
-                              <div className="addlistitem-2-0-0-0-0-0">
-                                  <div className="addlistitem-label-7">
-                                      { this.props.label }
-                                  </div>
-                              </div>
-                          </div>
-                          <div className="addlistitem-2-0-0-0-1">
-                              { if (this.props.keyCommand? and this.props.keyCommand != '')
-                                  <div className="addlistitem-rectangle_2-7">
-                                      <div className="addlistitem-2-0-0-0-1-0-0-0">
-                                          <div className="addlistitem-a_-7">
-                                              { this.props.keyCommand }
-                                          </div>
-                                      </div>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"className": "pd-onactive addlistitem-_active-1"},
+              React.createElement("div", {"className": "addlistitem-0-0"},
+                  React.createElement("div", {"className": "addlistitem-pointer-8"},
+                      React.createElement("div", {"className": "addlistitem-0-0-0-0"},
+                          React.createElement("div", {"className": "addlistitem-0-0-0-0-0"},
+                              React.createElement("div", {"className": "addlistitem-0-0-0-0-0-0"},
+                                  React.createElement("div", {"className": "addlistitem-label-6"},
+                                      ( this.props.label )
+                                  )
+                              )
+                          ),
+                          React.createElement("div", {"className": "addlistitem-0-0-0-0-1"},
+                              ( if (this.props.keyCommand? and this.props.keyCommand != '')
+                                  React.createElement("div", {"className": "addlistitem-rectangle_2"},
+                                      React.createElement("div", {"className": "addlistitem-0-0-0-0-1-0-0-0"},
+                                          React.createElement("div", {"className": "addlistitem-a_-1"},
+                                              ( this.props.keyCommand )
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if (("A") == "A")
+              React.createElement("div", {"className": "addlistitem-a-6"},
+                  React.createElement("div", {"className": "addlistitem-1-0-0"},
+                      React.createElement("div", {"className": "addlistitem-pointer-7"},
+                          React.createElement("div", {"className": "addlistitem-1-0-0-0-0"},
+                              React.createElement("div", {"className": "addlistitem-1-0-0-0-0-0"},
+                                  React.createElement("div", {"className": "addlistitem-1-0-0-0-0-0-0"},
+                                      React.createElement("div", {"className": "addlistitem-label-9"},
+                                          ( this.props.label )
+                                      )
+                                  )
+                              ),
+                              React.createElement("div", {"className": "addlistitem-1-0-0-0-0-1"},
+                                  ( if (this.props.keyCommand? and this.props.keyCommand != '')
+                                      React.createElement("div", {"className": "addlistitem-rectangle_2-9"},
+                                          React.createElement("div", {"className": "addlistitem-1-0-0-0-0-1-0-0-0"},
+                                              React.createElement("div", {"className": "addlistitem-a_-9"},
+                                                  ( this.props.keyCommand )
+                                              )
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          React.createElement("div", {"className": "pd-onhover addlistitem-_hover-9"},
+              React.createElement("div", {"className": "addlistitem-2-0"},
+                  React.createElement("div", {"className": "addlistitem-pointer-1"},
+                      React.createElement("div", {"className": "addlistitem-2-0-0-0"},
+                          React.createElement("div", {"className": "addlistitem-2-0-0-0-0"},
+                              React.createElement("div", {"className": "addlistitem-2-0-0-0-0-0"},
+                                  React.createElement("div", {"className": "addlistitem-label-7"},
+                                      ( this.props.label )
+                                  )
+                              )
+                          ),
+                          React.createElement("div", {"className": "addlistitem-2-0-0-0-1"},
+                              ( if (this.props.keyCommand? and this.props.keyCommand != '')
+                                  React.createElement("div", {"className": "addlistitem-rectangle_2-7"},
+                                      React.createElement("div", {"className": "addlistitem-2-0-0-0-1-0-0-0"},
+                                          React.createElement("div", {"className": "addlistitem-a_-7"},
+                                              ( this.props.keyCommand )
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

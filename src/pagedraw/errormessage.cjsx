@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Errormessage = createReactClass {
     displayName: 'Errormessage'
     render: ->
-        <div className="errormessage">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "errormessage"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .errormessage {
                   display: flex;
                   flex-grow: 1;
@@ -239,60 +239,60 @@ module.exports = Errormessage = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if (this.props.type == "error")
-              <div className="pd-onhover-parent pd-onactive-parent errormessage-0-0">
-                  { if (('default') == "default")
-                      <div className="errormessage-default-0">
-                          <div className="errormessage-0-0-0-0-0">
-                              <div onClick={this.props.handleClick} className="errormessage-text_2">
-                                  { @props.content }
-                              </div>
-                          </div>
-                      </div>
-                  }
-                  <div className="pd-onhover errormessage-default_hover-5">
-                      <div className="errormessage-0-0-1-0">
-                          <div onClick={this.props.handleClick} className="errormessage-text_2-0">
-                              { @props.content }
-                          </div>
-                      </div>
-                  </div>
-                  <div className="pd-onactive errormessage-default_active-6">
-                      <div className="errormessage-0-0-2-0">
-                          <div onMouseUp={this.props.handleClick} className="errormessage-text_2-4">
-                              { @props.content }
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-          { if (this.props.type == "warning")
-              <div className="pd-onhover-parent pd-onactive-parent errormessage-1-0">
-                  { if (('default') == "default")
-                      <div className="errormessage-default-01">
-                          <div className="errormessage-1-0-0-0-0">
-                              <div onClick={this.props.handleClick} className="errormessage-text_2-1">
-                                  { @props.content }
-                              </div>
-                          </div>
-                      </div>
-                  }
-                  <div className="pd-onhover errormessage-default_hover-1">
-                      <div className="errormessage-1-0-1-0">
-                          <div onClick={this.props.handleClick} className="errormessage-text_2-5">
-                              { @props.content }
-                          </div>
-                      </div>
-                  </div>
-                  <div className="pd-onactive errormessage-default_active-7">
-                      <div className="errormessage-1-0-2-0">
-                          <div onMouseUp={this.props.handleClick} className="errormessage-text_2-07">
-                              { @props.content }
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-      </div>
+          """)}),  
+          ( if (this.props.type == "error")
+              React.createElement("div", {"className": "pd-onhover-parent pd-onactive-parent errormessage-0-0"},
+                  ( if (('default') == "default")
+                      React.createElement("div", {"className": "errormessage-default-0"},
+                          React.createElement("div", {"className": "errormessage-0-0-0-0-0"},
+                              React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2"},
+                                  ( @props.content )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onhover errormessage-default_hover-5"},
+                      React.createElement("div", {"className": "errormessage-0-0-1-0"},
+                          React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2-0"},
+                              ( @props.content )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onactive errormessage-default_active-6"},
+                      React.createElement("div", {"className": "errormessage-0-0-2-0"},
+                          React.createElement("div", {"onMouseUp": (this.props.handleClick), "className": "errormessage-text_2-4"},
+                              ( @props.content )
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if (this.props.type == "warning")
+              React.createElement("div", {"className": "pd-onhover-parent pd-onactive-parent errormessage-1-0"},
+                  ( if (('default') == "default")
+                      React.createElement("div", {"className": "errormessage-default-01"},
+                          React.createElement("div", {"className": "errormessage-1-0-0-0-0"},
+                              React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2-1"},
+                                  ( @props.content )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onhover errormessage-default_hover-1"},
+                      React.createElement("div", {"className": "errormessage-1-0-1-0"},
+                          React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2-5"},
+                              ( @props.content )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onactive errormessage-default_active-7"},
+                      React.createElement("div", {"className": "errormessage-1-0-2-0"},
+                          React.createElement("div", {"onMouseUp": (this.props.handleClick), "className": "errormessage-text_2-07"},
+                              ( @props.content )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

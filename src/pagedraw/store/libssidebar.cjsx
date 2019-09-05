@@ -4,8 +4,8 @@ Librarylist = require './librarylist'
 
 
 render = ->
-    <div className="libssidebar-libssidebar-3">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "libssidebar-libssidebar-3"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .libssidebar-libssidebar-3 {
@@ -118,22 +118,22 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="libssidebar-0">
-            <div className="libssidebar-libraries_currently_in_this_project_-5">
-                <div>Libraries currently</div>
-                <div>in this project</div>
-            </div>
-        </div>
-        <div className="libssidebar-1">
-            <div className="libssidebar-line-7" /> 
-        </div>
-        <div className="libssidebar-2">
-            <div className="libssidebar-librarylist-7">
-                <Librarylist libraries={(@props.libraries)} /> 
-            </div>
-        </div>
-        <div className="libssidebar-3" /> 
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "libssidebar-0"},
+            React.createElement("div", {"className": "libssidebar-libraries_currently_in_this_project_-5"},
+                React.createElement("div", null, "Libraries currently"),
+                React.createElement("div", null, "in this project")
+            )
+        ),
+        React.createElement("div", {"className": "libssidebar-1"},
+            React.createElement("div", {"className": "libssidebar-line-7"}) 
+        ),
+        React.createElement("div", {"className": "libssidebar-2"},
+            React.createElement("div", {"className": "libssidebar-librarylist-7"},
+                React.createElement(Librarylist, {"libraries": ((@props.libraries))}) 
+            )
+        ),
+        React.createElement("div", {"className": "libssidebar-3"}) 
+    )
 
 module.exports = (props) -> render.apply({props})

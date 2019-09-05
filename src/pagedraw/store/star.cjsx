@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="star">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "star"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .star {
@@ -160,35 +160,35 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if ((if @props.starred then 'starred' else 'default') == "starred")
-            <div className="star-starred-6">
-                <div className="star-0-0-0">
-                    <div className="star-image_5" /> 
-                    <div className="star-0-0-0-1">
-                        <div className="star-0-0-0-1-0">
-                            <div className="star-5">
-                                { "#{@props.starCount} stars" }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        { if ((if @props.starred then 'starred' else 'default') == "default")
-            <div className="star-default-9">
-                <div className="star-1-0-0">
-                    <div className="star-image_4" /> 
-                    <div className="star-1-0-0-1">
-                        <div className="star-1-0-0-1-0">
-                            <div className="star-50">
-                                { "#{@props.starCount} stars" }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+        """)}),  
+        ( if ((if @props.starred then 'starred' else 'default') == "starred")
+            React.createElement("div", {"className": "star-starred-6"},
+                React.createElement("div", {"className": "star-0-0-0"},
+                    React.createElement("div", {"className": "star-image_5"}),  
+                    React.createElement("div", {"className": "star-0-0-0-1"},
+                        React.createElement("div", {"className": "star-0-0-0-1-0"},
+                            React.createElement("div", {"className": "star-5"},
+                                ( "#{@props.starCount} stars" )
+                            )
+                        )
+                    )
+                )
+            )
+        ),
+        ( if ((if @props.starred then 'starred' else 'default') == "default")
+            React.createElement("div", {"className": "star-default-9"},
+                React.createElement("div", {"className": "star-1-0-0"},
+                    React.createElement("div", {"className": "star-image_4"}),  
+                    React.createElement("div", {"className": "star-1-0-0-1"},
+                        React.createElement("div", {"className": "star-1-0-0-1-0"},
+                            React.createElement("div", {"className": "star-50"},
+                                ( "#{@props.starCount} stars" )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

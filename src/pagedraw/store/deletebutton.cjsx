@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="pd-onhover-parent deletebutton">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "pd-onhover-parent deletebutton"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             .deletebutton {
                 display: flex;
                 flex-grow: 1;
@@ -122,27 +122,27 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="pd-onhover deletebutton-_hover-2">
-            <div className="deletebutton-0-0">
-                <div className="deletebutton-oval_2">
-                    <div className="deletebutton-0-0-0-0">
-                        <img src="https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/" className="deletebutton-image_6" /> 
-                    </div>
-                </div>
-            </div>
-        </div>
-        { if (this.props.state == "default")
-            <div className="deletebutton-default-7">
-                <div className="deletebutton-1-0-0">
-                    <div className="deletebutton-oval_2-3">
-                        <div className="deletebutton-1-0-0-0-0">
-                            <img src="https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/" className="deletebutton-image_6-3" /> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "pd-onhover deletebutton-_hover-2"},
+            React.createElement("div", {"className": "deletebutton-0-0"},
+                React.createElement("div", {"className": "deletebutton-oval_2"},
+                    React.createElement("div", {"className": "deletebutton-0-0-0-0"},
+                        React.createElement("img", {"src": "https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/", "className": "deletebutton-image_6"}) 
+                    )
+                )
+            )
+        ),
+        ( if (this.props.state == "default")
+            React.createElement("div", {"className": "deletebutton-default-7"},
+                React.createElement("div", {"className": "deletebutton-1-0-0"},
+                    React.createElement("div", {"className": "deletebutton-oval_2-3"},
+                        React.createElement("div", {"className": "deletebutton-1-0-0-0-0"},
+                            React.createElement("img", {"src": "https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/", "className": "deletebutton-image_6-3"}) 
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

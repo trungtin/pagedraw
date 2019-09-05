@@ -18,37 +18,37 @@ module.exports = createReactClass
     }
 
     render: ->
-        <div style={
+        React.createElement("div", {"style": (
             # We need this extra CSS gross hacks because the compiler has some issues, I think.
             # Alternatively, .app should always have this on it.  Not sure, but don't want to make such a
             # potentially dangerous change right now.
             display: 'flex'
             flexGrow: '1'
-        }>
-            <PagedrawnView
-                current_user={@props.current_user}
-                logout={@logout}
+        )},
+            React.createElement(PagedrawnView, { \
+                "current_user": (@props.current_user),  \
+                "logout": (@logout),  \
 
-                apps={@state.apps}
-                handleAppChanged={(app_id) =>
+                "apps": (@state.apps),  \
+                "handleAppChanged": ((app_id) =>
                     window.location = "/apps/#{app_id}"
-                }
+                ),  \
 
-                projectNameField={@state.name}
-                handleProjectNameChange={(new_name) => @setState name: new_name}
+                "projectNameField": (@state.name),  \
+                "handleProjectNameChange": ((new_name) => @setState name: new_name),  \
 
-                angular_support={config.angular_support}
-                framework={@state.framework}
-                handleFrameworkChange={(new_val) => @setState framework: new_val}
+                "angular_support": (config.angular_support),  \
+                "framework": (@state.framework),  \
+                "handleFrameworkChange": ((new_val) => @setState framework: new_val),  \
 
-                collaborators={@state.collaborators}
-                handleCollaboratorDelete={(email) =>
+                "collaborators": (@state.collaborators),  \
+                "handleCollaboratorDelete": ((email) =>
                     @setState collaborators: @state.collaborators.filter (c) => c.email != email
-                }
+                ),  \
 
-                newCollaboratorField={@state.collaboratorField}
-                handleNewCollaboratorChanged={(new_val) => @setState collaboratorField: new_val}
-                handleAddCollaborator={=>
+                "newCollaboratorField": (@state.collaboratorField),  \
+                "handleNewCollaboratorChanged": ((new_val) => @setState collaboratorField: new_val),  \
+                "handleAddCollaborator": (=>
                     # no-op if the field is empty
                     return if @state.collaboratorField == ''
 
@@ -61,12 +61,12 @@ module.exports = createReactClass
                         collaborators: @state.collaborators.concat({email: @state.collaboratorField, is_me: false})
                         collaboratorField: ''
                     }
-                }
+                ),  \
 
-                handleSubmit={@handleSubmit}
+                "handleSubmit": (@handleSubmit)
 
-                />
-        </div>
+                })
+        )
 
     logout: ->
         server.logOutAndRedirect()

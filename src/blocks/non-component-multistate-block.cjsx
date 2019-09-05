@@ -27,15 +27,15 @@ exports.MutlistateAltsBlock = Model.register 'multistate-alts', class Multistate
         return []
 
     editor: ->
-        <div style={position: 'relative', minHeight: @height, minWidth: @width}>
-            <div style={
+        React.createElement("div", {"style": (position: 'relative', minHeight: @height, minWidth: @width)},
+            React.createElement("div", {"style": (
                 position: 'absolute', top: 20, left: 30
                 fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.3em'
-            }>{@getLabel()}</div>
-            <div style={
+            )}, (@getLabel())),
+            React.createElement("div", {"style": (
                 border: '10px dashed #DEDEDE', borderRadius: 30,
-                position: 'absolute', top: 0, bottom: 0, left: 0, right: 0} />
-        </div>
+                position: 'absolute', top: 0, bottom: 0, left: 0, right: 0)})
+        )
 
 exports.MutlistateHoleBlock = Model.register 'multistate-hole', class MultistateHoleBlock extends Block
     @userVisibleLabel: 'Multistate Hole'
@@ -78,15 +78,15 @@ exports.MutlistateHoleBlock = Model.register 'multistate-hole', class Multistate
         artboard = @getArtboardForEditor()
 
         if not artboard?
-            return <div style={
+            return React.createElement("div", {"style": (
                 backgroundColor: 'rgb(233, 176, 176)'
                 display: 'flex'
                 alignItems: 'center'
                 justifyContent: 'center'
                 fontFamily: '"Open Sans", sans-serif'
-            }>
+            )}, """
                 No state
-            </div>
+""")
 
         ShouldSubtreeRender = require '../frontend/should-subtree-render'
         {LayoutEditorContextProvider} = require '../editor/layout-editor-context-provider'
@@ -112,9 +112,9 @@ exports.MutlistateHoleBlock = Model.register 'multistate-hole', class Multistate
         shifted_doc.enterReadonlyMode()
 
         # UNCLEAR what's the pointerEvents 'none' for?  @michael wrote it in the original code
-        <LayoutEditorContextProvider doc={@doc}>
-            <div style={{width: artboard.width, height: artboard.height, pointerEvents: 'none'}}>
-                <LayoutView doc={shifted_doc} blockOverrides={{}} overlayForBlock={=> null} />
-            </div>
-        </LayoutEditorContextProvider>
+        React.createElement(LayoutEditorContextProvider, {"doc": (@doc)},
+            React.createElement("div", {"style": ({width: artboard.width, height: artboard.height, pointerEvents: 'none'})},
+                React.createElement(LayoutView, {"doc": (shifted_doc), "blockOverrides": ({}), "overlayForBlock": (=> null)})
+            )
+        )
 

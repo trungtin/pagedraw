@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="sketchimporter">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "sketchimporter"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .sketchimporter {
@@ -242,57 +242,57 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if ((if @props.error? then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Error")
-            <div className="sketchimporter-error-1">
-                <div className="sketchimporter-0-0-0">
-                    <div className="sketchimporter-error_importing_file_-8">
+        """)}),  
+        ( if ((if @props.error? then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Error")
+            React.createElement("div", {"className": "sketchimporter-error-1"},
+                React.createElement("div", {"className": "sketchimporter-0-0-0"},
+                    React.createElement("div", {"className": "sketchimporter-error_importing_file_-8"}, """
                         Error importing file.
-                    </div>
-                </div>
-                <div className="sketchimporter-0-0-1">
-                    <div className="sketchimporter-check_that_your_sketch_file_is_correctly_formed_if_this_problem_persists_please_send_your_sketch_file_to_the_pagedraw_team_at_team_pagedraw_io_-7">
-                        { @props.error }
-                    </div>
-                </div>
-            </div>
-        }
-        { if ((if @props.error? then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Importing")
-            <div className="sketchimporter-importing-7">
-                <div className="sketchimporter-1-0-0">
-                    <div className="sketchimporter-1-0-0-0" /> 
-                    <img src="https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/" className="sketchimporter-image-7" /> 
-                    <div className="sketchimporter-1-0-0-2" /> 
-                </div>
-                <div className="sketchimporter-1-0-1">
-                    <a href="https://documentation.pagedraw.io/sketch/" target="_blank" className="sketchimporter-1-0-1-0">
-                        <div className="sketchimporter-text-0">
+""")
+                ),
+                React.createElement("div", {"className": "sketchimporter-0-0-1"},
+                    React.createElement("div", {"className": "sketchimporter-check_that_your_sketch_file_is_correctly_formed_if_this_problem_persists_please_send_your_sketch_file_to_the_pagedraw_team_at_team_pagedraw_io_-7"},
+                        ( @props.error )
+                    )
+                )
+            )
+        ),
+        ( if ((if @props.error? then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Importing")
+            React.createElement("div", {"className": "sketchimporter-importing-7"},
+                React.createElement("div", {"className": "sketchimporter-1-0-0"},
+                    React.createElement("div", {"className": "sketchimporter-1-0-0-0"}),  
+                    React.createElement("img", {"src": "https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/", "className": "sketchimporter-image-7"}),  
+                    React.createElement("div", {"className": "sketchimporter-1-0-0-2"}) 
+                ),
+                React.createElement("div", {"className": "sketchimporter-1-0-1"},
+                    React.createElement("a", {"href": "https://documentation.pagedraw.io/sketch/", "target": "_blank", "className": "sketchimporter-1-0-1-0"},
+                        React.createElement("div", {"className": "sketchimporter-text-0"}, """
                             Read more about Sketch importing while you wait
-                        </div>
-                    </a>
-                </div>
-            </div>
-        }
-        { if ((if @props.error? then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Initial")
-            <div className="sketchimporter-initial-9">
-                <div className="sketchimporter-2-0-0">
-                    <div className="sketchimporter-rectangle-6">
-                        <div className="sketchimporter-2-0-0-0-0">
-                            <div className="sketchimporter-drop_your_sketch_file_here_-4">
+""")
+                    )
+                )
+            )
+        ),
+        ( if ((if @props.error? then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Initial")
+            React.createElement("div", {"className": "sketchimporter-initial-9"},
+                React.createElement("div", {"className": "sketchimporter-2-0-0"},
+                    React.createElement("div", {"className": "sketchimporter-rectangle-6"},
+                        React.createElement("div", {"className": "sketchimporter-2-0-0-0-0"},
+                            React.createElement("div", {"className": "sketchimporter-drop_your_sketch_file_here_-4"}, """
                                 Drop your Sketch file here
-                            </div>
-                        </div>
-                        <div className="sketchimporter-2-0-0-0-1">
-                            <div className="sketchimporter-2-0-0-0-1-0" /> 
-                            <div className="sketchimporter-or_click_to_select_a_file_to_upload_-4">
+""")
+                        ),
+                        React.createElement("div", {"className": "sketchimporter-2-0-0-0-1"},
+                            React.createElement("div", {"className": "sketchimporter-2-0-0-0-1-0"}),  
+                            React.createElement("div", {"className": "sketchimporter-or_click_to_select_a_file_to_upload_-4"}, """
                                 or click to select a file to upload
-                            </div>
-                            <div className="sketchimporter-2-0-0-0-1-2" /> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+"""),
+                            React.createElement("div", {"className": "sketchimporter-2-0-0-0-1-2"}) 
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

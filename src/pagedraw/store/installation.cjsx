@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="installation">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "installation"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .installation {
@@ -182,44 +182,44 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if (this.props.state == "default")
-            <div className="installation-default-1">
-                <div className="installation-0-0-0">
-                    <div onClick={@props.onClick} className="installation-rectangle_3">
-                        <div className="installation-0-0-0-0-0">
-                            <div className="installation-add_to_app_-4">
+        """)}),  
+        ( if (this.props.state == "default")
+            React.createElement("div", {"className": "installation-default-1"},
+                React.createElement("div", {"className": "installation-0-0-0"},
+                    React.createElement("div", {"onClick": (@props.onClick), "className": "installation-rectangle_3"},
+                        React.createElement("div", {"className": "installation-0-0-0-0-0"},
+                            React.createElement("div", {"className": "installation-add_to_app_-4"}, """
                                 Add to app
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        { if (this.props.state == "upgrade")
-            <div className="installation-upgrade-5">
-                <div className="installation-1-0-0">
-                    <div onClick={@props.onClick} className="installation-rectangle_3-0">
-                        <div className="installation-1-0-0-0-0">
-                            <div className="installation-_upgrade_-5"> Upgrade</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        { if (this.props.state == "installed")
-            <div className="installation-installed-5">
-                <div className="installation-2-0-0">
-                    <div onClick={@props.onClick} className="installation-rectangle_3-05">
-                        <div className="installation-2-0-0-0-0">
-                            <div className="installation-_installed_-2">
+""")
+                        )
+                    )
+                )
+            )
+        ),
+        ( if (this.props.state == "upgrade")
+            React.createElement("div", {"className": "installation-upgrade-5"},
+                React.createElement("div", {"className": "installation-1-0-0"},
+                    React.createElement("div", {"onClick": (@props.onClick), "className": "installation-rectangle_3-0"},
+                        React.createElement("div", {"className": "installation-1-0-0-0-0"},
+                            React.createElement("div", {"className": "installation-_upgrade_-5"}, " Upgrade")
+                        )
+                    )
+                )
+            )
+        ),
+        ( if (this.props.state == "installed")
+            React.createElement("div", {"className": "installation-installed-5"},
+                React.createElement("div", {"className": "installation-2-0-0"},
+                    React.createElement("div", {"onClick": (@props.onClick), "className": "installation-rectangle_3-05"},
+                        React.createElement("div", {"className": "installation-2-0-0-0-0"},
+                            React.createElement("div", {"className": "installation-_installed_-2"}, """
                                  Installed 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+""")
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

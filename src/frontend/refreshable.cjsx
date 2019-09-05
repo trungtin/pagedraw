@@ -13,15 +13,15 @@ module.exports = class Refreshable
         if @willRefresh
             window.requestAnimationFrame ->
                 modal.show(((closeHandler) -> [
-                    <Modal.Header>
-                        <Modal.Title>About to refresh</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
+                    React.createElement(Modal.Header, null,
+                        React.createElement(Modal.Title, null, "About to refresh")
+                    )
+                    React.createElement(Modal.Body, null, """
                         The changes you did require a refresh. Closing this window will refresh the screen.
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <PdButtonOne type="primary" onClick={closeHandler}>Ok</PdButtonOne>
-                    </Modal.Footer>
+""")
+                    React.createElement(Modal.Footer, null,
+                        React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Ok")
+                    )
                 ]), ->
                     window.location = window.location
                 )

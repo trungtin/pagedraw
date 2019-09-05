@@ -44,11 +44,11 @@ module.exports = createReactClass
         currentWindow.show()
 
     render: ->
-        <Editor
-            initialDocJson={initialDocjson}
-            onChange={@handleDocjsonChanged}
-            windowTitle="Pagedraw"
-        />
+        React.createElement(Editor, { \
+            "initialDocJson": (initialDocjson),  \
+            "onChange": (@handleDocjsonChanged),  \
+            "windowTitle": "Pagedraw"
+        })
 
     handleDocjsonChanged: (docjson) ->
         # save the .pagedraw file

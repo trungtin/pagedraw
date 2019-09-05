@@ -76,7 +76,7 @@ exports.VnetBlock = Block.register 'vnet', class VnetBlock extends Block
         @editorWithSelectedNode(null, highlight_pts: no)
 
     editorWithSelectedNode: (selected, {highlight_pts}) ->
-        <CanvasRenderer width={@width} height={@height} render={(ctx) =>
+        React.createElement(CanvasRenderer, {"width": (@width), "height": (@height), "render": ((ctx) =>
             nbn = _l.keyBy @nodes, 'uniqueKey'
 
             ctx.strokeStyle = 'black'
@@ -101,7 +101,7 @@ exports.VnetBlock = Block.register 'vnet', class VnetBlock extends Block
                 ctx.beginPath()
                 ctx.arc(selected.x, selected.y, 8, 2*Math.PI, false)
                 ctx.stroke()
-        } />
+        )})
 
     editContentMode: (double_click_location) ->
         { ContentEditorMode } = require '../interactions/layout-editor'
@@ -178,10 +178,10 @@ exports.VnetBlock = Block.register 'vnet', class VnetBlock extends Block
 
             sidebar: (editor) =>
                 { StandardSidebar } = require '../editor/sidebar'
-                <StandardSidebar>
-                    <h5 style={textAlign: 'center'}>Drawing Mode</h5>
-                    <button style={width: '100%'} onClick={deleteSelected}>delete</button>
-                </StandardSidebar>
+                React.createElement(StandardSidebar, null,
+                    React.createElement("h5", {"style": (textAlign: 'center')}, "Drawing Mode"),
+                    React.createElement("button", {"style": (width: '100%'), "onClick": (deleteSelected)}, "delete")
+                )
 
             # # NOT CALLED: need to wire up the key events through editorMode
             # handleKey: (e) ->
@@ -193,13 +193,13 @@ exports.VnetBlock = Block.register 'vnet', class VnetBlock extends Block
 
 CanvasRenderer = createReactClass
     render: ->
-        <canvas
-            width={@props.width * 2}
-            height={@props.height * 2}
-            ref="canvas"
-            style={
+        React.createElement("canvas", { \
+            "width": (@props.width * 2),  \
+            "height": (@props.height * 2),  \
+            "ref": "canvas",  \
+            "style": (
                 width: @props.width, height: @props.height
-            } />
+            )})
 
     componentDidMount: ->
         @elem = ReactDOM.findDOMNode(@refs.canvas)

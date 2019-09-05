@@ -33,8 +33,8 @@ module.exports = createReactClass
 
 
     render: ->
-        <div ref="scrollView" className="editor-scrollbar"
-            style={ _.extend {}, @props.style,
+        React.createElement("div", {"ref": "scrollView", "className": "editor-scrollbar",  \
+            "style": ( _.extend {}, @props.style,
                 # make this region scroll
                 overflow: 'auto'
 
@@ -44,30 +44,30 @@ module.exports = createReactClass
                 # Without z-index higher than ref.scaling's, ref.scaling
                 # will cover our scroll bars.  Don't know why.
                 zIndex: 2
-            }
-            onWheel={@handleMousePinchScroll}>
-            {@stlyeTagForZoom(@zoom)}
-            <div style={position: 'relative'}>
-                <div style={
+            ),  \
+            "onWheel": (@handleMousePinchScroll)},
+            (@stlyeTagForZoom(@zoom)),
+            React.createElement("div", {"style": (position: 'relative')},
+                React.createElement("div", {"style": (
                         position: 'absolute'
                         top: 0, left: 0
                         width: '100%'
                         height: '100%'
                         zIndex: 1
-                    }>
-                    <div ref="scaling" style={
+                    )},
+                    React.createElement("div", {"ref": "scaling", "style": (
                             transform: "scale(#{@zoom})"
                             minWidth: "#{100/@zoom}%"
                             minHeight: "#{100/@zoom}%"
                             transformOrigin: "top left"
-                        }>
-                        <ShouldSubtreeRender shouldUpdate={@shouldUpdateContents} subtree={=>
+                        )},
+                        React.createElement(ShouldSubtreeRender, {"shouldUpdate": (@shouldUpdateContents), "subtree": (=>
                             @props.children
-                        } />
-                    </div>
-                </div>
-            </div>
-        </div>
+                        )})
+                    )
+                )
+            )
+        )
 
     stlyeTagForZoom: (zoom) ->
         # only cache one, but invalidate if the zoom changes
@@ -80,9 +80,9 @@ module.exports = createReactClass
         # not do any updating with it.  This short circuiting is why we cache the tag, which is
         # why we have stlyeTagForZoom.  I think this improves perf, but can't really tell.  -JRP
         return @cachedStyleTag ?=
-            <style ref="dynamicCss" dangerouslySetInnerHTML={__html: """
+            React.createElement("style", {"ref": "dynamicCss", "dangerouslySetInnerHTML": (__html: """
                 .unzoomed-control { transform: scale(#{1/@zoom}); }
-            """} />
+            """)})
 
     updateZoom: ->
         # mutate React's DOM like we're not supposed to.  It'll get cleared on the next

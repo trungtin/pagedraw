@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="backbutton-backbutton-6">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "backbutton-backbutton-6"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .backbutton-backbutton-6 {
@@ -95,14 +95,14 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="backbutton-0">
-            <div title={"Back to store"} onClick={@props.onClick} className="backbutton-oval-4">
-                <div className="backbutton-0-0-0">
-                    <div className="backbutton-_-4">{"←"}</div>
-                </div>
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "backbutton-0"},
+            React.createElement("div", {"title": ("Back to store"), "onClick": (@props.onClick), "className": "backbutton-oval-4"},
+                React.createElement("div", {"className": "backbutton-0-0-0"},
+                    React.createElement("div", {"className": "backbutton-_-4"}, ("←"))
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

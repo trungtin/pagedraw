@@ -147,7 +147,7 @@ module.exports = Block.register 'layout', class LayoutBlock extends Block
         ]
         ['Occupies space if hidden', 'occupies_space_if_hidden', CheckboxControl] if @is_optional
 
-        <hr />
+        React.createElement("hr", null)
 
         @fillSidebarControls()...
     ]

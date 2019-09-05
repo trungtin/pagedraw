@@ -26,29 +26,29 @@ exports.HistoryView = HistoryView = createReactClass
         # ByLineFont = 'Open Sans'
         commitRefs = server.getCommitRefsAsync(@props.docRef)
 
-        <div>
-            <div style={marginBottom: 10}>
-                <FormControl tag="textarea" style={width: '100%'} placeholder="Commit message" type="text" valueLink={@linkState('commitMessage')} />
-                <button style={width: '100%'} disabled={_l.isEmpty @state.commitMessage} onClick={@commit}>Commit</button>
-            </div>
+        React.createElement("div", null,
+            React.createElement("div", {"style": (marginBottom: 10)},
+                React.createElement(FormControl, {"tag": "textarea", "style": (width: '100%'), "placeholder": "Commit message", "type": "text", "valueLink": (@linkState('commitMessage'))}),
+                React.createElement("button", {"style": (width: '100%'), "disabled": (_l.isEmpty @state.commitMessage), "onClick": (@commit)}, "Commit")
+            ),
 
-            {commitRefs?.map (commit) =>
-                <div key={commit.uniqueKey} style={marginTop: '1.3em', marginBottom: '1.3em'}>
-                    {<button onClick={=> @showDiff(commit)} style={float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none'}>
+            (commitRefs?.map (commit) =>
+                React.createElement("div", {"key": (commit.uniqueKey), "style": (marginTop: '1.3em', marginBottom: '1.3em')},
+                    (React.createElement("button", {"onClick": (=> @showDiff(commit)), "style": (float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none')}, """
                         Show Diff
-                    </button> if config.diffView}
-                    <button onClick={=> @restore(commit)} style={float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none'}>
+""") if config.diffView),
+                    React.createElement("button", {"onClick": (=> @restore(commit)), "style": (float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none')}, """
                         Restore
-                    </button>
-                    <div style={fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.1em'}>
-                        {commit.message}
-                    </div>
-                    <div style={clear: 'both', fontFamily: ByLineFont, fontWeight: '300', fontSize: '0.8em', marginBottom: '0.4em'}>
-                        {moment(commit.timestamp).fromNow()} by <span style={fontWeight: 'bold'}>{commit.authorName}</span>
-                    </div>
-                </div>
-            }
-        </div>
+"""),
+                    React.createElement("div", {"style": (fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.1em')},
+                        (commit.message)
+                    ),
+                    React.createElement("div", {"style": (clear: 'both', fontFamily: ByLineFont, fontWeight: '300', fontSize: '0.8em', marginBottom: '0.4em')},
+                        (moment(commit.timestamp).fromNow()), " by ", React.createElement("span", {"style": (fontWeight: 'bold')}, (commit.authorName))
+                    )
+                )
+            )
+        )
 
     commit: ->
         # FIXME: timestamp should actually come from the server once the serializedDoc is saved

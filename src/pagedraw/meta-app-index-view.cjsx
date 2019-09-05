@@ -13,8 +13,8 @@ Footer = require './footer'
 module.exports = Main = createReactClass {
     displayName: 'Main'
     render: ->
-        <div className="main">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "main"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:');
               
               .main {
@@ -864,204 +864,204 @@ module.exports = Main = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if ((if this.props.figma_importing then "figma" else "no_figma") == "figma")
-              <div className="main-figma-3">
-                  <div className="main-0-0-0">
-                      <div className="main-instance_of_deleted_component-4">
-                          <Banner username={this.props.current_user.name} logout={(@props.logout)} /> 
-                      </div>
-                  </div>
-                  <div className="main-0-0-1">
-                      <div className="main-body-1">
-                          <div className="main-0-0-1-0-0">
-                              <div className="main-sidebar-2">
-                                  <div className="main-0-0-1-0-0-0-0">
-                                      <div className="main-projects-3">
-                                          <div className="main-0-0-1-0-0-0-0-0-0">
-                                              <div className="main-text_1">Other Projects</div>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-0-0-0-1">
-                                              <div className="main-rectangle_6" /> 
-                                          </div>
-                                          <div className="main-0-0-1-0-0-0-0-0-2">
-                                              <div className="main-0-0-1-0-0-0-0-0-2-0">
-                                                  { this.props.apps.map (app, i) =>
-                                                      <div key={i} className="main-project_list-2">
-                                                          <div className="main-0-0-1-0-0-0-0-0-2-0-0-0-0">
-                                                              <div className="main-projectitem_instance-9">
-                                                                  <Projectitem name={app.name} selected={(app.id == this.props.app.id)} onClick={(=> @props.handleAppChanged(app.id))} /> 
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  }
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div className="main-0-0-1-0-0-0-1">
-                                      <a href="/apps/new" className="main-0-0-1-0-0-0-1-0">
-                                          <div className="main-new_project_button-3">
-                                              <Textbutton text={"+ NEW PROJECT"} onClick={(->)} disabled={false} /> 
-                                          </div>
-                                      </a>
-                                  </div>
-                                  <div className="main-0-0-1-0-0-0-2">
-                                      <div className="main-collaborators-4">
-                                          <div className="main-0-0-1-0-0-0-2-0-0">
-                                              <div className="main-text_2">Collaborators</div>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-0-2-0-1">
-                                              <div className="main-rectangle_9" /> 
-                                          </div>
-                                          <div className="main-0-0-1-0-0-0-2-0-2">
-                                              <div className="main-0-0-1-0-0-0-2-0-2-0">
-                                                  { this.props.app.users.map (user, i) =>
-                                                      <div key={i} className="main-collab_list-9">
-                                                          <div className="main-0-0-1-0-0-0-2-0-2-0-0-0-0">
-                                                              <a href="mailto:#{user.email}" className="main-0-0-1-0-0-0-2-0-2-0-0-0-0-0">
-                                                                  <div className="main-text_15">{ user.email }</div>
-                                                              </a>
-                                                              <div onClick={=> @props.handleCollaboratorDelete(user.id)} className="main-text_16">
-                                                                  {"╳"}
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  }
-                                              </div>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-0-2-0-3">
-                                              <input type="text" placeholder="add new collaborator" value={@props.collaboratorField} onChange={(e) => @props.setState collaboratorField: e.target.value} className="main-text_input_2" /> 
-                                              <button type="submit" onClick={@props.handleCollaboratorSubmit} className="main-button_2">
-                                                  <span>Add</span>
-                                              </button>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div className="main-0-0-1-0-0-0-3">
-                                      <div className="main-pagedraw_json-9">
-                                          <div className="main-0-0-1-0-0-0-3-0-0">
-                                              <a href="https://documentation.pagedraw.io/install" className="main-0-0-1-0-0-0-3-0-0-0">
-                                                  <div className="main-text_3">pagedraw.json</div>
-                                              </a>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-0-3-0-1">
-                                              <div className="main-rectangle_5">
-                                                  <div className="main-0-0-1-0-0-0-3-0-1-0-0">
-                                                      <div className="main-text_6">
-                                                          { this.props.pagedrawJsonBody }
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div className="main-0-0-1-0-0-0-4">
-                                      <a href="https://documentation.pagedraw.io/install/" className="main-0-0-1-0-0-0-4-0">
-                                          <div className="main-text_15-4">
-                                              INSTALLATION / GETTING STARTED GUIDE
-                                          </div>
-                                      </a>
-                                  </div>
-                              </div>
-                              <div className="main-0-0-1-0-0-1">
-                                  <div className="main-0-0-1-0-0-1-0">
-                                      <div className="main-rectangle_1">
-                                          <div className="main-0-0-1-0-0-1-0-0-0">
-                                              <div className="main-text_17">{ this.props.app.name }</div>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-1-0-0-1">
-                                              <div className="main-rectangle_7" /> 
-                                          </div>
-                                          <div className="main-0-0-1-0-0-1-0-0-2">
-                                              <div className="main-0-0-1-0-0-1-0-0-2-0">
-                                                  { this.props.app.pages.map (page, i) =>
-                                                      <div key={i} className="main-doc_list-4">
-                                                          <div className="main-0-0-1-0-0-1-0-0-2-0-0-0-0">
-                                                              <div className="main-pageitem_instance-8">
-                                                                  <Pageitem state={"A"} text={page.url} link={("/pages/#{page.id}")} handleDelete={(=> @props.handlePageDelete(page))} /> 
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  }
-                                              </div>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-1-0-0-3">
-                                              <input type="text" placeholder="new doc name" value={@props.pageField} onChange={(e) => @props.setState pageField: e.target.value} className="main-text_input-3" /> 
-                                              <button type="submit" onClick={this.props.handlePageSubmit} className="main-button_3">
-                                                  <span>ADD</span>
-                                              </button>
-                                          </div>
-                                          <div className="main-0-0-1-0-0-1-0-0-4">
-                                              <div onClick={this.props.handleNewDoc} className="main-new_doc_button-9">
-                                                  <div className="main-0-0-1-0-0-1-0-0-4-0-0">
-                                                      <div className="main-0-0-1-0-0-1-0-0-4-0-0-0">
-                                                          <div className="main-0-0-1-0-0-1-0-0-4-0-0-0-0">
-                                                              <div className="main-text_7">+</div>
-                                                          </div>
-                                                      </div>
-                                                      <div className="main-0-0-1-0-0-1-0-0-4-0-0-1">
-                                                          <div className="main-0-0-1-0-0-1-0-0-4-0-0-1-0">
-                                                              <div className="main-text_19">New Doc</div>
-                                                          </div>
-                                                          <div className="main-0-0-1-0-0-1-0-0-4-0-0-1-1">
-                                                              <div className="main-text_13">
+          """)}),  
+          ( if ((if this.props.figma_importing then "figma" else "no_figma") == "figma")
+              React.createElement("div", {"className": "main-figma-3"},
+                  React.createElement("div", {"className": "main-0-0-0"},
+                      React.createElement("div", {"className": "main-instance_of_deleted_component-4"},
+                          React.createElement(Banner, {"username": (this.props.current_user.name), "logout": ((@props.logout))}) 
+                      )
+                  ),
+                  React.createElement("div", {"className": "main-0-0-1"},
+                      React.createElement("div", {"className": "main-body-1"},
+                          React.createElement("div", {"className": "main-0-0-1-0-0"},
+                              React.createElement("div", {"className": "main-sidebar-2"},
+                                  React.createElement("div", {"className": "main-0-0-1-0-0-0-0"},
+                                      React.createElement("div", {"className": "main-projects-3"},
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-0-0-0"},
+                                              React.createElement("div", {"className": "main-text_1"}, "Other Projects")
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-0-0-1"},
+                                              React.createElement("div", {"className": "main-rectangle_6"}) 
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-0-0-2"},
+                                              React.createElement("div", {"className": "main-0-0-1-0-0-0-0-0-2-0"},
+                                                  ( this.props.apps.map (app, i) =>
+                                                      React.createElement("div", {"key": (i), "className": "main-project_list-2"},
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-0-0-2-0-0-0-0"},
+                                                              React.createElement("div", {"className": "main-projectitem_instance-9"},
+                                                                  React.createElement(Projectitem, {"name": (app.name), "selected": ((app.id == this.props.app.id)), "onClick": ((=> @props.handleAppChanged(app.id)))}) 
+                                                              )
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  ),
+                                  React.createElement("div", {"className": "main-0-0-1-0-0-0-1"},
+                                      React.createElement("a", {"href": "/apps/new", "className": "main-0-0-1-0-0-0-1-0"},
+                                          React.createElement("div", {"className": "main-new_project_button-3"},
+                                              React.createElement(Textbutton, {"text": ("+ NEW PROJECT"), "onClick": ((->)), "disabled": (false)}) 
+                                          )
+                                      )
+                                  ),
+                                  React.createElement("div", {"className": "main-0-0-1-0-0-0-2"},
+                                      React.createElement("div", {"className": "main-collaborators-4"},
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-2-0-0"},
+                                              React.createElement("div", {"className": "main-text_2"}, "Collaborators")
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-2-0-1"},
+                                              React.createElement("div", {"className": "main-rectangle_9"}) 
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-2-0-2"},
+                                              React.createElement("div", {"className": "main-0-0-1-0-0-0-2-0-2-0"},
+                                                  ( this.props.app.users.map (user, i) =>
+                                                      React.createElement("div", {"key": (i), "className": "main-collab_list-9"},
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-2-0-2-0-0-0-0"},
+                                                              React.createElement("a", {"href": "mailto:#{user.email}", "className": "main-0-0-1-0-0-0-2-0-2-0-0-0-0-0"},
+                                                                  React.createElement("div", {"className": "main-text_15"}, ( user.email ))
+                                                              ),
+                                                              React.createElement("div", {"onClick": (=> @props.handleCollaboratorDelete(user.id)), "className": "main-text_16"},
+                                                                  ("╳")
+                                                              )
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-2-0-3"},
+                                              React.createElement("input", {"type": "text", "placeholder": "add new collaborator", "value": (@props.collaboratorField), "onChange": ((e) => @props.setState collaboratorField: e.target.value), "className": "main-text_input_2"}),  
+                                              React.createElement("button", {"type": "submit", "onClick": (@props.handleCollaboratorSubmit), "className": "main-button_2"},
+                                                  React.createElement("span", null, "Add")
+                                              )
+                                          )
+                                      )
+                                  ),
+                                  React.createElement("div", {"className": "main-0-0-1-0-0-0-3"},
+                                      React.createElement("div", {"className": "main-pagedraw_json-9"},
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-3-0-0"},
+                                              React.createElement("a", {"href": "https://documentation.pagedraw.io/install", "className": "main-0-0-1-0-0-0-3-0-0-0"},
+                                                  React.createElement("div", {"className": "main-text_3"}, "pagedraw.json")
+                                              )
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-0-3-0-1"},
+                                              React.createElement("div", {"className": "main-rectangle_5"},
+                                                  React.createElement("div", {"className": "main-0-0-1-0-0-0-3-0-1-0-0"},
+                                                      React.createElement("div", {"className": "main-text_6"},
+                                                          ( this.props.pagedrawJsonBody )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  ),
+                                  React.createElement("div", {"className": "main-0-0-1-0-0-0-4"},
+                                      React.createElement("a", {"href": "https://documentation.pagedraw.io/install/", "className": "main-0-0-1-0-0-0-4-0"},
+                                          React.createElement("div", {"className": "main-text_15-4"}, """
+                                              INSTALLATION \x2F GETTING STARTED GUIDE
+""")
+                                      )
+                                  )
+                              ),
+                              React.createElement("div", {"className": "main-0-0-1-0-0-1"},
+                                  React.createElement("div", {"className": "main-0-0-1-0-0-1-0"},
+                                      React.createElement("div", {"className": "main-rectangle_1"},
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-0"},
+                                              React.createElement("div", {"className": "main-text_17"}, ( this.props.app.name ))
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-1"},
+                                              React.createElement("div", {"className": "main-rectangle_7"}) 
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-2"},
+                                              React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-2-0"},
+                                                  ( this.props.app.pages.map (page, i) =>
+                                                      React.createElement("div", {"key": (i), "className": "main-doc_list-4"},
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-2-0-0-0-0"},
+                                                              React.createElement("div", {"className": "main-pageitem_instance-8"},
+                                                                  React.createElement(Pageitem, {"state": ("A"), "text": (page.url), "link": (("/pages/#{page.id}")), "handleDelete": ((=> @props.handlePageDelete(page)))}) 
+                                                              )
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-3"},
+                                              React.createElement("input", {"type": "text", "placeholder": "new doc name", "value": (@props.pageField), "onChange": ((e) => @props.setState pageField: e.target.value), "className": "main-text_input-3"}),  
+                                              React.createElement("button", {"type": "submit", "onClick": (this.props.handlePageSubmit), "className": "main-button_3"},
+                                                  React.createElement("span", null, "ADD")
+                                              )
+                                          ),
+                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4"},
+                                              React.createElement("div", {"onClick": (this.props.handleNewDoc), "className": "main-new_doc_button-9"},
+                                                  React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-0-0"},
+                                                      React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-0-0-0"},
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-0-0-0-0"},
+                                                              React.createElement("div", {"className": "main-text_7"}, "+")
+                                                          )
+                                                      ),
+                                                      React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-0-0-1"},
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-0-0-1-0"},
+                                                              React.createElement("div", {"className": "main-text_19"}, "New Doc")
+                                                          ),
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-0-0-1-1"},
+                                                              React.createElement("div", {"className": "main-text_13"}, """
                                                                   Start from a blank design
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                              <SketchDropzone app={(@props.app)}>
-                                                  <div className="main-import_sketch_button-2">
-                                                      <div className="main-0-0-1-0-0-1-0-0-4-1-0-0">
-                                                          <div className="main-image_3" /> 
-                                                          <div className="main-0-0-1-0-0-1-0-0-4-1-0-0-1">
-                                                              <div className="main-0-0-1-0-0-1-0-0-4-1-0-0-1-0">
-                                                                  <div className="main-text_5">Import Sketch</div>
-                                                              </div>
-                                                              <div className="main-0-0-1-0-0-1-0-0-4-1-0-0-1-1">
-                                                                  <div className="main-text_4">
+""")
+                                                          )
+                                                      )
+                                                  )
+                                              ),
+                                              React.createElement(SketchDropzone, {"app": ((@props.app))},
+                                                  React.createElement("div", {"className": "main-import_sketch_button-2"},
+                                                      React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-1-0-0"},
+                                                          React.createElement("div", {"className": "main-image_3"}),  
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-1-0-0-1"},
+                                                              React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-1-0-0-1-0"},
+                                                                  React.createElement("div", {"className": "main-text_5"}, "Import Sketch")
+                                                              ),
+                                                              React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-1-0-0-1-1"},
+                                                                  React.createElement("div", {"className": "main-text_4"}, """
                                                                       Click or drop a Sketch file here to upload
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </SketchDropzone>
-                                              <FigmaModal app={(@props.app)} show_figma_modal={(@props.figma_modal)} figma_access_token={(@props.figma_access_token)}>
-                                                  <div className="main-import_sketch_button-5">
-                                                      <div className="main-0-0-1-0-0-1-0-0-4-2-0-0">
-                                                          <div className="main-0-0-1-0-0-1-0-0-4-2-0-0-0">
-                                                              <div className="main-0-0-1-0-0-1-0-0-4-2-0-0-0-0">
-                                                                  <img src="https://ucarecdn.com/8fb8956e-20d0-4114-b516-a2d8c5e4dd7e/" className="main-image_3-8" /> 
-                                                              </div>
-                                                          </div>
-                                                          <div className="main-0-0-1-0-0-1-0-0-4-2-0-0-1">
-                                                              <div className="main-0-0-1-0-0-1-0-0-4-2-0-0-1-0">
-                                                                  <div className="main-text_5-9">Import Figma</div>
-                                                              </div>
-                                                              <div className="main-0-0-1-0-0-1-0-0-4-2-0-0-1-1">
-                                                                  <div className="main-text_4-3">
+""")
+                                                              )
+                                                          )
+                                                      )
+                                                  )
+                                              ),
+                                              React.createElement(FigmaModal, {"app": ((@props.app)), "show_figma_modal": ((@props.figma_modal)), "figma_access_token": ((@props.figma_access_token))},
+                                                  React.createElement("div", {"className": "main-import_sketch_button-5"},
+                                                      React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-2-0-0"},
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-2-0-0-0"},
+                                                              React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-2-0-0-0-0"},
+                                                                  React.createElement("img", {"src": "https://ucarecdn.com/8fb8956e-20d0-4114-b516-a2d8c5e4dd7e/", "className": "main-image_3-8"}) 
+                                                              )
+                                                          ),
+                                                          React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-2-0-0-1"},
+                                                              React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-2-0-0-1-0"},
+                                                                  React.createElement("div", {"className": "main-text_5-9"}, "Import Figma")
+                                                              ),
+                                                              React.createElement("div", {"className": "main-0-0-1-0-0-1-0-0-4-2-0-0-1-1"},
+                                                                  React.createElement("div", {"className": "main-text_4-3"}, """
                                                                       Start from a design in Figma 
-                                                                  </div>
-                                                              </div>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              </FigmaModal>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="main-0-0-2" /> 
-                  <div className="main-0-0-3">
-                      <div className="main-unnamed_instance_2"><Footer /> </div>
-                  </div>
-              </div>
-          }
-      </div>
+""")
+                                                              )
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "main-0-0-2"}),  
+                  React.createElement("div", {"className": "main-0-0-3"},
+                      React.createElement("div", {"className": "main-unnamed_instance_2"}, React.createElement(Footer, null), " ")
+                  )
+              )
+          )
+      )
 }

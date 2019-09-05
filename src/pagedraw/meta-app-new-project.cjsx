@@ -11,8 +11,8 @@ Footer = require './footer'
 module.exports = Meta_app_new_project = createReactClass {
     displayName: 'Meta_app_new_project'
     render: ->
-        <div className="meta-app-new-project-meta-app-new-project-2">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "meta-app-new-project-meta-app-new-project-2"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:|Roboto:');
               
               .meta-app-new-project-meta-app-new-project-2 {
@@ -517,138 +517,138 @@ module.exports = Meta_app_new_project = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="meta-app-new-project-0">
-              <div className="meta-app-new-project-instance_of_deleted_component-4">
-                  <Banner username={this.props.current_user.name} logout={(@props.logout)} /> 
-              </div>
-          </div>
-          <div className="meta-app-new-project-1">
-              <div className="meta-app-new-project-body-6">
-                  <div className="meta-app-new-project-1-0-0">
-                      <div className="meta-app-new-project-sidebar-9">
-                          <div className="meta-app-new-project-1-0-0-0-0">
-                              <div className="meta-app-new-project-projects-0">
-                                  <div className="meta-app-new-project-1-0-0-0-0-0-0">
-                                      <div className="meta-app-new-project-text_2">
+          """)}),  
+          React.createElement("div", {"className": "meta-app-new-project-0"},
+              React.createElement("div", {"className": "meta-app-new-project-instance_of_deleted_component-4"},
+                  React.createElement(Banner, {"username": (this.props.current_user.name), "logout": ((@props.logout))}) 
+              )
+          ),
+          React.createElement("div", {"className": "meta-app-new-project-1"},
+              React.createElement("div", {"className": "meta-app-new-project-body-6"},
+                  React.createElement("div", {"className": "meta-app-new-project-1-0-0"},
+                      React.createElement("div", {"className": "meta-app-new-project-sidebar-9"},
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-0"},
+                              React.createElement("div", {"className": "meta-app-new-project-projects-0"},
+                                  React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-0-0-0"},
+                                      React.createElement("div", {"className": "meta-app-new-project-text_2"}, """
                                           Other Projects
-                                      </div>
-                                  </div>
-                                  <div className="meta-app-new-project-1-0-0-0-0-0-1">
-                                      <div className="meta-app-new-project-rectangle_6" /> 
-                                  </div>
-                                  <div className="meta-app-new-project-1-0-0-0-0-0-2">
-                                      <div className="meta-app-new-project-1-0-0-0-0-0-2-0">
-                                          { this.props.apps.map (app, i) =>
-                                              <div key={i} className="meta-app-new-project-project_list-2">
-                                                  <div className="meta-app-new-project-1-0-0-0-0-0-2-0-0-0-0">
-                                                      <div className="meta-app-new-project-projectitem_instance_2">
-                                                          <Projectitem name={app.name} selected={false} onClick={(=> @props.handleAppChanged(app.id))} /> 
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          }
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-0-1">
-                              { if (this.props.apps.length == 0)
-                                  <div className="meta-app-new-project-rectangle_8">
-                                      <div className="meta-app-new-project-1-0-0-0-1-0-0-0">
-                                          <div className="meta-app-new-project-text_8">
+""")
+                                  ),
+                                  React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-0-0-1"},
+                                      React.createElement("div", {"className": "meta-app-new-project-rectangle_6"}) 
+                                  ),
+                                  React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-0-0-2"},
+                                      React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-0-0-2-0"},
+                                          ( this.props.apps.map (app, i) =>
+                                              React.createElement("div", {"key": (i), "className": "meta-app-new-project-project_list-2"},
+                                                  React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-0-0-2-0-0-0-0"},
+                                                      React.createElement("div", {"className": "meta-app-new-project-projectitem_instance_2"},
+                                                          React.createElement(Projectitem, {"name": (app.name), "selected": (false), "onClick": ((=> @props.handleAppChanged(app.id)))}) 
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  )
+                              )
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-1"},
+                              ( if (this.props.apps.length == 0)
+                                  React.createElement("div", {"className": "meta-app-new-project-rectangle_8"},
+                                      React.createElement("div", {"className": "meta-app-new-project-1-0-0-0-1-0-0-0"},
+                                          React.createElement("div", {"className": "meta-app-new-project-text_8"}, """
                                               No existing projects
-                                          </div>
-                                      </div>
-                                  </div>
-                              }
-                          </div>
-                      </div>
-                      <div className="meta-app-new-project-1-0-0-1">
-                          <div className="meta-app-new-project-1-0-0-1-0">
-                              <div className="meta-app-new-project-text_1">
+""")
+                                      )
+                                  )
+                              )
+                          )
+                      ),
+                      React.createElement("div", {"className": "meta-app-new-project-1-0-0-1"},
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-0"},
+                              React.createElement("div", {"className": "meta-app-new-project-text_1"}, """
                                   New Project
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-1">
-                              <input type="text" placeholder="Project name" value={this.props.projectNameField} onChange={(e) => @props.handleProjectNameChange(e.target.value)} className="meta-app-new-project-project_name-2" /> 
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-2">
-                              <div className="meta-app-new-project-text_8-2">
+""")
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-1"},
+                              React.createElement("input", {"type": "text", "placeholder": "Project name", "value": (this.props.projectNameField), "onChange": ((e) => @props.handleProjectNameChange(e.target.value)), "className": "meta-app-new-project-project_name-2"}) 
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-2"},
+                              React.createElement("div", {"className": "meta-app-new-project-text_8-2"}, """
                                   You can rename it later
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-3">
-                              { if this.props.angular_support
-                                  <div className="meta-app-new-project-rectangle_1">
-                                      <div className="meta-app-new-project-1-0-0-1-3-0-0-0">
-                                          <div className="meta-app-new-project-text_24">
+""")
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-3"},
+                              ( if this.props.angular_support
+                                  React.createElement("div", {"className": "meta-app-new-project-rectangle_1"},
+                                      React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-3-0-0-0"},
+                                          React.createElement("div", {"className": "meta-app-new-project-text_24"}, """
                                               Framework
-                                          </div>
-                                      </div>
-                                      <div className="meta-app-new-project-1-0-0-1-3-0-0-1">
-                                          <div className="meta-app-new-project-unnamed_instance-0">
-                                              <Frameworkpickerradiobutton img={"https://ucarecdn.com/217042e2-98ad-4a15-a63c-357202c0c7c0/"} name={"React"} desc={"The Javascript view library from Facebook"} selected={(@props.framework == 'JSX')} handleClick={(=> @props.handleFrameworkChange('JSX'))} /> 
-                                          </div>
-                                          <div className="meta-app-new-project-unnamed_instance-09">
-                                              <Frameworkpickerradiobutton img={"https://ucarecdn.com/fdcb4b95-69ab-4a6e-be90-6d668181bc54/"} name={"Angular"} desc={"The Front End Framework from Google"} selected={(@props.framework == 'Angular2')} handleClick={(=> @props.handleFrameworkChange('Angular2'))} /> 
-                                          </div>
-                                      </div>
-                                  </div>
-                              }
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-4">
-                              <div className="meta-app-new-project-text_24-9">
+""")
+                                      ),
+                                      React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-3-0-0-1"},
+                                          React.createElement("div", {"className": "meta-app-new-project-unnamed_instance-0"},
+                                              React.createElement(Frameworkpickerradiobutton, {"img": ("https://ucarecdn.com/217042e2-98ad-4a15-a63c-357202c0c7c0/"), "name": ("React"), "desc": ("The Javascript view library from Facebook"), "selected": ((@props.framework == 'JSX')), "handleClick": ((=> @props.handleFrameworkChange('JSX')))}) 
+                                          ),
+                                          React.createElement("div", {"className": "meta-app-new-project-unnamed_instance-09"},
+                                              React.createElement(Frameworkpickerradiobutton, {"img": ("https://ucarecdn.com/fdcb4b95-69ab-4a6e-be90-6d668181bc54/"), "name": ("Angular"), "desc": ("The Front End Framework from Google"), "selected": ((@props.framework == 'Angular2')), "handleClick": ((=> @props.handleFrameworkChange('Angular2')))}) 
+                                          )
+                                      )
+                                  )
+                              )
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-4"},
+                              React.createElement("div", {"className": "meta-app-new-project-text_24-9"}, """
                                   Collaborators
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-5">
-                              <div className="meta-app-new-project-1-0-0-1-5-0">
-                                  { this.props.collaborators.map (user, i) =>
-                                      <div key={i} className="meta-app-new-project-collab_list-1">
-                                          <div className="meta-app-new-project-1-0-0-1-5-0-0-0-0">
-                                              <div className="meta-app-new-project-text_18">
-                                                  { user.email }
-                                              </div>
-                                              { if (not user.is_me)
-                                                  <div className="meta-app-new-project-rectangle_10">
-                                                      <div className="meta-app-new-project-1-0-0-1-5-0-0-0-0-1-0-0">
-                                                          <div onClick={=> @props.handleCollaboratorDelete(user.email)} className="meta-app-new-project-text_19">
-                                                              {"╳"}
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                              }
-                                          </div>
-                                      </div>
-                                  }
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-6">
-                              <input type="text" placeholder="coworker@yourcompany.com" value={@props.newCollaboratorField} onChange={(e) => @props.handleNewCollaboratorChanged(e.target.value)} className="meta-app-new-project-text_input_4" /> 
-                              <div className="meta-app-new-project-textbutton-3">
-                                  <Textbutton text={"ADD"} onClick={(@props.handleAddCollaborator)} disabled={false} /> 
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-7">
-                              <div className="meta-app-new-project-text_8-7">
+""")
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-5"},
+                              React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-5-0"},
+                                  ( this.props.collaborators.map (user, i) =>
+                                      React.createElement("div", {"key": (i), "className": "meta-app-new-project-collab_list-1"},
+                                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-5-0-0-0-0"},
+                                              React.createElement("div", {"className": "meta-app-new-project-text_18"},
+                                                  ( user.email )
+                                              ),
+                                              ( if (not user.is_me)
+                                                  React.createElement("div", {"className": "meta-app-new-project-rectangle_10"},
+                                                      React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-5-0-0-0-0-1-0-0"},
+                                                          React.createElement("div", {"onClick": (=> @props.handleCollaboratorDelete(user.email)), "className": "meta-app-new-project-text_19"},
+                                                              ("╳")
+                                                          )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  )
+                              )
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-6"},
+                              React.createElement("input", {"type": "text", "placeholder": "coworker@yourcompany.com", "value": (@props.newCollaboratorField), "onChange": ((e) => @props.handleNewCollaboratorChanged(e.target.value)), "className": "meta-app-new-project-text_input_4"}),  
+                              React.createElement("div", {"className": "meta-app-new-project-textbutton-3"},
+                                  React.createElement(Textbutton, {"text": ("ADD"), "onClick": ((@props.handleAddCollaborator)), "disabled": (false)}) 
+                              )
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-7"},
+                              React.createElement("div", {"className": "meta-app-new-project-text_8-7"}, """
                                   You can add or remove more collaborators later
-                              </div>
-                          </div>
-                          <div className="meta-app-new-project-1-0-0-1-8">
-                              <div className="meta-app-new-project-textbutton-1">
-                                  <Textbutton text={"CREATE PROJECT"} onClick={(@props.handleSubmit)} disabled={false} /> 
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div className="meta-app-new-project-2" /> 
-          <div className="meta-app-new-project-3">
-              <div className="meta-app-new-project-footer_instance-7">
-                  <Footer /> 
-              </div>
-          </div>
-      </div>
+""")
+                          ),
+                          React.createElement("div", {"className": "meta-app-new-project-1-0-0-1-8"},
+                              React.createElement("div", {"className": "meta-app-new-project-textbutton-1"},
+                                  React.createElement(Textbutton, {"text": ("CREATE PROJECT"), "onClick": ((@props.handleSubmit)), "disabled": (false)}) 
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          React.createElement("div", {"className": "meta-app-new-project-2"}),  
+          React.createElement("div", {"className": "meta-app-new-project-3"},
+              React.createElement("div", {"className": "meta-app-new-project-footer_instance-7"},
+                  React.createElement(Footer, null) 
+              )
+          )
+      )
 }

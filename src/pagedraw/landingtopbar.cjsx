@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Landingtopbar = createReactClass {
     displayName: 'Landingtopbar'
     render: ->
-        <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:');
               
               * {
@@ -54,57 +54,57 @@ module.exports = Landingtopbar = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div style={{"display": "flex", "flexShrink": "0", "paddingLeft": 15}}>
-              <div style={{"display": "flex", "flexDirection": "column", "paddingBottom": 1}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <a href="/" style={{"display": "flex"}}>
-                          <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
-                              <div style={{"display": "flex", "flexShrink": "0", "paddingRight": 29}}>
-                                  <img src="https://ucarecdn.com/f8b3ff29-bde2-4e98-b67e-bfa1f4cfbe04/" style={{"width": 30, "height": 25, "flexShrink": "0", "borderWidth": 0}} /> 
-                                  <div style={{"width": 75, "flexShrink": "0", "marginLeft": 6, "fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "25.5px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"}}>
+          """)}),  
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingLeft": 15})},
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "paddingBottom": 1})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("a", {"href": "/", "style": ({"display": "flex"})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
+                              React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingRight": 29})},
+                                  React.createElement("img", {"src": "https://ucarecdn.com/f8b3ff29-bde2-4e98-b67e-bfa1f4cfbe04/", "style": ({"width": 30, "height": 25, "flexShrink": "0", "borderWidth": 0})}),  
+                                  React.createElement("div", {"style": ({"width": 75, "flexShrink": "0", "marginLeft": 6, "fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "25.5px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"})}, """
                                       Pagedraw
-                                  </div>
-                              </div>
-                          </div>
-                      </a>
-                  </div>
-              </div>
-              <div style={{"display": "flex", "flexDirection": "column", "marginLeft": 117}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"width": 445, "height": 26, "flexShrink": "0", "position": "relative"}}>
-                          <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "position": "absolute", "top": 0, "left": 0}}>
-                              <div style={{"display": "flex", "flexShrink": "0", "paddingRight": 102}}>
-                                  <a href="/tutorials/basics" style={{"flexShrink": "0", "display": "flex"}}>
-                                      <div style={{"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word", "paddingRight": 0.1875, "flexGrow": "1"}}>
+""")
+                              )
+                          )
+                      )
+                  )
+              ),
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "marginLeft": 117})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"width": 445, "height": 26, "flexShrink": "0", "position": "relative"})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "position": "absolute", "top": 0, "left": 0})},
+                              React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingRight": 102})},
+                                  React.createElement("a", {"href": "/tutorials/basics", "style": ({"flexShrink": "0", "display": "flex"})},
+                                      React.createElement("div", {"style": ({"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word", "paddingRight": 0.1875, "flexGrow": "1"})}, """
                                           Get Started
-                                      </div>
-                                  </a>
-                                  <a href="https://documentation.pagedraw.io/" style={{"flexShrink": "0", "marginLeft": 52, "display": "flex"}}>
-                                      <div style={{"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "paddingRight": 0.59375, "flexGrow": "1"}}>
+""")
+                                  ),
+                                  React.createElement("a", {"href": "https://documentation.pagedraw.io/", "style": ({"flexShrink": "0", "marginLeft": 52, "display": "flex"})},
+                                      React.createElement("div", {"style": ({"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "paddingRight": 0.59375, "flexGrow": "1"})}, """
                                           Documentation
-                                      </div>
-                                  </a>
-                                  <a href="https://medium.com/pagedraw" style={{"flexShrink": "0", "marginLeft": 50, "display": "flex"}}>
-                                      <div style={{"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "paddingRight": 0.71875, "flexGrow": "1"}}>
+""")
+                                  ),
+                                  React.createElement("a", {"href": "https://medium.com/pagedraw", "style": ({"flexShrink": "0", "marginLeft": 50, "display": "flex"})},
+                                      React.createElement("div", {"style": ({"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "paddingRight": 0.71875, "flexGrow": "1"})}, """
                                           Blog
-                                      </div>
-                                  </a>
-                              </div>
-                          </div>
-                          <a href="https://github.com/Pagedraw/pagedraw" style={{"flexGrow": "1", "position": "absolute", "top": 0, "left": 390, "display": "flex"}}>
-                              <div style={{"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word", "paddingRight": 0.015625, "flexGrow": "1"}}>
+""")
+                                  )
+                              )
+                          ),
+                          React.createElement("a", {"href": "https://github.com/Pagedraw/pagedraw", "style": ({"flexGrow": "1", "position": "absolute", "top": 0, "left": 390, "display": "flex"})},
+                              React.createElement("div", {"style": ({"fontFamily": "\"Lato\", sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "center", "wordWrap": "break-word", "paddingRight": 0.015625, "flexGrow": "1"})}, """
                                   GitHub
-                              </div>
-                          </a>
-                      </div>
-                  </div>
-              </div>
-              <a href="/apps" style={{"flexShrink": "0", "marginLeft": 195, "display": "flex"}}>
-                  <div style={{"width": 74, "fontFamily": "Helvetica, Arial, sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
-                      {"Sign in → "}
-                  </div>
-              </a>
-          </div>
-      </div>
+""")
+                          )
+                      )
+                  )
+              ),
+              React.createElement("a", {"href": "/apps", "style": ({"flexShrink": "0", "marginLeft": 195, "display": "flex"})},
+                  React.createElement("div", {"style": ({"width": 74, "fontFamily": "Helvetica, Arial, sans-serif", "color": (if this.props.white then 'rgba(255, 255, 255, 0.8)' else '#06122C'), "fontSize": 17, "lineHeight": "26px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})},
+                      ("Sign in → ")
+                  )
+              )
+          )
+      )
 }

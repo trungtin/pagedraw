@@ -17,11 +17,11 @@ module.exports = createReactClass
         atom_rpc_send({msg: "ready"})
 
     render: ->
-        return <div /> unless @loaded
-        <Editor
-            initialDocJson={@initialDocjson}
-            onChange={@handleDocjsonChanged}
-            />
+        return React.createElement("div", null) unless @loaded
+        React.createElement(Editor, { \
+            "initialDocJson": (@initialDocjson),  \
+            "onChange": (@handleDocjsonChanged)
+            })
 
     handleDocjsonChanged: (docjson) ->
         atom_rpc_send({msg: "write", fileContents: JSON.stringify(docjson)})

@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Projectitem = createReactClass {
     displayName: 'Projectitem'
     render: ->
-        <div className="projectitem">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "projectitem"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Roboto:');
               
               .projectitem {
@@ -145,28 +145,28 @@ module.exports = Projectitem = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if ((if this.props.selected then 'B' else 'A') == "B")
-              <div className="projectitem-b-7">
-                  <div className="projectitem-0-0-0">
-                      <div className="projectitem-rectangle_1">
-                          <div className="projectitem-0-0-0-0-0">
-                              <div className="projectitem-text_1">
-                                  { this.props.name }
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-          { if ((if this.props.selected then 'B' else 'A') == "A")
-              <div className="projectitem-a-9">
-                  <div className="projectitem-1-0-0">
-                      <div onClick={@props.onClick} className="projectitem-text_6">
-                          { this.props.name }
-                      </div>
-                  </div>
-              </div>
-          }
-      </div>
+          """)}),  
+          ( if ((if this.props.selected then 'B' else 'A') == "B")
+              React.createElement("div", {"className": "projectitem-b-7"},
+                  React.createElement("div", {"className": "projectitem-0-0-0"},
+                      React.createElement("div", {"className": "projectitem-rectangle_1"},
+                          React.createElement("div", {"className": "projectitem-0-0-0-0-0"},
+                              React.createElement("div", {"className": "projectitem-text_1"},
+                                  ( this.props.name )
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if ((if this.props.selected then 'B' else 'A') == "A")
+              React.createElement("div", {"className": "projectitem-a-9"},
+                  React.createElement("div", {"className": "projectitem-1-0-0"},
+                      React.createElement("div", {"onClick": (@props.onClick), "className": "projectitem-text_6"},
+                          ( this.props.name )
+                      )
+                  )
+              )
+          )
+      )
 }

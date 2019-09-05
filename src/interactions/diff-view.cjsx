@@ -66,12 +66,12 @@ module.exports = class DiffViewInteraction extends EditorMode
             width: @docArea.right + window.innerWidth
 
         layoutViewWrapper = (doc, viewport) =>
-            <LayoutEditorContextProvider doc={doc}>
-                <Zoomable viewportManager={viewport} style={flex: 1, backgroundColor: 'rgb(51, 51, 51, .9)'}>
-                    <DraggingCanvas classes={[]} ref="draggingCanvas"
-                        style={cursor: @cursor, height: editorGeometry.height, width: editorGeometry.width}
-                        onDrag={=>} onDoubleClick={=>} onMouseMove={=>} onInteractionHappened={->}
-                        onClick={(where) =>
+            React.createElement(LayoutEditorContextProvider, {"doc": (doc)},
+                React.createElement(Zoomable, {"viewportManager": (viewport), "style": (flex: 1, backgroundColor: 'rgb(51, 51, 51, .9)')},
+                    React.createElement(DraggingCanvas, {"classes": ([]), "ref": "draggingCanvas",  \
+                        "style": (cursor: @cursor, height: editorGeometry.height, width: editorGeometry.width),  \
+                        "onDrag": (=>), "onDoubleClick": (=>), "onMouseMove": (=>), "onInteractionHappened": (->),  \
+                        "onClick": ((where) =>
                             block = doc.getBlockUnderMouseLocation(where)
 
                             rootComponent = block?.getRootComponent()
@@ -82,26 +82,26 @@ module.exports = class DiffViewInteraction extends EditorMode
                             @selectedComponentKey = componentForBlockKey(@oldDoc, @selectedBlockKey) ? componentForBlockKey(@newDoc, @selectedBlockKey)
 
                             @rerender()
-                        }>
-                        <div style={flex: 1, zIndex: 0, isolation: 'isolate'}>
-                            <LayoutView doc={doc} blockOverrides={[]} overlayForBlock={(block) =>
+                        )},
+                        React.createElement("div", {"style": (flex: 1, zIndex: 0, isolation: 'isolate')},
+                            React.createElement(LayoutView, {"doc": (doc), "blockOverrides": ([]), "overlayForBlock": ((block) =>
                                 overlayComponentUniqueKey = block.getRootComponent()?.uniqueKey
                                 classes = 'mouse-full-block-overlay'
                                 classes += ' faded-out' unless overlayComponentUniqueKey? and overlayComponentUniqueKey == @selectedComponentKey
-                                <div className={classes} />
-                            } />
-                        </div>
-                    </DraggingCanvas>
-                </Zoomable>
-            </LayoutEditorContextProvider>
+                                React.createElement("div", {"className": (classes)})
+                            )})
+                        )
+                    )
+                )
+            )
 
-        <div style={display: 'flex', flex: 1, flexDirection: 'row'}>
-            {layoutViewWrapper(@oldDoc, @vp1)}
-            <div className="vdivider" />
-            {layoutViewWrapper(@newDoc, @vp2)}
-        </div>
+        React.createElement("div", {"style": (display: 'flex', flex: 1, flexDirection: 'row')},
+            (layoutViewWrapper(@oldDoc, @vp1)),
+            React.createElement("div", {"className": "vdivider"}),
+            (layoutViewWrapper(@newDoc, @vp2))
+        )
 
-    topbar: (editor, defaultTopbar) => <div><Topbar editor={editor} whichTopbar={'diff-viewer'} /></div>
+    topbar: (editor, defaultTopbar) => React.createElement("div", null, React.createElement(Topbar, {"editor": (editor), "whichTopbar": ('diff-viewer')}))
 
     getBlockSidebarControls: (blocks) => memoize_on @sidebarControls, blocks[0].uniqueKey, =>
         [oldBlock, newBlock] = blocks
@@ -141,18 +141,18 @@ module.exports = class DiffViewInteraction extends EditorMode
         if @selectedBlockKey
             selectedBlock = @oldDoc.getBlockByKey(@selectedBlockKey) ? @newDoc.getBlockByKey(@selectedBlockKey)
             rootComponent = selectedBlock.getRootComponent()
-            <div className="sidebar bootstrap" style={width: 250, display: 'flex', flexDirection: 'column'}>
-                <p key={"component-name"} style={fontSize: '1.5em'}><b>Component Name:</b> {rootComponent.name}</p>
-                {if @addedBlocks[selectedBlock.uniqueKey]
-                    <p key={"created-block-sidebar"}>Block was created</p>
+            React.createElement("div", {"className": "sidebar bootstrap", "style": (width: 250, display: 'flex', flexDirection: 'column')},
+                React.createElement("p", {"key": ("component-name"), "style": (fontSize: '1.5em')}, React.createElement("b", null, "Component Name:"), " ", (rootComponent.name)),
+                (if @addedBlocks[selectedBlock.uniqueKey]
+                    React.createElement("p", {"key": ("created-block-sidebar")}, "Block was created")
                 else
-                    <div key={"mutated-block-sidebar"}> {
+                    React.createElement("div", {"key": ("mutated-block-sidebar")}, " ", (
                         rootComponent.andChildren().map (blockInComponent, ind) =>
                             # TODO: Show only top level blocks. Show removed block in sidebar when clicked
-                            return <div key={"empty-div-#{ind}"}></div> if @addedBlocks[blockInComponent.uniqueKey] or @removedBlocks[blockInComponent.uniqueKey]
+                            return React.createElement("div", {"key": ("empty-div-#{ind}")}) if @addedBlocks[blockInComponent.uniqueKey] or @removedBlocks[blockInComponent.uniqueKey]
                             [oldBlock, newBlock, controls] = @getBlockSidebarControls(@mutatedBlocks[blockInComponent.uniqueKey])
 
-                            blockTitle = [<p key={blockInComponent.name} style={fontSize: '1.2em'}><b>Block Name:</b> {blockInComponent.name}</p>]
+                            blockTitle = [React.createElement("p", {"key": (blockInComponent.name), "style": (fontSize: '1.2em')}, React.createElement("b", null, "Block Name:"), " ", (blockInComponent.name))]
                             differences = controls.map ([oldSpec, newSpec], i) =>
                                 attr = oldSpec.attr
 
@@ -163,51 +163,51 @@ module.exports = class DiffViewInteraction extends EditorMode
 
                                 [oldControl, old_react_key] = controlFromSpec(oldSpec, oldBlock, @linkAttrFromBlock(oldBlock), i)
                                 [newControl, new_react_key] = controlFromSpec(newSpec, newBlock, @linkAttrFromBlock(newBlock), i)
-                                <div key={"control-container-#{i}"}>
-                                    {([
+                                React.createElement("div", {"key": ("control-container-#{i}")},
+                                    (([
                                         [oldBlock, isOldDynamic, oldControl, "#BABABA", "old-#{old_react_key}"]
                                         [newBlock, isNewDynamic, newControl, "inherit", "new-#{new_react_key}"]
                                         ]).map ([block, isDyn, control, color, key]) =>
-                                            <div style={{backgroundColor: color}} key={"div-#{key}"}>
-                                                <ReactWrapper key={key}>{control}</ReactWrapper>
-                                                {<p key={"dynamic-#{key}"}><b>Dynamic:</b> {isDyn.toString()}</p> if isOldDynamic != isNewDynamic}
-                                                {<p key={"code-#{key}"}><b>Code:</b> {block[attr].code}</p> if isDyn}
-                                            </div>
-                                    }
-                                </div>
+                                            React.createElement("div", {"style": ({backgroundColor: color}), "key": ("div-#{key}")},
+                                                React.createElement(ReactWrapper, {"key": (key)}, (control)),
+                                                (React.createElement("p", {"key": ("dynamic-#{key}")}, React.createElement("b", null, "Dynamic:"), " ", (isDyn.toString())) if isOldDynamic != isNewDynamic),
+                                                (React.createElement("p", {"key": ("code-#{key}")}, React.createElement("b", null, "Code:"), " ", (block[attr].code)) if isDyn)
+                                            )
+                                    )
+                                )
 
                             style = {}
                             style = _l.extend {}, style, {backgroundColor: "#AED1D0"} if blockInComponent.isEqual selectedBlock
-                            if not _l.isEmpty(differences) then <div key={"diffs-parent-#{ind}"} style={style}>{blockTitle.concat differences}</div> else <div key={"empty-div-#{ind}"}></div>
-                    } </div>
-                }
-            </div>
+                            if not _l.isEmpty(differences) then React.createElement("div", {"key": ("diffs-parent-#{ind}"), "style": (style)}, (blockTitle.concat differences)) else React.createElement("div", {"key": ("empty-div-#{ind}")})
+                    ), " ")
+                )
+            )
         else
             blackListedProperties = ['intentionallyMessWithUser', 'version', 'metaserver_id']
-            <div className="sidebar bootstrap" style={width: 250, display: 'flex', flexDirection: 'column'}>
-                <b key={"title"}>Select a block to see its diff</b>
-                <br key={"br"} />
-                <b key={"subtitle"}>Doc Level Differences:</b>
-                {if not _l.isEmpty _l.values(@removedBlocks)
-                    <div key={"removed-blocks"}>
-                        <p><b>Removed blocks:</b></p>
-                        {_l.values(@removedBlocks).map ([removedBlock]) => <p key={removedBlock.name}>{removedBlock.name}</p>}
-                    </div>
-                }
+            React.createElement("div", {"className": "sidebar bootstrap", "style": (width: 250, display: 'flex', flexDirection: 'column')},
+                React.createElement("b", {"key": ("title")}, "Select a block to see its diff"),
+                React.createElement("br", {"key": ("br")}),
+                React.createElement("b", {"key": ("subtitle")}, "Doc Level Differences:"),
+                (if not _l.isEmpty _l.values(@removedBlocks)
+                    React.createElement("div", {"key": ("removed-blocks")},
+                        React.createElement("p", null, React.createElement("b", null, "Removed blocks:")),
+                        (_l.values(@removedBlocks).map ([removedBlock]) => React.createElement("p", {"key": (removedBlock.name)}, (removedBlock.name)))
+                    )
+                ),
 
-                <div key={"body"}>{
+                React.createElement("div", {"key": ("body")}, (
                     _l.keys(_l.omit @oldDoc.properties, blackListedProperties)
                         .map((prop) => {oldVal: @oldDoc[prop], newVal: @newDoc[prop], propLabel: prop})
                         .filter ({oldVal, newVal}) =>
                             oldVal != newVal and typeof newVal in ["boolean", "string", "number"]
                         .map ({propLabel, oldVal, newVal}, i) =>
-                            <div key={propLabel}>
-                                <b style={fontSize: '1.3em'}>{propLabel}:</b>
-                                <div style={paddingLeft: '25px'}>
-                                    <b>Old value:</b> {if oldVal then oldVal.toString() else "not set"}
-                                    <br />
-                                    <b>New value:</b> {if newVal then newVal.toString() else "not set"}
-                                </div>
-                            </div>
-                }</div>
-            </div>
+                            React.createElement("div", {"key": (propLabel)},
+                                React.createElement("b", {"style": (fontSize: '1.3em')}, (propLabel), ":"),
+                                React.createElement("div", {"style": (paddingLeft: '25px')},
+                                    React.createElement("b", null, "Old value:"), " ", (if oldVal then oldVal.toString() else "not set"),
+                                    React.createElement("br", null),
+                                    React.createElement("b", null, "New value:"), " ", (if newVal then newVal.toString() else "not set")
+                                )
+                            )
+                ))
+            )

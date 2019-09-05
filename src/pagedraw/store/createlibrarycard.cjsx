@@ -4,8 +4,8 @@ Createlibrary = require './createlibrary'
 
 
 render = ->
-    <div className="pd-onhover-parent createlibrarycard">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "pd-onhover-parent createlibrarycard"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .createlibrarycard {
@@ -231,55 +231,55 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if (('default') == "default")
-            <div className="createlibrarycard-default-5">
-                <div className="createlibrarycard-0-0-0">
-                    <div className="createlibrarycard-rectangle-6">
-                        <div className="createlibrarycard-0-0-0-0-0">
-                            <div className="createlibrarycard-build_your_own_library_-1">
+        """)}),  
+        ( if (('default') == "default")
+            React.createElement("div", {"className": "createlibrarycard-default-5"},
+                React.createElement("div", {"className": "createlibrarycard-0-0-0"},
+                    React.createElement("div", {"className": "createlibrarycard-rectangle-6"},
+                        React.createElement("div", {"className": "createlibrarycard-0-0-0-0-0"},
+                            React.createElement("div", {"className": "createlibrarycard-build_your_own_library_-1"}, """
                                 Build your own library
-                            </div>
-                        </div>
-                        <div className="createlibrarycard-0-0-0-0-1">
-                            <div className="createlibrarycard-import_your_existing_code_components_into_a_pagedraw_library_or_create_a_new_one_-5">
+""")
+                        ),
+                        React.createElement("div", {"className": "createlibrarycard-0-0-0-0-1"},
+                            React.createElement("div", {"className": "createlibrarycard-import_your_existing_code_components_into_a_pagedraw_library_or_create_a_new_one_-5"}, """
                                 Import your existing code components into a Pagedraw library or create a new one
-                            </div>
-                            <div className="createlibrarycard-0-0-0-0-1-1">
-                                <div className="createlibrarycard-0-0-0-0-1-1-0">
-                                    <div onClick={@props.onClick} className="createlibrarycard-createlibrary-4">
-                                        <Createlibrary /> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        <div className="pd-onhover createlibrarycard-_hover-9">
-            <div className="createlibrarycard-1-0">
-                <div className="createlibrarycard-rectangle-8">
-                    <div className="createlibrarycard-1-0-0-0">
-                        <div className="createlibrarycard-build_your_own_library_-5">
+"""),
+                            React.createElement("div", {"className": "createlibrarycard-0-0-0-0-1-1"},
+                                React.createElement("div", {"className": "createlibrarycard-0-0-0-0-1-1-0"},
+                                    React.createElement("div", {"onClick": (@props.onClick), "className": "createlibrarycard-createlibrary-4"},
+                                        React.createElement(Createlibrary, null) 
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ),
+        React.createElement("div", {"className": "pd-onhover createlibrarycard-_hover-9"},
+            React.createElement("div", {"className": "createlibrarycard-1-0"},
+                React.createElement("div", {"className": "createlibrarycard-rectangle-8"},
+                    React.createElement("div", {"className": "createlibrarycard-1-0-0-0"},
+                        React.createElement("div", {"className": "createlibrarycard-build_your_own_library_-5"}, """
                             Build your own library
-                        </div>
-                    </div>
-                    <div className="createlibrarycard-1-0-0-1">
-                        <div className="createlibrarycard-import_your_existing_code_components_into_a_pagedraw_library_or_create_a_new_one_-9">
+""")
+                    ),
+                    React.createElement("div", {"className": "createlibrarycard-1-0-0-1"},
+                        React.createElement("div", {"className": "createlibrarycard-import_your_existing_code_components_into_a_pagedraw_library_or_create_a_new_one_-9"}, """
                             Import your existing code components into a Pagedraw library or create a new one
-                        </div>
-                        <div className="createlibrarycard-1-0-0-1-1">
-                            <div className="createlibrarycard-1-0-0-1-1-0">
-                                <div onClick={@props.onClick} className="createlibrarycard-createlibrary_instance-2">
-                                    <Createlibrary /> 
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+"""),
+                        React.createElement("div", {"className": "createlibrarycard-1-0-0-1-1"},
+                            React.createElement("div", {"className": "createlibrarycard-1-0-0-1-1-0"},
+                                React.createElement("div", {"onClick": (@props.onClick), "className": "createlibrarycard-createlibrary_instance-2"},
+                                    React.createElement(Createlibrary, null) 
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

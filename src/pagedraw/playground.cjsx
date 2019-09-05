@@ -7,8 +7,8 @@ Demobutton = require './demobutton'
 module.exports = Playground = createReactClass {
     displayName: 'Playground'
     render: ->
-        <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "paddingTop": 52, "background": "#FFFFFF"}}>
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "paddingTop": 52, "background": "#FFFFFF"})},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               
               
               * {
@@ -55,61 +55,61 @@ module.exports = Playground = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div style={{"display": "flex", "flexShrink": "0"}}>
-              <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "0.5", "flexBasis": 0, "minHeight": "fit-content", "background": "rgba(216, 216, 216, 0)"}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"height": 0, "flexGrow": "0.4984709480122324", "flexBasis": 0}} /> 
-                      <div style={{"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 172}}>
-                          <Demobutton selected={true} content={"PAGEDRAW EDITOR"} /> 
-                      </div>
-                      <div style={{"height": 0, "flexGrow": "0.5015290519877675", "flexBasis": 0}} /> 
-                  </div>
-              </div>
-              <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "0.5", "flexBasis": 0, "minHeight": "fit-content", "marginLeft": 2, "background": "rgba(216, 216, 216, 0)"}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"height": 0, "flexGrow": "0.4984709480122324", "flexBasis": 0}} /> 
-                      <div style={{"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 172}}>
-                          <Demobutton selected={true} content={"YOUR INTEGRATION"} /> 
-                      </div>
-                      <div style={{"height": 0, "flexGrow": "0.5015290519877675", "flexBasis": 0}} /> 
-                  </div>
-              </div>
-          </div>
-          <div style={{"display": "flex", "flexShrink": "0", "marginTop": 7}}>
-              <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "0.5", "flexBasis": 0, "minHeight": "fit-content", "paddingBottom": 1}}>
-                  <div style={{"display": "flex", "flexShrink": "0"}}>
-                      <div style={{"height": 330, "flexGrow": "1", "flexBasis": 0, "display": "flex", "flexDirection": "column"}}>
-                          {@props.pdEditor}
-                      </div>
-                  </div>
-              </div>
-              <div style={{"height": 331, "flexGrow": "0.5", "flexBasis": 0, "overflow": "scroll", "position": "relative", "background": "rgba(216, 216, 216, 0)"}}>
-                  <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "position": "absolute", "width": "100%", "minHeight": "100%"}}>
-                      <div style={{"display": "flex", "flexShrink": "0"}}>
-                          <div style={{"height": 330, "flexGrow": "1", "flexBasis": 0, "display": "flex", "flexDirection": "column"}}>
-                              {@props.codeEditor}
-                          </div>
-                      </div>
-                      <div style={{"width": 0, "flexShrink": "0", "flexGrow": "1", "flexBasis": 0}} /> 
-                  </div>
-              </div>
-          </div>
-          <div style={{"display": "flex", "flexShrink": "0", "marginTop": 29, "paddingLeft": 276, "paddingRight": 278}}>
-              <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "background": "rgba(216, 216, 216, 0)"}}>
-                  <div style={{"display": "flex", "flexShrink": "0", "justifyContent": "center"}}>
-                      <div style={{"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 172}}>
-                          <Demobutton selected={true} content={"LIVE APP"} /> 
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div style={{"display": "flex", "flexShrink": "0", "marginTop": 19}}>
-              <div style={{"height": 0, "flexGrow": "0.4981949458483754", "flexBasis": 0}} /> 
-              <div style={{"width": 446, "height": 333, "flexShrink": "0", "display": "flex", "flexDirection": "column"}}>
-                  {@props.preview}
-              </div>
-              <div style={{"height": 0, "flexGrow": "0.5018050541516246", "flexBasis": 0}} /> 
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "0.5", "flexBasis": 0, "minHeight": "fit-content", "background": "rgba(216, 216, 216, 0)"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"height": 0, "flexGrow": "0.4984709480122324", "flexBasis": 0})}),  
+                      React.createElement("div", {"style": ({"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 172})},
+                          React.createElement(Demobutton, {"selected": (true), "content": ("PAGEDRAW EDITOR")}) 
+                      ),
+                      React.createElement("div", {"style": ({"height": 0, "flexGrow": "0.5015290519877675", "flexBasis": 0})}) 
+                  )
+              ),
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "0.5", "flexBasis": 0, "minHeight": "fit-content", "marginLeft": 2, "background": "rgba(216, 216, 216, 0)"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"height": 0, "flexGrow": "0.4984709480122324", "flexBasis": 0})}),  
+                      React.createElement("div", {"style": ({"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 172})},
+                          React.createElement(Demobutton, {"selected": (true), "content": ("YOUR INTEGRATION")}) 
+                      ),
+                      React.createElement("div", {"style": ({"height": 0, "flexGrow": "0.5015290519877675", "flexBasis": 0})}) 
+                  )
+              )
+          ),
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "marginTop": 7})},
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "0.5", "flexBasis": 0, "minHeight": "fit-content", "paddingBottom": 1})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                      React.createElement("div", {"style": ({"height": 330, "flexGrow": "1", "flexBasis": 0, "display": "flex", "flexDirection": "column"})},
+                          (@props.pdEditor)
+                      )
+                  )
+              ),
+              React.createElement("div", {"style": ({"height": 331, "flexGrow": "0.5", "flexBasis": 0, "overflow": "scroll", "position": "relative", "background": "rgba(216, 216, 216, 0)"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "position": "absolute", "width": "100%", "minHeight": "100%"})},
+                      React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                          React.createElement("div", {"style": ({"height": 330, "flexGrow": "1", "flexBasis": 0, "display": "flex", "flexDirection": "column"})},
+                              (@props.codeEditor)
+                          )
+                      ),
+                      React.createElement("div", {"style": ({"width": 0, "flexShrink": "0", "flexGrow": "1", "flexBasis": 0})}) 
+                  )
+              )
+          ),
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "marginTop": 29, "paddingLeft": 276, "paddingRight": 278})},
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "flexBasis": 0, "minHeight": "fit-content", "background": "rgba(216, 216, 216, 0)"})},
+                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "justifyContent": "center"})},
+                      React.createElement("div", {"style": ({"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 172})},
+                          React.createElement(Demobutton, {"selected": (true), "content": ("LIVE APP")}) 
+                      )
+                  )
+              )
+          ),
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "marginTop": 19})},
+              React.createElement("div", {"style": ({"height": 0, "flexGrow": "0.4981949458483754", "flexBasis": 0})}),  
+              React.createElement("div", {"style": ({"width": 446, "height": 333, "flexShrink": "0", "display": "flex", "flexDirection": "column"})},
+                  (@props.preview)
+              ),
+              React.createElement("div", {"style": ({"height": 0, "flexGrow": "0.5018050541516246", "flexBasis": 0})}) 
+          )
+      )
 }

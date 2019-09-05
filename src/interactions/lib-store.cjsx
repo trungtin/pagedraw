@@ -33,25 +33,25 @@ module.exports = class LibStoreInteraction extends EditorMode
 
     canvas: (editor) ->
         # Overrides the CSS coming from editor
-        <div style={overflow: 'auto', userSelect: 'text', display: 'flex', flexGrow: '1'}>
-            <LibStore editor={editor} />
-        </div>
+        React.createElement("div", {"style": (overflow: 'auto', userSelect: 'text', display: 'flex', flexGrow: '1')},
+            React.createElement(LibStore, {"editor": (editor)})
+        )
 
     leftbar: (editor) ->
         mapLibrary = (lib) =>
             title: lib.library_name
             version: lib.version_name
             onRemove: () => confirm {
-                body: <span>
+                body: React.createElement("span", null, """
                     Removing this library will delete
-                    <strong> {@blocksOfLib(editor.doc, lib).length} blocks </strong>
+""", React.createElement("strong", null, " ", (@blocksOfLib(editor.doc, lib).length), " blocks "), """
                     tied to it. Wish to proceed?
-                </span>
+""")
                 yesType: 'danger'
                 yes: 'Remove'
             }, => @removeLibrary(editor, lib)
 
-        <LibsSidebar libraries={_l.map(editor.doc.libraries, mapLibrary)} />
+        React.createElement(LibsSidebar, {"libraries": (_l.map(editor.doc.libraries, mapLibrary))})
 
     blocksOfLib: (doc, lib) ->
         doc.blocks.filter (b) -> b.getSourceLibrary?() == lib
@@ -81,24 +81,24 @@ LibShower = createReactClass
 
     # FIXME: We are getting some doc not in readonly mode errors when doing setState in this component
     render: ->
-        return <div style={padding: '50px'}><h1>{@state.error.message}</h1></div> if @state.error?
+        return React.createElement("div", {"style": (padding: '50px')}, React.createElement("h1", null, (@state.error.message))) if @state.error?
 
         currentUser = window.pd_params?.current_user?.id
 
-        <LibDetails
-            components={(@state.loadedInstances ? []).map (instance) -> {title: instance.name}}
-            renderPreviews={@renderPreviews}
-            title={@props.library.name}
-            version={@props.version.name}
-            owner={@props.library.owner_name}
-            starCount={@props.library.users_who_starred.length}
-            installCount={@props.library.users_who_installed.length}
-            starred={currentUser in @props.library.users_who_starred}
-            installed={@installedState()}
-            onToggleStar={@props.onToggleStar}
-            onInstall={@addLib}
-            onNavigateBack={@props.onNavigateBack}
-        />
+        React.createElement(LibDetails, { \
+            "components": ((@state.loadedInstances ? []).map (instance) -> {title: instance.name}),  \
+            "renderPreviews": (@renderPreviews),  \
+            "title": (@props.library.name),  \
+            "version": (@props.version.name),  \
+            "owner": (@props.library.owner_name),  \
+            "starCount": (@props.library.users_who_starred.length),  \
+            "installCount": (@props.library.users_who_installed.length),  \
+            "starred": (currentUser in @props.library.users_who_starred),  \
+            "installed": (@installedState()),  \
+            "onToggleStar": (@props.onToggleStar),  \
+            "onInstall": (@addLib),  \
+            "onNavigateBack": (@props.onNavigateBack)
+        })
 
     installedState: ->
         docLibsIds = _l.map @props.editor.doc.libraries, 'library_id'
@@ -112,18 +112,18 @@ LibShower = createReactClass
     renderPreviews: ->
         inside = =>
             if not @state.loadedInstances?
-                return <div style={flexGrow: '1', padding: '300px'}><PdSpinner /></div>
+                return React.createElement("div", {"style": (flexGrow: '1', padding: '300px')}, React.createElement(PdSpinner, null))
 
-            <div style={display: 'flex', flexDirection: 'column', padding: '10px'}>
-                {@state.loadedInstances.map (instance) ->
-                    <div>
-                        <h1>{instance.name}</h1>
-                        {layoutViewForBlock(instance, {}, {}, null)}
-                    </div>
-                }
-            </div>
+            React.createElement("div", {"style": (display: 'flex', flexDirection: 'column', padding: '10px')},
+                (@state.loadedInstances.map (instance) ->
+                    React.createElement("div", null,
+                        React.createElement("h1", null, (instance.name)),
+                        (layoutViewForBlock(instance, {}, {}, null))
+                    )
+                )
+            )
 
-        <WrapInIframe style={border: '1px solid #ccc', flexGrow: '1'} registerIframe={@onIframeLoad} render={inside} />
+        React.createElement(WrapInIframe, {"style": (border: '1px solid #ccc', flexGrow: '1'), "registerIframe": (@onIframeLoad), "render": (inside)})
 
     addLib: ->
         switch @installedState()
@@ -240,30 +240,30 @@ LibStore = createReactClass
         if @showingLibId?
             lib = [mostStarredLibraries..., appLibraries...].find((l) => l.id == @showingLibId)
 
-            <LibShower
-                editor={@props.editor}
-                library={lib}
-                version={lib.latest_version}
-                onNavigateBack={() => @showingLibId = null; @rerender()}
-                onToggleStar={() =>
+            React.createElement(LibShower, { \
+                "editor": (@props.editor),  \
+                "library": (lib),  \
+                "version": (lib.latest_version),  \
+                "onNavigateBack": (() => @showingLibId = null; @rerender()),  \
+                "onToggleStar": (() =>
                     if @current_user_id in lib.users_who_starred
                         @unstar(@showingLibId)
                     else
                         @star(@showingLibId)
                     @rerender()
-                }
-                onInstall={() =>
+                ),  \
+                "onInstall": (() =>
                     @trackInstall(@showingLibId)
                     @refreshable.needsRefresh()
-                }
-            />
+                )
+            })
         else
-            <StoreFront
-                popularLibraries={_l.map(mostStarredLibraries, mapLibraries)}
-                teamLibraries={_l.map(appLibraries, mapLibraries)}
-                onSearch={(search) => console.log("Searching for '#{search}'")}
-                onCreateNewLibrary={() => openLibManagerModal(@props.editor.doc, @props.editor.handleDocChanged)}
-            />
+            React.createElement(StoreFront, { \
+                "popularLibraries": (_l.map(mostStarredLibraries, mapLibraries)),  \
+                "teamLibraries": (_l.map(appLibraries, mapLibraries)),  \
+                "onSearch": ((search) => console.log("Searching for '#{search}'")),  \
+                "onCreateNewLibrary": (() => openLibManagerModal(@props.editor.doc, @props.editor.handleDocChanged))
+            })
 
     star: (lib_id) ->
         @mutateSingleLib 'star', lib_id, (lib) =>

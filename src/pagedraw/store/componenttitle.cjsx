@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="componenttitle-componenttitle-4">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "componenttitle-componenttitle-4"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .componenttitle-componenttitle-4 {
@@ -77,12 +77,12 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="componenttitle-0">
-            <div className="componenttitle-app_bar_-6">
-                { @props.title }
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "componenttitle-0"},
+            React.createElement("div", {"className": "componenttitle-app_bar_-6"},
+                ( @props.title )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

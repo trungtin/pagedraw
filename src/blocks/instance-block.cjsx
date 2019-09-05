@@ -56,24 +56,24 @@ exports.BaseInstanceBlock = Model.register 'base-inst', class BaseInstanceBlock 
     defaultSidebarControls: (linkAttr, onChange, editorCache) ->
         sourceComponent = @getSourceComponent()
         if not sourceComponent?
-            return <div>This block's source component was deleted</div>
+            return React.createElement("div", null, "This block\'s source component was deleted")
 
         return _l.compact [
             if Object.keys(sourceComponent.componentSpec.propControl.attrTypes).length > 0
-                <React.Fragment>
-                    <button style={width: '100%'} onClick={=> @propValues = sourceComponent.componentSpec.propControl.random(); onChange()}>Randomize props</button>
+                React.createElement(React.Fragment, null,
+                    React.createElement("button", {"style": (width: '100%'), "onClick": (=> @propValues = sourceComponent.componentSpec.propControl.random(); onChange())}, "Randomize props"),
 
-                    {#NOTE: the valuelinks below assume that propValues.enforceValuesConformWithSpec was run somwhere else (i.e. in normalize)}
-                    <div style={overflow: 'auto'}>
-                        {sourceComponent.componentSpec.propControl.sidebarControl('props', propValueLinkTransformer('staticValue', propValueLinkTransformer('innerValue', linkAttr('propValues'))))}
-                    </div>
+                    
+                    React.createElement("div", {"style": (overflow: 'auto')},
+                        (sourceComponent.componentSpec.propControl.sidebarControl('props', propValueLinkTransformer('staticValue', propValueLinkTransformer('innerValue', linkAttr('propValues')))))
+                    ),
 
-                    <button style={width: '100%'} onClick={=> @handleExportParamsAsJson()}>Export params as json</button>
-                </React.Fragment>
+                    React.createElement("button", {"style": (width: '100%'), "onClick": (=> @handleExportParamsAsJson())}, "Export params as json")
+                )
         ]
 
     constraintControls: (linkAttr, onChange) -> _l.concat super(linkAttr, onChange), [
-            <hr /> if config.ignoreMinGeometryQuickfix
+            React.createElement("hr", null) if config.ignoreMinGeometryQuickfix
             # constraints
             ["fixed width", "fixedWidth", CheckboxControl] if config.ignoreMinGeometryQuickfix
             ["fixed height", "fixedHeight", CheckboxControl] if config.ignoreMinGeometryQuickfix
@@ -83,15 +83,15 @@ exports.BaseInstanceBlock = Model.register 'base-inst', class BaseInstanceBlock 
     handleExportParamsAsJson: ->
         json = JSON.stringify(jsonDynamicableToJsonStatic(@getPropsAsJsonDynamicable()), null, 4)
         modal.show (closeHandler) -> [
-            <Modal.Header closeButton>
-                <Modal.Title>JSON Params</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <CodeShower content={json} />
-            </Modal.Body>
-            <Modal.Footer>
-                <PdButtonOne type="primary" onClick={closeHandler}>Close</PdButtonOne>
-            </Modal.Footer>
+            React.createElement(Modal.Header, {"closeButton": true},
+                React.createElement(Modal.Title, null, "JSON Params")
+            )
+            React.createElement(Modal.Body, null,
+                React.createElement(CodeShower, {"content": (json)})
+            )
+            React.createElement(Modal.Footer, null,
+                React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
+            )
         ]
 
     getPropsAsJsonDynamicable: (editorCache = {}) ->
@@ -206,9 +206,9 @@ exports.DrawInstanceBlock = Model.register_with_legacy_absolute_tag '/block/inst
 
             catch e
                 console.warn e if config.warnOnEvalPdomErrors
-                <div style={width: @width, padding: '0.5em', backgroundColor: '#ff7f7f'}>
-                    {e.message}
-                </div>
+                React.createElement("div", {"style": (width: @width, padding: '0.5em', backgroundColor: '#ff7f7f')},
+                    (e.message)
+                )
 
 
 # :: Block -> [{spec: PropSpec, value: PropValue, parentSpec: PropSpec?}]

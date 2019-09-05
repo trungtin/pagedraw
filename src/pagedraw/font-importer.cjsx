@@ -3,8 +3,8 @@ React = require 'react'
 _l = require 'lodash'
 
 render = ->
-    <div className="fontimporter">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "fontimporter"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             .fontimporter {
                 display: flex;
                 flex-grow: 1;
@@ -233,58 +233,58 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if ((if not _l.isEmpty(@props.error) then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Initial")
-            <div className="fontimporter-initial-0">
-                <div className="fontimporter-0-0-0">
-                    <div className="fontimporter-rectangle-7">
-                        <div className="fontimporter-0-0-0-0-0">
-                            <div className="fontimporter-0-0-0-0-0-0" /> 
-                            <div className="fontimporter-drop_your_font_file_here_-9">
+        """)}),  
+        ( if ((if not _l.isEmpty(@props.error) then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Initial")
+            React.createElement("div", {"className": "fontimporter-initial-0"},
+                React.createElement("div", {"className": "fontimporter-0-0-0"},
+                    React.createElement("div", {"className": "fontimporter-rectangle-7"},
+                        React.createElement("div", {"className": "fontimporter-0-0-0-0-0"},
+                            React.createElement("div", {"className": "fontimporter-0-0-0-0-0-0"}),  
+                            React.createElement("div", {"className": "fontimporter-drop_your_font_file_here_-9"}, """
                                 Drop your Font file here
-                            </div>
-                            <div className="fontimporter-0-0-0-0-0-2" /> 
-                        </div>
-                        <div className="fontimporter-0-0-0-0-1">
-                            <div className="fontimporter-0-0-0-0-1-0" /> 
-                            <div className="fontimporter-or_click_to_select_a_file_to_upload_-5">
+"""),
+                            React.createElement("div", {"className": "fontimporter-0-0-0-0-0-2"}) 
+                        ),
+                        React.createElement("div", {"className": "fontimporter-0-0-0-0-1"},
+                            React.createElement("div", {"className": "fontimporter-0-0-0-0-1-0"}),  
+                            React.createElement("div", {"className": "fontimporter-or_click_to_select_a_file_to_upload_-5"}, """
                                 or click to select a file to upload
-                            </div>
-                            <div className="fontimporter-0-0-0-0-1-2" /> 
-                        </div>
-                        <div className="fontimporter-0-0-0-0-2">
-                            <div className="fontimporter-text-6">
-                                <div>Pagedraw uses file names to infer font names on upload.</div>
-                                <br/>
-                                <div>If trying to upload a missing font like Lato-regular</div>
-                                <div>{"make sure your font file is named exactly \"Lato-regular.ttf\" or equivalent. "}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        { if ((if not _l.isEmpty(@props.error) then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Importing")
-            <div className="fontimporter-importing-3">
-                <div className="fontimporter-1-0-0">
-                    <img src="https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/" className="fontimporter-image-8" /> 
-                </div>
-            </div>
-        }
-        { if ((if not _l.isEmpty(@props.error) then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Error")
-            <div className="fontimporter-error-4">
-                <div className="fontimporter-2-0-0">
-                    <div className="fontimporter-error_importing_file_-6">
-                        { @props.error }
-                    </div>
-                </div>
-                <div className="fontimporter-2-0-1">
-                    <div className="fontimporter-please_contact_the_pagedraw_team_at_team_pagedraw_io_-0">
+"""),
+                            React.createElement("div", {"className": "fontimporter-0-0-0-0-1-2"}) 
+                        ),
+                        React.createElement("div", {"className": "fontimporter-0-0-0-0-2"},
+                            React.createElement("div", {"className": "fontimporter-text-6"},
+                                React.createElement("div", null, "Pagedraw uses file names to infer font names on upload."),
+                                React.createElement("br", null),
+                                React.createElement("div", null, "If trying to upload a missing font like Lato-regular"),
+                                React.createElement("div", null, ("make sure your font file is named exactly \"Lato-regular.ttf\" or equivalent. "))
+                            )
+                        )
+                    )
+                )
+            )
+        ),
+        ( if ((if not _l.isEmpty(@props.error) then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Importing")
+            React.createElement("div", {"className": "fontimporter-importing-3"},
+                React.createElement("div", {"className": "fontimporter-1-0-0"},
+                    React.createElement("img", {"src": "https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/", "className": "fontimporter-image-8"}) 
+                )
+            )
+        ),
+        ( if ((if not _l.isEmpty(@props.error) then 'Error' else if @props.importing then 'Importing' else 'Initial') == "Error")
+            React.createElement("div", {"className": "fontimporter-error-4"},
+                React.createElement("div", {"className": "fontimporter-2-0-0"},
+                    React.createElement("div", {"className": "fontimporter-error_importing_file_-6"},
+                        ( @props.error )
+                    )
+                ),
+                React.createElement("div", {"className": "fontimporter-2-0-1"},
+                    React.createElement("div", {"className": "fontimporter-please_contact_the_pagedraw_team_at_team_pagedraw_io_-0"}, """
                         Please contact the Pagedraw team at team@pagedraw.io
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+""")
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

@@ -88,18 +88,18 @@ module.exports = Block.register 'artboard', class ArtboardBlock extends Block
         StressTesterInteraction = require '../interactions/stress-tester'
 
         _.compact [
-            <button style={width: '100%'} onClick={=> setEditorMode(new StressTesterInteraction(this)); onChange(fast: true)}>Stress test</button>
-            <button style={width: '100%'} onClick={=> @becomeMultistate(onChange)}>Make multistate</button> if @isComponent
-            <button style={width: '100%'} onClick={=> @becomeHoverable(onChange)}>Make Hoverable</button> if @isComponent
+            React.createElement("button", {"style": (width: '100%'), "onClick": (=> setEditorMode(new StressTesterInteraction(this)); onChange(fast: true))}, "Stress test")
+            React.createElement("button", {"style": (width: '100%'), "onClick": (=> @becomeMultistate(onChange))}, "Make multistate") if @isComponent
+            React.createElement("button", {"style": (width: '100%'), "onClick": (=> @becomeHoverable(onChange))}, "Make Hoverable") if @isComponent
 
-            <hr />
+            React.createElement("hr", null)
 
             # background styling
             @fillSidebarControls()...
             ["include color in instances/code", 'includeColorInCompilation', CheckboxControl]
             ["cursor", "cursor", CursorControl]
 
-            <hr />
+            React.createElement("hr", null)
 
             # Design grid
             # ["window dressing", "windowDressing", SelectControl({multi: false, style: 'dropdown'}, [
@@ -117,11 +117,11 @@ module.exports = Block.register 'artboard', class ArtboardBlock extends Block
         _l.compact [
             ["Is page", 'is_screenfull', CheckboxControl]
             (if @isComponent and not @is_screenfull then [
-                <span style={fontSize: '12px'}>Instances have resizable</span>
-                <div style={display: 'flex', justifyContent: 'flex'}>
-                    {LeftCheckboxControl("Width", componentSpecLinkAttr('flexWidth'))}
-                    {LeftCheckboxControl("Height", componentSpecLinkAttr('flexHeight'))}
-                </div>
+                React.createElement("span", {"style": (fontSize: '12px')}, "Instances have resizable")
+                React.createElement("div", {"style": (display: 'flex', justifyContent: 'flex')},
+                    (LeftCheckboxControl("Width", componentSpecLinkAttr('flexWidth'))),
+                    (LeftCheckboxControl("Height", componentSpecLinkAttr('flexHeight')))
+                )
             ] else [])...
         ]
 
@@ -159,52 +159,52 @@ module.exports = Block.register 'artboard', class ArtboardBlock extends Block
         #    @renderWithoutWindowDressing(styles)
 
     renderWithoutWindowDressing: (styles) ->
-        <div className="expand-children" style={minWidth: @width, minHeight: @height, position: 'relative'}>
-            <div style={
+        React.createElement("div", {"className": "expand-children", "style": (minWidth: @width, minHeight: @height, position: 'relative')},
+            React.createElement("div", {"style": (
                 position: 'absolute', top: -20, whiteSpace: 'pre'
                 fontFamily: 'Open Sans'
                 color: if @is_screenfull then '#111' else '#aa00cc'
-            }>
-                {@getLabel()}
-            </div>
-            <div className="expand-children" style={_l.extend {}, {boxShadow: '0 0 5px 2px #DEDEDE'}, styles} />
-            {@renderDesignGrid()}
-        </div>
+            )},
+                (@getLabel())
+            ),
+            React.createElement("div", {"className": "expand-children", "style": (_l.extend {}, {boxShadow: '0 0 5px 2px #DEDEDE'}, styles)}),
+            (@renderDesignGrid())
+        )
 
     renderWithWindowDressing: (styles) ->
-        <div className="expand-children" style={minWidth: @width, minHeight: @height, position: 'relative'}>
+        React.createElement("div", {"className": "expand-children", "style": (minWidth: @width, minHeight: @height, position: 'relative')},
 
-            <div style={
+            React.createElement("div", {"style": (
                 position: 'absolute', top: -75, height: 75
                 left: 10, right: 10
                 backgroundImage: "url('#{config.static_server}/assets/chrome-mid.png')"
-                } />
+                )}),
 
-            <div style={
+            React.createElement("div", {"style": (
                 position: 'absolute', top: -75, height: 75, left: 0, right: 0
                 backgroundImage: "url('#{config.static_server}/assets/chrome-right.png')"
                 backgroundRepeat: 'no-repeat', backgroundPositionX: '100%'
-                } />
+                )}),
 
-            <div style={
+            React.createElement("div", {"style": (
                 position: 'absolute', top: -75, height: 75, left: 0, right: 0
                 backgroundImage: "url('#{config.static_server}/assets/chrome-left.png')"
                 backgroundRepeat: 'no-repeat', backgroundPositionX: '0%'
-                } />
+                )}),
 
-            <div style={position: 'absolute', top: -26.7, left: 168, fontFamily: "Helvetica", fontSize: "14px", fontWeight: "lighter"}>
-                {@getLabel()}
-            </div>
+            React.createElement("div", {"style": (position: 'absolute', top: -26.7, left: 168, fontFamily: "Helvetica", fontSize: "14px", fontWeight: "lighter")},
+                (@getLabel())
+            ),
 
-            <div className="expand-children" style={_l.extend {
+            React.createElement("div", {"className": "expand-children", "style": (_l.extend {
                 boxShadow: '0 0 5px 2px #DEDEDE'
                 borderRadius: '0 0 5px 5px'
                 outline: '1px solid #dbdbdb'
                 borderTopWidth: 0
-            }, styles} />
+            }, styles)}),
 
-            {@renderDesignGrid()}
-        </div>
+            (@renderDesignGrid())
+        )
 
 
     ## DESIGN GRID
@@ -213,15 +213,15 @@ module.exports = Block.register 'artboard', class ArtboardBlock extends Block
 
         # We need pointerEvents: 'none' in both of these so our clicks go through to Layout/Content editor and don't
         # stop on the overlay
-        <div style={position: 'absolute', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: '100%', pointerEvents: 'none'}>
-            {[0..(@gridNumOfColumns - 1)].map (i) =>
+        React.createElement("div", {"style": (position: 'absolute', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: '100%', pointerEvents: 'none')},
+            ([0..(@gridNumOfColumns - 1)].map (i) =>
                 # The zIndex here has to be smaller than that of draggable
                 style = {backgroundColor: 'rgba(0,0,0,0.23)', zIndex: 999, flexGrow: 1, pointerEvents: 'none'}
                 if i > 0
                     _l.extend style, {marginLeft: @gridGutterWidth}
-                <div key={i} style={style} />
-            }
-        </div>
+                React.createElement("div", {"key": (i), "style": (style)})
+            )
+        )
 
 
     gridTotalGutterWidth: -> (@gridNumOfColumns - 1) * @gridGutterWidth

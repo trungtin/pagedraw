@@ -40,12 +40,12 @@ exports.ModalComponent = createReactClass
         # here.  I *believe* it should never be exhibited unless we load the
         # page with a modal open from the start, so for now let's just
         # pretend this works (JRP 6/4/2016)
-        <div>
-            <div className="bootstrap">
-                <div ref="container" />
-            </div>
-            {sharedModal}
-        </div>
+        React.createElement("div", null,
+            React.createElement("div", {"className": "bootstrap"},
+                React.createElement("div", {"ref": "container"})
+            ),
+            (sharedModal)
+        )
 
     getContents: ->
         @state.content_fn?(@closeModal) ? []

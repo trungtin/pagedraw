@@ -71,12 +71,12 @@ module.exports = Model.register 'multistate', class MultistateBlock extends Bloc
         # we enforce that here.
         # FIXME: I don't like this here. Maybe there's a better, more
         # generalizable way to enforce fixed geometry like this?
-        <div style={position: 'relative', minHeight: @height, minWidth: @width}>
-            <div style={
+        React.createElement("div", {"style": (position: 'relative', minHeight: @height, minWidth: @width)},
+            React.createElement("div", {"style": (
                 position: 'absolute', top: 20, left: 30
                 fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.3em'
-            }>{@getLabel()}</div>
-            <div style={
+            )}, (@getLabel())),
+            React.createElement("div", {"style": (
                 border: '10px dashed #DEDEDE', borderRadius: 30,
-                position: 'absolute', top: 0, bottom: 0, left: 0, right: 0} />
-        </div>
+                position: 'absolute', top: 0, bottom: 0, left: 0, right: 0)})
+        )

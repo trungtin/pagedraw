@@ -43,17 +43,17 @@ module.exports = Block.register 'button', class ButtonBlock extends Block
     getDefaultColor: -> '#337ab7'
 
     sidebarControls: -> [
-        <div>
-            <h5>Deprecation Notice</h5>
-            <p>
+        React.createElement("div", null,
+            React.createElement("h5", null, "Deprecation Notice"),
+            React.createElement("p", null, """
             This block is a Button Block, which has been deprecated.  Instead, you should make your
             own button component, and use it throughout your app.
-            </p>
-            <p>
-            You'll notice that the block type listed above is incorrect.  This is because the Button
+"""),
+            React.createElement("p", null, """
+            You\'ll notice that the block type listed above is incorrect.  This is because the Button
             Block type has been hidden in Pagedraw as part of the deprecation process.
-            </p>
-        </div>
+""")
+        )
     ]
 
     canContainChildren: false

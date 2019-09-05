@@ -34,7 +34,7 @@ escapedHTMLForTextContent = (textContent) ->
     # where core's returning a string
     escapedLines = textContent.split('\n')
     return escapedLines[0] if escapedLines.length == 1
-    escapedLines.map((line, i) -> if _l.isEmpty(line) then <br key={i} /> else <div key={i}>{line}</div>)
+    escapedLines.map((line, i) -> if _l.isEmpty(line) then React.createElement("br", {"key": (i)}) else React.createElement("div", {"key": (i)}, (line)))
 
 # Note: In React 16.4.1
 ExternalInstanceErrorBoundary = createReactClass
@@ -45,9 +45,9 @@ ExternalInstanceErrorBoundary = createReactClass
 
     render: ->
         if @state.error?
-            return <div style={flexGrow: '1', padding: '0.5em', backgroundColor: '#ff7f7f', overflow: 'hidden'}>
-                {@state.error.message}
-            </div>
+            return React.createElement("div", {"style": (flexGrow: '1', padding: '0.5em', backgroundColor: '#ff7f7f', overflow: 'hidden')},
+                (@state.error.message)
+            )
 
         return @props.children
 
@@ -90,22 +90,22 @@ exports.pdomToReact = pdomToReact = (pdom, key = undefined) ->
     if isExternalComponent(Tag)
         # External component props come through pdom.props, not through the regular htmlAttrs way
         assert -> _l.isEmpty(htmlAttrsForPdom(pdom)) and _l.isEmpty(editorReactStylesForPdom(pdom)) and _l.isEmpty(props.className)
-        <ExternalInstanceErrorBoundary key={key}>
-            <ExternalInstanceRenderer instanceRef={Tag.componentSpec.ref} props={pdom.props} />
-        </ExternalInstanceErrorBoundary>
+        React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
+            React.createElement(ExternalInstanceRenderer, {"instanceRef": (Tag.componentSpec.ref), "props": (pdom.props)})
+        )
 
     # Allowing innerHTML in the editor is a security vulnerability
     else if pdom.innerHTML?
         throw new Error("innerHTML is bad")
 
     else if not _l.isEmpty(pdom.textContent)
-        <Tag {...props}>{escapedHTMLForTextContent pdom.textContent}</Tag>
+        React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent pdom.textContent))
 
     else if not _.isEmpty(pdom.children)
-        <Tag {...props}>{pdom.children.map (child, i) -> pdomToReact(child, i)}</Tag>
+        React.createElement(Tag, Object.assign({},  props), (pdom.children.map (child, i) -> pdomToReact(child, i)))
 
     else
-        <Tag {...props} />
+        React.createElement(Tag, Object.assign({},  props ))
 
 # Exact same as the above but with prop overrides
 # note that map_props takes ownership of the props object, and thus may mutate or destroy it
@@ -127,19 +127,19 @@ exports.pdomToReactWithPropOverrides = pdomToReactWithPropOverrides = (
     if isExternalComponent(Tag)
         # External component props come through pdom.props, not through the regular htmlAttrs way
         assert -> _l.isEmpty(htmlAttrsForPdom(pdom)) and _l.isEmpty(editorReactStylesForPdom(pdom)) and _l.isEmpty(props.className)
-        <ExternalInstanceErrorBoundary key={key}>
-            <ExternalInstanceRenderer instanceRef={Tag.componentSpec.ref} props={pdom.props} />
-        </ExternalInstanceErrorBoundary>
+        React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
+            React.createElement(ExternalInstanceRenderer, {"instanceRef": (Tag.componentSpec.ref), "props": (pdom.props)})
+        )
 
     # Allowing innerHTML in the editor is a security vulnerability
     else if pdom.innerHTML?
         throw new Error("innerHTML is bad")
 
     else if not _l.isEmpty(pdom.textContent)
-        <Tag {...props}>{escapedHTMLForTextContent pdom.textContent}</Tag>
+        React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent pdom.textContent))
 
     else if not _.isEmpty(pdom.children)
-        <Tag {...props}>{pdom.children.map (child, i) -> pdomToReactWithPropOverrides(child, i, map_props)}</Tag>
+        React.createElement(Tag, Object.assign({},  props), (pdom.children.map (child, i) -> pdomToReactWithPropOverrides(child, i, map_props)))
 
     else
-        <Tag {...props} />
+        React.createElement(Tag, Object.assign({},  props ))

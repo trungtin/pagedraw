@@ -5,8 +5,8 @@ Installation = require './installation'
 
 
 render = ->
-    <div className="pd-onhover-parent publiclibrary">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "pd-onhover-parent publiclibrary"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .publiclibrary {
@@ -600,143 +600,143 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if (('default') == "default")
-            <div className="publiclibrary-default-1">
-                <div className="publiclibrary-0-0-0">
-                    <div onClick={@props.onDetails} className="publiclibrary-rectangle-8">
-                        <div className="publiclibrary-0-0-0-0-0">
-                            <div className="publiclibrary-0-0-0-0-0-0">
-                                <div className="publiclibrary-0-0-0-0-0-0-0">
-                                    <div className="publiclibrary-rectangle_1">
-                                        <div className="publiclibrary-0-0-0-0-0-0-0-0-0">
-                                            <div className="publiclibrary-material_ui_-0">
-                                                { @props.title }
-                                            </div>
-                                        </div>
-                                        <div className="publiclibrary-0-0-0-0-0-0-0-0-1">
-                                            <div className="publiclibrary-image_2" /> 
-                                            <div className="publiclibrary-0-0-0-0-0-0-0-0-1-1">
-                                                <div className="publiclibrary-0-0-0-0-0-0-0-0-1-1-0">
-                                                    <div className="publiclibrary-1">
-                                                        { "#{@props.installCount} installs" }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="publiclibrary-component_1">
-                                                <Star starCount={(@props.starCount)} starred={(@props.starred)} /> 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="publiclibrary-rectangle_2">
-                                <div className="publiclibrary-0-0-0-0-0-1-0">
-                                    <div className="publiclibrary-0-0-0-0-0-1-0-0" /> 
-                                    <div className="publiclibrary-v_0">
-                                        { "v.#{@props.version}" }
-                                    </div>
-                                </div>
-                                <div className="publiclibrary-0-0-0-0-0-1-1">
-                                    <div className="publiclibrary-0-0-0-0-0-1-1-0" /> 
-                                    <div className="publiclibrary-by_john_appleseed_-1">
-                                        { "by #{@props.owner}" }
-                                    </div>
-                                </div>
-                                <div className="publiclibrary-0-0-0-0-0-1-2">
-                                    <div className="publiclibrary-0-0-0-0-0-1-2-0" /> 
-                                    <div className="publiclibrary-button_instance-1">
-                                        <Installation state={(@props.installed)} onClick={(@props.onInstall)} /> 
-                                    </div>
-                                    <div className="publiclibrary-0-0-0-0-0-1-2-2" /> 
-                                </div>
-                            </div>
-                        </div>
-                        <div className="publiclibrary-0-0-0-0-1">
-                            { if (@props.repository? and @props.repository != '')
-                                <div className="publiclibrary-rectangle_12">
-                                    <div className="publiclibrary-0-0-0-0-1-0-0-0">
-                                        <img src="https://ucarecdn.com/9e6b5270-cc68-4e0c-bcab-ec5653a3703b/" className="publiclibrary-image-6" /> 
-                                        <div className="publiclibrary-0-0-0-0-1-0-0-0-1">
-                                            <div className="publiclibrary-0-0-0-0-1-0-0-0-1-0">
-                                                <div className="publiclibrary-github_com_pagedraw_pd_-1">
-                                                    { @props.repository }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        <div className="pd-onhover publiclibrary-_hover-3">
-            <div className="publiclibrary-1-0">
-                <div onClick={@props.onDetails} className="publiclibrary-rectangle-85">
-                    <div className="publiclibrary-1-0-0-0">
-                        <div className="publiclibrary-rectangle_10">
-                            <div className="publiclibrary-1-0-0-0-0-0">
-                                <div className="publiclibrary-material_ui_-3">
-                                    { @props.title }
-                                </div>
-                            </div>
-                            <div className="publiclibrary-1-0-0-0-0-1">
-                                <div className="publiclibrary-image_2-9" /> 
-                                <div className="publiclibrary-1-0-0-0-0-1-1">
-                                    <div className="publiclibrary-1-0-0-0-0-1-1-0">
-                                        <div className="publiclibrary-11">
-                                            { "#{@props.installCount} installs" }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="publiclibrary-component_1_">
-                                    <Star starCount={(@props.starCount)} starred={(@props.starred)} /> 
-                                </div>
-                            </div>
-                        </div>
-                        <div className="publiclibrary-rectangle_2-4">
-                            <div className="publiclibrary-1-0-0-0-1-0">
-                                <div className="publiclibrary-1-0-0-0-1-0-0" /> 
-                                <div className="publiclibrary-v_0_">
-                                    { "v.#{@props.version}" }
-                                </div>
-                            </div>
-                            <div className="publiclibrary-1-0-0-0-1-1">
-                                <div className="publiclibrary-1-0-0-0-1-1-0" /> 
-                                <div className="publiclibrary-by_john_appleseed_-6">
-                                    { "by #{@props.owner}" }
-                                </div>
-                            </div>
-                            <div className="publiclibrary-1-0-0-0-1-2">
-                                <div className="publiclibrary-1-0-0-0-1-2-0" /> 
-                                <div className="publiclibrary-button_instance-16">
-                                    <Installation state={(@props.installed)} onClick={(@props.onInstall)} /> 
-                                </div>
-                                <div className="publiclibrary-1-0-0-0-1-2-2" /> 
-                            </div>
-                        </div>
-                    </div>
-                    <div className="publiclibrary-1-0-0-1">
-                        { if (@props.repository? and @props.repository != '')
-                            <div className="publiclibrary-rectangle_12-5">
-                                <div className="publiclibrary-1-0-0-1-0-0-0">
-                                    <img src="https://ucarecdn.com/9e6b5270-cc68-4e0c-bcab-ec5653a3703b/" className="publiclibrary-image-7" /> 
-                                    <div className="publiclibrary-1-0-0-1-0-0-0-1">
-                                        <div className="publiclibrary-1-0-0-1-0-0-0-1-0">
-                                            <div className="publiclibrary-github_com_pagedraw_pd_-9">
-                                                { @props.repository }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        """)}),  
+        ( if (('default') == "default")
+            React.createElement("div", {"className": "publiclibrary-default-1"},
+                React.createElement("div", {"className": "publiclibrary-0-0-0"},
+                    React.createElement("div", {"onClick": (@props.onDetails), "className": "publiclibrary-rectangle-8"},
+                        React.createElement("div", {"className": "publiclibrary-0-0-0-0-0"},
+                            React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-0"},
+                                React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-0-0"},
+                                    React.createElement("div", {"className": "publiclibrary-rectangle_1"},
+                                        React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-0-0-0-0"},
+                                            React.createElement("div", {"className": "publiclibrary-material_ui_-0"},
+                                                ( @props.title )
+                                            )
+                                        ),
+                                        React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-0-0-0-1"},
+                                            React.createElement("div", {"className": "publiclibrary-image_2"}),  
+                                            React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-0-0-0-1-1"},
+                                                React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-0-0-0-1-1-0"},
+                                                    React.createElement("div", {"className": "publiclibrary-1"},
+                                                        ( "#{@props.installCount} installs" )
+                                                    )
+                                                )
+                                            ),
+                                            React.createElement("div", {"className": "publiclibrary-component_1"},
+                                                React.createElement(Star, {"starCount": ((@props.starCount)), "starred": ((@props.starred))}) 
+                                            )
+                                        )
+                                    )
+                                )
+                            ),
+                            React.createElement("div", {"className": "publiclibrary-rectangle_2"},
+                                React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-0"},
+                                    React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-0-0"}),  
+                                    React.createElement("div", {"className": "publiclibrary-v_0"},
+                                        ( "v.#{@props.version}" )
+                                    )
+                                ),
+                                React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-1"},
+                                    React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-1-0"}),  
+                                    React.createElement("div", {"className": "publiclibrary-by_john_appleseed_-1"},
+                                        ( "by #{@props.owner}" )
+                                    )
+                                ),
+                                React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-2"},
+                                    React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-2-0"}),  
+                                    React.createElement("div", {"className": "publiclibrary-button_instance-1"},
+                                        React.createElement(Installation, {"state": ((@props.installed)), "onClick": ((@props.onInstall))}) 
+                                    ),
+                                    React.createElement("div", {"className": "publiclibrary-0-0-0-0-0-1-2-2"}) 
+                                )
+                            )
+                        ),
+                        React.createElement("div", {"className": "publiclibrary-0-0-0-0-1"},
+                            ( if (@props.repository? and @props.repository != '')
+                                React.createElement("div", {"className": "publiclibrary-rectangle_12"},
+                                    React.createElement("div", {"className": "publiclibrary-0-0-0-0-1-0-0-0"},
+                                        React.createElement("img", {"src": "https://ucarecdn.com/9e6b5270-cc68-4e0c-bcab-ec5653a3703b/", "className": "publiclibrary-image-6"}),  
+                                        React.createElement("div", {"className": "publiclibrary-0-0-0-0-1-0-0-0-1"},
+                                            React.createElement("div", {"className": "publiclibrary-0-0-0-0-1-0-0-0-1-0"},
+                                                React.createElement("div", {"className": "publiclibrary-github_com_pagedraw_pd_-1"},
+                                                    ( @props.repository )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        ),
+        React.createElement("div", {"className": "pd-onhover publiclibrary-_hover-3"},
+            React.createElement("div", {"className": "publiclibrary-1-0"},
+                React.createElement("div", {"onClick": (@props.onDetails), "className": "publiclibrary-rectangle-85"},
+                    React.createElement("div", {"className": "publiclibrary-1-0-0-0"},
+                        React.createElement("div", {"className": "publiclibrary-rectangle_10"},
+                            React.createElement("div", {"className": "publiclibrary-1-0-0-0-0-0"},
+                                React.createElement("div", {"className": "publiclibrary-material_ui_-3"},
+                                    ( @props.title )
+                                )
+                            ),
+                            React.createElement("div", {"className": "publiclibrary-1-0-0-0-0-1"},
+                                React.createElement("div", {"className": "publiclibrary-image_2-9"}),  
+                                React.createElement("div", {"className": "publiclibrary-1-0-0-0-0-1-1"},
+                                    React.createElement("div", {"className": "publiclibrary-1-0-0-0-0-1-1-0"},
+                                        React.createElement("div", {"className": "publiclibrary-11"},
+                                            ( "#{@props.installCount} installs" )
+                                        )
+                                    )
+                                ),
+                                React.createElement("div", {"className": "publiclibrary-component_1_"},
+                                    React.createElement(Star, {"starCount": ((@props.starCount)), "starred": ((@props.starred))}) 
+                                )
+                            )
+                        ),
+                        React.createElement("div", {"className": "publiclibrary-rectangle_2-4"},
+                            React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-0"},
+                                React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-0-0"}),  
+                                React.createElement("div", {"className": "publiclibrary-v_0_"},
+                                    ( "v.#{@props.version}" )
+                                )
+                            ),
+                            React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-1"},
+                                React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-1-0"}),  
+                                React.createElement("div", {"className": "publiclibrary-by_john_appleseed_-6"},
+                                    ( "by #{@props.owner}" )
+                                )
+                            ),
+                            React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-2"},
+                                React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-2-0"}),  
+                                React.createElement("div", {"className": "publiclibrary-button_instance-16"},
+                                    React.createElement(Installation, {"state": ((@props.installed)), "onClick": ((@props.onInstall))}) 
+                                ),
+                                React.createElement("div", {"className": "publiclibrary-1-0-0-0-1-2-2"}) 
+                            )
+                        )
+                    ),
+                    React.createElement("div", {"className": "publiclibrary-1-0-0-1"},
+                        ( if (@props.repository? and @props.repository != '')
+                            React.createElement("div", {"className": "publiclibrary-rectangle_12-5"},
+                                React.createElement("div", {"className": "publiclibrary-1-0-0-1-0-0-0"},
+                                    React.createElement("img", {"src": "https://ucarecdn.com/9e6b5270-cc68-4e0c-bcab-ec5653a3703b/", "className": "publiclibrary-image-7"}),  
+                                    React.createElement("div", {"className": "publiclibrary-1-0-0-1-0-0-0-1"},
+                                        React.createElement("div", {"className": "publiclibrary-1-0-0-1-0-0-0-1-0"},
+                                            React.createElement("div", {"className": "publiclibrary-github_com_pagedraw_pd_-9"},
+                                                ( @props.repository )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

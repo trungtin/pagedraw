@@ -108,20 +108,20 @@ module.exports = Block.register 'text', class TextBlock extends Block
 
     specialSidebarControls: (linkAttr, onChange) ->
         [
-            <div style ={display: 'flex', flexDirection: 'row', alignItems: 'stretch'}>
-                <div style={flex: 1, marginRight: 8}>
-                    <SidebarControls.PDFontControl
-                        valueLink={linkAttr('fontFamily')}
-                        doc={@doc}
-                        onChange={onChange}
-                    />
-                </div>
+            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', alignItems: 'stretch')},
+                React.createElement("div", {"style": (flex: 1, marginRight: 8)},
+                    React.createElement(SidebarControls.PDFontControl, { \
+                        "valueLink": (linkAttr('fontFamily')),  \
+                        "doc": (@doc),  \
+                        "onChange": (onChange)
+                    })
+                ),
 
-                <SidebarControls.PDColorControl
-                    valueLink={SidebarControls.staticValueLinkTransformer linkAttr('fontColor')}
-                    color_well_style={height: ""}
-                />
-            </div>
+                React.createElement(SidebarControls.PDColorControl, { \
+                    "valueLink": (SidebarControls.staticValueLinkTransformer linkAttr('fontColor')),  \
+                    "color_well_style": (height: "")
+                })
+            )
 
 
             (do =>
@@ -129,13 +129,13 @@ module.exports = Block.register 'text', class TextBlock extends Block
                 hasCustomFontWeight = fontHasWeightVariants and linkAttr('hasCustomFontWeight').value == true
 
                 [
-                    <div className="ctrl-wrapper">
-                        <h5 className="sidebar-ctrl-label">style</h5>
-                        <div className="ctrl">
-                            <PDStyleGuide.PdButtonGroup buttons={[
-                                    [<i>I</i>, 'isItalics']
-                                    [<u>U</u>, 'isUnderline']
-                                    [<s>S</s>, 'isStrikethrough']
+                    React.createElement("div", {"className": "ctrl-wrapper"},
+                        React.createElement("h5", {"className": "sidebar-ctrl-label"}, "style"),
+                        React.createElement("div", {"className": "ctrl"},
+                            React.createElement(PDStyleGuide.PdButtonGroup, {"buttons": ([
+                                    [React.createElement("i", null, "I"), 'isItalics']
+                                    [React.createElement("u", null, "U"), 'isUnderline']
+                                    [React.createElement("s", null, "S"), 'isStrikethrough']
                                 ].map ([label, attr], i) =>
                                     vlink = linkAttr(attr)
                                     return {
@@ -143,28 +143,28 @@ module.exports = Block.register 'text', class TextBlock extends Block
                                         label: label
                                         onClick: ((e) -> vlink.requestChange(!vlink.value); e.preventDefault(); e.stopPropagation())
                                     }
-                            } />
-                        </div>
-                    </div>
+                            )})
+                        )
+                    )
 
                     ["use custom font weight", 'hasCustomFontWeight', CheckboxControl] if fontHasWeightVariants
                     ["font weight", 'fontWeight', FontWeightControl(@fontFamily)] if hasCustomFontWeight
                 ]
             )...
 
-            <div style={
+            React.createElement("div", {"style": (
                 display: 'flex',
                 justifyContent: 'stretch',
                 width: '100%'
-            }>
-                <SidebarControls.LabelBelowControl
-                    label="Size"
-                    vl={SidebarControls.NumberToStringTransformer SidebarControls.staticValueLinkTransformer linkAttr('fontSize')}
-                    ctrlProps={type: 'number', className: 'underlined-number-input'}
-                />
-                <div style={width: 16} />
-                {React.createElement(SidebarControls.LabelBelowControl, {
-                    label: <span style={color: if not @hasCustomLineHeight then '#555' else ""}>Line</span>
+            )},
+                React.createElement(SidebarControls.LabelBelowControl, { \
+                    "label": "Size",  \
+                    "vl": (SidebarControls.NumberToStringTransformer SidebarControls.staticValueLinkTransformer linkAttr('fontSize')),  \
+                    "ctrlProps": (type: 'number', className: 'underlined-number-input')
+                }),
+                React.createElement("div", {"style": (width: 16)}),
+                (React.createElement(SidebarControls.LabelBelowControl, {
+                    label: React.createElement("span", {"style": (color: if not @hasCustomLineHeight then '#555' else "")}, "Line")
                     vl: SidebarControls.NumberToStringTransformer linkAttr('lineHeight')
                     ctrlProps: {type: 'number', className: 'underlined-number-input', disabled: not @hasCustomLineHeight, style:
                         if not @hasCustomLineHeight then {
@@ -176,40 +176,40 @@ module.exports = Block.register 'text', class TextBlock extends Block
                             # not disabled
                         }
                     }
-                })}
-                <div style={width: 16} />
-                <SidebarControls.LabelBelowControl
-                    label="Kerning"
-                    vl={SidebarControls.NumberToStringTransformer SidebarControls.staticValueLinkTransformer linkAttr('kerning')}
-                    ctrlProps={type: 'number', className: 'underlined-number-input'}
-                />
-            </div>
+                })),
+                React.createElement("div", {"style": (width: 16)}),
+                React.createElement(SidebarControls.LabelBelowControl, { \
+                    "label": "Kerning",  \
+                    "vl": (SidebarControls.NumberToStringTransformer SidebarControls.staticValueLinkTransformer linkAttr('kerning')),  \
+                    "ctrlProps": (type: 'number', className: 'underlined-number-input')
+                })
+            )
             ["use custom line height", 'hasCustomLineHeight', CheckboxControl]
 
-            <hr />
+            React.createElement("hr", null)
             ["text shadows", "textShadows", TextShadowsControl]
 
-            <hr />
+            React.createElement("hr", null)
 
             # this is all just so we can get a dynamicable around content
             ["Content", "textContent", labeledControl (=>
-                <div style={height: 24, display: 'flex', alignItems: 'center'}>
-                    <Tooltip content="Double click text block on canvas to edit content">
-                        <div style={whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', fontSize: 14, fontFamily: @fontFamily.get_css_string()}>
-                            {@textContent.staticValue}
-                        </div>
-                    </Tooltip>
-                </div>
+                React.createElement("div", {"style": (height: 24, display: 'flex', alignItems: 'center')},
+                    React.createElement(Tooltip, {"content": "Double click text block on canvas to edit content"},
+                        React.createElement("div", {"style": (whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', fontSize: 14, fontFamily: @fontFamily.get_css_string())},
+                            (@textContent.staticValue)
+                        )
+                    )
+                )
             )]
         ]
 
     # FIXME: Disable or remove flexWidth if in auto, flex height in text doesnt make sense and whatnot
     constraintControls: (linkAttr, onChange) -> _l.concat super(linkAttr, onChange), [
             ["align", "textAlign", SelectControl({multi: false, style: 'segmented'}, [
-                [<Glyphicon glyph="align-left" />, 'left'],
-                [<Glyphicon glyph="align-center" />, 'center'],
-                [<Glyphicon glyph="align-right" />, 'right'],
-                [<Glyphicon glyph="align-justify" />, 'justify']
+                [React.createElement(Glyphicon, {"glyph": "align-left"}), 'left'],
+                [React.createElement(Glyphicon, {"glyph": "align-center"}), 'center'],
+                [React.createElement(Glyphicon, {"glyph": "align-right"}), 'right'],
+                [React.createElement(Glyphicon, {"glyph": "align-justify"}), 'justify']
             ])]
 
             # For text block's textContent we have to add a dynamic checkbox

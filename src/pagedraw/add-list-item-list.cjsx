@@ -7,8 +7,8 @@ Addlistitem = require './add-list-item'
 module.exports = Addlistitemlist = createReactClass {
     displayName: 'Addlistitemlist'
     render: ->
-        <div className="addlistitemlist-addlistitemlist-8">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "addlistitemlist-addlistitemlist-8"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .addlistitemlist-addlistitemlist-8 {
                   display: flex;
                   flex-direction: column;
@@ -88,19 +88,19 @@ module.exports = Addlistitemlist = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div className="addlistitemlist-0">
-              <div className="addlistitemlist-0-0">
-                  { this.props.items.map (item, i) =>
-                      <div key={i} onClick={item.handler} className="addlistitemlist-rectangle-7">
-                          <div className="addlistitemlist-0-0-0-0-0">
-                              <div className="addlistitemlist-addlistitem-7">
-                                  <Addlistitem label={item.label} keyCommand={item.keyCommand} /> 
-                              </div>
-                          </div>
-                      </div>
-                  }
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"className": "addlistitemlist-0"},
+              React.createElement("div", {"className": "addlistitemlist-0-0"},
+                  ( this.props.items.map (item, i) =>
+                      React.createElement("div", {"key": (i), "onClick": (item.handler), "className": "addlistitemlist-rectangle-7"},
+                          React.createElement("div", {"className": "addlistitemlist-0-0-0-0-0"},
+                              React.createElement("div", {"className": "addlistitemlist-addlistitem-7"},
+                                  React.createElement(Addlistitem, {"label": (item.label), "keyCommand": (item.keyCommand)}) 
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

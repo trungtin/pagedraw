@@ -6,6 +6,6 @@ PagedrawnPricing = require '../pagedraw/pricing'
 
 PricingDesktop = createReactClass
     render: ->
-        <PagedrawnPricing />
+        React.createElement(PagedrawnPricing, null)
 
 module.exports = PricingDesktop

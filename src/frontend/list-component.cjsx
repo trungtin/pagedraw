@@ -4,19 +4,19 @@ createReactClass = require 'create-react-class'
 
 module.exports = ListComponent = createReactClass
     render: ->
-        <div style={@props.labelRowStyle}>
-            <div style={display: 'flex', flexDirection: 'row', alignItems: 'center'}>
-                <span style={flex: 1}>{@props.label}</span>
-                <SidebarHeaderAddButton onClick={@handleAdd} />
-            </div>
-            <div>
-                { @props.valueLink.value.map (elem, i) =>
-                    <React.Fragment key={i}>
-                        {@props.elem({value: elem, requestChange: @handleUpdate(i)}, (=> @handleRemove(i)), i)}
-                    </React.Fragment>
-                }
-            </div>
-        </div>
+        React.createElement("div", {"style": (@props.labelRowStyle)},
+            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', alignItems: 'center')},
+                React.createElement("span", {"style": (flex: 1)}, (@props.label)),
+                React.createElement(SidebarHeaderAddButton, {"onClick": (@handleAdd)})
+            ),
+            React.createElement("div", null,
+                ( @props.valueLink.value.map (elem, i) =>
+                    React.createElement(React.Fragment, {"key": (i)},
+                        (@props.elem({value: elem, requestChange: @handleUpdate(i)}, (=> @handleRemove(i)), i))
+                    )
+                )
+            )
+        )
 
     handleAdd: -> @update @getVal().concat([@props.newElement()])
     handleRemove: (i) -> @splice(i, 1)

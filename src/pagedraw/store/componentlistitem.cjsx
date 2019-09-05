@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="listitem">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "listitem"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .listitem {
@@ -114,25 +114,25 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if ((if @props.active then 'active' else 'default') == "active")
-            <div className="listitem-active-2">
-                <div className="listitem-0-0-0">
-                    <div className="listitem-app_bar_-9">
-                        { this.props.title }
-                    </div>
-                </div>
-            </div>
-        }
-        { if ((if @props.active then 'active' else 'default') == "default")
-            <div className="listitem-default-4">
-                <div className="listitem-1-0-0">
-                    <div className="listitem-app_bar_-6">
-                        { this.props.title }
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+        """)}),  
+        ( if ((if @props.active then 'active' else 'default') == "active")
+            React.createElement("div", {"className": "listitem-active-2"},
+                React.createElement("div", {"className": "listitem-0-0-0"},
+                    React.createElement("div", {"className": "listitem-app_bar_-9"},
+                        ( this.props.title )
+                    )
+                )
+            )
+        ),
+        ( if ((if @props.active then 'active' else 'default') == "default")
+            React.createElement("div", {"className": "listitem-default-4"},
+                React.createElement("div", {"className": "listitem-1-0-0"},
+                    React.createElement("div", {"className": "listitem-app_bar_-6"},
+                        ( this.props.title )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

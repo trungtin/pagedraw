@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="createlibrary-createlibrary-5">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "createlibrary-createlibrary-5"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .createlibrary-createlibrary-5 {
@@ -95,16 +95,16 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="createlibrary-0">
-            <div onClick={@props.onClick} className="createlibrary-rectangle_3">
-                <div className="createlibrary-0-0-0">
-                    <div className="createlibrary-create_now_-0">
+        """)}),  
+        React.createElement("div", {"className": "createlibrary-0"},
+            React.createElement("div", {"onClick": (@props.onClick), "className": "createlibrary-rectangle_3"},
+                React.createElement("div", {"className": "createlibrary-0-0-0"},
+                    React.createElement("div", {"className": "createlibrary-create_now_-0"}, """
                         Create now!
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+""")
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

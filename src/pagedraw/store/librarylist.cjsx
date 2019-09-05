@@ -4,8 +4,8 @@ Deletebutton = require './deletebutton'
 
 
 render = ->
-    <div className="librarylist-librarylist-9">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "librarylist-librarylist-9"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .librarylist-librarylist-9 {
@@ -160,38 +160,38 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        <div className="librarylist-0">
-            <div className="librarylist-0-0">
-                { this.props.libraries.map (library, i) =>
-                    <div key={i} className="librarylist-repeat-0">
-                        <div className="librarylist-0-0-0-0-0">
-                            <div className="librarylist-0-0-0-0-0-0">
-                                <div className="librarylist-0-0-0-0-0-0-0">
-                                    <div className="librarylist-label-3">
-                                        { library.title }
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="librarylist-0-0-0-0-0-1">
-                                <div className="librarylist-0-0-0-0-0-1-0">
-                                    <div className="librarylist-label-1">
-                                        { library.version }
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="librarylist-0-0-0-0-0-2">
-                                <div className="librarylist-0-0-0-0-0-2-0">
-                                    <div onClick={library.onRemove} className="librarylist-delete-1">
-                                        <Deletebutton state={"default"} /> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </div>
+        """)}),  
+        React.createElement("div", {"className": "librarylist-0"},
+            React.createElement("div", {"className": "librarylist-0-0"},
+                ( this.props.libraries.map (library, i) =>
+                    React.createElement("div", {"key": (i), "className": "librarylist-repeat-0"},
+                        React.createElement("div", {"className": "librarylist-0-0-0-0-0"},
+                            React.createElement("div", {"className": "librarylist-0-0-0-0-0-0"},
+                                React.createElement("div", {"className": "librarylist-0-0-0-0-0-0-0"},
+                                    React.createElement("div", {"className": "librarylist-label-3"},
+                                        ( library.title )
+                                    )
+                                )
+                            ),
+                            React.createElement("div", {"className": "librarylist-0-0-0-0-0-1"},
+                                React.createElement("div", {"className": "librarylist-0-0-0-0-0-1-0"},
+                                    React.createElement("div", {"className": "librarylist-label-1"},
+                                        ( library.version )
+                                    )
+                                )
+                            ),
+                            React.createElement("div", {"className": "librarylist-0-0-0-0-0-2"},
+                                React.createElement("div", {"className": "librarylist-0-0-0-0-0-2-0"},
+                                    React.createElement("div", {"onClick": (library.onRemove), "className": "librarylist-delete-1"},
+                                        React.createElement(Deletebutton, {"state": ("default")}) 
+                                    )
+                                )
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

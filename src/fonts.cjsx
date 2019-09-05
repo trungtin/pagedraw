@@ -109,8 +109,8 @@ exports.font_loading_head_tags_for_doc = font_loading_head_tags_for_doc = (doc) 
     gwfs = doc.fonts.filter((font) => font instanceof GoogleWebFont)
     cfs = doc.fonts.filter((font) => font instanceof CustomFont)
     sp_g = / /g # because cjsx is broken, I can't inline this
-    <Helmet>
-        {<link href={"https://fonts.googleapis.com/css?family=#{gwfs.map((font) -> "#{font.name.replace(sp_g, '+')}:#{font.get_font_variants().join(',')}").join('|')}"} rel="stylesheet" /> unless _l.isEmpty(gwfs)}
-        {<style type="text/css">{cfs.map((font) => font.get_font_face()).join('\n')}</style> unless _l.isEmpty(cfs)}
-    </Helmet>
+    React.createElement(Helmet, null,
+        (React.createElement("link", {"href": ("https://fonts.googleapis.com/css?family=#{gwfs.map((font) -> "#{font.name.replace(sp_g, '+')}:#{font.get_font_variants().join(',')}").join('|')}"), "rel": "stylesheet"}) unless _l.isEmpty(gwfs)),
+        (React.createElement("style", {"type": "text/css"}, (cfs.map((font) => font.get_font_face()).join('\n'))) unless _l.isEmpty(cfs))
+    )
 

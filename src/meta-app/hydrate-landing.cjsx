@@ -3,4 +3,4 @@ ReactDOM = require 'react-dom'
 
 Landing = require './landing'
 
-ReactDOM.render(<Landing />, document.getElementById('app'))
+ReactDOM.render(React.createElement(Landing, null), document.getElementById('app'))

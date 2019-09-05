@@ -33,16 +33,16 @@ exports.LibraryAutoSuggest = createReactClass
 
     renderSuggestion: (suggestion) ->
         if suggestion.isVersion
-            <span>{"#{suggestion.lib_name} v#{suggestion.name}"}</span>
+            React.createElement("span", null, ("#{suggestion.lib_name} v#{suggestion.name}"))
         else
-            <span>{"#{suggestion.name}@#{suggestion.latest_version.name}"}</span>
+            React.createElement("span", null, ("#{suggestion.name}@#{suggestion.latest_version.name}"))
 
-    renderInputComponent: (inputProps) -> <input {...inputProps} style={color: @props.textColor ? 'black'} ref={(node) =>
-        @input_node = node} />
+    renderInputComponent: (inputProps) -> React.createElement("input", Object.assign({},  inputProps, {"style": (color: @props.textColor ? 'black'), "ref": ((node) =>
+        @input_node = node)}))
 
     render: ->
-        <Autosuggest suggestions={@suggestions ? @defaultSuggestions} alwaysRenderSuggestions
-                            onSuggestionsFetchRequested={({value}) =>
+        React.createElement(Autosuggest, {"suggestions": (@suggestions ? @defaultSuggestions), "alwaysRenderSuggestions": true,  \
+                            "onSuggestionsFetchRequested": (({value}) =>
                                 matchingLibs = @libraries.filter (option) =>
                                     len = if value.includes('@') then value.split('@')[0].length else value.length
                                     value == option.name.slice(0, len)
@@ -57,25 +57,25 @@ exports.LibraryAutoSuggest = createReactClass
                                 else
                                     @suggestions = matchingLibs
                                 @props.onChange()
-                            }
-                            onSuggestionsClearRequested={=>
+                            ),  \
+                            "onSuggestionsClearRequested": (=>
                                 @suggestions = undefined
                                 @props.onChange()
-                            }
-                            getSuggestionValue={(suggestion) =>
+                            ),  \
+                            "getSuggestionValue": ((suggestion) =>
                                 if suggestion.lib_name
                                     "#{suggestion.lib_name} v#{suggestion.name}"
                                 else
                                     suggestion.name
-                            }
-                            renderInputComponent={@renderInputComponent}
-                            renderSuggestion={@renderSuggestion}
-                            inputProps={{value: @value, onChange: (evt, {newValue}) =>
+                            ),  \
+                            "renderInputComponent": (@renderInputComponent),  \
+                            "renderSuggestion": (@renderSuggestion),  \
+                            "inputProps": ({value: @value, onChange: (evt, {newValue}) =>
                                 @value = newValue
                                 @props.onChange()
-                            }}
-                            focusInputOnSuggestionClick={false}
-                            onSuggestionSelected={(evt, {suggestion}) =>
+                            }),  \
+                            "focusInputOnSuggestionClick": (false),  \
+                            "onSuggestionSelected": ((evt, {suggestion}) =>
                                 if suggestion.id? and suggestion.name? and suggestion.latest_version.name? and suggestion.latest_version.bundle_hash? and suggestion.latest_version.id?
                                     @props.onAddLibrary(new Library({
                                         library_id: String(suggestion.id), library_name: suggestion.name, version_name: suggestion.latest_version.name
@@ -86,4 +86,4 @@ exports.LibraryAutoSuggest = createReactClass
                                 else
                                     throw new Error('Bad library from server')
 
-                            } />
+                            )})

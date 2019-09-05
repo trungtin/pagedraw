@@ -87,10 +87,10 @@ module.exports = Block.register 'text-input', class TextInputBlock extends Block
         ["text shadows", "textShadows", TextShadowsControl]
 
         ["align", "textAlign", SelectControl({multi: false, style: 'segmented'}, [
-            [<Glyphicon glyph="align-left" />, 'left'],
-            [<Glyphicon glyph="align-center" />, 'center'],
-            [<Glyphicon glyph="align-right" />, 'right'],
-            [<Glyphicon glyph="align-justify" />, 'justify']
+            [React.createElement(Glyphicon, {"glyph": "align-left"}), 'left'],
+            [React.createElement(Glyphicon, {"glyph": "align-center"}), 'center'],
+            [React.createElement(Glyphicon, {"glyph": "align-right"}), 'right'],
+            [React.createElement(Glyphicon, {"glyph": "align-justify"}), 'justify']
         ])]
 
         ['Hide focus ring', 'disableFocusRing', CheckboxControl]
@@ -104,7 +104,7 @@ module.exports = Block.register 'text-input', class TextInputBlock extends Block
         ['padding top', 'paddingTop', NumberControl] if @hasCustomPadding and @isMultiline
         ['padding bottom', 'paddingBottom', NumberControl] if @hasCustomPadding and @isMultiline
 
-        <hr />
+        React.createElement("hr", null)
 
         @fillSidebarControls()...
     ]

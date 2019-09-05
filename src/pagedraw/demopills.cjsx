@@ -7,8 +7,8 @@ Expandingpill = require './expandingpill'
 module.exports = Demopills = createReactClass {
     displayName: 'Demopills'
     render: ->
-        <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               
               
               * {
@@ -55,19 +55,19 @@ module.exports = Demopills = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          <div style={{"display": "flex", "flexShrink": "0"}}>
-              <div style={{"display": "flex", "flexDirection": "column", "marginTop": -12}}>
-                  { this.props.list.map (elem, i) =>
-                      <div key={i} style={{"display": "flex", "flexDirection": "column", "marginTop": 12, "flexGrow": "1"}}>
-                          <div style={{"display": "flex", "flexShrink": "0"}}>
-                              <div style={{"flexShrink": "0", "display": "flex", "flexDirection": "column"}}>
-                                  <Expandingpill open={(this.props.step == i + 1)} title={elem.title} n={(i + 1)} body={elem.body} /> 
-                              </div>
-                          </div>
-                      </div>
-                  }
-              </div>
-          </div>
-      </div>
+          """)}),  
+          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "marginTop": -12})},
+                  ( this.props.list.map (elem, i) =>
+                      React.createElement("div", {"key": (i), "style": ({"display": "flex", "flexDirection": "column", "marginTop": 12, "flexGrow": "1"})},
+                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
+                              React.createElement("div", {"style": ({"flexShrink": "0", "display": "flex", "flexDirection": "column"})},
+                                  React.createElement(Expandingpill, {"open": ((this.props.step == i + 1)), "title": (elem.title), "n": ((i + 1)), "body": (elem.body)}) 
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

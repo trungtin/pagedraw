@@ -19,14 +19,14 @@ Topbar = require '../pagedraw/topbar'
 
 {inferConstraints} = require '../programs'
 
-link = (txt, href) -> <a style={textDecoration: 'underline'} target="_blank" href={href}>{txt}</a>
+link = (txt, href) -> React.createElement("a", {"style": (textDecoration: 'underline'), "target": "_blank", "href": (href)}, (txt))
 warningStyles = {fontFamily: 'Helvetica neue', padding: 5, borderBottom: '1px solid grey', backgroundColor: '#EEE8AA', color: '#333300'}
 uselessStressTesterWarning = ->
-    <div style={warningStyles}>
-        <img style={marginRight: 3} src="#{config.static_server}/assets/warning-icon.png" />
+    React.createElement("div", {"style": (warningStyles)},
+        React.createElement("img", {"style": (marginRight: 3), "src": "#{config.static_server}/assets/warning-icon.png"}), """
         To use stress tester mode, use the sidebar to specify that this component is
-        {link('resizable', 'https://documentation.pagedraw.io/layout/')}, or add some {link('data bindings', 'https://documentation.pagedraw.io/data-binding/')} to it.
-    </div>
+""", (link('resizable', 'https://documentation.pagedraw.io/layout/')), ", or add some ", (link('data bindings', 'https://documentation.pagedraw.io/data-binding/')), """ to it.
+""")
 
 module.exports = class StressTesterInteraction extends EditorMode
     constructor: (@artboard) ->
@@ -47,15 +47,15 @@ module.exports = class StressTesterInteraction extends EditorMode
         if not component?
             # the component was deleted
             window.setTimeout => @exitMode()
-            return <div />
+            return React.createElement("div", null)
 
         try
             evaled_pdom = core.evalInstanceBlock(@instanceBlock, @editor.getInstanceEditorCompileOptions())
         catch e
             console.warn e if config.warnOnEvalPdomErrors
-            return <div style={padding: '0.5em', backgroundColor: '#ff7f7f'}>
-                {e.message}
-            </div>
+            return React.createElement("div", {"style": (padding: '0.5em', backgroundColor: '#ff7f7f')},
+                (e.message)
+            )
 
         component_blocks = component.andChildren()
         selected_blocks = @editor.getSelectedBlocks()
@@ -81,24 +81,24 @@ module.exports = class StressTesterInteraction extends EditorMode
         canvasGeometry = {height: @previewGeometry.height + window.innerHeight, width: @previewGeometry.width + window.innerWidth}
 
         # We add DraggingCanvas here just for the ResizingGrip functionality
-        <div style={display: 'flex', flexDirection: 'column', flex: 1}>
-            {uselessStressTesterWarning() if _l.isEmpty(dynamics) and _l.isEmpty(@instanceBlock.resizableEdges)}
-            <Zoomable viewportManager={@viewportManager} style={flex: 1, backgroundColor: '#333'}>
-                <DraggingCanvas
-                    className="stress-tester" style={height: canvasGeometry.height, width: canvasGeometry.width}
-                    onDrag={@handleDrag} onClick={->} onDoubleClick={->} onInteractionHappened={->}>
-                    <div className="expand-children" style={_l.extend({position: 'absolute'}, _l.pick(@previewGeometry, ['top', 'left', 'width', 'height']))}>
-                        <ResizingFrame resizable_edges={@instanceBlock.resizableEdges}
-                            style={position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}
-                            flag={(grip) => {control: 'resizer', edges: grip.sides, grip_label: grip.label}}
-                            />
-                        <div className="expand-children" style={overflow: 'auto'}>{rendered_pdom}</div>
-                    </div>
-                </DraggingCanvas>
-            </Zoomable>
-        </div>
+        React.createElement("div", {"style": (display: 'flex', flexDirection: 'column', flex: 1)},
+            (uselessStressTesterWarning() if _l.isEmpty(dynamics) and _l.isEmpty(@instanceBlock.resizableEdges)),
+            React.createElement(Zoomable, {"viewportManager": (@viewportManager), "style": (flex: 1, backgroundColor: '#333')},
+                React.createElement(DraggingCanvas, { \
+                    "className": "stress-tester", "style": (height: canvasGeometry.height, width: canvasGeometry.width),  \
+                    "onDrag": (@handleDrag), "onClick": (->), "onDoubleClick": (->), "onInteractionHappened": (->)},
+                    React.createElement("div", {"className": "expand-children", "style": (_l.extend({position: 'absolute'}, _l.pick(@previewGeometry, ['top', 'left', 'width', 'height'])))},
+                        React.createElement(ResizingFrame, {"resizable_edges": (@instanceBlock.resizableEdges),  \
+                            "style": (position: 'absolute', top: 0, left: 0, right: 0, bottom: 0),  \
+                            "flag": ((grip) => {control: 'resizer', edges: grip.sides, grip_label: grip.label})
+                            }),
+                        React.createElement("div", {"className": "expand-children", "style": (overflow: 'auto')}, (rendered_pdom))
+                    )
+                )
+            )
+        )
 
-    topbar: => <div><Topbar editor={_l.extend({}, @editor, this)} whichTopbar={'stress-tester'} /></div>
+    topbar: => React.createElement("div", null, React.createElement(Topbar, {"editor": (_l.extend({}, @editor, this)), "whichTopbar": ('stress-tester')}))
 
     ## Topbar methods
     randomizeSize: =>

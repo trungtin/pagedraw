@@ -3,8 +3,8 @@ React = require 'react'
 
 
 render = ->
-    <div className="installationhuge">
-        <style dangerouslySetInnerHTML={__html: """
+    React.createElement("div", {"className": "installationhuge"},
+        React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
             @import url('https://fonts.googleapis.com/css?family=Lato:');
             
             .installationhuge {
@@ -185,46 +185,46 @@ render = ->
             .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                 display: none;
             }
-        """} /> 
-        { if ((@props.installed) == "installed")
-            <div className="installationhuge-installed-0">
-                <div className="installationhuge-0-0-0">
-                    <div className="installationhuge-rectangle_3">
-                        <div className="installationhuge-0-0-0-0-0">
-                            <div className="installationhuge-installed_-8">
+        """)}),  
+        ( if ((@props.installed) == "installed")
+            React.createElement("div", {"className": "installationhuge-installed-0"},
+                React.createElement("div", {"className": "installationhuge-0-0-0"},
+                    React.createElement("div", {"className": "installationhuge-rectangle_3"},
+                        React.createElement("div", {"className": "installationhuge-0-0-0-0-0"},
+                            React.createElement("div", {"className": "installationhuge-installed_-8"}, """
                                 Installed
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        { if ((@props.installed) == "default")
-            <div className="installationhuge-default-1">
-                <div className="installationhuge-1-0-0">
-                    <div onClick={@props.onClick} className="installationhuge-rectangle_3-1">
-                        <div className="installationhuge-1-0-0-0-0">
-                            <div className="installationhuge-add_to_app_-2">
+""")
+                        )
+                    )
+                )
+            )
+        ),
+        ( if ((@props.installed) == "default")
+            React.createElement("div", {"className": "installationhuge-default-1"},
+                React.createElement("div", {"className": "installationhuge-1-0-0"},
+                    React.createElement("div", {"onClick": (@props.onClick), "className": "installationhuge-rectangle_3-1"},
+                        React.createElement("div", {"className": "installationhuge-1-0-0-0-0"},
+                            React.createElement("div", {"className": "installationhuge-add_to_app_-2"}, """
                                 Add to app
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-        { if ((@props.installed) == "upgrade")
-            <div className="installationhuge-upgrade-5">
-                <div className="installationhuge-2-0-0">
-                    <div onClick={@props.onClick} className="installationhuge-rectangle_3-3">
-                        <div className="installationhuge-2-0-0-0-0">
-                            <div className="installationhuge-_upgrade_-7">
+""")
+                        )
+                    )
+                )
+            )
+        ),
+        ( if ((@props.installed) == "upgrade")
+            React.createElement("div", {"className": "installationhuge-upgrade-5"},
+                React.createElement("div", {"className": "installationhuge-2-0-0"},
+                    React.createElement("div", {"onClick": (@props.onClick), "className": "installationhuge-rectangle_3-3"},
+                        React.createElement("div", {"className": "installationhuge-2-0-0-0-0"},
+                            React.createElement("div", {"className": "installationhuge-_upgrade_-7"}, """
                                 + Upgrade 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+""")
+                        )
+                    )
+                )
+            )
+        )
+    )
 
 module.exports = (props) -> render.apply({props})

@@ -39,9 +39,9 @@ module.exports = Block.register 'image', class ImageBlock extends Block
         ["Parallax Scrolling", "parallax", CheckboxControl]
 
         # TODO only show stretch controls iff dynamic src OR non-fixed size
-        <div className="ctrl-wrapper">
-            <div className="ctrl">
-                <PdButtonGroup buttons={[
+        React.createElement("div", {"className": "ctrl-wrapper"},
+            React.createElement("div", {"className": "ctrl"},
+                React.createElement(PdButtonGroup, {"buttons": ([
                     ['Stretch', 'stretch']
                     ['Cover',   'cover']
                     ['Contain', 'contain']
@@ -52,9 +52,9 @@ module.exports = Block.register 'image', class ImageBlock extends Block
                     return
                         label: label, type: if vlink.value == value then 'primary' else 'default'
                         onClick: (e) -> vlink.requestChange(value); e.preventDefault(); e.stopPropagation()
-                } />
-            </div>
-        </div>
+                )})
+            )
+        )
     ]
 
     canContainChildren: true
@@ -120,7 +120,7 @@ module.exports = Block.register 'image', class ImageBlock extends Block
         # returning null uses the default editor, rendering the image the same way it's compiled
         return null if not needs_loading_animation
 
-        <div>
-            <div className="animated-background" style={height: @height} />
-        </div>
+        React.createElement("div", null,
+            React.createElement("div", {"className": "animated-background", "style": (height: @height)})
+        )
 

@@ -18,7 +18,7 @@ module.exports = createReactClass
         enqueueForceUpdate: propTypes.func
 
     render: ->
-        <div className="shadow-host" ref="shadowHost" />
+        React.createElement("div", {"className": "shadow-host", "ref": "shadowHost"})
 
     componentDidUpdate: ->
         @rerender()
@@ -29,10 +29,10 @@ module.exports = createReactClass
 
     rerender: ->
         # FIXME: Might want to ReactDOM.render only once here
-        elemWithStyles = <React.Fragment>{[
+        elemWithStyles = React.createElement(React.Fragment, null, ([
             @props.children
-            ((@props.includeCssUrls ? []).map (url, i) -> <link key={i} rel="stylesheet" href={url} />)...
-        ]}</React.Fragment>
+            ((@props.includeCssUrls ? []).map (url, i) -> React.createElement("link", {"key": (i), "rel": "stylesheet", "href": (url)}))...
+        ]))
         @context.enqueueForceUpdate {
             forceUpdate: (callback) => ReactDOM.render(elemWithStyles, @shadowRoot, callback)
         }

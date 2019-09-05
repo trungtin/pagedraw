@@ -11,14 +11,14 @@ exports.Popover = Popover = createReactClass
     render: ->
         React.cloneElement(@props.trigger, {ref: 'trigger', onClick: (=> @setState open: !@state.open)}, @props.trigger.props.children,
             (if @state.open # overlay preventing clicks / scroll
-                <div style={position: 'fixed', zIndex: 1000, top: 0, right: 0, bottom: 0, left: 0}
-                    onClick={=> @setState open: no}
-                    onWheel={=>
+                React.createElement("div", {"style": (position: 'fixed', zIndex: 1000, top: 0, right: 0, bottom: 0, left: 0),  \
+                    "onClick": (=> @setState open: no),  \
+                    "onWheel": (=>
                         # scrolling anywhere on the page could cause geometry to change, and we're
                         # explicitly dependant on rendered geometry.  Specifically, scrolling the
                         # sidebar where a color picker lives could change the on-screen location
                         # of @props.target, which means the popover's positioning needs to change.
-                        @forceUpdate()} />
+                        @forceUpdate())})
             else undefined)
 
             (if @state.open
@@ -41,13 +41,13 @@ exports.Popover = Popover = createReactClass
                     then @props.popover_position_for_trigger_rect(trigger_rect)
                     else {top: 0, left: 0}
 
-                <div style={_l.extend {position: 'fixed', zIndex: 1001}, position}
-                    onClick={(e) ->
+                React.createElement("div", {"style": (_l.extend {position: 'fixed', zIndex: 1001}, position),  \
+                    "onClick": ((e) ->
                         # prevent the click from getting to the overlay, which would close the popover
                         e.preventDefault(); e.stopPropagation()
-                    }>
-                    {@props.popover(@closeHandler)}
-                </div>
+                    )},
+                    (@props.popover(@closeHandler))
+                )
             else undefined))
 
 

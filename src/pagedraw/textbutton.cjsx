@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Textbutton = createReactClass {
     displayName: 'Textbutton'
     render: ->
-        <div className="textbutton">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "textbutton"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               .textbutton {
                   display: flex;
                   flex-grow: 1;
@@ -284,58 +284,58 @@ module.exports = Textbutton = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if ((if @props.disabled then 'Disabled' else 'Enabled') == "Disabled")
-              <div className="textbutton-disabled-1">
-                  <div className="textbutton-0-0-0">
-                      <div className="textbutton-rectangle_7">
-                          <div className="textbutton-0-0-0-0-0">
-                              <div className="textbutton-0-0-0-0-0-0" /> 
-                              <div className="textbutton-text_5">{ @props.text }</div>
-                              <div className="textbutton-0-0-0-0-0-2" /> 
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-          { if ((if @props.disabled then 'Disabled' else 'Enabled') == "Enabled")
-              <div className="pd-onhover-parent pd-onactive-parent textbutton-1-0">
-                  { if (("A") == "A")
-                      <div className="textbutton-a-6">
-                          <div className="textbutton-1-0-0-0-0">
-                              <div className="textbutton-rectangle_7-1">
-                                  <div className="textbutton-1-0-0-0-0-0-0">
-                                      <div className="textbutton-1-0-0-0-0-0-0-0" /> 
-                                      <div className="textbutton-text_5-8">{ @props.text }</div>
-                                      <div className="textbutton-1-0-0-0-0-0-0-2" /> 
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  }
-                  <div className="pd-onhover textbutton-_hover-7">
-                      <div className="textbutton-1-0-1-0">
-                          <div className="textbutton-rectangle_7-5">
-                              <div className="textbutton-1-0-1-0-0-0">
-                                  <div className="textbutton-1-0-1-0-0-0-0" /> 
-                                  <div className="textbutton-text_5-0">{ @props.text }</div>
-                                  <div className="textbutton-1-0-1-0-0-0-2" /> 
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  <div className="pd-onactive textbutton-_active-7">
-                      <div className="textbutton-1-0-2-0">
-                          <div onMouseUp={this.props.onClick} className="textbutton-rectangle_7-4">
-                              <div className="textbutton-1-0-2-0-0-0">
-                                  <div className="textbutton-1-0-2-0-0-0-0" /> 
-                                  <div className="textbutton-text_5-6">{ @props.text }</div>
-                                  <div className="textbutton-1-0-2-0-0-0-2" /> 
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-      </div>
+          """)}),  
+          ( if ((if @props.disabled then 'Disabled' else 'Enabled') == "Disabled")
+              React.createElement("div", {"className": "textbutton-disabled-1"},
+                  React.createElement("div", {"className": "textbutton-0-0-0"},
+                      React.createElement("div", {"className": "textbutton-rectangle_7"},
+                          React.createElement("div", {"className": "textbutton-0-0-0-0-0"},
+                              React.createElement("div", {"className": "textbutton-0-0-0-0-0-0"}),  
+                              React.createElement("div", {"className": "textbutton-text_5"}, ( @props.text )),
+                              React.createElement("div", {"className": "textbutton-0-0-0-0-0-2"}) 
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if ((if @props.disabled then 'Disabled' else 'Enabled') == "Enabled")
+              React.createElement("div", {"className": "pd-onhover-parent pd-onactive-parent textbutton-1-0"},
+                  ( if (("A") == "A")
+                      React.createElement("div", {"className": "textbutton-a-6"},
+                          React.createElement("div", {"className": "textbutton-1-0-0-0-0"},
+                              React.createElement("div", {"className": "textbutton-rectangle_7-1"},
+                                  React.createElement("div", {"className": "textbutton-1-0-0-0-0-0-0"},
+                                      React.createElement("div", {"className": "textbutton-1-0-0-0-0-0-0-0"}),  
+                                      React.createElement("div", {"className": "textbutton-text_5-8"}, ( @props.text )),
+                                      React.createElement("div", {"className": "textbutton-1-0-0-0-0-0-0-2"}) 
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onhover textbutton-_hover-7"},
+                      React.createElement("div", {"className": "textbutton-1-0-1-0"},
+                          React.createElement("div", {"className": "textbutton-rectangle_7-5"},
+                              React.createElement("div", {"className": "textbutton-1-0-1-0-0-0"},
+                                  React.createElement("div", {"className": "textbutton-1-0-1-0-0-0-0"}),  
+                                  React.createElement("div", {"className": "textbutton-text_5-0"}, ( @props.text )),
+                                  React.createElement("div", {"className": "textbutton-1-0-1-0-0-0-2"}) 
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onactive textbutton-_active-7"},
+                      React.createElement("div", {"className": "textbutton-1-0-2-0"},
+                          React.createElement("div", {"onMouseUp": (this.props.onClick), "className": "textbutton-rectangle_7-4"},
+                              React.createElement("div", {"className": "textbutton-1-0-2-0-0-0"},
+                                  React.createElement("div", {"className": "textbutton-1-0-2-0-0-0-0"}),  
+                                  React.createElement("div", {"className": "textbutton-text_5-6"}, ( @props.text )),
+                                  React.createElement("div", {"className": "textbutton-1-0-2-0-0-0-2"}) 
+                              )
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

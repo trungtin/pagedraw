@@ -6,8 +6,8 @@ createReactClass = require 'create-react-class'
 module.exports = Frameworkpickerradiobutton = createReactClass {
     displayName: 'Frameworkpickerradiobutton'
     render: ->
-        <div className="frameworkpickerradiobutton">
-          <style dangerouslySetInnerHTML={__html: """
+        React.createElement("div", {"className": "frameworkpickerradiobutton"},
+          React.createElement("style", {"dangerouslySetInnerHTML": (__html: """
               @import url('https://fonts.googleapis.com/css?family=Lato:');
               
               .frameworkpickerradiobutton {
@@ -412,95 +412,95 @@ module.exports = Frameworkpickerradiobutton = createReactClass {
               .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
                   display: none;
               }
-          """} /> 
-          { if ((if this.props.selected then 'selected' else 'default') == "default")
-              <div className="pd-onhover-parent frameworkpickerradiobutton-0-0">
-                  { if (("default") == "default")
-                      <div className="frameworkpickerradiobutton-default-3">
-                          <div className="frameworkpickerradiobutton-0-0-0-0-0">
-                              <div className="frameworkpickerradiobutton-rectangle-8">
-                                  <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0">
-                                      <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0-0" /> 
-                                      <div className="frameworkpickerradiobutton-rectangle_2">
-                                          <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0">
-                                              <div className="frameworkpickerradiobutton-image_6" style={{"backgroundImage": ("url('"+(this.props.img)+"')")}} /> 
-                                              <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0-1">
-                                                  <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0-1-0">
-                                                      <div className="frameworkpickerradiobutton-text_5">
-                                                          { this.props.name }
-                                                      </div>
-                                                  </div>
-                                                  <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0-1-1">
-                                                      <div className="frameworkpickerradiobutton-text_4">
-                                                          { this.props.desc }
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                      <div className="frameworkpickerradiobutton-0-0-0-0-0-0-0-2" /> 
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  }
-                  <div className="pd-onhover frameworkpickerradiobutton-_hover-9">
-                      <div className="frameworkpickerradiobutton-0-0-1-0">
-                          <div onMouseUp={this.props.handleClick} className="frameworkpickerradiobutton-rectangle-1">
-                              <div className="frameworkpickerradiobutton-0-0-1-0-0-0">
-                                  <div className="frameworkpickerradiobutton-0-0-1-0-0-0-0" /> 
-                                  <div className="frameworkpickerradiobutton-rectangle_2-5">
-                                      <div className="frameworkpickerradiobutton-0-0-1-0-0-0-1-0">
-                                          <div className="frameworkpickerradiobutton-image_6-8" style={{"backgroundImage": ("url('"+(this.props.img)+"')")}} /> 
-                                          <div className="frameworkpickerradiobutton-0-0-1-0-0-0-1-0-1">
-                                              <div className="frameworkpickerradiobutton-0-0-1-0-0-0-1-0-1-0">
-                                                  <div className="frameworkpickerradiobutton-text_5-2">
-                                                      { this.props.name }
-                                                  </div>
-                                              </div>
-                                              <div className="frameworkpickerradiobutton-0-0-1-0-0-0-1-0-1-1">
-                                                  <div className="frameworkpickerradiobutton-text_4-3">
-                                                      { this.props.desc }
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div className="frameworkpickerradiobutton-0-0-1-0-0-0-2" /> 
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-          { if ((if this.props.selected then 'selected' else 'default') == "selected")
-              <div className="frameworkpickerradiobutton-selected-7">
-                  <div className="frameworkpickerradiobutton-1-0-0">
-                      <div className="frameworkpickerradiobutton-rectangle-9">
-                          <div className="frameworkpickerradiobutton-1-0-0-0-0">
-                              <div className="frameworkpickerradiobutton-1-0-0-0-0-0" /> 
-                              <div className="frameworkpickerradiobutton-rectangle_2-4">
-                                  <div className="frameworkpickerradiobutton-1-0-0-0-0-1-0">
-                                      <div className="frameworkpickerradiobutton-image_6-0" style={{"backgroundImage": ("url('"+(this.props.img)+"')")}} /> 
-                                      <div className="frameworkpickerradiobutton-1-0-0-0-0-1-0-1">
-                                          <div className="frameworkpickerradiobutton-1-0-0-0-0-1-0-1-0">
-                                              <div className="frameworkpickerradiobutton-text_5-4">
-                                                  { this.props.name }
-                                              </div>
-                                          </div>
-                                          <div className="frameworkpickerradiobutton-1-0-0-0-0-1-0-1-1">
-                                              <div className="frameworkpickerradiobutton-text_4-6">
-                                                  { this.props.desc }
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div className="frameworkpickerradiobutton-1-0-0-0-0-2" /> 
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          }
-      </div>
+          """)}),  
+          ( if ((if this.props.selected then 'selected' else 'default') == "default")
+              React.createElement("div", {"className": "pd-onhover-parent frameworkpickerradiobutton-0-0"},
+                  ( if (("default") == "default")
+                      React.createElement("div", {"className": "frameworkpickerradiobutton-default-3"},
+                          React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0"},
+                              React.createElement("div", {"className": "frameworkpickerradiobutton-rectangle-8"},
+                                  React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0"},
+                                      React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0-0"}),  
+                                      React.createElement("div", {"className": "frameworkpickerradiobutton-rectangle_2"},
+                                          React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0"},
+                                              React.createElement("div", {"className": "frameworkpickerradiobutton-image_6", "style": ({"backgroundImage": ("url('"+(this.props.img)+"')")})}),  
+                                              React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0-1"},
+                                                  React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0-1-0"},
+                                                      React.createElement("div", {"className": "frameworkpickerradiobutton-text_5"},
+                                                          ( this.props.name )
+                                                      )
+                                                  ),
+                                                  React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0-1-0-1-1"},
+                                                      React.createElement("div", {"className": "frameworkpickerradiobutton-text_4"},
+                                                          ( this.props.desc )
+                                                      )
+                                                  )
+                                              )
+                                          )
+                                      ),
+                                      React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-0-0-0-0-0-2"}) 
+                                  )
+                              )
+                          )
+                      )
+                  ),
+                  React.createElement("div", {"className": "pd-onhover frameworkpickerradiobutton-_hover-9"},
+                      React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0"},
+                          React.createElement("div", {"onMouseUp": (this.props.handleClick), "className": "frameworkpickerradiobutton-rectangle-1"},
+                              React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0"},
+                                  React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0-0"}),  
+                                  React.createElement("div", {"className": "frameworkpickerradiobutton-rectangle_2-5"},
+                                      React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0-1-0"},
+                                          React.createElement("div", {"className": "frameworkpickerradiobutton-image_6-8", "style": ({"backgroundImage": ("url('"+(this.props.img)+"')")})}),  
+                                          React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0-1-0-1"},
+                                              React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0-1-0-1-0"},
+                                                  React.createElement("div", {"className": "frameworkpickerradiobutton-text_5-2"},
+                                                      ( this.props.name )
+                                                  )
+                                              ),
+                                              React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0-1-0-1-1"},
+                                                  React.createElement("div", {"className": "frameworkpickerradiobutton-text_4-3"},
+                                                      ( this.props.desc )
+                                                  )
+                                              )
+                                          )
+                                      )
+                                  ),
+                                  React.createElement("div", {"className": "frameworkpickerradiobutton-0-0-1-0-0-0-2"}) 
+                              )
+                          )
+                      )
+                  )
+              )
+          ),
+          ( if ((if this.props.selected then 'selected' else 'default') == "selected")
+              React.createElement("div", {"className": "frameworkpickerradiobutton-selected-7"},
+                  React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0"},
+                      React.createElement("div", {"className": "frameworkpickerradiobutton-rectangle-9"},
+                          React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0"},
+                              React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0-0"}),  
+                              React.createElement("div", {"className": "frameworkpickerradiobutton-rectangle_2-4"},
+                                  React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0-1-0"},
+                                      React.createElement("div", {"className": "frameworkpickerradiobutton-image_6-0", "style": ({"backgroundImage": ("url('"+(this.props.img)+"')")})}),  
+                                      React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0-1-0-1"},
+                                          React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0-1-0-1-0"},
+                                              React.createElement("div", {"className": "frameworkpickerradiobutton-text_5-4"},
+                                                  ( this.props.name )
+                                              )
+                                          ),
+                                          React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0-1-0-1-1"},
+                                              React.createElement("div", {"className": "frameworkpickerradiobutton-text_4-6"},
+                                                  ( this.props.desc )
+                                              )
+                                          )
+                                      )
+                                  )
+                              ),
+                              React.createElement("div", {"className": "frameworkpickerradiobutton-1-0-0-0-0-2"}) 
+                          )
+                      )
+                  )
+              )
+          )
+      )
 }

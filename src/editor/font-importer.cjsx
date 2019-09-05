@@ -17,9 +17,9 @@ module.exports = createReactClass
         error: undefined
 
     render: ->
-        <Dropzone onDrop={@handleDrop} style={display: 'flex', flexDirection: 'column'}>
-            {<FontImporter error={@state.error} importing={@state.importing} />}
-        </Dropzone>
+        React.createElement(Dropzone, {"onDrop": (@handleDrop), "style": (display: 'flex', flexDirection: 'column')},
+            (React.createElement(FontImporter, {"error": (@state.error), "importing": (@state.importing)}))
+        )
 
     handleDrop: (files) ->
         # Don't throw if font being uploaded will replace a LocalUserFont
@@ -50,12 +50,12 @@ module.exports = createReactClass
             lst.push("and ", items.slice(-1)[0])
             return lst
 
-        return @setState({error: <div style={width: 512}>
-            <h4>Error: Unsupported font file format</h4>
-            <p>You uploaded a <code>.{format}</code> file, but we only support {
-                english_list _l.keys(fontExtensions).map((extension, i) -> <code key={i}>.{extension}</code>)
-            } font files.</p>
-        </div>}) if not fontExtensions[format]
+        return @setState({error: React.createElement("div", {"style": (width: 512)},
+            React.createElement("h4", null, "Error: Unsupported font file format"),
+            React.createElement("p", null, "You uploaded a ", React.createElement("code", null, ".", (format)), " file, but we only support ", (
+                english_list _l.keys(fontExtensions).map((extension, i) -> React.createElement("code", {"key": (i)}, ".", (extension)))
+            ), " font files.")
+        )}) if not fontExtensions[format]
 
         # FIXME: For now we always base64 encode fonts. Move to a more flexible world where
         # fonts can be required and all

@@ -133,18 +133,18 @@ exports.DropdownPropControl = DropdownPropControl = Model.register "prop-ctrl(dr
     customSpecControl: (controlValueLink) ->
         optionsValueLink = propValueLinkTransformer('options', controlValueLink)
         itemRenderer = (elemValueLink, handleRemove) ->
-            <div style={display: 'flex', alignItems: 'center', paddingRight: '6px', marginTop: '6px'}>
-                <i role="button" className="material-icons md-14" style={lineHeight: '24px', color: 'black', marginRight: '6px'} onClick={handleRemove}>delete</i>
-                <FormControl style={flexGrow: '1'} debounced={true} type="text" valueLink={elemValueLink} />
-            </div>
+            React.createElement("div", {"style": (display: 'flex', alignItems: 'center', paddingRight: '6px', marginTop: '6px')},
+                React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": (lineHeight: '24px', color: 'black', marginRight: '6px'), "onClick": (handleRemove)}, "delete"),
+                React.createElement(FormControl, {"style": (flexGrow: '1'), "debounced": (true), "type": "text", "valueLink": (elemValueLink)})
+            )
 
-        <div style={paddingLeft: indentation}>
-            <ListComponent
-                label={<h5 className="sidebar-ctrl-label">Dropdown options</h5>}
-                valueLink={optionsValueLink}
-                newElement={-> "option#{optionsValueLink.value.length}"}
-                elem={itemRenderer} />
-        </div>
+        React.createElement("div", {"style": (paddingLeft: indentation)},
+            React.createElement(ListComponent, { \
+                "label": (React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Dropdown options")),  \
+                "valueLink": (optionsValueLink),  \
+                "newElement": (-> "option#{optionsValueLink.value.length}"),  \
+                "elem": (itemRenderer)})
+        )
 
 ## Generic list controls
 ListPropValue = Model.register "prop-val(list)", class ListPropValue extends PropValue
@@ -177,15 +177,15 @@ exports.ListPropControl = ListPropControl = Model.register "prop-ctrl(list)", cl
         get: ->
             return (label, valueLink) =>
                 elem = (elemValueLink, handleRemove, i) =>
-                    <div style={paddingLeft: indentation, display: 'flex', alignItems: 'center'}>
-                        {(DynamicableControl @elemType.sidebarControl)("#{i}:", propValueLinkTransformer('innerValue', elemValueLink))}
-                        <i role="button" className="material-icons md-14" style={color: 'black', marginLeft: '6px'} onClick={handleRemove}>delete</i>
-                    </div>
-                <ListComponent
-                    label={<h5 className="sidebar-ctrl-label">{label}</h5>}
-                    valueLink={valueLink}
-                    newElement={=> @elemType.default()}
-                    elem={elem} />
+                    React.createElement("div", {"style": (paddingLeft: indentation, display: 'flex', alignItems: 'center')},
+                        ((DynamicableControl @elemType.sidebarControl)("#{i}:", propValueLinkTransformer('innerValue', elemValueLink))),
+                        React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": (color: 'black', marginLeft: '6px'), "onClick": (handleRemove)}, "delete")
+                    )
+                React.createElement(ListComponent, { \
+                    "label": (React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))),  \
+                    "valueLink": (valueLink),  \
+                    "newElement": (=> @elemType.default()),  \
+                    "elem": (elem)})
 
     ValueType: ListPropValue
     default: -> new @ValueType(innerValue: (Dynamicable [PropValue]).from([]))
@@ -196,17 +196,17 @@ exports.ListPropControl = ListPropControl = Model.register "prop-ctrl(list)", cl
     # In the component definition, users get a customSpecControl that lets them choose the type of list
     customSpecControl: (controlValueLink) ->
         elemTypeValueLink = propValueLinkTransformer('elemType', controlValueLink)
-        <div style={paddingLeft: indentation}>
-            <div className="ctrl-wrapper">
-                <h5 className="sidebar-ctrl-label">Element type</h5>
-                <PdIndexDropdown options={controlTypes.map (ctrl) ->
+        React.createElement("div", {"style": (paddingLeft: indentation)},
+            React.createElement("div", {"className": "ctrl-wrapper"},
+                React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Element type"),
+                React.createElement(PdIndexDropdown, {"options": (controlTypes.map (ctrl) ->
                         value: ctrl.userVisibleLabel,
                         handler: -> elemTypeValueLink.requestChange(new ctrl())
-                    }
-                    defaultIndex={_l.findIndex controlTypes, (ctrl) => elemTypeValueLink.value instanceof ctrl} />
-            </div>
-            {@elemType.customSpecControl(elemTypeValueLink)}
-        </div>
+                    ),  \
+                    "defaultIndex": (_l.findIndex controlTypes, (ctrl) => elemTypeValueLink.value instanceof ctrl)})
+            ),
+            (@elemType.customSpecControl(elemTypeValueLink))
+        )
 
 ## Generic object controls
 getProps = (propInstances, propSpecs) ->
@@ -323,41 +323,41 @@ exports.ObjectPropControl = ObjectPropControl = Model.register "prop-ctrl(obj)",
             visibleProps = _l.filter allProps, ([prop, spec]) => prop.present or spec.required
             availableProps = _l.filter allProps, ([prop, spec]) => not prop.present and not spec.required
 
-            <div>
-                <div style={display: 'flex', alignItems: 'center', marginTop: '9px', height: '20px'}>
-                    <h5 className="sidebar-ctrl-label" style={flex: 1}>
-                        {label}
-                    </h5>
-                    {if availableProps.length > 0
-                        <PdPopupMenu
-                            label="Add optional properties"
-                            iconName="add"
-                            options={_l.map availableProps, ([prop, spec]) => spec.title}
-                            onSelect={(index) =>
+            React.createElement("div", null,
+                React.createElement("div", {"style": (display: 'flex', alignItems: 'center', marginTop: '9px', height: '20px')},
+                    React.createElement("h5", {"className": "sidebar-ctrl-label", "style": (flex: 1)},
+                        (label)
+                    ),
+                    (if availableProps.length > 0
+                        React.createElement(PdPopupMenu, { \
+                            "label": "Add optional properties",  \
+                            "iconName": "add",  \
+                            "options": (_l.map availableProps, ([prop, spec]) => spec.title),  \
+                            "onSelect": ((index) =>
                                 [prop, spec] = availableProps[index]
                                 prop.present = true
                                 propInstancesValueLink.requestChange(propInstancesValueLink.value)
-                            }
-                        />
-                    }
-                </div>
-                <div style={paddingLeft: indentation}>
-                    {_l.map visibleProps, ([prop, spec]) =>
+                            )
+                        })
+                    )
+                ),
+                React.createElement("div", {"style": (paddingLeft: indentation)},
+                    (_l.map visibleProps, ([prop, spec]) =>
                         valueVl = propInstancesDotVl(prop, propInstancesValueLink, 'value')
                         presentVl = propInstancesDotVl(prop, propInstancesValueLink, 'present')
-                        <div key={prop.specUniqueKey} style={display: 'flex', alignItems: 'flex-start'}>
-                            {spec.propValueSidebarControl(spec.title, valueVl)}
-                            {if not spec.required
-                                <i className="material-icons md-14"
-                                    title="Remove this property"
-                                    style={marginLeft: '6px', marginTop: '6px'}
-                                    onClick={=> presentVl.requestChange(false)}
-                                >delete</i>
-                            }
-                        </div>
-                    }
-                </div>
-            </div>
+                        React.createElement("div", {"key": (prop.specUniqueKey), "style": (display: 'flex', alignItems: 'flex-start')},
+                            (spec.propValueSidebarControl(spec.title, valueVl)),
+                            (if not spec.required
+                                React.createElement("i", {"className": "material-icons md-14",  \
+                                    "title": "Remove this property",  \
+                                    "style": (marginLeft: '6px', marginTop: '6px'),  \
+                                    "onClick": (=> presentVl.requestChange(false))
+                                }, "delete")
+                            )
+                        )
+                    )
+                )
+            )
 
 
     ValueType: ObjectPropValue
@@ -365,36 +365,36 @@ exports.ObjectPropControl = ObjectPropControl = Model.register "prop-ctrl(obj)",
     random: ->
         new @ValueType({innerValue: (Dynamicable [PropInstance]).from(@attrTypes.map (spec) -> spec.randomInstance())})
 
-    customSpecControl: (objectControlVl, label = <h5 className='sidebar-ctrl-label'>keys</h5>, indent = true) ->
+    customSpecControl: (objectControlVl, label = React.createElement("h5", {"className": 'sidebar-ctrl-label'}, "keys"), indent = true) ->
         PropSpecControl = (elemValueLink, handleRemove) ->
             controlValueLink = propValueLinkTransformer('control', elemValueLink)
 
-            <div style={flexGrow: '1', marginBottom: '9px'}>
-                <div style={display: 'flex', marginBottom: '5px'}>
-                    <div style={marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}>
-                        <i role="button" className="material-icons md-14" style={color: 'black'} onClick={handleRemove}>delete</i>
-                    </div>
-                    <div style={marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}>
-                        <Tooltip position="top" content={'Required'}>
-                                <FormControl style={margin: 0} type="checkbox" valueLink={propValueLinkTransformer('required', elemValueLink)} />
-                        </Tooltip>
-                    </div>
-                    <FormControl debounced={true} placeholder="Prop name" type="text" valueLink={propValueLinkTransformer('name', elemValueLink)} style={width: '100%', marginRight: '5px'} />
-                    <PdIndexDropdown options={controlTypes.map (ctrl) ->
+            React.createElement("div", {"style": (flexGrow: '1', marginBottom: '9px')},
+                React.createElement("div", {"style": (display: 'flex', marginBottom: '5px')},
+                    React.createElement("div", {"style": (marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center')},
+                        React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": (color: 'black'), "onClick": (handleRemove)}, "delete")
+                    ),
+                    React.createElement("div", {"style": (marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center')},
+                        React.createElement(Tooltip, {"position": "top", "content": ('Required')},
+                                React.createElement(FormControl, {"style": (margin: 0), "type": "checkbox", "valueLink": (propValueLinkTransformer('required', elemValueLink))})
+                        )
+                    ),
+                    React.createElement(FormControl, {"debounced": (true), "placeholder": "Prop name", "type": "text", "valueLink": (propValueLinkTransformer('name', elemValueLink)), "style": (width: '100%', marginRight: '5px')}),
+                    React.createElement(PdIndexDropdown, {"options": (controlTypes.map (ctrl) ->
                             value: ctrl.userVisibleLabel,
                             handler: -> controlValueLink.requestChange(new ctrl())
-                        }
-                        defaultIndex={_l.findIndex controlTypes, (ctrl) => controlValueLink.value instanceof ctrl} />
-                </div>
-                {elemValueLink.value.control.customSpecControl(controlValueLink)}
-            </div>
-        <div style={paddingLeft: if indent then indentation else 0}>
-            <ListComponent
-                label={label}
-                valueLink={propValueLinkTransformer('attrTypes', objectControlVl)}
-                newElement={-> new PropSpec(name: "", control: new StringPropControl())}
-                elem={PropSpecControl} />
-        </div>
+                        ),  \
+                        "defaultIndex": (_l.findIndex controlTypes, (ctrl) => controlValueLink.value instanceof ctrl)})
+                ),
+                (elemValueLink.value.control.customSpecControl(controlValueLink))
+            )
+        React.createElement("div", {"style": (paddingLeft: if indent then indentation else 0)},
+            React.createElement(ListComponent, { \
+                "label": (label),  \
+                "valueLink": (propValueLinkTransformer('attrTypes', objectControlVl)),  \
+                "newElement": (-> new PropSpec(name: "", control: new StringPropControl())),  \
+                "elem": (PropSpecControl)})
+        )
 
 # :: PropControl -> PropValue -> [{spec: PropSpec, value: PropValue, parentSpec: PropSpec?}]
 exports.flattenedSpecAndValue = flattenedSpecAndValue = (propControl, propValues) =>

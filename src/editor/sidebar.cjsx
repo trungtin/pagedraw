@@ -85,11 +85,11 @@ dynamicableVariableCreatorValueLink = (dynamicableValueLink, block, prop_control
 exports.SidebarFromSpec = SidebarFromSpec = createReactClass
     displayName: 'SidebarFromSpec'
     render: ->
-        <div> {
+        React.createElement("div", null, " ", (
             @props.spec(@linkAttr, @props.onChange, @props.editorCache, @props.setEditorMode).map (spec, i) =>
                 [control, react_key] = controlFromSpec(spec, @props.block, @linkAttr, i)
-                <ReactWrapper key={react_key}>{control}</ReactWrapper>
-        } </div>
+                React.createElement(ReactWrapper, {"key": (react_key)}, (control))
+        ), " ")
 
     linkAttr: (attr) -> propLinkWithMutatedBlocks(@props.block, attr, @props.onChange, [@props.block])
 
@@ -162,25 +162,25 @@ BlockInspector = createReactClass render: ->
     # Set a key so we don't reuse BlockInspectors across blocks.
     # If we use the same inspector for different blocks, color pickers
     # that are open will stay open, etc.
-    <div key={"design-#{block.uniqueKey}"} style={width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING}>
-        <div className="ctrl-wrapper" style={alignItems: 'baseline'}>
-            <h5 className="sidebar-ctrl-label">Block type</h5>
-            {
+    React.createElement("div", {"key": ("design-#{block.uniqueKey}"), "style": (width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING)},
+        React.createElement("div", {"className": "ctrl-wrapper", "style": (alignItems: 'baseline')},
+            React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Block type"),
+            (
                 user_level_block_types = block_types_for_doc(block.doc)
-                <PdIndexDropdown stretch defaultIndex={_l.findIndex user_level_block_types, (ty) => ty.describes(block)}
-                    options={user_level_block_types.map (ty) => {value: ty.getName(), handler: =>
+                React.createElement(PdIndexDropdown, {"stretch": true, "defaultIndex": (_l.findIndex user_level_block_types, (ty) => ty.describes(block)),  \
+                    "options": (user_level_block_types.map (ty) => {value: ty.getName(), handler: =>
                       replacement = block.becomeFresh (new_members) -> ty.create(new_members)
                       replacement.textContent.staticValue = "Type something" if replacement instanceof TextBlock
                       @props.onChange()
-                    }} />
-            }
-        </div>
+                    })})
+            )
+        ),
 
-        {<p style={color: 'red'}>The font used has not been uploaded</p> if block.fontFamily instanceof LocalUserFont}
-        <SidebarFromSpec editorCache={@props.editorCache} spec={-> block.sidebarControls(arguments...)} block={block} onChange={@props.onChange} setEditorMode={@props.setEditorMode} />
+        (React.createElement("p", {"style": (color: 'red')}, "The font used has not been uploaded") if block.fontFamily instanceof LocalUserFont),
+        React.createElement(SidebarFromSpec, {"editorCache": (@props.editorCache), "spec": (-> block.sidebarControls(arguments...)), "block": (block), "onChange": (@props.onChange), "setEditorMode": (@props.setEditorMode)}),
 
-        <hr />
-        <button style={marginTop: 20, width: '100%'} onClick={=>
+        React.createElement("hr", null),
+        React.createElement("button", {"style": (marginTop: 20, width: '100%'), "onClick": (=>
             wrapper_block = LayoutBlockType.create {
                 color: Dynamicable(String).from('rgba(0,0,0,0)')
                 top: block.top, left: block.left, width: block.width, height: block.height
@@ -189,11 +189,11 @@ BlockInspector = createReactClass render: ->
             block.doc.addBlock(wrapper_block)
             @props.selectBlocks([wrapper_block])
             @props.onChange()
-        }>Wrap</button>
-        <button style={width: '100%'} onClick={=>
+        )}, "Wrap"),
+        React.createElement("button", {"style": (width: '100%'), "onClick": (=>
             programs.deleteAllButSelectedArtboards([block], @props.onChange)
-        }>Remove All But Selected</button>
-    </div>
+        )}, "Remove All But Selected")
+    )
 
 
 DocScaler = createReactClass
@@ -201,12 +201,12 @@ DocScaler = createReactClass
         scaleRatio: 1.0
 
     render: ->
-        <div style={display: 'flex', marginBottom: '-9px'}>
-            <button onClick={@rescale} style={flex: '1'}>Rescale doc</button>
-            <input style={marginBottom: '9px', marginLeft: '6px'} type="number" step="0.1" min="0.1" max="10" value={@state.scaleRatio} onChange={(evt) => @setState(scaleRatio: evt.target.value)} />
-            <button onClick={=> @setState({scaleRatio: Math.round((@state.scaleRatio + .2) * 10) / 10})}>+</button>
-            <button onClick={=> @setState({scaleRatio: Math.round((@state.scaleRatio - .2) * 10) / 10})}>-</button>
-        </div>
+        React.createElement("div", {"style": (display: 'flex', marginBottom: '-9px')},
+            React.createElement("button", {"onClick": (@rescale), "style": (flex: '1')}, "Rescale doc"),
+            React.createElement("input", {"style": (marginBottom: '9px', marginLeft: '6px'), "type": "number", "step": "0.1", "min": "0.1", "max": "10", "value": (@state.scaleRatio), "onChange": ((evt) => @setState(scaleRatio: evt.target.value))}),
+            React.createElement("button", {"onClick": (=> @setState({scaleRatio: Math.round((@state.scaleRatio + .2) * 10) / 10}))}, "+"),
+            React.createElement("button", {"onClick": (=> @setState({scaleRatio: Math.round((@state.scaleRatio - .2) * 10) / 10}))}, "-")
+        )
 
     rescale: ->
         if @state.scaleRatio == 1.0
@@ -224,28 +224,28 @@ DocScaler = createReactClass
 
 
 DocInspector = createReactClass render: ->
-    <div key="doc-design" style={width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING}>
-        <div style={margin: '1em 0'}>
-            {TextControl('Doc name', @props.editor.docNameVL())}
-        </div>
+    React.createElement("div", {"key": "doc-design", "style": (width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING)},
+        React.createElement("div", {"style": (margin: '1em 0')},
+            (TextControl('Doc name', @props.editor.docNameVL()))
+        ),
 
-        <DocScaler doc={@props.doc} onChange={@props.onChange} />
-        <hr />
+        React.createElement(DocScaler, {"doc": (@props.doc), "onChange": (@props.onChange)}),
+        React.createElement("hr", null),
 
-        <button style={width: '100%'} onClick={=> handleAddCustomFonts(@props.doc, @props.onChange)}>Manage Fonts</button>
-        <hr />
+        React.createElement("button", {"style": (width: '100%'), "onClick": (=> handleAddCustomFonts(@props.doc, @props.onChange))}, "Manage Fonts"),
+        React.createElement("hr", null),
 
-        {@props.editor.getDocSidebarExtras()}
-    </div>
+        (@props.editor.getDocSidebarExtras())
+    )
 
 MultipleSelectedSidebar = createReactClass render: ->
     blocks = @props.value
 
-    <div key="multiple" style={
+    React.createElement("div", {"key": "multiple", "style": (
         padding: DEFAULT_SIDEBAR_PADDING, paddingTop: '1em'
         flex: '1 0 auto', display: 'flex', flexDirection: 'column'
-    }>
-        <button style={width: '100%'} onClick={=>
+    )},
+        React.createElement("button", {"style": (width: '100%'), "onClick": (=>
             doc = blocks[0].doc
             union = Block.unionBlock(blocks)
 
@@ -260,20 +260,20 @@ MultipleSelectedSidebar = createReactClass render: ->
             doc.addBlock(wrapper_block)
             @props.selectBlocks([wrapper_block])
             @props.onChange()
-        }>Wrap</button>
-        <button style={width: '100%'} onClick={=>
+        )}, "Wrap"),
+        React.createElement("button", {"style": (width: '100%'), "onClick": (=>
             @props.selectBlocks(_l.flatMap blocks, (b) -> b.andChildren())
             @props.onChange(fast: true)
-        }>Select Children</button>
-        <button style={width: '100%'} onClick={=>
+        )}, "Select Children"),
+        React.createElement("button", {"style": (width: '100%'), "onClick": (=>
             programs.make_multistate_component_from_blocks(blocks, @props.editor)
-        }>Make Multistate</button>
+        )}, "Make Multistate"),
 
-        <div className="sidebar-default-content noselect" style={marginTop: '2em'}>
-            <div>MULTIPLE SELECTED</div>
-        </div>
+        React.createElement("div", {"className": "sidebar-default-content noselect", "style": (marginTop: '2em')},
+            React.createElement("div", null, "MULTIPLE SELECTED")
+        ),
 
-        {
+        (
             text_blocks = blocks.filter (b) -> b.constructor in [TextBlock, TextInputBlock]
             if not _l.isEmpty text_blocks
                 all_have_variants = _l.every text_blocks, (block) -> not _l.isEmpty(block.fontFamily.get_font_variants())
@@ -298,17 +298,17 @@ MultipleSelectedSidebar = createReactClass render: ->
                         @props.onChange()
                 }
 
-                <div>
-                    {FontControl(@props.doc, @props.onChange)('font', multiple_value_link('fontFamily', text_blocks[0].fontFamily))}
+                React.createElement("div", null,
+                    (FontControl(@props.doc, @props.onChange)('font', multiple_value_link('fontFamily', text_blocks[0].fontFamily))),
 
-                    <div className="ctrl-wrapper">
-                        <h5 className="sidebar-ctrl-label">style</h5>
-                        <div className="ctrl">
-                            <PdIconGroup buttons={[
-                                    [<b>B</b>, 'isBold']
-                                    [<i>I</i>, 'isItalics']
-                                    [<u>U</u>, 'isUnderline']
-                                    [<s>S</s>, 'isStrikethrough']
+                    React.createElement("div", {"className": "ctrl-wrapper"},
+                        React.createElement("h5", {"className": "sidebar-ctrl-label"}, "style"),
+                        React.createElement("div", {"className": "ctrl"},
+                            React.createElement(PdIconGroup, {"buttons": ([
+                                    [React.createElement("b", null, "B"), 'isBold']
+                                    [React.createElement("i", null, "I"), 'isItalics']
+                                    [React.createElement("u", null, "U"), 'isUnderline']
+                                    [React.createElement("s", null, "S"), 'isStrikethrough']
                                 ].map ([label, attr], i) =>
                                     # Don't render bold button if fontweight control is showing
                                     return if attr == 'isBold' and _l.some(text_blocks, 'hasCustomFontWeight') and some_have_variants
@@ -316,55 +316,55 @@ MultipleSelectedSidebar = createReactClass render: ->
                                     return
                                         label: label, type: if vlink.value then 'primary' else 'default'
                                         onClick: (e) -> vlink.requestChange(!vlink.value); e.preventDefault(); e.stopPropagation()
-                                } />
-                        </div>
-                    </div>
+                                )})
+                        )
+                    ),
 
-                    {CheckboxControl("use custom font weight", multiple_value_link('hasCustomFontWeight', false)) if all_have_variants}
-                    {if _l.every(text_blocks, 'hasCustomFontWeight') and all_have_variants
+                    (CheckboxControl("use custom font weight", multiple_value_link('hasCustomFontWeight', false)) if all_have_variants),
+                    (if _l.every(text_blocks, 'hasCustomFontWeight') and all_have_variants
                         fake_union_font = {
                             get_font_variants: ->
                                 intersection = (arrs) -> _l.intersection(arrs...) # lodash has an annoying habbit of varargs when they should have a list of lists
                                 return _l.sortBy intersection _l.map text_blocks, (block) -> block.fontFamily.get_font_variants()
                         }
                         FontWeightControl(fake_union_font)("font weight", multiple_value_link('fontWeight', '<multiple>'))
-                    }
+                    ),
 
-                    {ColorControl("text color", multiple_value_link("fontColor", text_blocks[0].fontColor))}
+                    (ColorControl("text color", multiple_value_link("fontColor", text_blocks[0].fontColor))),
 
-                    <button style={width: '100%'} onClick={=>
+                    React.createElement("button", {"style": (width: '100%'), "onClick": (=>
                         text_blocks.forEach (b) => b.textContent.staticValue = b.textContent.staticValue.toUpperCase()
                         @props.onChange()
-                    }>To Uppercase</button>
-                </div>
-        }
+                    )}, "To Uppercase")
+                )
+        ),
 
-        <div style={
+        React.createElement("div", {"style": (
             # push down Export section to bottom of screen
             flex: 1
-        } />
+        )}),
 
-        <button style={width: '100%'} onClick={=>
+        React.createElement("button", {"style": (width: '100%'), "onClick": (=>
             blocks[0].doc.removeBlocks(blocks)
             @props.selectBlocks([])
             @props.onChange()
-        }>Remove</button>
-         <button style={width: '100%'} onClick={=>
+        )}, "Remove"),
+         React.createElement("button", {"style": (width: '100%'), "onClick": (=>
             programs.deleteAllButSelectedArtboards(blocks, @props.onChange)
-        }>Remove All But Selected</button>
-    </div>
+        )}, "Remove All But Selected")
+    )
 
 
 exports.StandardSidebar = ({children}) =>
-    <div className="sidebar bootstrap" style={width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING}>
-        {children}
-    </div>
+    React.createElement("div", {"className": "sidebar bootstrap", "style": (width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING)},
+        (children)
+    )
 
 
 exports.DrawCodeSidebarContainer = DrawCodeSidebarContainer = ({width, sidebarMode, editor, aboveScroll, children}) ->
-    <div className="sidebar bootstrap" style={width: width, display: 'flex', flexDirection: 'column'}>
-        <div style={width: '100%', marginBottom: 12}>
-            <PdTabBar tabs={
+    React.createElement("div", {"className": "sidebar bootstrap", "style": (width: width, display: 'flex', flexDirection: 'column')},
+        React.createElement("div", {"style": (width: '100%', marginBottom: 12)},
+            React.createElement(PdTabBar, {"tabs": (
                 [
                     ['draw', 'Draw']
                     ['code', 'Component'] # TODO rename sidebar to "Data"?
@@ -375,21 +375,21 @@ exports.DrawCodeSidebarContainer = DrawCodeSidebarContainer = ({width, sidebarMo
                         editor.setSidebarMode(mode)
                         editor.handleDocChanged(fast: true)
                 })
-            } />
-        </div>
+            )})
+        ),
 
-        { aboveScroll }
+        ( aboveScroll ),
 
-        <div className="editor-scrollbar scrollbar-show-on-hover" style={
+        React.createElement("div", {"className": "editor-scrollbar scrollbar-show-on-hover", "style": (
             flex: 1, display: 'flex', flexDirection: 'column', overflowX: 'hidden'
 
             # compensate for space taken up by intercom.  This is going to look extra ugly in dev where there
             # is no intercom.
             paddingBottom: 80
-        }>
-            { children }
-        </div>
-    </div>
+        )},
+            ( children )
+        )
+    )
 
 
 
@@ -399,56 +399,56 @@ exports.Sidebar = createReactClass
         assert => @props.doc.isInReadonlyMode()
         switch @props.sidebarMode
             when 'draw'
-                first_aligners = <AlignmentControls key="alignment-controls" blocks={@props.value} onChange={@props.onChange} />
+                first_aligners = React.createElement(AlignmentControls, {"key": "alignment-controls", "blocks": (@props.value), "onChange": (@props.onChange)})
 
                 if @props.value.length == 0
-                    <DrawCodeSidebarContainer
-                        width={DEFAULT_SIDEBAR_WIDTH}
-                        sidebarMode="draw"
-                        editor={@props.editor}
-                        aboveScroll={first_aligners}
-                    >
-                        <DocInspector {...@props} />
-                    </DrawCodeSidebarContainer>
+                    React.createElement(DrawCodeSidebarContainer, { \
+                        "width": (DEFAULT_SIDEBAR_WIDTH),  \
+                        "sidebarMode": "draw",  \
+                        "editor": (@props.editor),  \
+                        "aboveScroll": (first_aligners)
+                    },
+                        React.createElement(DocInspector, Object.assign({},  @props ))
+                    )
 
                 else if @props.value.length == 1
-                    <DrawCodeSidebarContainer
-                        width={DEFAULT_SIDEBAR_WIDTH}
-                        sidebarMode="draw"
-                        editor={@props.editor}
-                        aboveScroll={first_aligners}
-                    >
-                        <BlockInspector {...@props} />
-                    </DrawCodeSidebarContainer>
+                    React.createElement(DrawCodeSidebarContainer, { \
+                        "width": (DEFAULT_SIDEBAR_WIDTH),  \
+                        "sidebarMode": "draw",  \
+                        "editor": (@props.editor),  \
+                        "aboveScroll": (first_aligners)
+                    },
+                        React.createElement(BlockInspector, Object.assign({},  @props ))
+                    )
 
                 else
-                    aligners = <React.Fragment>
-                        {first_aligners}
-                        <ExpandAlignmentControls key="expand-alignment-controls" blocks={@props.value} onChange={@props.onChange} />
-                    </React.Fragment>
-                    <DrawCodeSidebarContainer
-                        width={DEFAULT_SIDEBAR_WIDTH}
-                        sidebarMode="draw"
-                        editor={@props.editor}
-                        aboveScroll={aligners}
-                    >
-                        <MultipleSelectedSidebar {...@props} />
-                    </DrawCodeSidebarContainer>
+                    aligners = React.createElement(React.Fragment, null,
+                        (first_aligners),
+                        React.createElement(ExpandAlignmentControls, {"key": "expand-alignment-controls", "blocks": (@props.value), "onChange": (@props.onChange)})
+                    )
+                    React.createElement(DrawCodeSidebarContainer, { \
+                        "width": (DEFAULT_SIDEBAR_WIDTH),  \
+                        "sidebarMode": "draw",  \
+                        "editor": (@props.editor),  \
+                        "aboveScroll": (aligners)
+                    },
+                        React.createElement(MultipleSelectedSidebar, Object.assign({},  @props ))
+                    )
 
 
             when 'code'
-                <DrawCodeSidebarContainer
-                    width={DEVELOPER_SIDEBAR_WIDTH}
-                    sidebarMode="code"
-                    editor={@props.editor}
-                >
-                    <ComponentSidebar
-                        selectedBlocks={@props.value}
-                        editor={@props.editor}
-                        selectBlocks={@props.selectBlocks}
-                        onChange={@props.onChange}
-                        editorCache={@props.editorCache}
-                        doc={@props.doc}
-                        setEditorMode={@props.setEditorMode}
-                        />
-                </DrawCodeSidebarContainer>
+                React.createElement(DrawCodeSidebarContainer, { \
+                    "width": (DEVELOPER_SIDEBAR_WIDTH),  \
+                    "sidebarMode": "code",  \
+                    "editor": (@props.editor)
+                },
+                    React.createElement(ComponentSidebar, { \
+                        "selectedBlocks": (@props.value),  \
+                        "editor": (@props.editor),  \
+                        "selectBlocks": (@props.selectBlocks),  \
+                        "onChange": (@props.onChange),  \
+                        "editorCache": (@props.editorCache),  \
+                        "doc": (@props.doc),  \
+                        "setEditorMode": (@props.setEditorMode)
+                        })
+                )

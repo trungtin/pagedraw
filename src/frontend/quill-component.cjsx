@@ -11,7 +11,7 @@ Quill = require 'quill'
 exports.QuillComponent = createReactClass
     displayName: 'QuillComponent'
     render: ->
-        <div ref="editor" className="quill-editor expand-children" onMouseDown={@handleMouseDown} onContextMenu={@handleRightClick} />
+        React.createElement("div", {"ref": "editor", "className": "quill-editor expand-children", "onMouseDown": (@handleMouseDown), "onContextMenu": (@handleRightClick)})
 
     handleMouseDown: (e) ->
         # stop the click from bubling up, so we make sure it's used only to set the cursor position

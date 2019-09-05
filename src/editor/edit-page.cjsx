@@ -104,7 +104,7 @@ ViewportManager = require './viewport-manager'
 
 DraggableInElectron = (wrapped) =>
     if window.is_electron
-    then <div style={WebkitAppRegion: "drag"}>{wrapped}</div>
+    then React.createElement("div", {"style": (WebkitAppRegion: "drag")}, (wrapped))
     else wrapped
 
 ErrorPage = require '../meta-app/error-page'
@@ -130,23 +130,23 @@ exports.Editor = Editor = createReactClass
             lib_in_dev_mode = _l.find(@librariesWithErrors, {inDevMode: true})
 
             cli_running = not _l.some(lib_in_dev_mode?.loadErrors(window), (err) -> err.__pdStatus == 'net-err')
-            return <ErrorPage message={if lib_in_dev_mode and not cli_running \
+            return React.createElement(ErrorPage, {"message": (if lib_in_dev_mode and not cli_running \
                                        then "You have a library in dev mode but you're not running pagedraw develop in the CLI"
-                                       else "Some libraries failed to load"}
-                              detail={if lib_in_dev_mode and not cli_running then <a href="https://documentation.pagedraw.io/cli/">Click here to install the pagedraw CLI</a>}>
-                <div style={display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px', marginTop: '20px'}>
-                    {@librariesWithErrors.map (lib) =>
+                                       else "Some libraries failed to load"),  \
+                              "detail": (if lib_in_dev_mode and not cli_running then React.createElement("a", {"href": "https://documentation.pagedraw.io/cli/"}, "Click here to install the pagedraw CLI"))},
+                React.createElement("div", {"style": (display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px', marginTop: '20px')},
+                    (@librariesWithErrors.map (lib) =>
                         error = _l.first(lib.loadErrors(window)) # FIXME: Maybe show all of them?
-                        <div key={lib.uniqueKey} style={display: 'flex', marginBottom: '20px'}>
-                            <div style={marginRight: '20px'}>
-                                <strong>{lib.name()}</strong>
-                                {<div>In dev mode</div> if lib.inDevMode}
-                            </div>
-                            <div>
-                                <code style={whiteSpace: 'pre', display: 'flex', textAlign: 'left'}>{error.stack}</code>
-                            </div>
-                            {if error.__pdStatus == 'different-state-upon-load'
-                                <PdButtonOne onClick={=>
+                        React.createElement("div", {"key": (lib.uniqueKey), "style": (display: 'flex', marginBottom: '20px')},
+                            React.createElement("div", {"style": (marginRight: '20px')},
+                                React.createElement("strong", null, (lib.name())),
+                                (React.createElement("div", null, "In dev mode") if lib.inDevMode)
+                            ),
+                            React.createElement("div", null,
+                                React.createElement("code", {"style": (whiteSpace: 'pre', display: 'flex', textAlign: 'left')}, (error.stack))
+                            ),
+                            (if error.__pdStatus == 'different-state-upon-load'
+                                React.createElement(PdButtonOne, {"onClick": (=>
                                     return unless @docjsonThatWasPreventedFromLoading?
 
                                     makeLibAtVersion(window, lib.library_id, lib.version_id).then (new_lib) =>
@@ -162,31 +162,31 @@ exports.Editor = Editor = createReactClass
                                         @finishLoadingDoc(doc, doc.serialize())
                                         @docjsonThatWasPreventedFromLoading = null
 
-                                } type="warning">Attempt to reinstall library</PdButtonOne>
-                            }
-                        </div>
-                    }
-                </div>
-                <div style={display: 'flex', justifyContent: 'center'}>
-                    <PdButtonOne onClick={=>
+                                ), "type": "warning"}, "Attempt to reinstall library")
+                            )
+                        )
+                    )
+                ),
+                React.createElement("div", {"style": (display: 'flex', justifyContent: 'center')},
+                    React.createElement(PdButtonOne, {"onClick": (=>
                         return unless @docjsonThatWasPreventedFromLoading?
                         @librariesWithErrors = []
                         @finishLoadingDoc(Doc.deserialize(@docjsonThatWasPreventedFromLoading), @docjsonThatWasPreventedFromLoading)
                         @docjsonThatWasPreventedFromLoading = null
-                    } type="danger">Proceed without loading libraries</PdButtonOne>
-                    <div style={width: 20} />
-                    <PdButtonOne type="primary" onClick={-> window.location = window.location}>Refresh</PdButtonOne>
-                </div>
-             </ErrorPage>
+                    ), "type": "danger"}, "Proceed without loading libraries"),
+                    React.createElement("div", {"style": (width: 20)}),
+                    React.createElement(PdButtonOne, {"type": "primary", "onClick": (-> window.location = window.location)}, "Refresh")
+                )
+             )
 
         if @isLoaded() == false
-            return <div style={backgroundColor: 'rgb(251, 251, 251)'}>
-                {###
+            return React.createElement("div", {"style": (backgroundColor: 'rgb(251, 251, 251)')},
+                (###
                 Nothing in particular to do with loading, but we have the same offscreen div as below.
                 We need it in the boot sequence before the editor isLoaded()
-                ###}
-                <div style={visibility: 'hidden'} key="off_screen_div" ref="off_screen_div" />
-            </div>
+                ###),
+                React.createElement("div", {"style": (visibility: 'hidden'), "key": "off_screen_div", "ref": "off_screen_div"})
+            )
 
         assert => @doc.isInReadonlyMode()
 
@@ -194,96 +194,96 @@ exports.Editor = Editor = createReactClass
         editorMode.rebuild_render_caches()
 
         if @props.playground
-            return <div style={display: 'flex', flex: '1'}>
-                {editorMode.canvas(this)}
-                <div style={visibility: 'hidden'} ref="off_screen_div" />
-            </div>
+            return React.createElement("div", {"style": (display: 'flex', flex: '1')},
+                (editorMode.canvas(this)),
+                React.createElement("div", {"style": (visibility: 'hidden'), "ref": "off_screen_div"})
+            )
 
         assert => @doc.isInReadonlyMode()
 
         shadowDom = ({contents, wrapper}) =>
             if config.shadowDomTheEditor
-                <ShadowDOM includeCssUrls={config.editor_css_urls}>
-                    {wrapper(contents)}
-                </ShadowDOM>
+                React.createElement(ShadowDOM, {"includeCssUrls": (config.editor_css_urls)},
+                    (wrapper(contents))
+                )
 
             else
                 contents
 
-        <div style={
+        React.createElement("div", {"style": (
             # The StackBlitz integration overrides {height: '100%'}
             _l.extend {height: '100vh', flex: 1, display: 'flex', flexDirection: 'column'}, @props.editorOuterStyle
-        }>
-            <Helmet><title>{@props.windowTitle ? "#{@doc.url} — Pagedraw"}</title></Helmet>
-            {font_loading_head_tags_for_doc(@doc)}
+        )},
+            React.createElement(Helmet, null, React.createElement("title", null, (@props.windowTitle ? "#{@doc.url} — Pagedraw"))),
+            (font_loading_head_tags_for_doc(@doc)),
 
-            {shadowDom({
+            (shadowDom({
                 wrapper: (content) => content
                 contents:
-                    <ShouldSubtreeRender shouldUpdate={@editorCache.render_params.dontUpdateSidebars != true} subtree={=> DraggableInElectron(
+                    React.createElement(ShouldSubtreeRender, {"shouldUpdate": (@editorCache.render_params.dontUpdateSidebars != true), "subtree": (=> DraggableInElectron(
                         editorMode.topbar(this, @props.defaultTopbar ? (
                             if config.nonComponentMultistates then 'with-mk-multi' else 'default'
                         ))
-                    )} />
-            })}
+                    ))})
+            })),
 
-            <div style={display: 'flex', flex: 1, flexDirection: 'row'}>
-                { if config.layerList
+            React.createElement("div", {"style": (display: 'flex', flex: 1, flexDirection: 'row')},
+                ( if config.layerList
                     shadowDom({
                         wrapper: (content) =>
-                            <div style={display: 'flex', flexDirection: 'row', height: '100%'}>
-                                {content}
-                            </div>
+                            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', height: '100%')},
+                                (content)
+                            )
                         contents:
-                            <React.Fragment>
-                                <div style={display: 'flex', flexDirection: 'column', justifyContent: 'space-between'} key="ll">
-                                    <ShouldSubtreeRender shouldUpdate={@editorCache.render_params.dontUpdateSidebars != true} subtree={=>
+                            React.createElement(React.Fragment, null,
+                                React.createElement("div", {"style": (display: 'flex', flexDirection: 'column', justifyContent: 'space-between'), "key": "ll"},
+                                    React.createElement(ShouldSubtreeRender, {"shouldUpdate": (@editorCache.render_params.dontUpdateSidebars != true), "subtree": (=>
                                         editorMode.leftbar(this)
-                                    } />
-                                </div>
-                                <div className="vdivider" key="bhs-div" />
-                            </React.Fragment>
+                                    )})
+                                ),
+                                React.createElement("div", {"className": "vdivider", "key": "bhs-div"})
+                            )
                     })
-                }
+                ),
 
-                { if config.libraryPreviewSidebar then [
-                    <ShouldSubtreeRender shouldUpdate={@editorCache.render_params.dontUpdateSidebars != true} key="sb" subtree={=>
-                        <LibraryPreviewSidebar doc={@doc} setEditorMode={@setEditorMode} editorMode={editorMode} onChange={@handleDocChanged} />
-                    } />
-                    <div className="vdivider" key="lps-div" />
-                ]}
+                ( if config.libraryPreviewSidebar then [
+                    React.createElement(ShouldSubtreeRender, {"shouldUpdate": (@editorCache.render_params.dontUpdateSidebars != true), "key": "sb", "subtree": (=>
+                        React.createElement(LibraryPreviewSidebar, {"doc": (@doc), "setEditorMode": (@setEditorMode), "editorMode": (editorMode), "onChange": (@handleDocChanged)})
+                    )})
+                    React.createElement("div", {"className": "vdivider", "key": "lps-div"})
+                ]),
 
-                {
+                (
                     editorMode.canvas(this)
-                }
+                ),
 
-                { if config.docSidebar or not _l.isEmpty @getSelectedBlocks()
+                ( if config.docSidebar or not _l.isEmpty @getSelectedBlocks()
                     shadowDom({
                         wrapper: (content) =>
-                            <div style={display: 'flex', flexDirection: 'row', height: '100%'}>
-                                {content}
-                            </div>
+                            React.createElement("div", {"style": (display: 'flex', flexDirection: 'row', height: '100%')},
+                                (content)
+                            )
                         contents:
-                            <React.Fragment>
-                                <div className="vdivider" key="sb-div" />
-                                <ShouldSubtreeRender shouldUpdate={@editorCache.render_params.dontUpdateSidebars != true} key="sb" subtree={=>
+                            React.createElement(React.Fragment, null,
+                                React.createElement("div", {"className": "vdivider", "key": "sb-div"}),
+                                React.createElement(ShouldSubtreeRender, {"shouldUpdate": (@editorCache.render_params.dontUpdateSidebars != true), "key": "sb", "subtree": (=>
                                     editorMode.sidebar(this)
-                                } />
-                            </React.Fragment>
+                                )})
+                            )
                     })
-                }
-            </div>
+                )
+            ),
 
-            {###
+            (###
             @refs.off_screen_div is used for when we need access to a DOM node but don't want
             to interfere with the Editor, for example with getSizeOfPdom().
-            ###}
-            <div style={visibility: 'hidden'} key="off_screen_div" ref="off_screen_div" />
-        </div>
+            ###),
+            React.createElement("div", {"style": (visibility: 'hidden'), "key": "off_screen_div", "ref": "off_screen_div"})
+        )
 
     ## Topbar utilities
     topbarBlockAdder: ->
-        trigger = <div><TopbarButton text="Add" image="https://ucarecdn.com/10ab7bf3-7f34-4d0f-a1b4-3187747c3862/" /></div>
+        trigger = React.createElement("div", null, React.createElement(TopbarButton, {"text": "Add", "image": "https://ucarecdn.com/10ab7bf3-7f34-4d0f-a1b4-3187747c3862/"}))
 
         popover = (closePopover) =>
             entry_for_type = (blockType) => {
@@ -296,62 +296,62 @@ exports.Editor = Editor = createReactClass
             }
             item_for_type = (blockType) =>
                 {label, handler, keyCommand} = entry_for_type(blockType)
-                <MenuItem text={label} onClick={handler} label={keyCommand} key={blockType.getUniqueKey()} />
+                React.createElement(MenuItem, {"text": (label), "onClick": (handler), "label": (keyCommand), "key": (blockType.getUniqueKey())})
 
             external_code_entries = (node, key) =>
                 if node.ref? then item_for_type(new ExternalBlockType(_l.find(@doc.getExternalCodeSpecs(), {uniqueKey: node.ref})))
-                else <MenuItem text={node.name} key={"folder-#{key}"}>{node.children.map(external_code_entries)}</MenuItem>
+                else React.createElement(MenuItem, {"text": (node.name), "key": ("folder-#{key}")}, (node.children.map(external_code_entries)))
 
-            <div style={
+            React.createElement("div", {"style": (
                 borderRadius: 5
                 borderTopLeftRadius: 0
                 boxShadow: "0px 2px 3px rgba(0, 0, 0, 0.62)"
                 maxHeight: "calc(87vh - 47px)"
                 overflow: 'auto'
-            }>
-                <Menu>
-                    <MenuItem text="Shapes">
-                        {((o) -> _l.compact(o).map(item_for_type))([
+            )},
+                React.createElement(Menu, null,
+                    React.createElement(MenuItem, {"text": "Shapes"},
+                        (((o) -> _l.compact(o).map(item_for_type))([
                             LayoutBlockType
                             LineBlockType
                             OvalBlockType
                             TriangleBlockType
                             VnetBlockType if config.vnet_block
-                        ])}
-                    </MenuItem>
-                    <MenuDivider />
-                    {_l.compact([
+                        ]))
+                    ),
+                    React.createElement(MenuDivider, null),
+                    (_l.compact([
                         ArtboardBlockType
                         MultistateBlockType
                         ScreenSizeBlockType
                         StackBlockType if config.stackBlock
-                    ]).map(item_for_type)}
-                    <MenuDivider />
-                    {[TextBlockType, ImageBlockType].map(item_for_type)}
-                    <MenuDivider />
-                    <MenuItem text="Form Inputs">
-                        {[TextInputBlockType, FileInputBlockType, CheckBoxBlockType, RadioInputBlockType, SliderBlockType].map(item_for_type)}
-                    </MenuItem>
-                    <MenuDivider />
-                    <MenuItem text="Document Component">
-                        {if (block_types = user_defined_block_types_list(@doc)).length > 0 then block_types.map(item_for_type)
-                        else <MenuItem text="Draw an artboard to define a component" disabled={true} />}
-                    </MenuItem>
-                    {<MenuItem text="Library Component">
-                        <MenuItem
-                            text="Search for and add libraries"
-                            onClick={() => @setEditorMode(new LibStoreInteraction()); closePopover(); @handleDocChanged(fast: true)}
-                        />
-                        {if (children = @doc.getExternalCodeSpecTree().children).length > 0 then children.map(external_code_entries)
-                        else <MenuItem text="No libraries added to this document yet" disabled={true} />}
-                    </MenuItem> if config.realExternalCode}
-                </Menu>
-            </div>
+                    ]).map(item_for_type)),
+                    React.createElement(MenuDivider, null),
+                    ([TextBlockType, ImageBlockType].map(item_for_type)),
+                    React.createElement(MenuDivider, null),
+                    React.createElement(MenuItem, {"text": "Form Inputs"},
+                        ([TextInputBlockType, FileInputBlockType, CheckBoxBlockType, RadioInputBlockType, SliderBlockType].map(item_for_type))
+                    ),
+                    React.createElement(MenuDivider, null),
+                    React.createElement(MenuItem, {"text": "Document Component"},
+                        (if (block_types = user_defined_block_types_list(@doc)).length > 0 then block_types.map(item_for_type)
+                        else React.createElement(MenuItem, {"text": "Draw an artboard to define a component", "disabled": (true)}))
+                    ),
+                    (React.createElement(MenuItem, {"text": "Library Component"},
+                        React.createElement(MenuItem, { \
+                            "text": "Search for and add libraries",  \
+                            "onClick": (() => @setEditorMode(new LibStoreInteraction()); closePopover(); @handleDocChanged(fast: true))
+                        }),
+                        (if (children = @doc.getExternalCodeSpecTree().children).length > 0 then children.map(external_code_entries)
+                        else React.createElement(MenuItem, {"text": "No libraries added to this document yet", "disabled": (true)}))
+                    ) if config.realExternalCode)
+                )
+            )
 
-        <Popover trigger={trigger} popover={popover} popover_position_for_trigger_rect={(trigger_rect) -> {
+        React.createElement(Popover, {"trigger": (trigger), "popover": (popover), "popover_position_for_trigger_rect": ((trigger_rect) -> {
             top: trigger_rect.top + 35
             left: trigger_rect.left + 11
-        }} />
+        })})
 
     showUpdatingFromFigmaModal: ->
         if access_token = window.pd_params.figma_access_token
@@ -361,45 +361,45 @@ exports.Editor = Editor = createReactClass
                     @updateJsonFromFigma(doc_json)
                     closeHandler()
                 return [
-                    <Modal.Header>
-                        <Modal.Title>Updating from Figma</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <img style={display: 'block', marginLeft: 'auto', marginRight: 'auto'} src="https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/" />
-                    </Modal.Body>
+                    React.createElement(Modal.Header, null,
+                        React.createElement(Modal.Title, null, "Updating from Figma")
+                    )
+                    React.createElement(Modal.Body, null,
+                        React.createElement("img", {"style": (display: 'block', marginLeft: 'auto', marginRight: 'auto'), "src": "https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/"})
+                    )
                 ])
         else
             window.location.href = "/oauth/figma_redirect?page_id=#{window.pd_params.page_id}"
 
-    getDocSidebarExtras: -> <div>
-        { if config.realExternalCode
-            <React.Fragment>
-                <PdSidebarButton onClick={=> @setEditorMode(new LibStoreInteraction()); @handleDocChanged({fast: true})}>Add Libraries to Doc</PdSidebarButton>
-                <PdSidebarButton onClick={=> libManagerModal(@doc, @handleDocChanged)}>Create Libraries</PdSidebarButton>
-            </React.Fragment>
-        }
+    getDocSidebarExtras: -> React.createElement("div", null,
+        ( if config.realExternalCode
+            React.createElement(React.Fragment, null,
+                React.createElement(PdSidebarButton, {"onClick": (=> @setEditorMode(new LibStoreInteraction()); @handleDocChanged({fast: true}))}, "Add Libraries to Doc"),
+                React.createElement(PdSidebarButton, {"onClick": (=> libManagerModal(@doc, @handleDocChanged))}, "Create Libraries")
+            )
+        ),
 
-        { if config.handleRawDocJson
-            <div>
-                <PdSidebarButton onClick={=>
+        ( if config.handleRawDocJson
+            React.createElement("div", null,
+                React.createElement(PdSidebarButton, {"onClick": (=>
                     modal.show (closeHandler) => [
-                        <Modal.Header closeButton>
-                            <Modal.Title>Serialized Doc JSON</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <p>Hey, you found a Pagedraw Developer Internal Feature!  That's pretty cool, don't tell your friends.</p>
-                            <CodeShower content={JSON.stringify @doc.serialize()} />
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <PdButtonOne type="primary" onClick={closeHandler}>Close</PdButtonOne>
-                        </Modal.Footer>
+                        React.createElement(Modal.Header, {"closeButton": true},
+                            React.createElement(Modal.Title, null, "Serialized Doc JSON")
+                        )
+                        React.createElement(Modal.Body, null,
+                            React.createElement("p", null, "Hey, you found a Pagedraw Developer Internal Feature!  That\'s pretty cool, don\'t tell your friends."),
+                            React.createElement(CodeShower, {"content": (JSON.stringify @doc.serialize())})
+                        )
+                        React.createElement(Modal.Footer, null,
+                            React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
+                        )
                     ]
-                }>Serialize Doc</PdSidebarButton>
+                )}, "Serialize Doc"),
 
-                <FormControl tag="textarea" style={width: '100%'}
-                    valueLink={propLink(this, 'raw_doc_json_input', => @handleDocChanged(fast: 'true'))}
-                    placeholder="Enter raw doc json..." />
-                <PdSidebarButton onClick={(=>
+                React.createElement(FormControl, {"tag": "textarea", "style": (width: '100%'),  \
+                    "valueLink": (propLink(this, 'raw_doc_json_input', => @handleDocChanged(fast: 'true'))),  \
+                    "placeholder": "Enter raw doc json..."}),
+                React.createElement(PdSidebarButton, {"onClick": ((=>
                     try
                         json = JSON.parse(@raw_doc_json_input)
                     catch e
@@ -409,75 +409,75 @@ exports.Editor = Editor = createReactClass
 
                     @raw_doc_json_input = ''
                     @setDocJson(json)
-                )}>
+                ))}, """
                     Set Doc from Json
-                </PdSidebarButton>
-                <hr />
-            </div>
-        }
+"""),
+                React.createElement("hr", null)
+            )
+        ),
 
 
-        { if config.crashButton
+        ( if config.crashButton
             throw new Error("crashy!") if @crashy == true
-            <div>
-                <PdSidebarButton onClick={=> @crashy = true}>Crash</PdSidebarButton>
-                <PdSidebarButton onClick={=> log_assert -> false}>Log assert false</PdSidebarButton>
-                <PdSidebarButton onClick={=> log_assert -> true}>Log assert true</PdSidebarButton>
-                <PdSidebarButton onClick={=> log_assert -> true[0]['undefined']()}>Log assert throws</PdSidebarButton>
-                <hr />
-            </div>
-        }
+            React.createElement("div", null,
+                React.createElement(PdSidebarButton, {"onClick": (=> @crashy = true)}, "Crash"),
+                React.createElement(PdSidebarButton, {"onClick": (=> log_assert -> false)}, "Log assert false"),
+                React.createElement(PdSidebarButton, {"onClick": (=> log_assert -> true)}, "Log assert true"),
+                React.createElement(PdSidebarButton, {"onClick": (=> log_assert -> true[0]['undefined']())}, "Log assert throws"),
+                React.createElement("hr", null)
+            )
+        ),
 
-        {if not _l.isEmpty @doc.figma_url
-            <div>
-                {
+        (if not _l.isEmpty @doc.figma_url
+            React.createElement("div", null,
+                (
                     if window.pd_params.figma_access_token
-                        <PdSidebarButton onClick={@showUpdatingFromFigmaModal}>Update from Figma</PdSidebarButton>
+                        React.createElement(PdSidebarButton, {"onClick": (@showUpdatingFromFigmaModal)}, "Update from Figma")
                     else
-                        <a href="/oauth/figma_redirect?page_id=#{window.pd_params.page_id}">
-                            <PdSidebarButton>Update from Figma</PdSidebarButton>
-                        </a>
-                }
-                <hr />
-            </div>
-        }
+                        React.createElement("a", {"href": "/oauth/figma_redirect?page_id=#{window.pd_params.page_id}"},
+                            React.createElement(PdSidebarButton, null, "Update from Figma")
+                        )
+                ),
+                React.createElement("hr", null)
+            )
+        ),
 
-        {if @imported_from_sketch
-            <div>
-                <PdSidebarButton onClick={() =>
+        (if @imported_from_sketch
+            React.createElement("div", null,
+                React.createElement(PdSidebarButton, {"onClick": (() =>
                     modal.show (closeHandler) =>
                         [
-                            <Modal.Header closeButton>
-                                <Modal.Title>Update from Sketch</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                <SketchImporter onImport={(doc_json) => @updateJsonFromSketch(doc_json); closeHandler()} />
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <PdButtonOne type="primary" onClick={closeHandler}>Close</PdButtonOne>
-                            </Modal.Footer>
-                        ]}>Update from Sketch </PdSidebarButton>
-                <hr />
-            </div>
-        }
+                            React.createElement(Modal.Header, {"closeButton": true},
+                                React.createElement(Modal.Title, null, "Update from Sketch")
+                            )
+                            React.createElement(Modal.Body, null,
+                                React.createElement(SketchImporter, {"onImport": ((doc_json) => @updateJsonFromSketch(doc_json); closeHandler())})
+                            )
+                            React.createElement(Modal.Footer, null,
+                                React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
+                            )
+                        ])}, "Update from Sketch "),
+                React.createElement("hr", null)
+            )
+        ),
 
-        { if config.configEditorButton
-            <div>
-                <PdSidebarButton onClick={window.__openConfigEditor}>Config</PdSidebarButton>
-                <hr />
-            </div>
-        }
+        ( if config.configEditorButton
+            React.createElement("div", null,
+                React.createElement(PdSidebarButton, {"onClick": (window.__openConfigEditor)}, "Config"),
+                React.createElement("hr", null)
+            )
+        ),
 
-        { if config.normalizeForceAllButton
-            <div>
-                <PdSidebarButton onClick={=> @doc.inReadonlyMode(=> @normalizeForceAll()); @handleDocChanged(fast: true)}>Force Normalize All</PdSidebarButton>
-                <hr />
-            </div>
-        }
+        ( if config.normalizeForceAllButton
+            React.createElement("div", null,
+                React.createElement(PdSidebarButton, {"onClick": (=> @doc.inReadonlyMode(=> @normalizeForceAll()); @handleDocChanged(fast: true))}, "Force Normalize All"),
+                React.createElement("hr", null)
+            )
+        ),
 
-        { if config.diffSinceCommitShower and @docRef?
-            <div>
-                <PdSidebarButton onClick={=>
+        ( if config.diffSinceCommitShower and @docRef?
+            React.createElement("div", null,
+                React.createElement(PdSidebarButton, {"onClick": (=>
                     diff = prettyPrintDocDiff(@cacheOfLastCommit.doc, @doc)
                     server.compileDocjson @doc.serialize(), (compiled_head) =>
                         server.compileDocjson @cacheOfLastCommit.doc.serialize(), (compiled_master) ->
@@ -510,42 +510,42 @@ exports.Editor = Editor = createReactClass
                             diff_results.push(['Doc Diff', JSON.stringify(diff, null, 2).split('\n').map (line) -> {color: 'grey', line}])
 
                             modal.show (closeHandler) => [
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Differences since last commit</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    <Tabs defaultActiveKey={0} id="commit-diffs-tabs">
-                                        { diff_results.map ([filePath, diffedLines], key) =>
-                                            <Tab eventKey={key} title={filePath} key={key}>
-                                                <div style={width: '100%', overflow: 'auto', backgroundColor: 'white'}>
-                                                    {diffedLines.map ({color, line})  ->
-                                                        <div style={color: color, whiteSpace: 'pre', fontFamily: 'monospace'}>{line}</div>
-                                                    }
-                                                </div>
-                                            </Tab>
-                                        }
-                                    </Tabs>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <PdButtonOne type="primary" onClick={closeHandler}>Close</PdButtonOne>
-                                </Modal.Footer>
+                                React.createElement(Modal.Header, {"closeButton": true},
+                                    React.createElement(Modal.Title, null, "Differences since last commit")
+                                )
+                                React.createElement(Modal.Body, null,
+                                    React.createElement(Tabs, {"defaultActiveKey": (0), "id": "commit-diffs-tabs"},
+                                        ( diff_results.map ([filePath, diffedLines], key) =>
+                                            React.createElement(Tab, {"eventKey": (key), "title": (filePath), "key": (key)},
+                                                React.createElement("div", {"style": (width: '100%', overflow: 'auto', backgroundColor: 'white')},
+                                                    (diffedLines.map ({color, line})  ->
+                                                        React.createElement("div", {"style": (color: color, whiteSpace: 'pre', fontFamily: 'monospace')}, (line))
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                                React.createElement(Modal.Footer, null,
+                                    React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
+                                )
                             ]
-                }>Diff since last Commit</PdSidebarButton>
-                <hr />
-            </div>
-        }
+                )}, "Diff since last Commit"),
+                React.createElement("hr", null)
+            )
+        ),
 
-        {if @docRef?
-            <HistoryView docRef={@docRef}
-                         doc={@doc}
-                         setDocJson={@setDocJson}
-                         user={@props.current_user}
-                         showDocjsonDiff={(commits_docjson) =>
+        (if @docRef?
+            React.createElement(HistoryView, {"docRef": (@docRef),  \
+                         "doc": (@doc),  \
+                         "setDocJson": (@setDocJson),  \
+                         "user": (@props.current_user),  \
+                         "showDocjsonDiff": ((commits_docjson) =>
                             @setEditorMode(new DiffViewInteraction(commits_docjson, @doc.serialize()))
                             @handleDocChanged(fast: true, mutated_blocks: [])
-                        } />
-        }
-    </div>
+                        )})
+        )
+    )
 
     hasUncommitedChanges: ->
         return false if not @docRef?
@@ -1244,58 +1244,58 @@ exports.Editor = Editor = createReactClass
                 delete @shortcutsModalCloseFn
 
         modal.show (closeHandler) => registerCloseHandler(closeHandler); [
-            <Modal.Header closeButton>
-                <Modal.Title>Pagedraw Shortcuts</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <p>a &rarr; Draw Artboard</p>
-                <p>m &rarr; Draw Multistate Grouping</p>
-                <p>r &rarr; Draw Rectangle</p>
-                <p>t &rarr; Draw Text Block</p>
-                <p>Backspace/Delete &rarr; Remove block</p>
-                <hr />
+            React.createElement(Modal.Header, {"closeButton": true},
+                React.createElement(Modal.Title, null, "Pagedraw Shortcuts")
+            )
+            React.createElement(Modal.Body, null,
+                React.createElement("p", null, "a → Draw Artboard"),
+                React.createElement("p", null, "m → Draw Multistate Grouping"),
+                React.createElement("p", null, "r → Draw Rectangle"),
+                React.createElement("p", null, "t → Draw Text Block"),
+                React.createElement("p", null, "Backspace\x2FDelete → Remove block"),
+                React.createElement("hr", null),
 
-                <p>d &rarr; Mark Dynamic Data</p>
-                <p>p &rarr; Enter pushdown mode</p>
-                <hr />
+                React.createElement("p", null, "d → Mark Dynamic Data"),
+                React.createElement("p", null, "p → Enter pushdown mode"),
+                React.createElement("hr", null),
 
-                <p>Shift + Resize &rarr; Resize block w/ fixed ratio</p>
-                <p>Alt + Resize &rarr; Resize block from center/middle</p>
-                <p>Alt + IJKL Keys &rarr; Traverse document</p>
-                <p>{Meta} + Drag &rarr; Selection box</p>
-                <p>Alt + Drag &rarr; Drag copy with children</p>
-                <p>Alt + Arrow Keys &rarr; Nudge block w/ children</p>
-                <p>Shift + Drag &rarr; Drag block perfectly vertically or horizonally</p>
-                <p>Arrow Keys &rarr; Nudge Block</p>
-                <p>Caps Lock &rarr; Prevent Snap to Grid</p>
-                <p>{Meta} + {"Shift + <"} &rarr; Decrease font size</p>
-                <p>{Meta} + {"Shift + >"} &rarr; Increase font size</p>
-                <p>{Meta} + A &rarr; Select all blocks</p>
-                <p>{Meta} + Arrow Keys &rarr; Expand block</p>
-                <p>Space + Drag &rarr; Drag canvas</p>
-                <p>s &rarr; Create blank 1024 x 1024 artboard</p>
-                <hr />
+                React.createElement("p", null, "Shift + Resize → Resize block w\x2F fixed ratio"),
+                React.createElement("p", null, "Alt + Resize → Resize block from center\x2Fmiddle"),
+                React.createElement("p", null, "Alt + IJKL Keys → Traverse document"),
+                React.createElement("p", null, (Meta), " + Drag → Selection box"),
+                React.createElement("p", null, "Alt + Drag → Drag copy with children"),
+                React.createElement("p", null, "Alt + Arrow Keys → Nudge block w\x2F children"),
+                React.createElement("p", null, "Shift + Drag → Drag block perfectly vertically or horizonally"),
+                React.createElement("p", null, "Arrow Keys → Nudge Block"),
+                React.createElement("p", null, "Caps Lock → Prevent Snap to Grid"),
+                React.createElement("p", null, (Meta), " + ", ("Shift + <"), " → Decrease font size"),
+                React.createElement("p", null, (Meta), " + ", ("Shift + >"), " → Increase font size"),
+                React.createElement("p", null, (Meta), " + A → Select all blocks"),
+                React.createElement("p", null, (Meta), " + Arrow Keys → Expand block"),
+                React.createElement("p", null, "Space + Drag → Drag canvas"),
+                React.createElement("p", null, "s → Create blank 1024 x 1024 artboard"),
+                React.createElement("hr", null),
 
-                <p>{Meta} + '+' &rarr; Zoom in</p>
-                <p>{Meta} + '-' &rarr; Zoom out</p>
-                <p>{Meta} + 0 &rarr; Return to 100% zoom</p>
-                <hr />
+                React.createElement("p", null, (Meta), " + \'+\' → Zoom in"),
+                React.createElement("p", null, (Meta), " + \'-\' → Zoom out"),
+                React.createElement("p", null, (Meta), " + 0 → Return to 100% zoom"),
+                React.createElement("hr", null),
 
 
-                <p>{Meta} + C &rarr; Copy</p>
-                <p>{Meta} + X &rarr; Cut</p>
-                <p>{Meta} + P &rarr; Paste</p>
-                <hr />
+                React.createElement("p", null, (Meta), " + C → Copy"),
+                React.createElement("p", null, (Meta), " + X → Cut"),
+                React.createElement("p", null, (Meta), " + P → Paste"),
+                React.createElement("hr", null),
 
-                <p>{Meta} + Z &rarr; Undo</p>
-                <p>{Meta} + Shift + Z or {Meta} + Y &rarr; Redo</p>
-                <hr />
+                React.createElement("p", null, (Meta), " + Z → Undo"),
+                React.createElement("p", null, (Meta), " + Shift + Z or ", (Meta), " + Y → Redo"),
+                React.createElement("hr", null),
 
-                <p>Shift + ? &rarr; Open/close shortcuts modal</p>
-            </Modal.Body>
-            <Modal.Footer>
-                <PdButtonOne type="primary" onClick={@shortcutsModalCloseFn}>Close</PdButtonOne>
-            </Modal.Footer>
+                React.createElement("p", null, "Shift + ? → Open\x2Fclose shortcuts modal")
+            )
+            React.createElement(Modal.Footer, null,
+                React.createElement(PdButtonOne, {"type": "primary", "onClick": (@shortcutsModalCloseFn)}, "Close")
+            )
         ]
 
     handleStackBlitzSave: ->
@@ -1308,48 +1308,48 @@ exports.Editor = Editor = createReactClass
             # possibly because of the namespaced bootstrap stuff. I added
             # a CSS hack to .nav-tabs to make it work. See editor.css
             [
-                <Modal.Header closeButton>
-                    <Modal.Title>Sync Code</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {
+                React.createElement(Modal.Header, {"closeButton": true},
+                    React.createElement(Modal.Title, null, "Sync Code")
+                )
+                React.createElement(Modal.Body, null,
+                    (
                         if _l.isEmpty(@doc.getComponents())
-                            <div>
-                                <h3>No components in this doc!</h3>
-                                <p>
+                            React.createElement("div", null,
+                                React.createElement("h3", null, "No components in this doc!"),
+                                React.createElement("p", null, """
                                 Each artboard in Pagedraw defines a component.
-                                Please draw at least one artboard ('A' + drag) before trying to export code.
-                                </p>
-                            </div>
+                                Please draw at least one artboard (\'A\' + drag) before trying to export code.
+""")
+                            )
                         else
-                            <div>
-                                <h5 style={margin: '9px 0', color: 'black'}>Step 1. Install Pagedraw CLI</h5>
-                                <p>In bash terminal (Terminal.app on macOS) run:</p>
-                                <CodeShower content={"npm install -g pagedraw-cli"} />
+                            React.createElement("div", null,
+                                React.createElement("h5", {"style": (margin: '9px 0', color: 'black')}, "Step 1. Install Pagedraw CLI"),
+                                React.createElement("p", null, "In bash terminal (Terminal.app on macOS) run:"),
+                                React.createElement(CodeShower, {"content": ("npm install -g pagedraw-cli")}),
 
-                                <h5 style={margin: '9px 0', color: 'black'}>Step 2. Login to Pagedraw </h5>
-                                <p>In terminal run:</p>
-                                <CodeShower content={"pagedraw login"} />
+                                React.createElement("h5", {"style": (margin: '9px 0', color: 'black')}, "Step 2. Login to Pagedraw "),
+                                React.createElement("p", null, "In terminal run:"),
+                                React.createElement(CodeShower, {"content": ("pagedraw login")}),
 
-                                <h5 style={margin: '9px 0', color: 'black'}>Step 3. pagedraw.json</h5>
-                                <p>In the root of your project create a file pagedraw.json with the following contents</p>
-                                <CodeShower content={recommended_pagedraw_json_for_app_id(@props.app_id, @doc.filepath_prefix)} />
+                                React.createElement("h5", {"style": (margin: '9px 0', color: 'black')}, "Step 3. pagedraw.json"),
+                                React.createElement("p", null, "In the root of your project create a file pagedraw.json with the following contents"),
+                                React.createElement(CodeShower, {"content": (recommended_pagedraw_json_for_app_id(@props.app_id, @doc.filepath_prefix))}),
 
-                                <h5 style={margin: '9px 0', color: 'black'}>Step 4. Pagedraw Sync/Pull</h5>
-                                <p>Start Pagedraw sync process (it runs continuously):</p>
-                                <CodeShower content={"pagedraw sync"} />
+                                React.createElement("h5", {"style": (margin: '9px 0', color: 'black')}, "Step 4. Pagedraw Sync\x2FPull"),
+                                React.createElement("p", null, "Start Pagedraw sync process (it runs continuously):"),
+                                React.createElement(CodeShower, {"content": ("pagedraw sync")}),
 
-                                <p>Alternatively, to one-off download the Pagedraw file changes, run</p>
-                                <CodeShower content={"pagedraw pull"} />
+                                React.createElement("p", null, "Alternatively, to one-off download the Pagedraw file changes, run"),
+                                React.createElement(CodeShower, {"content": ("pagedraw pull")}),
 
-                                <p>Check out <a href="https://documentation.pagedraw.io/install/">https://documentation.pagedraw.io/install/</a> for more info.</p>
-                            </div>
+                                React.createElement("p", null, "Check out ", React.createElement("a", {"href": "https://documentation.pagedraw.io/install/"}, "https:\x2F\x2Fdocumentation.pagedraw.io\x2Finstall\x2F"), " for more info.")
+                            )
 
-                    }
-                </Modal.Body>
-                <Modal.Footer>
-                    <PdButtonOne type="primary" onClick={closeHandler}>Close</PdButtonOne>
-                </Modal.Footer>
+                    )
+                )
+                React.createElement(Modal.Footer, null,
+                    React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
+                )
             ]
 
     topbarPlayButtonIsEnabled: -> @getPlayStartScreen()?
@@ -1377,16 +1377,16 @@ exports.Editor = Editor = createReactClass
 
         else
             modal.show (closeHandler) => [
-                <Modal.Header>
-                    <Modal.Title>Select an Artboard to play with it</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    If you have no artboards, you should start by drawing one from the <code>Add</code> menu.
-                    See <a href="https://documentation.pagedraw.io/the-editor/">https://documentation.pagedraw.io/the-editor/</a> for more details.
-                </Modal.Body>
-                <Modal.Footer>
-                    <PdButtonOne type="primary" onClick={closeHandler}>Close</PdButtonOne>
-                </Modal.Footer>
+                React.createElement(Modal.Header, null,
+                    React.createElement(Modal.Title, null, "Select an Artboard to play with it")
+                )
+                React.createElement(Modal.Body, null, """
+                    If you have no artboards, you should start by drawing one from the """, React.createElement("code", null, "Add"), """ menu.
+                    See """, React.createElement("a", {"href": "https://documentation.pagedraw.io/the-editor/"}, "https:\x2F\x2Fdocumentation.pagedraw.io\x2Fthe-editor\x2F"), """ for more details.
+""")
+                React.createElement(Modal.Footer, null,
+                    React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
+                )
             ]
 
 
@@ -1850,7 +1850,7 @@ exports.Editor = Editor = createReactClass
             if config.realExternalCode
                 modal.show((closeHandler) ->
                     return [
-                        <LibraryAutoSuggest focusOnMount={true} onChange={=> modal.forceUpdate(=>)} />
+                        React.createElement(LibraryAutoSuggest, {"focusOnMount": (true), "onChange": (=> modal.forceUpdate(=>))})
                     ])
 
         # Meta + '+'

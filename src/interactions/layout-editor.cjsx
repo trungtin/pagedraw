@@ -102,9 +102,9 @@ class LayoutEditorMode extends EditorMode
         @selectedBlocks = @editor.getSelectedBlocks()
 
     canvas: (editor) ->
-        <Zoomable viewportManager={@editor.viewportManager} style={flex: 1, backgroundColor: '#f3f1f3'}>
-            <PassDomNodeToRenderForMouse render={@render_canvas_knowing_dom} />
-        </Zoomable>
+        React.createElement(Zoomable, {"viewportManager": (@editor.viewportManager), "style": (flex: 1, backgroundColor: '#f3f1f3')},
+            React.createElement(PassDomNodeToRenderForMouse, {"render": (@render_canvas_knowing_dom)})
+        )
 
     render_canvas_knowing_dom: (draggingCanvasDiv) =>
         is_in_distance_measuring_mode = @measure_distance_on_alt_hover() \
@@ -174,55 +174,55 @@ class LayoutEditorMode extends EditorMode
         classes = []
         classes.push('highlight-blocks-on-hover') if @highlight_blocks_on_hover()
 
-        <DraggingCanvas classes={classes} ref="draggingCanvas"
-            style={cursor: @cursor(), height: @editorGeometry.height, width: @editorGeometry.width}
-            onDrag={@prepareDrag} onClick={@handleClick} onDoubleClick={@handleDoubleClick} onMouseMove={@handleMouseMove}
-            onInteractionHappened={->}>
+        React.createElement(DraggingCanvas, {"classes": (classes), "ref": "draggingCanvas",  \
+            "style": (cursor: @cursor(), height: @editorGeometry.height, width: @editorGeometry.width),  \
+            "onDrag": (@prepareDrag), "onClick": (@handleClick), "onDoubleClick": (@handleDoubleClick), "onMouseMove": (@handleMouseMove),  \
+            "onInteractionHappened": (->)},
 
-            <div style={zIndex: 0, isolation: 'isolate'}>
-                <LayoutView
-                    doc={@editor.doc}
-                    blockOverrides={@getBlockOverrides()}
-                    overlayForBlock={@getOverlayForBlock} />
-            </div>
+            React.createElement("div", {"style": (zIndex: 0, isolation: 'isolate')},
+                React.createElement(LayoutView, { \
+                    "doc": (@editor.doc),  \
+                    "blockOverrides": (@getBlockOverrides()),  \
+                    "overlayForBlock": (@getOverlayForBlock)})
+            ),
 
-            <div style={zIndex: 1, isolation: 'isolate'}>
-                { @renderPrototypingArrows() if config.prototyping }
-                { @renderGridlines(@getGridlines(@editor.doc.blocks), '1px dashed rgba(255, 50, 50, 0.8)') if config.showGridlines }
-                { @renderGridlines(@activeGridlines, '1px solid rgba(255, 50, 50, 0.8)') }
-                { @renderGridlines(measuringGridlines, '1px dashed rgba(255, 50, 50, 0.8)')}
-                { @renderRulers(rulers) }
-                { @showSlices() if config.show_slices }
+            React.createElement("div", {"style": (zIndex: 1, isolation: 'isolate')},
+                ( @renderPrototypingArrows() if config.prototyping ),
+                ( @renderGridlines(@getGridlines(@editor.doc.blocks), '1px dashed rgba(255, 50, 50, 0.8)') if config.showGridlines ),
+                ( @renderGridlines(@activeGridlines, '1px solid rgba(255, 50, 50, 0.8)') ),
+                ( @renderGridlines(measuringGridlines, '1px dashed rgba(255, 50, 50, 0.8)')),
+                ( @renderRulers(rulers) ),
+                ( @showSlices() if config.show_slices ),
 
-                { unless @hide_floating_controls()
+                ( unless @hide_floating_controls()
                     @selectedBlocks.map (block) =>
-                        <ResizingFrame key={block.uniqueKey} resizable_edges={block.resizableEdges}
-                            style={position: 'absolute', top: block.top, left: block.left, height: block.height, width: block.width}
-                            flag={(grip) => {
+                        React.createElement(ResizingFrame, {"key": (block.uniqueKey), "resizable_edges": (block.resizableEdges),  \
+                            "style": (position: 'absolute', top: block.top, left: block.left, height: block.height, width: block.width),  \
+                            "flag": ((grip) => {
                                 control: 'resizer', block: block
                                 edges: grip.sides, grip_label: grip.label
-                            }}
-                        />
-                }
+                            })
+                        })
+                ),
 
-                { if config.prototyping and not @hide_floating_controls() and @selectedBlocks.length == 1
+                ( if config.prototyping and not @hide_floating_controls() and @selectedBlocks.length == 1
                     @selectedBlocks.map (block) =>
-                        <div key={block.uniqueKey}
-                            className="unzoomed-control"
-                            onMouseDown={(evt) => evt.nativeEvent.context = {control: 'proto-linker', block: block}}
-                            style={
+                        React.createElement("div", {"key": (block.uniqueKey),  \
+                            "className": "unzoomed-control",  \
+                            "onMouseDown": ((evt) => evt.nativeEvent.context = {control: 'proto-linker', block: block}),  \
+                            "style": (
                                 backgroundColor: 'rgba(260, 165, 0, 0.7)',
                                 height: 30, width: 30, borderRadius: 30,
                                 border: '4px solid white',
                                 position: 'absolute'
                                 top: block.vertCenter - 15, left: block.right + 40
-                            }
-                        />
-                }
+                            )
+                        })
+                ),
 
-                { @extra_overlays?() }
-            </div>
-        </DraggingCanvas>
+                ( @extra_overlays?() )
+            )
+        )
 
     getOverlayForBlock: (block) =>
         return null if @disable_overlay_for_block(block)
@@ -254,7 +254,7 @@ class LayoutEditorMode extends EditorMode
 
         overlayClasses += @extra_overlay_classes_for_block(block)
 
-        <div className={overlayClasses} />
+        React.createElement("div", {"className": (overlayClasses)})
 
 
     renderPrototypingArrows: ->
@@ -274,26 +274,26 @@ class LayoutEditorMode extends EditorMode
         # FIXME: Should depend on zoom
         [h, w] = [10, 7]
 
-        <svg style={
+        React.createElement("svg", {"style": (
             position: 'absolute', zIndex: 1, pointerEvents: 'none'
             top: 0, left: 0,
             width: @editorGeometry.width, height: @editorGeometry.height,
-        }>
-            <defs>
-                <marker id="arrowhead" markerWidth={w} markerHeight={h} refX={w} refY={h/2} orient="auto" markerUnits="strokeWidth">
-                    <path d="M 0, 0 L #{w}, #{h/2} z" stroke="rgba(255, 165, 0, 0.7)" />
-                    <path d="M #{w}, #{h/2} L 0, #{h} z" stroke="rgba(255, 165, 0, 0.7)" />
-                </marker>
-            </defs>
-            {
+        )},
+            React.createElement("defs", null,
+                React.createElement("marker", {"id": "arrowhead", "markerWidth": (w), "markerHeight": (h), "refX": (w), "refY": (h/2), "orient": "auto", "markerUnits": "strokeWidth"},
+                    React.createElement("path", {"d": "M 0, 0 L #{w}, #{h/2} z", "stroke": "rgba(255, 165, 0, 0.7)"}),
+                    React.createElement("path", {"d": "M #{w}, #{h/2} L 0, #{h} z", "stroke": "rgba(255, 165, 0, 0.7)"})
+                )
+            ),
+            (
                 arrows.map ([from, to], i) =>
                     # render arrow
                     [x1, y1, x2, y2] = [(from.left + to.left) / 2, from.top - 5, (from.left + to.left) / 2, to.top + 5]
-                    <path key={i}
-                        d={"M#{from.left} #{from.top} C #{x1} #{y1}, #{x2} #{y2}, #{to.left} #{to.top}"}
-                        stroke="rgba(255,165,0, 0.7)" fill="transparent" markerEnd="url(#arrowhead)" />
-            }
-        </svg>
+                    React.createElement("path", {"key": (i),  \
+                        "d": ("M#{from.left} #{from.top} C #{x1} #{y1}, #{x2} #{y2}, #{to.left} #{to.top}"),  \
+                        "stroke": "rgba(255,165,0, 0.7)", "fill": "transparent", "markerEnd": "url(#arrowhead)"})
+            )
+        )
 
     # Render rulers on the screen. Ruler design inspired by Sketch's
     renderRulers: (rulers) ->
@@ -309,24 +309,24 @@ class LayoutEditorMode extends EditorMode
                 fontFamily: 'Roboto'
             tick_width = 7
             if axis == 'left'
-                <div key={'ruler' + i} style={_l.extend ruler_style, {
+                React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend ruler_style, {
                     top: start, height: end - start
                     left: position, width: '1px'
                     flexDirection: 'column'
-                }}>
-                    <div style={position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, top: 0, left: -tick_width / 2} />
-                    <div style={padding: '5px'}>{display}</div>
-                    <div style={position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, bottom: 0, left: -tick_width / 2} />
-                </div>
+                })},
+                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, top: 0, left: -tick_width / 2)}),
+                    React.createElement("div", {"style": (padding: '5px')}, (display)),
+                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, bottom: 0, left: -tick_width / 2)})
+                )
             else if axis == 'top'
-                <div key={'ruler' + i} style={_l.extend ruler_style, {
+                React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend ruler_style, {
                     left: start, width: end - start
                     top: position, height: '1px'
-                }}>
-                    <div style={position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, left: 0, bottom: -tick_width / 2} />
-                    <div style={padding: '5px'}>{display}</div>
-                    <div style={position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, right: 0, bottom: -tick_width / 2} />
-                </div>
+                })},
+                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, left: 0, bottom: -tick_width / 2)}),
+                    React.createElement("div", {"style": (padding: '5px')}, (display)),
+                    React.createElement("div", {"style": (position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, right: 0, bottom: -tick_width / 2)})
+                )
             else
                 throw new Error 'unknown ruler direction'
 
@@ -335,21 +335,21 @@ class LayoutEditorMode extends EditorMode
     renderGridlines: (gridlines, style) ->
         _.map gridlines, ({source, axis, position, start, end}, i) =>
             if axis == 'left'
-                <div key={'gridline' + i} style={{
+                React.createElement("div", {"key": ('gridline' + i), "style": ({
                     position: 'absolute'
                     top: start, height: end - start
                     left: position
                     borderLeft: style
                     color: 'rgba(255, 50, 50, 0.8)'
-                }} />
+                })})
             else if axis == 'top'
-                <div key={'gridline' + i} style={{
+                React.createElement("div", {"key": ('gridline' + i), "style": ({
                     position: 'absolute'
                     left: start, width: end - start
                     top: position
                     borderTop: style
                     color: 'rgba(255, 50, 50, 0.8)'
-                }} />
+                })})
             else
                 throw new Error 'unknown gridline direction'
 
@@ -882,8 +882,8 @@ exports.SelectRangeMode = class SelectRangeMode extends __UNSTABLE_DragInteracti
             height: 0, width: 0,
 
         @extra_overlays = ->
-            <React.Fragment>
-                <div style={{
+            React.createElement(React.Fragment, null,
+                React.createElement("div", {"style": ({
                     backgroundColor: 'rgba(100, 100, 255, 0.2)'
                     border: '1px solid rgba(100, 100, 255, 1)'
                     position: 'absolute'
@@ -891,8 +891,8 @@ exports.SelectRangeMode = class SelectRangeMode extends __UNSTABLE_DragInteracti
                     left: rangeRect.left
                     height: rangeRect.height
                     width: rangeRect.width
-                }} />
-            </React.Fragment>
+                })})
+            )
 
         onMove (to) =>
             order = (a, b) -> if a <= b then [a, b] else [b, a]
@@ -926,16 +926,16 @@ exports.DrawProtoLinkMode = class DrawProtoLinkMode extends __UNSTABLE_DragInter
         @prototype_link_in_progress = {from, to: from, hovered_component: null}
 
         @extra_overlays = ->
-            <React.Fragment>
-                { if @prototype_link_in_progress?.target?
-                    <div style={_l.extend(@prototype_link_in_progress.target.withMargin(40).geometry, {
+            React.createElement(React.Fragment, null,
+                ( if @prototype_link_in_progress?.target?
+                    React.createElement("div", {"style": (_l.extend(@prototype_link_in_progress.target.withMargin(40).geometry, {
                         position: 'absolute'
                         backgroundColor: 'rgba(250, 165, 0, 0.5)'
                         border: '10px solid rgba(250, 165, 0, 1)',
                         borderRadius: 40
-                    })} />
-                }
-            </React.Fragment>
+                    }))})
+                )
+            )
 
         onMove (to) =>
             # update the UI
@@ -1109,7 +1109,7 @@ exports.ContentEditorMode = class ContentEditorMode extends LayoutEditorMode
 
     # override in subclasses!
     contentEditor: ->
-        <div />
+        React.createElement("div", null)
 
     handleContentClick: (mouse) ->
         # pass
@@ -1148,19 +1148,19 @@ exports.TypingMode = class TypingMode extends ContentEditorMode
                 assert -> false
         })
 
-        <div style={_l.extend textStyles, {minHeight: @block.height}}>
-            <QuillComponent
-                ref={(quill_component) =>
+        React.createElement("div", {"style": (_l.extend textStyles, {minHeight: @block.height})},
+            React.createElement(QuillComponent, { \
+                "ref": ((quill_component) =>
                     if quill_component? and @onQuillMounted?
                         @onQuillMounted(quill_component)
                         delete @onQuillMounted
-                }
-                value={@block.textContent.staticValue}
-                onChange={(newval) =>
+                ),  \
+                "value": (@block.textContent.staticValue),  \
+                "onChange": ((newval) =>
                     @block.textContent.staticValue = newval
                     @editor.handleDocChanged()
-                } />
-        </div>
+                )})
+        )
 
 exports.PushdownTypingMode = class PushdownTypingMode extends ContentEditorMode
     constructor: (block) ->
@@ -1242,20 +1242,20 @@ exports.PushdownTypingMode = class PushdownTypingMode extends ContentEditorMode
                 assert -> false
         })
 
-        <div style={_l.extend textStyles, {minHeight: @block.height}}>
-            <QuillComponent
-                throttle_ms={0}
-                ref={(quill_component) =>
+        React.createElement("div", {"style": (_l.extend textStyles, {minHeight: @block.height})},
+            React.createElement(QuillComponent, { \
+                "throttle_ms": (0),  \
+                "ref": ((quill_component) =>
                     if quill_component? and @onQuillMounted?
                         @onQuillMounted(quill_component)
                         delete @onQuillMounted
-                }
-                value={@block.textContent.staticValue}
-                onChange={(newval) =>
+                ),  \
+                "value": (@block.textContent.staticValue),  \
+                "onChange": ((newval) =>
                     @changeTextWithPushdown(newval)
                     @editor.handleDocChanged()
-                } />
-        </div>
+                )})
+        )
 
 
 
@@ -1313,9 +1313,9 @@ exports.DrawingMode = class DrawingMode extends LayoutEditorMode
 
 
     extra_overlays: =>
-        <React.Fragment>
-            { if @drawingBox?
-                <div style={{
+        React.createElement(React.Fragment, null,
+            ( if @drawingBox?
+                React.createElement("div", {"style": ({
                     backgroundColor: 'rgba(0, 0, 0, 0)'
                     border: '1px solid grey'
                     position: 'absolute'
@@ -1323,9 +1323,9 @@ exports.DrawingMode = class DrawingMode extends LayoutEditorMode
                     left: @drawingBox.left
                     height: @drawingBox.height
                     width: @drawingBox.width
-                }} />
-            }
-        </React.Fragment>
+                })})
+            )
+        )
 
     handleDrag: (from, onMove, onEnd) =>
         user_level_block_type = @user_level_block_type
@@ -1423,16 +1423,16 @@ exports.DynamicizingMode = class DynamicizingMode extends LayoutEditorMode
         return overlayClasses
 
     sidebar: (editor) ->
-        <Sidebar
-            sidebarMode="code"
-            editor={editor}
-            value={editor.getSelectedBlocks()}
-            selectBlocks={editor.selectBlocks}
-            editorCache={editor.editorCache}
-            doc={editor.doc}
-            setEditorMode={editor.setEditorMode}
-            onChange={editor.handleDocChanged}
-            />
+        React.createElement(Sidebar, { \
+            "sidebarMode": "code",  \
+            "editor": (editor),  \
+            "value": (editor.getSelectedBlocks()),  \
+            "selectBlocks": (editor.selectBlocks),  \
+            "editorCache": (editor.editorCache),  \
+            "doc": (editor.doc),  \
+            "setEditorMode": (editor.setEditorMode),  \
+            "onChange": (editor.handleDocChanged)
+            })
 
     handleClick: (mouse) =>
         # override in subclasses
@@ -1695,9 +1695,9 @@ exports.VerticalPushdownMode = class VerticalPushdownMode extends LayoutEditorMo
                 # Put an 'underlay' on one of the targeted_blocks by giving it an extra overlay with negative zIndex
                 @specialOverlayForBlock = (block, standard_overlay) =>
                     return standard_overlay unless block == targeted_blocks[0]
-                    return <React.Fragment>
-                        {standard_overlay}
-                        <div style={
+                    return React.createElement(React.Fragment, null,
+                        (standard_overlay),
+                        React.createElement("div", {"style": (
                             position: 'absolute', zIndex: -1
                             border: '1px solid blue'
                             backgroundColor: '#93D3F9'
@@ -1708,8 +1708,8 @@ exports.VerticalPushdownMode = class VerticalPushdownMode extends LayoutEditorMo
 
                             height: target_slice.length,
                             width: targeted_blocks_area.width
-                        } />
-                    </React.Fragment>
+                        )})
+                    )
 
         onEnd =>
             repositon_blocks_in_slice(target_slice)

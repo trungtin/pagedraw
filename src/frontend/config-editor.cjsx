@@ -14,11 +14,11 @@ exports.ConfigEditor = createReactClass
     displayName: "ConfigEditor"
 
     render: ->
-        <form onSubmit={@updateConfig}>
-            <FormControl tag="textarea" style={{width: '100%', height: '8em', fontFamily: 'monospace'}}
-                valueLink={@linkState('updated_config')} />
-            <button style={{float: 'right', marginBottom: '3em'}}>Update config</button>
-        </form>
+        React.createElement("form", {"onSubmit": (@updateConfig)},
+            React.createElement(FormControl, {"tag": "textarea", "style": ({width: '100%', height: '8em', fontFamily: 'monospace'}),  \
+                "valueLink": (@linkState('updated_config'))}),
+            React.createElement("button", {"style": ({float: 'right', marginBottom: '3em'})}, "Update config")
+        )
 
     getInitialState: ->
         updated_config: window.localStorage.config
@@ -33,23 +33,23 @@ exports.showConfigEditorModal = showConfigEditorModal = ->
         updated_config = window.localStorage.config
 
         modal.show (closeHandler) => [
-            <Modal.Header closeButton>
-                <Modal.Title>Set config flags</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <FormControl tag="textarea" style={{width: '100%', height: '60vh', fontFamily: 'monospace'}}
-                    valueLink={
+            React.createElement(Modal.Header, {"closeButton": true},
+                React.createElement(Modal.Title, null, "Set config flags")
+            )
+            React.createElement(Modal.Body, null,
+                React.createElement(FormControl, {"tag": "textarea", "style": ({width: '100%', height: '60vh', fontFamily: 'monospace'}),  \
+                    "valueLink": (
                         value: updated_config
                         requestChange: (nv) => updated_config = nv; modal.forceUpdate()
-                    } />
-            </Modal.Body>
-            <Modal.Footer>
-                <PdButtonOne onClick={closeHandler}>Close</PdButtonOne>
-                <PdButtonOne type="primary" onClick={=>
+                    )})
+            )
+            React.createElement(Modal.Footer, null,
+                React.createElement(PdButtonOne, {"onClick": (closeHandler)}, "Close"),
+                React.createElement(PdButtonOne, {"type": "primary", "onClick": (=>
                     window.localStorage.config = updated_config
                     window.setTimeout -> window.location.reload()
-                }>Update</PdButtonOne>
-            </Modal.Footer>
+                )}, "Update")
+            )
         ]
 
 # let us open the config editor from the devtools console
