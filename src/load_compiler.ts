@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 // require the code we'll be using
 // note there's a dependency cycle as of 12/22/2015, so we must require src/core
 // before the blocks, specifically AbsoluteBlock/VisibleBlock.  See depgraph.png,

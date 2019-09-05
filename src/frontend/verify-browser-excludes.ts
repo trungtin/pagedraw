@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 /*
 This file is my best attempt to test that we're correctly not shipping down compileDoc with the editor.
 
