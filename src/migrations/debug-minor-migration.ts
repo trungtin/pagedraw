@@ -1,10 +1,7 @@
-require('../../coffeescript-register-web')
-require('../load_compiler')
+import '../../coffeescript-register-web';
+import '../load_compiler';
+import { Doc } from '../doc';
+import _l from 'lodash';
+import { debugBeforeMapProd } from './map_prod';
 
-{Doc} = require '../doc'
-
-_l = require 'lodash'
-
-{debugBeforeMapProd} = require './map_prod'
-
-debugBeforeMapProd (docjson) -> Doc.deserialize(docjson).serialize()
+debugBeforeMapProd(docjson => Doc.deserialize(docjson).serialize());

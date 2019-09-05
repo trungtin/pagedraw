@@ -1,4 +1,4 @@
-require('../../coffeescript-register-web')
-{migrationCheck} = require './map_prod'
+import '../../coffeescript-register-web';
+import { migrationCheck } from './map_prod';
 
-migrationCheck (docjson) -> docjson
+migrationCheck(docjson => docjson);

@@ -1,82 +1,101 @@
-_l = require 'lodash'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+let block_area, block_overlap_area, block_overlap_length, block_partially_encloses_block, block_props_by_direction, block_range, blocks_overlap, blocks_overlap_on_both_axes, direction_from_side, opposite_direction, opposite_side, overlap_sides, range_encloses_subrange, range_overlap_length, ranges_overlap;
+import _l from 'lodash';
+const defaultExport = {};
 
-exports.opposite_side = opposite_side = (side) -> switch side
-    when 'top'    then 'bottom'
-    when 'bottom' then 'top'
-    when 'left'   then 'right'
-    when 'right'  then 'left'
-    else throw new Error 'unknown side'
-
-
-exports.direction_from_side = direction_from_side = (side) -> switch side
-    when 'top'    then 'vertical'
-    when 'bottom' then 'vertical'
-    when 'left'   then 'horizontal'
-    when 'right'  then 'horizontal'
-
-
-exports.opposite_direction = opposite_direction = (direction) -> switch direction
-    when 'vertical'   then 'horizontal'
-    when 'horizontal' then 'vertical'
-    else throw new Error "unknown direction"
+defaultExport.opposite_side = (opposite_side = function(side) { switch (side) {
+    case 'top':    return 'bottom';
+    case 'bottom': return 'top';
+    case 'left':   return 'right';
+    case 'right':  return 'left';
+    default: throw new Error('unknown side');
+} });
 
 
-exports.block_props_by_direction = block_props_by_direction = (direction) ->
-    switch direction
-        when 'vertical'
-            start: 'top', end: 'bottom', length: 'height'
-            offset_before: 'offset_left', offset_after: 'offset_right'
-        when 'horizontal'
-            start: 'left', end: 'right', length: 'width'
-            offset_before: 'offset_top', offset_after: 'offset_bottom'
-        else throw new Error "unknown direction"
+defaultExport.direction_from_side = (direction_from_side = function(side) { switch (side) {
+    case 'top':    return 'vertical';
+    case 'bottom': return 'vertical';
+    case 'left':   return 'horizontal';
+    case 'right':  return 'horizontal';
+} });
 
 
-exports.block_area = block_area = (block) -> block.width * block.height
+defaultExport.opposite_direction = (opposite_direction = function(direction) { switch (direction) {
+    case 'vertical':   return 'horizontal';
+    case 'horizontal': return 'vertical';
+    default: throw new Error("unknown direction");
+} });
 
 
-exports.block_range = block_range = (direction, block) ->
-    { start, end } = block_props_by_direction(direction)
-    {start: block[start],  end: block[end]}
+defaultExport.block_props_by_direction = (block_props_by_direction = function(direction) {
+    switch (direction) {
+        case 'vertical':
+            return {
+                start: 'top', end: 'bottom', length: 'height',
+                offset_before: 'offset_left', offset_after: 'offset_right'
+            };
+        case 'horizontal':
+            return {
+                start: 'left', end: 'right', length: 'width',
+                offset_before: 'offset_top', offset_after: 'offset_bottom'
+            };
+        default: throw new Error("unknown direction");
+    }
+});
 
 
-exports.ranges_overlap = ranges_overlap = (range_a, range_b) -> range_a.start <= range_b.end  and range_b.start <= range_a.end
+defaultExport.block_area = (block_area = block => block.width * block.height);
 
 
-exports.range_encloses_subrange = range_encloses_subrange = (range, subrange)  -> range.start <=  subrange.start and range.end >= subrange.end
+defaultExport.block_range = (block_range = function(direction, block) {
+    const { start, end } = block_props_by_direction(direction);
+    return {start: block[start],  end: block[end]};
+});
 
 
-exports.range_overlap_length = range_overlap_length = (range_a, range_b) ->
-    e1 = Math.max(range_a.start, range_b.start)
-    e2 = Math.min(range_a.end, range_b.end)
-    if e1 > e2 then e1 - e2 else e2 - e1
+defaultExport.ranges_overlap = (ranges_overlap = (range_a, range_b) => (range_a.start <= range_b.end)  && (range_b.start <= range_a.end));
 
 
-exports.blocks_overlap = blocks_overlap = (direction, block_a, block_b) -> ranges_overlap(block_range(direction, block_a), block_range(direction, block_b))
+defaultExport.range_encloses_subrange = (range_encloses_subrange = (range, subrange) => (range.start <=  subrange.start) && (range.end >= subrange.end));
 
 
-exports.block_overlap_length = block_overlap_length = (dir, block_a, block_b) ->
-    range_a = block_range(dir, block_a)
-    range_b = block_range(dir, block_b)
-    range_overlap_length(range_a, range_b)
+defaultExport.range_overlap_length = (range_overlap_length = function(range_a, range_b) {
+    const e1 = Math.max(range_a.start, range_b.start);
+    const e2 = Math.min(range_a.end, range_b.end);
+    if (e1 > e2) { return e1 - e2; } else { return e2 - e1; }
+});
 
 
-exports.block_overlap_area = block_overlap_area = (block_a, block_b) ->
-    block_overlap_length('horizontal', block_a, block_b) * block_overlap_length('vertical', block_a, block_b)
-
-exports.blocks_overlap_on_both_axes = blocks_overlap_on_both_axes = (block_a, block_b) -> blocks_overlap('horizontal', block_a, block_b) and blocks_overlap('vertical', block_a, block_b)
+defaultExport.blocks_overlap = (blocks_overlap = (direction, block_a, block_b) => ranges_overlap(block_range(direction, block_a), block_range(direction, block_b)));
 
 
-exports.overlap_sides = overlap_sides = (block_a, block_b) ->
-    vertical_overlap   = blocks_overlap('vertical',   block_a, block_b)
-    horizontal_overlap = blocks_overlap('horizontal', block_a, block_b)
-    _l.compact [
-        'top'    if vertical_overlap   and block_a.top    >= block_b.top
-        'bottom' if vertical_overlap   and block_a.bottom <= block_b.bottom
-        'left'   if horizontal_overlap and block_a.left   >= block_b.left
-        'right'  if horizontal_overlap and block_a.right  <= block_b.right
-    ]
+defaultExport.block_overlap_length = (block_overlap_length = function(dir, block_a, block_b) {
+    const range_a = block_range(dir, block_a);
+    const range_b = block_range(dir, block_b);
+    return range_overlap_length(range_a, range_b);
+});
 
 
-exports.block_partially_encloses_block = block_partially_encloses_block = (dir, container, containee) ->
-    blocks_overlap_on_both_axes(container, containee) and range_encloses_subrange(block_range(dir, container), block_range(dir, containee))
+defaultExport.block_overlap_area = (block_overlap_area = (block_a, block_b) => block_overlap_length('horizontal', block_a, block_b) * block_overlap_length('vertical', block_a, block_b));
+
+defaultExport.blocks_overlap_on_both_axes = (blocks_overlap_on_both_axes = (block_a, block_b) => blocks_overlap('horizontal', block_a, block_b) && blocks_overlap('vertical', block_a, block_b));
+
+
+defaultExport.overlap_sides = (overlap_sides = function(block_a, block_b) {
+    const vertical_overlap   = blocks_overlap('vertical',   block_a, block_b);
+    const horizontal_overlap = blocks_overlap('horizontal', block_a, block_b);
+    return _l.compact([
+        vertical_overlap   && (block_a.top    >= block_b.top) ? 'top' : undefined,
+        vertical_overlap   && (block_a.bottom <= block_b.bottom) ? 'bottom' : undefined,
+        horizontal_overlap && (block_a.left   >= block_b.left) ? 'left' : undefined,
+        horizontal_overlap && (block_a.right  <= block_b.right) ? 'right' : undefined
+    ]);
+});
+
+
+defaultExport.block_partially_encloses_block = (block_partially_encloses_block = (dir, container, containee) => blocks_overlap_on_both_axes(container, containee) && range_encloses_subrange(block_range(dir, container), block_range(dir, containee)));
+export default defaultExport;

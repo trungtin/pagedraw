@@ -1,4 +1,6 @@
-exports.allCursors = allCursors = [
+let allCursors;
+const defaultExport = {};
+defaultExport.allCursors = (allCursors = [
   'pointer',
   'default',
   'move',
@@ -33,4 +35,5 @@ exports.allCursors = allCursors = [
   'wait',
   'zoom-in',
   'zoom-out',
-]
+]);
+export default defaultExport;

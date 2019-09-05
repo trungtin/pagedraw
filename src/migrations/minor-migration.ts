@@ -1,15 +1,13 @@
-require('../../coffeescript-register-web')
-require('../load_compiler')
+import '../../coffeescript-register-web';
+import '../load_compiler';
+import { Doc } from '../doc';
+import _l from 'lodash';
+import { migration } from './map_prod';
 
-{Doc} = require '../doc'
+//# DEBUG=true coffee src/migrations/minor-migration.coffee
+//# MIGRATION=true coffee src/migrations/minor-migration.coffee
 
-_l = require 'lodash'
-
-{migration} = require './map_prod'
-
-## DEBUG=true coffee src/migrations/minor-migration.coffee
-## MIGRATION=true coffee src/migrations/minor-migration.coffee
-
-migration 'minor-migration', (docjson) ->
-    return null if docjson == null
-    return Doc.deserialize(docjson).serialize()
+migration('minor-migration', function(docjson) {
+    if (docjson === null) { return null; }
+    return Doc.deserialize(docjson).serialize();
+});

@@ -1,9 +1,9 @@
-###
+/*
 This file is my best attempt to test that we're correctly not shipping down compileDoc with the editor.
 
 In core.coffee, we have the following lines:
 
-# PREVENT EVERYTHING BELOW FROM SHIPPING WITH THE EDITOR
+* PREVENT EVERYTHING BELOW FROM SHIPPING WITH THE EDITOR
 `if (!(process.env.REACT_APP_ENV === 'browser' && process.env.NODE_ENV === 'production')) {`
 
 The backticks make the code inside get emitted directly as js, with no modification.  It's coffeescript's
@@ -42,14 +42,15 @@ Note that even if the line we're trying to exclude is not excluded, the alert/er
 system could define `process = {env: {REACT_APP_ENV: 'browser'}`, but do any optimizing code removal.  This is a
 risk that could at best be mitigated by grep-ing the minified js for a special string.  It's impossible in general.
 
-###
+*/
 
 
-excluded = true
-`if (!(process.env.REACT_APP_ENV === 'browser')) {`
-# PREVENT THE FOLLOWING LINE FROM SHIPPING WITH THE EDITOR
-excluded = false
-`}`
-if not excluded
-    window.alert("[Pagedraw internal] build system misconfigured: roll back.")
-    throw new Error("Webpack failed to exclude when process.env.REACT_APP_ENV != 'browser'!!")
+let excluded = true;
+if (!(process.env.REACT_APP_ENV === 'browser')) {
+// PREVENT THE FOLLOWING LINE FROM SHIPPING WITH THE EDITOR
+excluded = false;
+}
+if (!excluded) {
+    window.alert("[Pagedraw internal] build system misconfigured: roll back.");
+    throw new Error("Webpack failed to exclude when process.env.REACT_APP_ENV != 'browser'!!");
+}

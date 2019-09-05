@@ -1,8 +1,15 @@
-$ = require 'jquery'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import $ from 'jquery';
 
-# prevent user from zooming page in Chrome
+// prevent user from zooming page in Chrome
 
-$(document).bind 'wheel', (evt) ->
-    if evt.ctrlKey == true
-        # it's a pinch-zoom event; Chrome does pinch-zoom as scroll with ctrl key held
-        evt.preventDefault()
+$(document).bind('wheel', function(evt) {
+    if (evt.ctrlKey === true) {
+        // it's a pinch-zoom event; Chrome does pinch-zoom as scroll with ctrl key held
+        return evt.preventDefault();
+    }
+});

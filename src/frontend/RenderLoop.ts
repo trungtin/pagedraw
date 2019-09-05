@@ -1,32 +1,31 @@
-modal = require './modal'
-config = require '../config'
+/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import modal from './modal';
+import config from '../config';
 
-forceUpdate = (root, callback) ->
-    root.forceUpdate ->
-        modal.forceUpdate ->
-            callback()
+let forceUpdate = (root, callback) => root.forceUpdate(() => modal.forceUpdate(() => callback()));
 
-if process.env.NODE_ENV != 'production' and config.reactPerfRecording
-    # Perf = require 'react-addons-perf'
+if ((process.env.NODE_ENV !== 'production') && config.reactPerfRecording) {
+    // Perf = require 'react-addons-perf'
 
-    forceUpdate = (root, callback) ->
-       #  Perf.start()
+    forceUpdate = (root, callback) => //  Perf.start()
 
-        root.forceUpdate ->
-            modal.forceUpdate ->
+    root.forceUpdate(() => modal.forceUpdate(() => // Perf.stop()
+    // console.log "frame"
+    // measurements = Perf.getLastMeasurements()
+    // Perf.printInclusive(measurements)
+    // Perf.printExclusive(measurements)
+    // Perf.printWasted(measurements)
+    // Perf.printOperations(measurements)
 
-                # Perf.stop()
-                # console.log "frame"
-                # measurements = Perf.getLastMeasurements()
-                # Perf.printInclusive(measurements)
-                # Perf.printExclusive(measurements)
-                # Perf.printWasted(measurements)
-                # Perf.printOperations(measurements)
-
-                callback()
-
-
-# export a mixin for EditPage.  We probably wouldn't do it this way if we were doing it from scratch
-module.exports = {
-    dirty: (callback) -> forceUpdate(this, callback)
+    callback()));
 }
+
+
+// export a mixin for EditPage.  We probably wouldn't do it this way if we were doing it from scratch
+export default {
+    dirty(callback) { return forceUpdate(this, callback); }
+};
