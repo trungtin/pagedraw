@@ -422,13 +422,13 @@ find_deepest_matching_blocktree_node = (tree, block) ->
 
             return find_deepest_matching_blocktree_node(child, block)
 
-        else if (\ # inlined child.block.overlaps(block) for performance
-                    child.block.top < block.top + block.height \
-                and child.block.left < block.left + block.width \
-                and child.block.left + child.block.width > block.left \
-                and child.block.top + child.block.height > block.top)
+        # else if (\ # inlined child.block.overlaps(block) for performance
+        #             child.block.top < block.top + block.height \
+        #         and child.block.left < block.left + block.width \
+        #         and child.block.left + child.block.width > block.left \
+        #         and child.block.top + child.block.height > block.top)
 
-            break
+        #     break
 
     # else
     return tree
