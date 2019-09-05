@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 // load all blocks
 
 // regenerate with `yarn run regenerate-blocks-index`
