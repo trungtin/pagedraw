@@ -105,39 +105,43 @@ defaultExport.VnetBlock = Block.register('vnet', (VnetBlock = (function() {
         }
 
         editorWithSelectedNode(selected, {highlight_pts}) {
-            return React.createElement(CanvasRenderer, {"width": (this.width), "height": (this.height), "render": (ctx => {
-                const nbn = _l.keyBy(this.nodes, 'uniqueKey');
+            return (
+                <CanvasRenderer
+                    width={this.width}
+                    height={this.height}
+                    render={ctx => {
+                        const nbn = _l.keyBy(this.nodes, 'uniqueKey');
 
-                ctx.strokeStyle = 'black';
-                ctx.lineWidth = 1;
-                for (let {p1, p2} of Array.from(this.lines)) {
-                    ctx.beginPath();
-                    ctx.moveTo(nbn[p1].x, nbn[p1].y);
-                    ctx.lineTo(nbn[p2].x, nbn[p2].y);
-                    ctx.stroke();
-                }
-
-                if (highlight_pts) {
-                    ctx.strokeStyle = 'red';
-                    ctx.lineWidth = 1;
-                    for (let pt of Array.from(this.nodes)) {
-                        if (pt !== selected) {
+                        ctx.strokeStyle = 'black';
+                        ctx.lineWidth = 1;
+                        for (let {p1, p2} of Array.from(this.lines)) {
                             ctx.beginPath();
-                            ctx.arc(pt.x, pt.y, 10, 2*Math.PI, false);
+                            ctx.moveTo(nbn[p1].x, nbn[p1].y);
+                            ctx.lineTo(nbn[p2].x, nbn[p2].y);
                             ctx.stroke();
                         }
-                    }
-                }
 
-                if (selected != null) {
-                    ctx.strokeStyle = 'green';
-                    ctx.lineWidth = 8;
-                    ctx.beginPath();
-                    ctx.arc(selected.x, selected.y, 8, 2*Math.PI, false);
-                    return ctx.stroke();
-                }
-            }
-            )});
+                        if (highlight_pts) {
+                            ctx.strokeStyle = 'red';
+                            ctx.lineWidth = 1;
+                            for (let pt of Array.from(this.nodes)) {
+                                if (pt !== selected) {
+                                    ctx.beginPath();
+                                    ctx.arc(pt.x, pt.y, 10, 2*Math.PI, false);
+                                    ctx.stroke();
+                                }
+                            }
+                        }
+
+                        if (selected != null) {
+                            ctx.strokeStyle = 'green';
+                            ctx.lineWidth = 8;
+                            ctx.beginPath();
+                            ctx.arc(selected.x, selected.y, 8, 2*Math.PI, false);
+                            return ctx.stroke();
+                        }
+                    }} />
+            );
         }
 
         editContentMode(double_click_location) {
@@ -235,9 +239,15 @@ defaultExport.VnetBlock = Block.register('vnet', (VnetBlock = (function() {
 
                 sidebar: editor => {
                     const { StandardSidebar } = require('../editor/sidebar');
-                    return React.createElement(StandardSidebar, null,
-                        React.createElement("h5", {"style": ({textAlign: 'center'})}, "Drawing Mode"),
-                        React.createElement("button", {"style": ({width: '100%'}), "onClick": (deleteSelected)}, "delete")
+                    return (
+                        <StandardSidebar>
+                            <h5 style={{textAlign: 'center'}}>
+                                Drawing Mode
+                            </h5>
+                            <button style={{width: '100%'}} onClick={deleteSelected}>
+                                delete
+                            </button>
+                        </StandardSidebar>
                     );
                 }
             }
@@ -262,13 +272,15 @@ export default defaultExport;
 
 var CanvasRenderer = createReactClass({
     render() {
-        return React.createElement("canvas", { 
-            "width": (this.props.width * 2),  
-            "height": (this.props.height * 2),  
-            "ref": "canvas",  
-            "style": ({
-                width: this.props.width, height: this.props.height
-            })});
+        return (
+            <canvas
+                width={this.props.width * 2}
+                height={this.props.height * 2}
+                ref="canvas"
+                style={{
+                    width: this.props.width, height: this.props.height
+                }} />
+        );
     },
 
     componentDidMount() {

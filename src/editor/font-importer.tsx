@@ -27,8 +27,12 @@ export default createReactClass({
     },
 
     render() {
-        return React.createElement(Dropzone, {"onDrop": (this.handleDrop), "style": ({display: 'flex', flexDirection: 'column'})},
-            (React.createElement(FontImporter, {"error": (this.state.error), "importing": (this.state.importing)}))
+        return (
+            <Dropzone
+                onDrop={this.handleDrop}
+                style={{display: 'flex', flexDirection: 'column'}}>
+                <FontImporter error={this.state.error} importing={this.state.importing} />
+            </Dropzone>
         );
     },
 
@@ -63,12 +67,24 @@ export default createReactClass({
             return lst;
         };
 
-        if (!fontExtensions[format]) { return this.setState({error: React.createElement("div", {"style": ({width: 512})},
-            React.createElement("h4", null, "Error: Unsupported font file format"),
-            React.createElement("p", null, "You uploaded a ", React.createElement("code", null, ".", (format)), " file, but we only support ", (
-                english_list(_l.keys(fontExtensions).map((extension, i) => React.createElement("code", {"key": (i)}, ".", (extension))))
-            ), " font files.")
-        )}); }
+        if (!fontExtensions[format]) { return this.setState({error: <div style={{width: 512}}>
+            <h4>
+                Error: Unsupported font file format
+            </h4>
+            <p>
+                {"You uploaded a "}
+                <code>
+                    .
+                    {format}
+                </code>
+                {" file, but we only support "}
+                {english_list(_l.keys(fontExtensions).map((extension, i) => <code key={i}>
+                    .
+                    {extension}
+                </code>))}
+                {" font files."}
+            </p>
+        </div>}); }
 
         // FIXME: For now we always base64 encode fonts. Move to a more flexible world where
         // fonts can be required and all

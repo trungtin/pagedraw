@@ -24,15 +24,16 @@ defaultExport.Popover = (Popover = createReactClass({
         let position;
         return React.cloneElement(this.props.trigger, {ref: 'trigger', onClick: (() => this.setState({open: !this.state.open}))}, this.props.trigger.props.children,
             (this.state.open ? // overlay preventing clicks / scroll
-                React.createElement("div", {"style": ({position: 'fixed', zIndex: 1000, top: 0, right: 0, bottom: 0, left: 0}),  
-                    "onClick": (() => this.setState({open: false})),  
-                    "onWheel": (() => {
+                <div
+                    style={{position: 'fixed', zIndex: 1000, top: 0, right: 0, bottom: 0, left: 0}}
+                    onClick={() => this.setState({open: false})}
+                    onWheel={() => {
                         // scrolling anywhere on the page could cause geometry to change, and we're
                         // explicitly dependant on rendered geometry.  Specifically, scrolling the
                         // sidebar where a color picker lives could change the on-screen location
                         // of @props.target, which means the popover's positioning needs to change.
                         return this.forceUpdate();
-                    })})
+                    }} />
             : undefined),
 
             ((() => {
@@ -56,11 +57,14 @@ defaultExport.Popover = (Popover = createReactClass({
                     ? this.props.popover_position_for_trigger_rect(trigger_rect)
                     : {top: 0, left: 0};
 
-                return React.createElement("div", {"style": (_l.extend({position: 'fixed', zIndex: 1001}, position)),  
-                    "onClick"(e) {
-                        // prevent the click from getting to the overlay, which would close the popover
-                        e.preventDefault(); return e.stopPropagation();}},
-                    (this.props.popover(this.closeHandler))
+                return (
+                    <div
+                        style={_l.extend({position: 'fixed', zIndex: 1001}, position)}
+                        onClick={function(e) {
+                            // prevent the click from getting to the overlay, which would close the popover
+                            e.preventDefault(); return e.stopPropagation();}}>
+                        {this.props.popover(this.closeHandler)}
+                    </div>
                 );
             } else { return undefined;
         }

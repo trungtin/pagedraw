@@ -11,14 +11,22 @@ import { Modal, PdButtonOne } from '../editor/component-lib';
 import modal from './modal';
 
 export default (data, callback) => modal.show((closeHandler => [
-    React.createElement(Modal.Header, {"closeButton": true},
-        React.createElement(Modal.Title, null, (data.title != null ? data.title : 'Are you sure?'))
-    ),
-    React.createElement(Modal.Body, null,
-        (data.body)
-    ),
-    React.createElement(Modal.Footer, null,
-        React.createElement(PdButtonOne, {"onClick": (closeHandler)}, (data.no != null ? data.no : 'Back')),
-        React.createElement(PdButtonOne, {"type": (data.yesType != null ? data.yesType : "primary"), "onClick"() { callback(); return closeHandler(); }}, (data.yes != null ? data.yes : 'Yes'))
-    )
+    <Modal.Header closeButton={true}>
+        <Modal.Title>
+            {data.title != null ? data.title : 'Are you sure?'}
+        </Modal.Title>
+    </Modal.Header>,
+    <Modal.Body>
+        {data.body}
+    </Modal.Body>,
+    <Modal.Footer>
+        <PdButtonOne onClick={closeHandler}>
+            {data.no != null ? data.no : 'Back'}
+        </PdButtonOne>
+        <PdButtonOne
+            type={data.yesType != null ? data.yesType : "primary"}
+            onClick={function() { callback(); return closeHandler(); }}>
+            {data.yes != null ? data.yes : 'Yes'}
+        </PdButtonOne>
+    </Modal.Footer>
 ]), (function() {}));

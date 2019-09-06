@@ -13,294 +13,293 @@ import createReactClass from 'create-react-class';
 export default Errormessage = createReactClass({
     displayName: 'Errormessage',
     render() {
-        return React.createElement("div", {"className": "errormessage"},
-          React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.errormessage {
-    display: flex;
-    flex-grow: 1;
-}
+        return (
+            <div className="errormessage">
+                <style
+                    dangerouslySetInnerHTML={{__html: `\
+          .errormessage {
+              display: flex;
+              flex-grow: 1;
+          }
 
-.errormessage-0-0 {
-    display: flex;
-    flex-grow: 1;
-}
+          .errormessage-0-0 {
+              display: flex;
+              flex-grow: 1;
+          }
 
-.errormessage-default-0 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+          .errormessage-default-0 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+          }
 
-.errormessage-0-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 4px;
-}
+          .errormessage-0-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 4px;
+          }
 
-.errormessage-text_2 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(231, 45, 45);
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-}
+          .errormessage-text_2 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              cursor: pointer;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(231, 45, 45);
+              font-size: 14px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+          }
 
-.errormessage-default_hover-5 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    background: rgb(231, 231, 231);
-}
+          .errormessage-default_hover-5 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              background: rgb(231, 231, 231);
+          }
 
-.errormessage-0-0-1-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 4px;
-}
+          .errormessage-0-0-1-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 4px;
+          }
 
-.errormessage-text_2-0 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(231, 45, 45);
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-}
+          .errormessage-text_2-0 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              cursor: pointer;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(231, 45, 45);
+              font-size: 14px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+          }
 
-.errormessage-default_active-6 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    background: rgb(217, 215, 215);
-}
+          .errormessage-default_active-6 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              background: rgb(217, 215, 215);
+          }
 
-.errormessage-0-0-2-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 4px;
-}
+          .errormessage-0-0-2-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 4px;
+          }
 
-.errormessage-text_2-4 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(231, 45, 45);
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-}
+          .errormessage-text_2-4 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              cursor: pointer;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(231, 45, 45);
+              font-size: 14px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+          }
 
-.errormessage-1-0 {
-    display: flex;
-    flex-grow: 1;
-}
+          .errormessage-1-0 {
+              display: flex;
+              flex-grow: 1;
+          }
 
-.errormessage-default-01 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+          .errormessage-default-01 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+          }
 
-.errormessage-1-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 4px;
-}
+          .errormessage-1-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 4px;
+          }
 
-.errormessage-text_2-1 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(239, 174, 77);
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-}
+          .errormessage-text_2-1 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              cursor: pointer;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(239, 174, 77);
+              font-size: 14px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+          }
 
-.errormessage-default_hover-1 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    background: rgb(231, 231, 231);
-}
+          .errormessage-default_hover-1 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              background: rgb(231, 231, 231);
+          }
 
-.errormessage-1-0-1-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 4px;
-}
+          .errormessage-1-0-1-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 4px;
+          }
 
-.errormessage-text_2-5 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(239, 174, 77);
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-}
+          .errormessage-text_2-5 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              cursor: pointer;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(239, 174, 77);
+              font-size: 14px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+          }
 
-.errormessage-default_active-7 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    background: rgb(217, 215, 215);
-}
+          .errormessage-default_active-7 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              background: rgb(217, 215, 215);
+          }
 
-.errormessage-1-0-2-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 4px;
-}
+          .errormessage-1-0-2-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 4px;
+          }
 
-.errormessage-text_2-07 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    cursor: pointer;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(239, 174, 77);
-    font-size: 14px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-}
+          .errormessage-text_2-07 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              cursor: pointer;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(239, 174, 77);
+              font-size: 14px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+          }
 
-* {
-    box-sizing: border-box;
-}
+          * {
+              box-sizing: border-box;
+          }
 
-body {
-    margin: 0;
-}
+          body {
+              margin: 0;
+          }
 
-button:hover {
-    cursor: pointer;
-}
+          button:hover {
+              cursor: pointer;
+          }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+          a {
+              text-decoration: none;
+              color: inherit;
+          }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+          .pd-onhover-parent >.pd-onhover {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+          .pd-onhover-parent:hover > * {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+          .pd-onhover-parent:hover > .pd-onhover {
+              display: flex;
+          }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+          .pd-onactive-parent > .pd-onactive {
+              display: none;
+          }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+          .pd-onactive-parent:active > * {
+              display: none;
+          }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+          .pd-onactive-parent:active > .pd-onactive {
+              display: flex;
+          }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-          ( (this.props.type === "error") ?
-              React.createElement("div", {"className": "pd-onhover-parent pd-onactive-parent errormessage-0-0"},
-                  ( (('default') === "default") ?
-                      React.createElement("div", {"className": "errormessage-default-0"},
-                          React.createElement("div", {"className": "errormessage-0-0-0-0-0"},
-                              React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2"},
-                                  ( this.props.content )
-                              )
-                          )
-                      ) : undefined
-                  ),
-                  React.createElement("div", {"className": "pd-onhover errormessage-default_hover-5"},
-                      React.createElement("div", {"className": "errormessage-0-0-1-0"},
-                          React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2-0"},
-                              ( this.props.content )
-                          )
-                      )
-                  ),
-                  React.createElement("div", {"className": "pd-onactive errormessage-default_active-6"},
-                      React.createElement("div", {"className": "errormessage-0-0-2-0"},
-                          React.createElement("div", {"onMouseUp": (this.props.handleClick), "className": "errormessage-text_2-4"},
-                              ( this.props.content )
-                          )
-                      )
-                  )
-              ) : undefined
-          ),
-          ( (this.props.type === "warning") ?
-              React.createElement("div", {"className": "pd-onhover-parent pd-onactive-parent errormessage-1-0"},
-                  ( (('default') === "default") ?
-                      React.createElement("div", {"className": "errormessage-default-01"},
-                          React.createElement("div", {"className": "errormessage-1-0-0-0-0"},
-                              React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2-1"},
-                                  ( this.props.content )
-                              )
-                          )
-                      ) : undefined
-                  ),
-                  React.createElement("div", {"className": "pd-onhover errormessage-default_hover-1"},
-                      React.createElement("div", {"className": "errormessage-1-0-1-0"},
-                          React.createElement("div", {"onClick": (this.props.handleClick), "className": "errormessage-text_2-5"},
-                              ( this.props.content )
-                          )
-                      )
-                  ),
-                  React.createElement("div", {"className": "pd-onactive errormessage-default_active-7"},
-                      React.createElement("div", {"className": "errormessage-1-0-2-0"},
-                          React.createElement("div", {"onMouseUp": (this.props.handleClick), "className": "errormessage-text_2-07"},
-                              ( this.props.content )
-                          )
-                      )
-                  )
-              ) : undefined
-          )
-      );
+          .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+              display: none;
+          }\
+          `}} />
+                {(this.props.type === "error") ?
+                      <div className="pd-onhover-parent pd-onactive-parent errormessage-0-0">
+                          {(('default') === "default") ?
+                                  <div className="errormessage-default-0">
+                                      <div className="errormessage-0-0-0-0-0">
+                                          <div onClick={this.props.handleClick} className="errormessage-text_2">
+                                              {this.props.content}
+                                          </div>
+                                      </div>
+                                  </div> : undefined}
+                          <div className="pd-onhover errormessage-default_hover-5">
+                              <div className="errormessage-0-0-1-0">
+                                  <div onClick={this.props.handleClick} className="errormessage-text_2-0">
+                                      {this.props.content}
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="pd-onactive errormessage-default_active-6">
+                              <div className="errormessage-0-0-2-0">
+                                  <div onMouseUp={this.props.handleClick} className="errormessage-text_2-4">
+                                      {this.props.content}
+                                  </div>
+                              </div>
+                          </div>
+                      </div> : undefined}
+                {(this.props.type === "warning") ?
+                      <div className="pd-onhover-parent pd-onactive-parent errormessage-1-0">
+                          {(('default') === "default") ?
+                                  <div className="errormessage-default-01">
+                                      <div className="errormessage-1-0-0-0-0">
+                                          <div onClick={this.props.handleClick} className="errormessage-text_2-1">
+                                              {this.props.content}
+                                          </div>
+                                      </div>
+                                  </div> : undefined}
+                          <div className="pd-onhover errormessage-default_hover-1">
+                              <div className="errormessage-1-0-1-0">
+                                  <div onClick={this.props.handleClick} className="errormessage-text_2-5">
+                                      {this.props.content}
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="pd-onactive errormessage-default_active-7">
+                              <div className="errormessage-1-0-2-0">
+                                  <div onMouseUp={this.props.handleClick} className="errormessage-text_2-07">
+                                      {this.props.content}
+                                  </div>
+                              </div>
+                          </div>
+                      </div> : undefined}
+            </div>
+        );
     }
 });

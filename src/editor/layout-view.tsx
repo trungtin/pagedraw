@@ -60,25 +60,33 @@ defaultExport.LayoutView = (LayoutView = createReactClass({
             getCompiledComponentByUniqueKey: instance_compile_opts.getCompiledComponentByUniqueKey
         };
 
-        return React.createElement(ShouldSubtreeRender, {"ref": "children", "shouldUpdate": (
-                // If we have subsetOfBlocksToRerender, componentDidUpdate will take care of .forceUpdate()ing them,
+        return (
+            <ShouldSubtreeRender
+                ref="children"
+                shouldUpdate={// If we have subsetOfBlocksToRerender, componentDidUpdate will take care of .forceUpdate()ing them,
                 // so skip rendering normally
-                (this.context.editorCache.render_params.subsetOfBlocksToRerender != null) === false
-            ),  
-            "subtree": (() => {
-                const zIndexes = _l.fromPairs(this.props.doc.getOrderedBlockList().map((block, i) => [block.uniqueKey, i]));
-                return React.createElement("div", {"className": "layout-view"},
-                    ( this.props.doc.blocks.map(block => {
-                        // We wrap in a ShouldSubtreeRender so we can have something to .forceUpdate()
-                        return React.createElement(ShouldSubtreeRender, {"key": (block.uniqueKey), "ref": (block.uniqueKey), "shouldUpdate": (true), "subtree": (() => {
-                            assert(() => block.doc.isInReadonlyMode());
-                            return this.renderBlock(block, zIndexes[block.uniqueKey], instance_compile_opts, editor_compile_opts);
-                        }
-                        )});
-                    }))
-                );
-            }
-            )});
+                (this.context.editorCache.render_params.subsetOfBlocksToRerender != null) === false}
+                subtree={() => {
+                    const zIndexes = _l.fromPairs(this.props.doc.getOrderedBlockList().map((block, i) => [block.uniqueKey, i]));
+                    return (
+                        <div className="layout-view">
+                            {this.props.doc.blocks.map(block => {
+                                    // We wrap in a ShouldSubtreeRender so we can have something to .forceUpdate()
+                                    return (
+                                        <ShouldSubtreeRender
+                                            key={block.uniqueKey}
+                                            ref={block.uniqueKey}
+                                            shouldUpdate={true}
+                                            subtree={() => {
+                                                assert(() => block.doc.isInReadonlyMode());
+                                                return this.renderBlock(block, zIndexes[block.uniqueKey], instance_compile_opts, editor_compile_opts);
+                                            }} />
+                                    );
+                                })}
+                        </div>
+                    );
+                }} />
+        );
     },
 
     componentDidUpdate() {
@@ -108,22 +116,26 @@ defaultExport.LayoutView = (LayoutView = createReactClass({
         } = this.context.editorCache.render_params;
         const mutated = mutated_blocks ? (mutated_blocks[block.uniqueKey] != null) : true;
 
-        return React.createElement("div", {"className": "layout-view-block expand-children", "style": ({
-            top: block.top,
-            left: block.left,
-            height: block.height,
-            width: block.width,
-            zIndex
-        })},
-            (React.createElement(ShouldSubtreeRender, {shouldUpdate: mutated, subtree: () => {
-                let override;
-                if ((override = this.props.blockOverrides[block.uniqueKey]) != null) { return override; }
+        return (
+            <div
+                className="layout-view-block expand-children"
+                style={{
+                    top: block.top,
+                    left: block.left,
+                    height: block.height,
+                    width: block.width,
+                    zIndex
+                }}>
+                <ShouldSubtreeRender
+                    shouldUpdate={mutated}
+                    subtree={() => {
+                            let override;
+                            if ((override = this.props.blockOverrides[block.uniqueKey]) != null) { return override; }
 
-                return layoutViewForBlock(block, instance_compile_opts, editor_compile_opts, this.context.editorCache);
-            }
-            })),
-
-            ( this.props.overlayForBlock(block) )
+                            return layoutViewForBlock(block, instance_compile_opts, editor_compile_opts, this.context.editorCache);
+                        }} />
+                {this.props.overlayForBlock(block)}
+            </div>
         );
     }
 }));

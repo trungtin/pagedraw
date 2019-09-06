@@ -48,123 +48,122 @@ defaultExport.LibraryAutoSuggest = createReactClass({
 
   renderSuggestion(suggestion) {
     if (suggestion.isVersion) {
-      return React.createElement(
-        'span',
-        null,
-        `${suggestion.lib_name} v${suggestion.name}`
-      )
+      return (
+        <span>
+          {`${suggestion.lib_name} v${suggestion.name}`}
+        </span>
+      );
     } else {
-      return React.createElement(
-        'span',
-        null,
-        `${suggestion.name}@${suggestion.latest_version.name}`
-      )
+      return (
+        <span>
+          {`${suggestion.name}@${suggestion.latest_version.name}`}
+        </span>
+      );
     }
   },
 
   renderInputComponent(inputProps) {
-    return React.createElement(
-      'input',
-      Object.assign({}, inputProps, {
-        style: {
+    return (
+      <input
+        {...inputProps}
+        style={{
           color: this.props.textColor != null ? this.props.textColor : 'black',
-        },
-        ref: node => {
+        }}
+        ref={node => {
           return (this.input_node = node)
-        },
-      })
-    )
+        }} />
+    );
   },
 
   render() {
-    return React.createElement(Autosuggest, {
-      suggestions:
-        this.suggestions != null ? this.suggestions : this.defaultSuggestions,
-      alwaysRenderSuggestions: true,
-      onSuggestionsFetchRequested: ({ value }) => {
-        const matchingLibs = this.libraries.filter(option => {
-          const len = value.includes('@')
-            ? value.split('@')[0].length
-            : value.length
-          return value === option.name.slice(0, len)
-        })
-        if (value.includes('@')) {
-          // TODO: verify coffeescript conversion
-          Promise.all(
-            matchingLibs.map(lib => {
-              return fetch('/libraries/#{lib.id}/versions').then(res => [
-                res.json(),
-                lib,
-              ])
-            })
-          ).then(versionsOfLibs => {
-            this.libraries = _l.flatten(
-              versionsOfLibs.map(([versions, lib]) =>
-                versions.map(version => {
-                  return { ...version, lib_name: lib.name }
-                })
-              )
-            )
+    return (
+      <Autosuggest
+        suggestions={this.suggestions != null ? this.suggestions : this.defaultSuggestions}
+        alwaysRenderSuggestions={true}
+        onSuggestionsFetchRequested={({ value }) => {
+          const matchingLibs = this.libraries.filter(option => {
+            const len = value.includes('@')
+              ? value.split('@')[0].length
+              : value.length
+            return value === option.name.slice(0, len)
           })
-          //    Promise.all(matchingLibs.map (lib) =>
-          //         fetch("/libraries/#{lib.id}/versions").then (res) =>
-          //             [res.json(), lib]
-          //     ).then (versionsOfLibs) =>
-          //         @libraries = _l.flatten(versionsOfLibs.map ([versions, lib]) =>
-          //             versions.map (version) => _l.extend {}, version, {lib_name: lib.name}
-          //             )
-        } else {
-          this.suggestions = matchingLibs
-        }
-        return this.props.onChange()
-      },
-      onSuggestionsClearRequested: () => {
-        this.suggestions = undefined
-        return this.props.onChange()
-      },
-      getSuggestionValue: suggestion => {
-        if (suggestion.lib_name) {
-          return `${suggestion.lib_name} v${suggestion.name}`
-        } else {
-          return suggestion.name
-        }
-      },
-      renderInputComponent: this.renderInputComponent,
-      renderSuggestion: this.renderSuggestion,
-      inputProps: {
-        value: this.value,
-        onChange: (evt, { newValue }) => {
-          this.value = newValue
-          return this.props.onChange()
-        },
-      },
-      focusInputOnSuggestionClick: false,
-      onSuggestionSelected: (evt, { suggestion }) => {
-        if (
-          suggestion.id != null &&
-          suggestion.name != null &&
-          suggestion.latest_version.name != null &&
-          suggestion.latest_version.bundle_hash != null &&
-          suggestion.latest_version.id != null
-        ) {
-          return this.props.onAddLibrary(
-            new Library({
-              library_id: String(suggestion.id),
-              library_name: suggestion.name,
-              version_name: suggestion.latest_version.name,
-              version_id: String(suggestion.latest_version.id),
-              npm_path: suggestion.latest_version.npm_path,
-              local_path: suggestion.latest_version.local_path,
-              is_node_module: suggestion.latest_version.is_node_module,
-              bundle_hash: suggestion.latest_version.bundle_hash,
-              inDevMode: false,
+          if (value.includes('@')) {
+            // TODO: verify coffeescript conversion
+            Promise.all(
+              matchingLibs.map(lib => {
+                return fetch('/libraries/#{lib.id}/versions').then(res => [
+                  res.json(),
+                  lib,
+                ])
+              })
+            ).then(versionsOfLibs => {
+              this.libraries = _l.flatten(
+                versionsOfLibs.map(([versions, lib]) =>
+                  versions.map(version => {
+                    return { ...version, lib_name: lib.name }
+                  })
+                )
+              )
             })
-          )
-        } else {
-          throw new Error('Bad library from server')
-        }
-      },
-    })
+            //    Promise.all(matchingLibs.map (lib) =>
+            //         fetch("/libraries/#{lib.id}/versions").then (res) =>
+            //             [res.json(), lib]
+            //     ).then (versionsOfLibs) =>
+            //         @libraries = _l.flatten(versionsOfLibs.map ([versions, lib]) =>
+            //             versions.map (version) => _l.extend {}, version, {lib_name: lib.name}
+            //             )
+          } else {
+            this.suggestions = matchingLibs
+          }
+          return this.props.onChange()
+        }}
+        onSuggestionsClearRequested={() => {
+          this.suggestions = undefined
+          return this.props.onChange()
+        }}
+        getSuggestionValue={suggestion => {
+          if (suggestion.lib_name) {
+            return `${suggestion.lib_name} v${suggestion.name}`
+          } else {
+            return suggestion.name
+          }
+        }}
+        renderInputComponent={this.renderInputComponent}
+        renderSuggestion={this.renderSuggestion}
+        inputProps={{
+          value: this.value,
+          onChange: (evt, { newValue }) => {
+            this.value = newValue
+            return this.props.onChange()
+          },
+        }}
+        focusInputOnSuggestionClick={false}
+        onSuggestionSelected={(evt, { suggestion }) => {
+          if (
+            suggestion.id != null &&
+            suggestion.name != null &&
+            suggestion.latest_version.name != null &&
+            suggestion.latest_version.bundle_hash != null &&
+            suggestion.latest_version.id != null
+          ) {
+            return this.props.onAddLibrary(
+              new Library({
+                library_id: String(suggestion.id),
+                library_name: suggestion.name,
+                version_name: suggestion.latest_version.name,
+                version_id: String(suggestion.latest_version.id),
+                npm_path: suggestion.latest_version.npm_path,
+                local_path: suggestion.latest_version.local_path,
+                is_node_module: suggestion.latest_version.is_node_module,
+                bundle_hash: suggestion.latest_version.bundle_hash,
+                inDevMode: false,
+              })
+            )
+          } else {
+            throw new Error('Bad library from server')
+          }
+        }} />
+    );
   },
 })
 export default defaultExport

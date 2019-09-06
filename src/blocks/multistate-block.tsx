@@ -100,14 +100,21 @@ export default Model.register('multistate', (MultistateBlock = (function() {
             // we enforce that here.
             // FIXME: I don't like this here. Maybe there's a better, more
             // generalizable way to enforce fixed geometry like this?
-            return React.createElement("div", {"style": ({position: 'relative', minHeight: this.height, minWidth: this.width})},
-                React.createElement("div", {"style": ({
-                    position: 'absolute', top: 20, left: 30,
-                    fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.3em'
-                })}, (this.getLabel())),
-                React.createElement("div", {"style": ({
-                    border: '10px dashed #DEDEDE', borderRadius: 30,
-                    position: 'absolute', top: 0, bottom: 0, left: 0, right: 0})})
+            return (
+                <div
+                    style={{position: 'relative', minHeight: this.height, minWidth: this.width}}>
+                    <div
+                        style={{
+                            position: 'absolute', top: 20, left: 30,
+                            fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.3em'
+                        }}>
+                        {this.getLabel()}
+                    </div>
+                    <div
+                        style={{
+                            border: '10px dashed #DEDEDE', borderRadius: 30,
+                            position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}} />
+                </div>
             );
         }
     };

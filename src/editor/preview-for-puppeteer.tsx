@@ -47,7 +47,9 @@ window.normalizeDocjson = function(docjson, skipBrowserDependentCode) {
         assert = function(fn) { if (!fn()) { return reject(new Error("Assertion failed in normalize check")); } };
 
         return ReactDOM.render(
-            React.createElement(Editor, {"normalizeCheckMode": ({docjson, callback: resolve, assert}), "skipBrowserDependentCode": (skipBrowserDependentCode)}),
+            <Editor
+                normalizeCheckMode={{docjson, callback: resolve, assert}}
+                skipBrowserDependentCode={skipBrowserDependentCode} />,
             document.getElementById('app'));
     });
 };
@@ -71,7 +73,9 @@ window.loadEditor = function(docjson) {
 
         var editorInstance = null;
         return ReactDOM.render(
-            React.createElement(Editor, {"ref"(_instance) { return editorInstance = _instance; }, "initialDocJson": (docjson)}),
+            <Editor
+                ref={function(_instance) { return editorInstance = _instance; }}
+                initialDocJson={docjson} />,
             document.getElementById('app'));
     });
 };
@@ -108,9 +112,11 @@ window.previewOfInstance = (previewOfInstance = function(instanceUniqueKey, docj
         compile_options.templateLang,
         window.innerWidth);
 
-    return React.createElement("div", null,
-        (font_loading_head_tags_for_doc(doc)),
-        (pdomToReact(evaled_pdom))
+    return (
+        <div>
+            {font_loading_head_tags_for_doc(doc)}
+            {pdomToReact(evaled_pdom)}
+        </div>
     );
 });
 
@@ -160,9 +166,13 @@ window.previewOfArtboard = (defaultExport.previewOfArtboard = function(artboardU
         // FIXME should this be artboard.width?
         window.innerWidth);
 
-    return React.createElement("div", {"className": "expand-children", "style": ({height: artboard.height, width: artboard.width})},
-        (font_loading_head_tags_for_doc(doc)),
-        (pdomToReact(evaled_pdom))
+    return (
+        <div
+            className="expand-children"
+            style={{height: artboard.height, width: artboard.width}}>
+            {font_loading_head_tags_for_doc(doc)}
+            {pdomToReact(evaled_pdom)}
+        </div>
     );
 });
 
@@ -173,12 +183,12 @@ window.layoutEditorOfArtboard = (defaultExport.layoutEditorOfArtboard = function
     const doc = Doc.deserialize(docjson);
     doc.enterReadonlyMode();
     const artboard = doc.getBlockByKey(artboardUniqueKey);
-    return React.createElement(LayoutEditorContextProvider, {"doc": (doc)},
-        (
-            // Pick from the existing doc instead of getting a freshRepresentation because they're not going to
-            // be mutated.  Think about that if you refactor this code.
-            (// We can't passs {blocks} to the Doc constructor or the constructor will set block.doc
-            shifted_doc = new Doc(_l.pick(doc, ['export_lang', 'fonts', 'custom_fonts'])), shifted_doc.blocks = artboard.andChildren().map(block => {
+    return (
+        // Pick from the existing doc instead of getting a freshRepresentation because they're not going to
+        // be mutated.  Think about that if you refactor this code.
+        // We can't passs {blocks} to the Doc constructor or the constructor will set block.doc
+        <LayoutEditorContextProvider doc={doc}>
+            {(shifted_doc = new Doc(_l.pick(doc, ['export_lang', 'fonts', 'custom_fonts'])), shifted_doc.blocks = artboard.andChildren().map(block => {
                 const clone = block.freshRepresentation();
                 clone.top -= artboard.top;
                 clone.left -= artboard.left;
@@ -188,11 +198,13 @@ window.layoutEditorOfArtboard = (defaultExport.layoutEditorOfArtboard = function
                 clone.doc = doc;
 
                 return clone;
-            }), shifted_doc.enterReadonlyMode(), // UNCLEAR what's the pointerEvents 'none' for?  @michael wrote it in the original code
-            React.createElement("div", {"style": ({width: artboard.width, height: artboard.height, pointerEvents: 'none'})},
-                (font_loading_head_tags_for_doc(shifted_doc)),
-                React.createElement(LayoutView, {"doc": (shifted_doc), "blockOverrides": ({}), "overlayForBlock": (() => null)})
-            )))
+            }), // UNCLEAR what's the pointerEvents 'none' for?  @michael wrote it in the original code
+            shifted_doc.enterReadonlyMode(), <div
+                style={{width: artboard.width, height: artboard.height, pointerEvents: 'none'}}>
+                {font_loading_head_tags_for_doc(shifted_doc)}
+                <LayoutView doc={shifted_doc} blockOverrides={{}} overlayForBlock={() => null} />
+            </div>)}
+        </LayoutEditorContextProvider>
     );
 });
 
@@ -204,8 +216,10 @@ export default defaultExport;
 
 const ComponentDidLoad = createReactClass({
     render() {
-        return React.createElement("div", {"ref": "wrapper"},
-            (this.props.elem)
+        return (
+            <div ref="wrapper">
+                {this.props.elem}
+            </div>
         );
     },
 
@@ -219,13 +233,13 @@ window.loadForScreenshotting = loader_params => new Promise(function(resolve, re
     window.load_for_screenshotting_params = loader_params; // leak in case you need to debug
     const [loader, ...args] = Array.from(loader_params);
     const elem = window[loader](...Array.from(args || []));
-    return ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (elem), "callback": (resolve)}), document.getElementById('app'));
+    return ReactDOM.render(<ComponentDidLoad elem={elem} callback={resolve} />, document.getElementById('app'));
 });
 
 window.loadPreviewOfInstance = (instanceUniqueKey, docjson) => // legacy— should be using loadForScreenshotting directly
 window.loadForScreenshotting(['previewOfInstance', instanceUniqueKey, docjson]);
 
-window.loadPdom = pdom => new Promise((resolve, reject) => ReactDOM.render(React.createElement(ComponentDidLoad, {"elem": (pdomToReact(pdom)), "callback": (resolve)}), document.getElementById('app')));
+window.loadPdom = pdom => new Promise((resolve, reject) => ReactDOM.render(<ComponentDidLoad elem={pdomToReact(pdom)} callback={resolve} />, document.getElementById('app')));
 
 function __guard__(value, transform) {
   return (typeof value !== 'undefined' && value !== null) ? transform(value) : undefined;

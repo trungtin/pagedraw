@@ -143,8 +143,12 @@ class LayoutEditorMode extends EditorMode {
     }
 
     canvas(editor) {
-        return React.createElement(Zoomable, {"viewportManager": (this.editor.viewportManager), "style": ({flex: 1, backgroundColor: '#f3f1f3'})},
-            React.createElement(PassDomNodeToRenderForMouse, {"render": (this.render_canvas_knowing_dom)})
+        return (
+            <Zoomable
+                viewportManager={this.editor.viewportManager}
+                style={{flex: 1, backgroundColor: '#f3f1f3'}}>
+                <PassDomNodeToRenderForMouse render={this.render_canvas_knowing_dom} />
+            </Zoomable>
         );
     }
 
@@ -224,56 +228,61 @@ class LayoutEditorMode extends EditorMode {
         const classes = [];
         if (this.highlight_blocks_on_hover()) { classes.push('highlight-blocks-on-hover'); }
 
-        return React.createElement(DraggingCanvas, {"classes": (classes), "ref": "draggingCanvas",  
-            "style": ({cursor: this.cursor(), height: this.editorGeometry.height, width: this.editorGeometry.width}),  
-            "onDrag": (this.prepareDrag), "onClick": (this.handleClick), "onDoubleClick": (this.handleDoubleClick), "onMouseMove": (this.handleMouseMove),  
-            "onInteractionHappened"() {}},
-
-            React.createElement("div", {"style": ({zIndex: 0, isolation: 'isolate'})},
-                React.createElement(LayoutView, { 
-                    "doc": (this.editor.doc),  
-                    "blockOverrides": (this.getBlockOverrides()),  
-                    "overlayForBlock": (this.getOverlayForBlock)})
-            ),
-
-            React.createElement("div", {"style": ({zIndex: 1, isolation: 'isolate'})},
-                ( config.prototyping ? this.renderPrototypingArrows() : undefined ),
-                ( config.showGridlines ? this.renderGridlines(this.getGridlines(this.editor.doc.blocks), '1px dashed rgba(255, 50, 50, 0.8)') : undefined ),
-                ( this.renderGridlines(this.activeGridlines, '1px solid rgba(255, 50, 50, 0.8)') ),
-                ( this.renderGridlines(measuringGridlines, '1px dashed rgba(255, 50, 50, 0.8)')),
-                ( this.renderRulers(rulers) ),
-                ( config.show_slices ? this.showSlices() : undefined ),
-
-                ( !this.hide_floating_controls() ?
-                    this.selectedBlocks.map(block => {
-                        return React.createElement(ResizingFrame, {"key": (block.uniqueKey), "resizable_edges": (block.resizableEdges),  
-                            "style": ({position: 'absolute', top: block.top, left: block.left, height: block.height, width: block.width}),  
-                            "flag": (grip => ({
-                                control: 'resizer', block,
-                                edges: grip.sides, grip_label: grip.label
-                            }))
-                        });
-                }) : undefined
-                ),
-
-                ( config.prototyping && !this.hide_floating_controls() && (this.selectedBlocks.length === 1) ?
-                    this.selectedBlocks.map(block => {
-                        return React.createElement("div", {"key": (block.uniqueKey),  
-                            "className": "unzoomed-control",  
-                            "onMouseDown": (evt => { return evt.nativeEvent.context = {control: 'proto-linker', block}; }),  
-                            "style": ({
-                                backgroundColor: 'rgba(260, 165, 0, 0.7)',
-                                height: 30, width: 30, borderRadius: 30,
-                                border: '4px solid white',
-                                position: 'absolute',
-                                top: block.vertCenter - 15, left: block.right + 40
-                            })
-                        });
-                }) : undefined
-                ),
-
-                ( typeof this.extra_overlays === 'function' ? this.extra_overlays()  : undefined)
-            )
+        return (
+            <DraggingCanvas
+                classes={classes}
+                ref="draggingCanvas"
+                style={{cursor: this.cursor(), height: this.editorGeometry.height, width: this.editorGeometry.width}}
+                onDrag={this.prepareDrag}
+                onClick={this.handleClick}
+                onDoubleClick={this.handleDoubleClick}
+                onMouseMove={this.handleMouseMove}
+                onInteractionHappened={function() {}}>
+                <div style={{zIndex: 0, isolation: 'isolate'}}>
+                    <LayoutView
+                        doc={this.editor.doc}
+                        blockOverrides={this.getBlockOverrides()}
+                        overlayForBlock={this.getOverlayForBlock} />
+                </div>
+                <div style={{zIndex: 1, isolation: 'isolate'}}>
+                    {config.prototyping ? this.renderPrototypingArrows() : undefined}
+                    {config.showGridlines ? this.renderGridlines(this.getGridlines(this.editor.doc.blocks), '1px dashed rgba(255, 50, 50, 0.8)') : undefined}
+                    {this.renderGridlines(this.activeGridlines, '1px solid rgba(255, 50, 50, 0.8)')}
+                    {this.renderGridlines(measuringGridlines, '1px dashed rgba(255, 50, 50, 0.8)')}
+                    {this.renderRulers(rulers)}
+                    {config.show_slices ? this.showSlices() : undefined}
+                    {!this.hide_floating_controls() ?
+                            this.selectedBlocks.map(block => {
+                                return (
+                                    <ResizingFrame
+                                        key={block.uniqueKey}
+                                        resizable_edges={block.resizableEdges}
+                                        style={{position: 'absolute', top: block.top, left: block.left, height: block.height, width: block.width}}
+                                        flag={grip => ({
+                                            control: 'resizer', block,
+                                            edges: grip.sides, grip_label: grip.label
+                                        })} />
+                                );
+                        }) : undefined}
+                    {config.prototyping && !this.hide_floating_controls() && (this.selectedBlocks.length === 1) ?
+                            this.selectedBlocks.map(block => {
+                                return (
+                                    <div
+                                        key={block.uniqueKey}
+                                        className="unzoomed-control"
+                                        onMouseDown={evt => { return evt.nativeEvent.context = {control: 'proto-linker', block}; }}
+                                        style={{
+                                            backgroundColor: 'rgba(260, 165, 0, 0.7)',
+                                            height: 30, width: 30, borderRadius: 30,
+                                            border: '4px solid white',
+                                            position: 'absolute',
+                                            top: block.vertCenter - 15, left: block.right + 40
+                                        }} />
+                                );
+                        }) : undefined}
+                    {typeof this.extra_overlays === 'function' ? this.extra_overlays()  : undefined}
+                </div>
+            </DraggingCanvas>
         );
     }
 
@@ -307,7 +316,7 @@ class LayoutEditorMode extends EditorMode {
 
         overlayClasses += this.extra_overlay_classes_for_block(block);
 
-        return React.createElement("div", {"className": (overlayClasses)});
+        return <div className={overlayClasses} />;
     }
 
 
@@ -337,29 +346,42 @@ class LayoutEditorMode extends EditorMode {
         // FIXME: Should depend on zoom
         const [h, w] = Array.from([10, 7]);
 
-        return React.createElement("svg", {"style": ({
-            position: 'absolute', zIndex: 1, pointerEvents: 'none',
-            top: 0, left: 0,
-            width: this.editorGeometry.width, height: this.editorGeometry.height,
-        })},
-            React.createElement("defs", null,
-                React.createElement("marker", {"id": "arrowhead", "markerWidth": (w), "markerHeight": (h), "refX": (w), "refY": (h/2), "orient": "auto", "markerUnits": "strokeWidth"},
-                    React.createElement("path", {"d": `M 0, 0 L ${w}, ${h/2} z`, "stroke": "rgba(255, 165, 0, 0.7)"}),
-                    React.createElement("path", {"d": `M ${w}, ${h/2} L 0, ${h} z`, "stroke": "rgba(255, 165, 0, 0.7)"})
-                )
-            ),
-            (
-                arrows.map((...args) => {
+        return (
+            <svg
+                style={{
+                    position: 'absolute', zIndex: 1, pointerEvents: 'none',
+                    top: 0, left: 0,
+                    width: this.editorGeometry.width, height: this.editorGeometry.height,
+                }}>
+                <defs>
+                    <marker
+                        id="arrowhead"
+                        markerWidth={w}
+                        markerHeight={h}
+                        refX={w}
+                        refY={h/2}
+                        orient="auto"
+                        markerUnits="strokeWidth">
+                        <path d={`M 0, 0 L ${w}, ${h/2} z`} stroke="rgba(255, 165, 0, 0.7)" />
+                        <path d={`M ${w}, ${h/2} L 0, ${h} z`} stroke="rgba(255, 165, 0, 0.7)" />
+                    </marker>
+                </defs>
+                {arrows.map((...args) => {
                     // render arrow
                     let from, i;
                     let to;
                     [from, to] = Array.from(args[0]), i = args[1];
                     const [x1, y1, x2, y2] = Array.from([(from.left + to.left) / 2, from.top - 5, (from.left + to.left) / 2, to.top + 5]);
-                    return React.createElement("path", {"key": (i),  
-                        "d": (`M${from.left} ${from.top} C ${x1} ${y1}, ${x2} ${y2}, ${to.left} ${to.top}`),  
-                        "stroke": "rgba(255,165,0, 0.7)", "fill": "transparent", "markerEnd": "url(#arrowhead)"});
-            })
-            )
+                    return (
+                        <path
+                            key={i}
+                            d={`M${from.left} ${from.top} C ${x1} ${y1}, ${x2} ${y2}, ${to.left} ${to.top}`}
+                            stroke="rgba(255,165,0, 0.7)"
+                            fill="transparent"
+                            markerEnd="url(#arrowhead)" />
+                    );
+            })}
+            </svg>
         );
     }
 
@@ -378,23 +400,39 @@ class LayoutEditorMode extends EditorMode {
             };
             const tick_width = 7;
             if (axis === 'left') {
-                return React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend(ruler_style, {
-                    top: start, height: end - start,
-                    left: position, width: '1px',
-                    flexDirection: 'column'
-                }))},
-                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, top: 0, left: -tick_width / 2})}),
-                    React.createElement("div", {"style": ({padding: '5px'})}, (display)),
-                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, bottom: 0, left: -tick_width / 2})})
+                return (
+                    <div
+                        key={'ruler' + i}
+                        style={_l.extend(ruler_style, {
+                            top: start, height: end - start,
+                            left: position, width: '1px',
+                            flexDirection: 'column'
+                        })}>
+                        <div
+                            style={{position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, top: 0, left: -tick_width / 2}} />
+                        <div style={{padding: '5px'}}>
+                            {display}
+                        </div>
+                        <div
+                            style={{position: 'absolute', backgroundColor: 'red', height: '1px', width: tick_width, bottom: 0, left: -tick_width / 2}} />
+                    </div>
                 );
             } else if (axis === 'top') {
-                return React.createElement("div", {"key": ('ruler' + i), "style": (_l.extend(ruler_style, {
-                    left: start, width: end - start,
-                    top: position, height: '1px'
-                }))},
-                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, left: 0, bottom: -tick_width / 2})}),
-                    React.createElement("div", {"style": ({padding: '5px'})}, (display)),
-                    React.createElement("div", {"style": ({position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, right: 0, bottom: -tick_width / 2})})
+                return (
+                    <div
+                        key={'ruler' + i}
+                        style={_l.extend(ruler_style, {
+                            left: start, width: end - start,
+                            top: position, height: '1px'
+                        })}>
+                        <div
+                            style={{position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, left: 0, bottom: -tick_width / 2}} />
+                        <div style={{padding: '5px'}}>
+                            {display}
+                        </div>
+                        <div
+                            style={{position: 'absolute', backgroundColor: 'red', width: '1px', height: tick_width, right: 0, bottom: -tick_width / 2}} />
+                    </div>
                 );
             } else {
                 throw new Error('unknown ruler direction');
@@ -408,21 +446,29 @@ class LayoutEditorMode extends EditorMode {
     renderGridlines(gridlines, style) {
         return _.map(gridlines, ({source, axis, position, start, end}, i) => {
             if (axis === 'left') {
-                return React.createElement("div", {"key": ('gridline' + i), "style": ({
-                    position: 'absolute',
-                    top: start, height: end - start,
-                    left: position,
-                    borderLeft: style,
-                    color: 'rgba(255, 50, 50, 0.8)'
-                })});
+                return (
+                    <div
+                        key={'gridline' + i}
+                        style={{
+                            position: 'absolute',
+                            top: start, height: end - start,
+                            left: position,
+                            borderLeft: style,
+                            color: 'rgba(255, 50, 50, 0.8)'
+                        }} />
+                );
             } else if (axis === 'top') {
-                return React.createElement("div", {"key": ('gridline' + i), "style": ({
-                    position: 'absolute',
-                    left: start, width: end - start,
-                    top: position,
-                    borderTop: style,
-                    color: 'rgba(255, 50, 50, 0.8)'
-                })});
+                return (
+                    <div
+                        key={'gridline' + i}
+                        style={{
+                            position: 'absolute',
+                            left: start, width: end - start,
+                            top: position,
+                            borderTop: style,
+                            color: 'rgba(255, 50, 50, 0.8)'
+                        }} />
+                );
             } else {
                 throw new Error('unknown gridline direction');
             }
@@ -1119,17 +1165,18 @@ defaultExport.SelectRangeMode = (SelectRangeMode = class SelectRangeMode extends
             height: 0, width: 0
         });
 
-        this.extra_overlays = () => React.createElement(React.Fragment, null,
-            React.createElement("div", {"style": ({
-                backgroundColor: 'rgba(100, 100, 255, 0.2)',
-                border: '1px solid rgba(100, 100, 255, 1)',
-                position: 'absolute',
-                top: rangeRect.top,
-                left: rangeRect.left,
-                height: rangeRect.height,
-                width: rangeRect.width
-            })})
-        );
+        this.extra_overlays = () => <React.Fragment>
+            <div
+                style={{
+                    backgroundColor: 'rgba(100, 100, 255, 0.2)',
+                    border: '1px solid rgba(100, 100, 255, 1)',
+                    position: 'absolute',
+                    top: rangeRect.top,
+                    left: rangeRect.left,
+                    height: rangeRect.height,
+                    width: rangeRect.width
+                }} />
+        </React.Fragment>;
 
         onMove(to => {
             let ref;
@@ -1168,15 +1215,17 @@ defaultExport.DrawProtoLinkMode = (DrawProtoLinkMode = class DrawProtoLinkMode e
         this.prototype_link_in_progress = {from, to: from, hovered_component: null};
 
         this.extra_overlays = function() {
-            return React.createElement(React.Fragment, null,
-                ( ((this.prototype_link_in_progress != null ? this.prototype_link_in_progress.target : undefined) != null) ?
-                    React.createElement("div", {"style": (_l.extend(this.prototype_link_in_progress.target.withMargin(40).geometry, {
-                        position: 'absolute',
-                        backgroundColor: 'rgba(250, 165, 0, 0.5)',
-                        border: '10px solid rgba(250, 165, 0, 1)',
-                        borderRadius: 40
-                    }))}) : undefined
-                )
+            return (
+                <React.Fragment>
+                    {((this.prototype_link_in_progress != null ? this.prototype_link_in_progress.target : undefined) != null) ?
+                            <div
+                                style={_l.extend(this.prototype_link_in_progress.target.withMargin(40).geometry, {
+                                    position: 'absolute',
+                                    backgroundColor: 'rgba(250, 165, 0, 0.5)',
+                                    border: '10px solid rgba(250, 165, 0, 1)',
+                                    borderRadius: 40
+                                })} /> : undefined}
+                </React.Fragment>
             );
         };
 
@@ -1403,7 +1452,7 @@ defaultExport.ContentEditorMode = (ContentEditorMode = class ContentEditorMode e
 
     // override in subclasses!
     contentEditor() {
-        return React.createElement("div", null);
+        return <div />;
     }
 
     handleContentClick(mouse) {}
@@ -1452,21 +1501,21 @@ defaultExport.TypingMode = (TypingMode = class TypingMode extends ContentEditorM
         )
         );
 
-        return React.createElement("div", {"style": (_l.extend(textStyles, {minHeight: this.block.height}))},
-            React.createElement(QuillComponent, { 
-                "ref": (quill_component => {
-                    if ((quill_component != null) && (this.onQuillMounted != null)) {
-                        this.onQuillMounted(quill_component);
-                        return delete this.onQuillMounted;
-                    }
-                }
-                ),  
-                "value": (this.block.textContent.staticValue),  
-                "onChange": (newval => {
-                    this.block.textContent.staticValue = newval;
-                    return this.editor.handleDocChanged();
-                }
-                )})
+        return (
+            <div style={_l.extend(textStyles, {minHeight: this.block.height})}>
+                <QuillComponent
+                    ref={quill_component => {
+                        if ((quill_component != null) && (this.onQuillMounted != null)) {
+                            this.onQuillMounted(quill_component);
+                            return delete this.onQuillMounted;
+                        }
+                    }}
+                    value={this.block.textContent.staticValue}
+                    onChange={newval => {
+                        this.block.textContent.staticValue = newval;
+                        return this.editor.handleDocChanged();
+                    }} />
+            </div>
         );
     }
 });
@@ -1591,22 +1640,22 @@ defaultExport.PushdownTypingMode = (PushdownTypingMode = class PushdownTypingMod
         )
         );
 
-        return React.createElement("div", {"style": (_l.extend(textStyles, {minHeight: this.block.height}))},
-            React.createElement(QuillComponent, { 
-                "throttle_ms": (0),  
-                "ref": (quill_component => {
-                    if ((quill_component != null) && (this.onQuillMounted != null)) {
-                        this.onQuillMounted(quill_component);
-                        return delete this.onQuillMounted;
-                    }
-                }
-                ),  
-                "value": (this.block.textContent.staticValue),  
-                "onChange": (newval => {
-                    this.changeTextWithPushdown(newval);
-                    return this.editor.handleDocChanged();
-                }
-                )})
+        return (
+            <div style={_l.extend(textStyles, {minHeight: this.block.height})}>
+                <QuillComponent
+                    throttle_ms={0}
+                    ref={quill_component => {
+                        if ((quill_component != null) && (this.onQuillMounted != null)) {
+                            this.onQuillMounted(quill_component);
+                            return delete this.onQuillMounted;
+                        }
+                    }}
+                    value={this.block.textContent.staticValue}
+                    onChange={newval => {
+                        this.changeTextWithPushdown(newval);
+                        return this.editor.handleDocChanged();
+                    }} />
+            </div>
         );
     }
 });
@@ -1687,18 +1736,20 @@ defaultExport.DrawingMode = (DrawingMode = class DrawingMode extends LayoutEdito
 
 
     extra_overlays() {
-        return React.createElement(React.Fragment, null,
-            ( (this.drawingBox != null) ?
-                React.createElement("div", {"style": ({
-                    backgroundColor: 'rgba(0, 0, 0, 0)',
-                    border: '1px solid grey',
-                    position: 'absolute',
-                    top: this.drawingBox.top,
-                    left: this.drawingBox.left,
-                    height: this.drawingBox.height,
-                    width: this.drawingBox.width
-                })}) : undefined
-            )
+        return (
+            <React.Fragment>
+                {(this.drawingBox != null) ?
+                        <div
+                            style={{
+                                backgroundColor: 'rgba(0, 0, 0, 0)',
+                                border: '1px solid grey',
+                                position: 'absolute',
+                                top: this.drawingBox.top,
+                                left: this.drawingBox.left,
+                                height: this.drawingBox.height,
+                                width: this.drawingBox.width
+                            }} /> : undefined}
+            </React.Fragment>
         );
     }
 
@@ -1828,16 +1879,17 @@ defaultExport.DynamicizingMode = (DynamicizingMode = class DynamicizingMode exte
     }
 
     sidebar(editor) {
-        return React.createElement(Sidebar, { 
-            "sidebarMode": "code",  
-            "editor": (editor),  
-            "value": (editor.getSelectedBlocks()),  
-            "selectBlocks": (editor.selectBlocks),  
-            "editorCache": (editor.editorCache),  
-            "doc": (editor.doc),  
-            "setEditorMode": (editor.setEditorMode),  
-            "onChange": (editor.handleDocChanged)
-            });
+        return (
+            <Sidebar
+                sidebarMode="code"
+                editor={editor}
+                value={editor.getSelectedBlocks()}
+                selectBlocks={editor.selectBlocks}
+                editorCache={editor.editorCache}
+                doc={editor.doc}
+                setEditorMode={editor.setEditorMode}
+                onChange={editor.handleDocChanged} />
+        );
     }
 
     handleClick(mouse) {
@@ -2211,20 +2263,23 @@ defaultExport.VerticalPushdownMode = (VerticalPushdownMode = class VerticalPushd
                 // Put an 'underlay' on one of the targeted_blocks by giving it an extra overlay with negative zIndex
                 return this.specialOverlayForBlock = (block, standard_overlay) => {
                     if (block !== targeted_blocks[0]) { return standard_overlay; }
-                    return React.createElement(React.Fragment, null,
-                        (standard_overlay),
-                        React.createElement("div", {"style": ({
-                            position: 'absolute', zIndex: -1,
-                            border: '1px solid blue',
-                            backgroundColor: '#93D3F9',
+                    return (
+                        <React.Fragment>
+                            {standard_overlay}
+                            <div
+                                style={{
+                                    position: 'absolute', zIndex: -1,
+                                    border: '1px solid blue',
+                                    backgroundColor: '#93D3F9',
 
-                            // relative to targeted_blocks[0]
-                            top: target_slice.start - block.top,
-                            left: 0,
+                                    // relative to targeted_blocks[0]
+                                    top: target_slice.start - block.top,
+                                    left: 0,
 
-                            height: target_slice.length,
-                            width: targeted_blocks_area.width
-                        })})
+                                    height: target_slice.length,
+                                    width: targeted_blocks_area.width
+                                }} />
+                        </React.Fragment>
                     );
                 };
             }

@@ -97,18 +97,16 @@ defaultExport.run = function() {
                 const active_screen_block = doc.getBlockByKey(active_screen_key);
 
                 if ((active_screen_block == null)) {
-                    return show(React.createElement(ErrorPage, { 
-                        "message": "404 Not Found",  
-                        "detail": "This prototype may have been deleted from the doc it was living in"}
-                    )
+                    return show(<ErrorPage
+                        message="404 Not Found"
+                        detail="This prototype may have been deleted from the doc it was living in" />
                     );
                 }
 
                 if (active_screen_block instanceof InstanceBlock && ((active_screen_block.getSourceComponent() != null) === false)) {
-                    return show(React.createElement(ErrorPage, { 
-                        "message": "404 Not Found",  
-                        "detail": "This screen of the prototype was derived from another, and it looks like the source one was deleted"}
-                    )
+                    return show(<ErrorPage
+                        message="404 Not Found"
+                        detail="This screen of the prototype was derived from another, and it looks like the source one was deleted" />
                     );
                 }
 
@@ -131,10 +129,9 @@ defaultExport.run = function() {
                 })();
 
                 if ((pdom_to_preview == null)) {
-                    return show(React.createElement(ErrorPage, { 
-                        "message": "418 Bad Link",  
-                        "detail": "You have a link to a piece of a prototype that isn't a whole screen, and can't meaningfully be previewed."}
-                    )
+                    return show(<ErrorPage
+                        message="418 Bad Link"
+                        detail="You have a link to a piece of a prototype that isn't a whole screen, and can't meaningfully be previewed." />
                     );
                 }
 
@@ -178,10 +175,12 @@ defaultExport.run = function() {
                 //     <small>They may find this error useful:</small> <code>{e.message}</code>
                 // </ErrorPage>
 
-                return show(React.createElement(React.Fragment, null,
-                    ( font_loading_head_tags_for_doc(doc) ),
-                    React.createElement(WindowContextProvider, {"window": (window)}, (react_with_events))
-                )
+                return show(<React.Fragment>
+                    {font_loading_head_tags_for_doc(doc)}
+                    <WindowContextProvider window={window}>
+                        {react_with_events}
+                    </WindowContextProvider>
+                </React.Fragment>
                 );
             };
 

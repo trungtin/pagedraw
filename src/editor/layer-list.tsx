@@ -108,100 +108,85 @@ export default createReactClass({
 
     const treeListView = this.getTreeList().map(
       ({ block, depth, hasChildren }) => {
-        return React.createElement(LayerListItem, {
-          key: block.uniqueKey,
-          ref: `item-${block.uniqueKey}`,
-          block: block,
-          parentLayerList: this,
-
-          labelValueLink: this.linkAttr(block, 'label'),
-          depth: depth,
-          hasChildren: hasChildren,
-          isSelected: Array.from(this.props.selectedBlocks).includes(block),
-          isCollapsed: this.isCollapsed(block),
-          isBeingRenamed: block === this.blockBeingRenamed,
-          isLockedValueLink: this.linkAttr(block, 'locked'),
-        })
+        return (
+          <LayerListItem
+            key={block.uniqueKey}
+            ref={`item-${block.uniqueKey}`}
+            block={block}
+            parentLayerList={this}
+            labelValueLink={this.linkAttr(block, 'label')}
+            depth={depth}
+            hasChildren={hasChildren}
+            isSelected={Array.from(this.props.selectedBlocks).includes(block)}
+            isCollapsed={this.isCollapsed(block)}
+            isBeingRenamed={block === this.blockBeingRenamed}
+            isLockedValueLink={this.linkAttr(block, 'locked')} />
+        );
       }
     )
 
-    return React.createElement(
-      'div',
-      {
-        className:
-          'layer-list editor-scrollbar scrollbar-show-on-hover bootstrap',
-      },
-      !_l.isEmpty(this.props.doc.blocks)
-        ? React.createElement(
-            'div',
-            {
-              onClick: () => {
-                this.props.onBlocksSelected([], { additive: false })
-                return this.props.onChange({ fast: true })
-              },
-              style: {
-                paddingLeft: 15,
-                display: 'flex',
-                justifyContent: 'space-between',
-              },
-              className: `layer-list-item ${
-                _l.isEmpty(this.props.selectedBlocks) ? 'selected' : ''
-              }`,
-            },
-            React.createElement('div', null, 'Doc'),
-            React.createElement(
-              'div',
-              {
-                style: {
-                  maxWidth: 100,
-                  whiteSpace: 'nowrap',
-                  overflowX: 'hidden',
-                  textOverflow: 'ellipsis',
-                },
-              },
-              this.props.doc.url
-            )
-          )
-        : undefined,
-      _l.isEmpty(this.props.doc.blocks)
-        ? React.createElement(
-            'div',
-            { className: 'sidebar-default-content' },
-            React.createElement(
-              'div',
-              { style: { padding: 15, fontSize: 14, fontFamily: 'Lato' } },
-              React.createElement('h3', null, 'Welcome to Pagedraw!'),
-              React.createElement('p', null, 'Few things you can try:'),
-              React.createElement(
-                'ul',
-                null,
-                React.createElement(
-                  'li',
-                  null,
-                  "Press 'a' and draw an artboard that can later become your page or React component"
-                ),
-                React.createElement(
-                  'li',
-                  null,
-                  "Press 'r' to draw a rectangle or 't' to add text element"
-                ),
-                React.createElement(
-                  'li',
-                  null,
-                  "Press 'd' to switch to Dynamic Data mode and select elements you want to make dynamic"
-                ),
-                React.createElement(
-                  'li',
-                  null,
-                  "Sync code with your codebase by pressing 'Sync Code' and following the setup instuctions"
-                )
-              )
-            )
-          )
-        : config.layerListFlipMoveAnimation
-        ? React.createElement(FlipMove, { duration: 100 }, treeListView)
-        : treeListView
-    )
+    return (
+      <div className="layer-list editor-scrollbar scrollbar-show-on-hover bootstrap">
+        {!_l.isEmpty(this.props.doc.blocks)
+          ? <div
+          onClick={() => {
+            this.props.onBlocksSelected([], { additive: false })
+            return this.props.onChange({ fast: true })
+          }}
+          style={{
+            paddingLeft: 15,
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+          className={`layer-list-item ${
+            _l.isEmpty(this.props.selectedBlocks) ? 'selected' : ''
+          }`}>
+          <div>
+            Doc
+          </div>
+          <div
+            style={{
+              maxWidth: 100,
+              whiteSpace: 'nowrap',
+              overflowX: 'hidden',
+              textOverflow: 'ellipsis',
+            }}>
+            {this.props.doc.url}
+          </div>
+        </div>
+          : undefined}
+        {_l.isEmpty(this.props.doc.blocks)
+          ? <div className="sidebar-default-content">
+          <div style={{ padding: 15, fontSize: 14, fontFamily: 'Lato' }}>
+            <h3>
+              Welcome to Pagedraw!
+            </h3>
+            <p>
+              Few things you can try:
+            </p>
+            <ul>
+              <li>
+                Press 'a' and draw an artboard that can later become your page or React component
+              </li>
+              <li>
+                Press 'r' to draw a rectangle or 't' to add text element
+              </li>
+              <li>
+                Press 'd' to switch to Dynamic Data mode and select elements you want to make dynamic
+              </li>
+              <li>
+                Sync code with your codebase by pressing 'Sync Code' and following the setup instuctions
+              </li>
+            </ul>
+          </div>
+        </div>
+          : config.layerListFlipMoveAnimation
+          ? <FlipMove duration={100}>
+          {treeListView}
+        </FlipMove>
+          : treeListView}
+      </div>
+    );
   },
 
   linkAttr(block, attr) {
@@ -318,75 +303,63 @@ var LayerListItem = createReactClass({
       block,
       parentLayerList,
     } = this.props
-    return React.createElement(
-      'div',
-      {
-        className: `layer-list-item ${isSelected ? 'selected' : ''} ${
+    return (
+      <div
+        className={`layer-list-item ${isSelected ? 'selected' : ''} ${
           depth === 0 ? 'top-level' : ''
-        }`,
-        style: {
+        }`}
+        style={{
           paddingLeft: 25 + 15 * depth,
-        },
-        onMouseDown(e) {
+        }}
+        onMouseDown={function(e) {
           return parentLayerList.handleLayerItemMouseDown(e, block)
-        },
-        onMouseOver() {
+        }}
+        onMouseOver={function() {
           return parentLayerList.handleMouseOver(block)
-        },
-        onMouseLeave() {
+        }}
+        onMouseLeave={function() {
           return parentLayerList.handleMouseLeave(block)
-        },
-      },
-      React.createElement(
-        'div',
-        { className: 'layer-list-item-line' },
-        hasChildren
-          ? // Allows user to collapse layer
-            // collapser draws a triangle, using the css border hack
-            React.createElement(
-              'div',
-              {
-                onMouseDown(e) {
+        }}>
+        <div className="layer-list-item-line">
+          {hasChildren
+            ? // Allows user to collapse layer
+              // collapser draws a triangle, using the css border hack
+              <div
+                onMouseDown={function(e) {
                   return parentLayerList.handleToggleCollapsed(e, block)
-                },
-                className: 'layer-list-collapser',
-              },
-              React.createElement('div', {
-                className: 'layer-list-collapser-triangle',
-                style: {
-                  borderColor: `transparent transparent transparent ${
-                    isSelected ? '#fff' : '#8c8c8c'
-                  }`,
-                  transform: !isCollapsed ? 'rotate(90deg)' : '',
-                },
-              })
-            )
-          : undefined,
-        React.createElement(EditableText, {
-          valueLink: labelValueLink,
-          isEditable: isSelected,
-          isEditing: isBeingRenamed,
-          onSwitchToEditMode(isEditMode) {
-            return parentLayerList.handleEditableTextSwitchToEditMode(
-              block,
-              isEditMode
-            )
-          },
-          editingStyle: { width: '100%' },
-        }),
-
-        !isBeingRenamed
-          ? React.createElement(
-              'div',
-              {
-                className: block.locked ? 'locked' : undefined,
-                style: { flexShrink: 0, marginLeft: 5 },
-              },
-              React.createElement(LockToggle, { valueLink: isLockedValueLink })
-            )
-          : undefined
-      )
-    )
+                }}
+                className="layer-list-collapser">
+                <div
+                  className="layer-list-collapser-triangle"
+                  style={{
+                    borderColor: `transparent transparent transparent ${
+                      isSelected ? '#fff' : '#8c8c8c'
+                    }`,
+                    transform: !isCollapsed ? 'rotate(90deg)' : '',
+                  }} />
+              </div>
+            : undefined}
+          <EditableText
+            valueLink={labelValueLink}
+            isEditable={isSelected}
+            isEditing={isBeingRenamed}
+            onSwitchToEditMode={function(isEditMode) {
+              return parentLayerList.handleEditableTextSwitchToEditMode(
+                block,
+                isEditMode
+              )
+            }}
+            editingStyle={{ width: '100%' }} />
+          {!isBeingRenamed
+            ? <div
+            className={block.locked ? 'locked' : undefined}
+            style={{ flexShrink: 0, marginLeft: 5 }}>
+            <LockToggle valueLink={isLockedValueLink} />
+          </div>
+            : undefined}
+        </div>
+      </div>
+    );
   },
 
   shouldComponentUpdate(nextProps) {

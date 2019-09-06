@@ -12,106 +12,111 @@ import Listitem from './componentlistitem';
 
 
 const render = function() {
-    return React.createElement("div", {"className": "componentlist-componentlist-8"},
-        React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.componentlist-componentlist-8 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+    return (
+        <div className="componentlist-componentlist-8">
+            <style
+                dangerouslySetInnerHTML={{__html: `\
+        .componentlist-componentlist-8 {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
 
-.componentlist-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+        .componentlist-0 {
+            display: flex;
+            flex-shrink: 0;
+        }
 
-.componentlist-0-0 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    display: flex;
-    flex-direction: column;
-    margin-top: -10px;
-}
+        .componentlist-0-0 {
+            flex-grow: 1;
+            flex-basis: 0px;
+            display: flex;
+            flex-direction: column;
+            margin-top: -10px;
+        }
 
-.componentlist-rectangle_5 {
-    display: flex;
-    flex-direction: column;
-    min-height: fit-content;
-    background: rgba(255, 255, 255, 0);
-    margin-top: 10px;
-    flex-grow: 1;
-}
+        .componentlist-rectangle_5 {
+            display: flex;
+            flex-direction: column;
+            min-height: fit-content;
+            background: rgba(255, 255, 255, 0);
+            margin-top: 10px;
+            flex-grow: 1;
+        }
 
-.componentlist-0-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+        .componentlist-0-0-0-0-0 {
+            display: flex;
+            flex-shrink: 0;
+        }
 
-.componentlist-componentlistitem_instance-7 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    display: flex;
-    flex-direction: column;
-}
+        .componentlist-componentlistitem_instance-7 {
+            flex-grow: 1;
+            flex-basis: 0px;
+            display: flex;
+            flex-direction: column;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-body {
-    margin: 0;
-}
+        body {
+            margin: 0;
+        }
 
-button:hover {
-    cursor: pointer;
-}
+        button:hover {
+            cursor: pointer;
+        }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+        .pd-onhover-parent >.pd-onhover {
+            display: none;
+        }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+        .pd-onhover-parent:hover > * {
+            display: none;
+        }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+        .pd-onhover-parent:hover > .pd-onhover {
+            display: flex;
+        }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+        .pd-onactive-parent > .pd-onactive {
+            display: none;
+        }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+        .pd-onactive-parent:active > * {
+            display: none;
+        }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+        .pd-onactive-parent:active > .pd-onactive {
+            display: flex;
+        }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-        React.createElement("div", {"className": "componentlist-0"},
-            React.createElement("div", {"className": "componentlist-0-0"},
-                ( this.props.components.map((component, i) => {
-                    return React.createElement("div", {"key": (i), "className": "componentlist-rectangle_5"},
-                        React.createElement("div", {"className": "componentlist-0-0-0-0-0"},
-                            React.createElement("div", {"className": "componentlist-componentlistitem_instance-7"},
-                                React.createElement(Listitem, {"active": (component.active), "title": (component.title)}) 
-                            )
-                        )
-                    );
-                }))
-            )
-        )
+        .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+            display: none;
+        }\
+        `}} />
+            <div className="componentlist-0">
+                <div className="componentlist-0-0">
+                    {this.props.components.map((component, i) => {
+                            return (
+                                <div key={i} className="componentlist-rectangle_5">
+                                    <div className="componentlist-0-0-0-0-0">
+                                        <div className="componentlist-componentlistitem_instance-7">
+                                            <Listitem active={component.active} title={component.title} />
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                </div>
+            </div>
+        </div>
     );
 };
 

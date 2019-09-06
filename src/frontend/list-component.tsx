@@ -13,18 +13,24 @@ import { SidebarHeaderAddButton } from '../editor/component-lib';
 
 export default ListComponent = createReactClass({
     render() {
-        return React.createElement("div", {"style": (this.props.labelRowStyle)},
-            React.createElement("div", {"style": ({display: 'flex', flexDirection: 'row', alignItems: 'center'})},
-                React.createElement("span", {"style": ({flex: 1})}, (this.props.label)),
-                React.createElement(SidebarHeaderAddButton, {"onClick": (this.handleAdd)})
-            ),
-            React.createElement("div", null,
-                ( this.props.valueLink.value.map((elem, i) => {
-                    return React.createElement(React.Fragment, {"key": (i)},
-                        (this.props.elem({value: elem, requestChange: this.handleUpdate(i)}, (() => this.handleRemove(i)), i))
-                    );
-                }))
-            )
+        return (
+            <div style={this.props.labelRowStyle}>
+                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <span style={{flex: 1}}>
+                        {this.props.label}
+                    </span>
+                    <SidebarHeaderAddButton onClick={this.handleAdd} />
+                </div>
+                <div>
+                    {this.props.valueLink.value.map((elem, i) => {
+                            return (
+                                <React.Fragment key={i}>
+                                    {this.props.elem({value: elem, requestChange: this.handleUpdate(i)}, (() => this.handleRemove(i)), i)}
+                                </React.Fragment>
+                            );
+                        })}
+                </div>
+            </div>
         );
     },
 

@@ -28,14 +28,13 @@ defaultExport.ModalComponent = createReactClass({
         // in Python.  The call is like
         // React.createElement(Modal, props, child[0], child[1], child[2], ...)
 
-        const sharedModal = React.createElement(Modal, {
-                show: this.state.open,
-                onHide: this.closeModal,
-                container: this.refs.container,
-                dialogClassName: this.state.dialogClassName
-            },
-            ...Array.from(this.getContents())
-        );
+        const sharedModal = <Modal
+            show={this.state.open}
+            onHide={this.closeModal}
+            container={this.refs.container}
+            dialogClassName={this.state.dialogClassName}>
+            {Array.from(this.getContents())}
+        </Modal>;
 
         // Set up an explicit container for the modal so we can apply the
         // 'bootstrap' class.  Without being in a Bootstrap DOM tree,
@@ -51,11 +50,13 @@ defaultExport.ModalComponent = createReactClass({
         // here.  I *believe* it should never be exhibited unless we load the
         // page with a modal open from the start, so for now let's just
         // pretend this works (JRP 6/4/2016)
-        return React.createElement("div", null,
-            React.createElement("div", {"className": "bootstrap"},
-                React.createElement("div", {"ref": "container"})
-            ),
-            (sharedModal)
+        return (
+            <div>
+                <div className="bootstrap">
+                    <div ref="container" />
+                </div>
+                {sharedModal}
+            </div>
         );
     },
 

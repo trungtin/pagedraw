@@ -14,314 +14,322 @@ import Errormessage from './errormessage';
 export default Errorsidebar = createReactClass({
     displayName: 'Errorsidebar',
     render() {
-        return React.createElement("div", {"className": "errorsidebar-errorsidebar-9"},
-          React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.errorsidebar-errorsidebar-9 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+        return (
+            <div className="errorsidebar-errorsidebar-9">
+                <style
+                    dangerouslySetInnerHTML={{__html: `\
+          .errorsidebar-errorsidebar-9 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+          }
 
-.errorsidebar-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .errorsidebar-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.errorsidebar-line_2 {
-    height: 1px;
-    flex-grow: 1;
-    flex-basis: 0px;
-    background: #D8D8D8;
-}
+          .errorsidebar-line_2 {
+              height: 1px;
+              flex-grow: 1;
+              flex-basis: 0px;
+              background: #D8D8D8;
+          }
 
-.errorsidebar-1 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 5px;
-    padding-left: 7px;
-    padding-right: 165px;
-}
+          .errorsidebar-1 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 5px;
+              padding-left: 7px;
+              padding-right: 165px;
+          }
 
-.errorsidebar-rectangle_6 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    border-radius: 11px;
-    background: rgb(251, 93, 93);
-}
+          .errorsidebar-rectangle_6 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 2px;
+              padding-bottom: 2px;
+              border-radius: 11px;
+              background: rgb(251, 93, 93);
+          }
 
-.errorsidebar-1-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 5px;
-    padding-right: 5px;
-}
+          .errorsidebar-1-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 5px;
+              padding-right: 5px;
+          }
 
-.errorsidebar-text_3 {
-    flex-shrink: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(255, 255, 255);
-    font-size: 10px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: center;
-    word-wrap: break-word;
-    padding-right: 0.4375px;
-}
+          .errorsidebar-text_3 {
+              flex-shrink: 0;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(255, 255, 255);
+              font-size: 10px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: center;
+              word-wrap: break-word;
+              padding-right: 0.4375px;
+          }
 
-.errorsidebar-rectangle_6-7 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    border-radius: 11px;
-    background: rgb(251, 193, 93);
-    margin-left: 6px;
-}
+          .errorsidebar-rectangle_6-7 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 2px;
+              padding-bottom: 2px;
+              border-radius: 11px;
+              background: rgb(251, 193, 93);
+              margin-left: 6px;
+          }
 
-.errorsidebar-1-1-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 5px;
-    padding-right: 5px;
-}
+          .errorsidebar-1-1-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 5px;
+              padding-right: 5px;
+          }
 
-.errorsidebar-text_3-3 {
-    flex-shrink: 0;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: rgb(255, 255, 255);
-    font-size: 10px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: center;
-    word-wrap: break-word;
-    padding-right: 0.4375px;
-}
+          .errorsidebar-text_3-3 {
+              flex-shrink: 0;
+              font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+              color: rgb(255, 255, 255);
+              font-size: 10px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: center;
+              word-wrap: break-word;
+              padding-right: 0.4375px;
+          }
 
-.errorsidebar-2 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 3px;
-}
+          .errorsidebar-2 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 3px;
+          }
 
-.errorsidebar-line_2-7 {
-    height: 1px;
-    flex-grow: 1;
-    flex-basis: 0px;
-    background: #D8D8D8;
-}
+          .errorsidebar-line_2-7 {
+              height: 1px;
+              flex-grow: 1;
+              flex-basis: 0px;
+              background: #D8D8D8;
+          }
 
-.errorsidebar-3 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .errorsidebar-3 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.errorsidebar-rectangle_4 {
-    height: 288px;
-    flex-grow: 1;
-    flex-basis: 0px;
-    overflow: scroll;
-    position: relative;
-    background: rgb(255, 255, 255);
-}
+          .errorsidebar-rectangle_4 {
+              height: 288px;
+              flex-grow: 1;
+              flex-basis: 0px;
+              overflow: scroll;
+              position: relative;
+              background: rgb(255, 255, 255);
+          }
 
-.errorsidebar-3-0-0 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    padding-top: 6px;
-    position: absolute;
-    width: 100%;
-    min-height: 100%;
-}
+          .errorsidebar-3-0-0 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              padding-top: 6px;
+              position: absolute;
+              width: 100%;
+              min-height: 100%;
+          }
 
-.errorsidebar-3-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .errorsidebar-3-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.errorsidebar-3-0-0-0-0 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    display: flex;
-    flex-direction: column;
-    margin-top: -5px;
-}
+          .errorsidebar-3-0-0-0-0 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              display: flex;
+              flex-direction: column;
+              margin-top: -5px;
+          }
 
-.errorsidebar-rectangle_5 {
-    display: flex;
-    flex-direction: column;
-    min-height: fit-content;
-    background: rgba(216, 216, 216, 0);
-    margin-top: 5px;
-    flex-grow: 1;
-}
+          .errorsidebar-rectangle_5 {
+              display: flex;
+              flex-direction: column;
+              min-height: fit-content;
+              background: rgba(216, 216, 216, 0);
+              margin-top: 5px;
+              flex-grow: 1;
+          }
 
-.errorsidebar-3-0-0-0-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .errorsidebar-3-0-0-0-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.errorsidebar-errormessage_instance-3 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    display: flex;
-    flex-direction: column;
-}
+          .errorsidebar-errormessage_instance-3 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              display: flex;
+              flex-direction: column;
+          }
 
-.errorsidebar-3-0-0-1 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 6px;
-}
+          .errorsidebar-3-0-0-1 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 6px;
+          }
 
-.errorsidebar-3-0-0-1-0 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    display: flex;
-    flex-direction: column;
-    margin-top: -5px;
-}
+          .errorsidebar-3-0-0-1-0 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              display: flex;
+              flex-direction: column;
+              margin-top: -5px;
+          }
 
-.errorsidebar-rectangle_5-3 {
-    display: flex;
-    flex-direction: column;
-    min-height: fit-content;
-    background: rgba(216, 216, 216, 0);
-    margin-top: 5px;
-    flex-grow: 1;
-}
+          .errorsidebar-rectangle_5-3 {
+              display: flex;
+              flex-direction: column;
+              min-height: fit-content;
+              background: rgba(216, 216, 216, 0);
+              margin-top: 5px;
+              flex-grow: 1;
+          }
 
-.errorsidebar-3-0-0-1-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .errorsidebar-3-0-0-1-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.errorsidebar-errormessage_instance-0 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    display: flex;
-    flex-direction: column;
-}
+          .errorsidebar-errormessage_instance-0 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              display: flex;
+              flex-direction: column;
+          }
 
-.errorsidebar-3-0-0-2 {
-    width: 0px;
-    flex-shrink: 0;
-    flex-grow: 1;
-    flex-basis: 0px;
-}
+          .errorsidebar-3-0-0-2 {
+              width: 0px;
+              flex-shrink: 0;
+              flex-grow: 1;
+              flex-basis: 0px;
+          }
 
-* {
-    box-sizing: border-box;
-}
+          * {
+              box-sizing: border-box;
+          }
 
-body {
-    margin: 0;
-}
+          body {
+              margin: 0;
+          }
 
-button:hover {
-    cursor: pointer;
-}
+          button:hover {
+              cursor: pointer;
+          }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+          a {
+              text-decoration: none;
+              color: inherit;
+          }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+          .pd-onhover-parent >.pd-onhover {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+          .pd-onhover-parent:hover > * {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+          .pd-onhover-parent:hover > .pd-onhover {
+              display: flex;
+          }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+          .pd-onactive-parent > .pd-onactive {
+              display: none;
+          }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+          .pd-onactive-parent:active > * {
+              display: none;
+          }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+          .pd-onactive-parent:active > .pd-onactive {
+              display: flex;
+          }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-          React.createElement("div", {"className": "errorsidebar-0"},
-              React.createElement("div", {"className": "errorsidebar-line_2"}) 
-          ),
-          React.createElement("div", {"className": "errorsidebar-1"},
-              ( (this.props.errors.length > 0) ?
-                  React.createElement("div", {"className": "errorsidebar-rectangle_6"},
-                      React.createElement("div", {"className": "errorsidebar-1-0-0-0"},
-                          React.createElement("div", {"className": "errorsidebar-text_3"},
-                              ( this.props.errors.length )
-                          )
-                      )
-                  ) : undefined
-              ),
-              ( (this.props.warnings.length > 0) ?
-                  React.createElement("div", {"className": "errorsidebar-rectangle_6-7"},
-                      React.createElement("div", {"className": "errorsidebar-1-1-0-0"},
-                          React.createElement("div", {"className": "errorsidebar-text_3-3"},
-                              ( this.props.warnings.length )
-                          )
-                      )
-                  ) : undefined
-              )
-          ),
-          React.createElement("div", {"className": "errorsidebar-2"},
-              React.createElement("div", {"className": "errorsidebar-line_2-7"}) 
-          ),
-          React.createElement("div", {"className": "errorsidebar-3"},
-              React.createElement("div", {"className": "errorsidebar-rectangle_4"},
-                  React.createElement("div", {"className": "errorsidebar-3-0-0"},
-                      React.createElement("div", {"className": "errorsidebar-3-0-0-0"},
-                          React.createElement("div", {"className": "errorsidebar-3-0-0-0-0"},
-                              ( (this.props.errors).map((error, i) => {
-                                  return React.createElement("div", {"key": (i), "className": "errorsidebar-rectangle_5"},
-                                      React.createElement("div", {"className": "errorsidebar-3-0-0-0-0-0-0-0"},
-                                          React.createElement("div", {"className": "errorsidebar-errormessage_instance-3"},
-                                              React.createElement(Errormessage, {"content": (error.content), "type": ("error"), "handleClick": (error.handleClick)}) 
-                                          )
-                                      )
-                                  );
-                              }))
-                          )
-                      ),
-                      React.createElement("div", {"className": "errorsidebar-3-0-0-1"},
-                          React.createElement("div", {"className": "errorsidebar-3-0-0-1-0"},
-                              ( (this.props.warnings).map((warning, i) => {
-                                  return React.createElement("div", {"key": (i), "className": "errorsidebar-rectangle_5-3"},
-                                      React.createElement("div", {"className": "errorsidebar-3-0-0-1-0-0-0-0"},
-                                          React.createElement("div", {"className": "errorsidebar-errormessage_instance-0"},
-                                              React.createElement(Errormessage, {"content": (warning.content), "type": ("warning"), "handleClick": (warning.handleClick)}) 
-                                          )
-                                      )
-                                  );
-                              }))
-                          )
-                      ),
-                      React.createElement("div", {"className": "errorsidebar-3-0-0-2"}) 
-                  )
-              )
-          )
-      );
+          .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+              display: none;
+          }\
+          `}} />
+                <div className="errorsidebar-0">
+                    <div className="errorsidebar-line_2" />
+                </div>
+                <div className="errorsidebar-1">
+                    {(this.props.errors.length > 0) ?
+                            <div className="errorsidebar-rectangle_6">
+                                <div className="errorsidebar-1-0-0-0">
+                                    <div className="errorsidebar-text_3">
+                                        {this.props.errors.length}
+                                    </div>
+                                </div>
+                            </div> : undefined}
+                    {(this.props.warnings.length > 0) ?
+                            <div className="errorsidebar-rectangle_6-7">
+                                <div className="errorsidebar-1-1-0-0">
+                                    <div className="errorsidebar-text_3-3">
+                                        {this.props.warnings.length}
+                                    </div>
+                                </div>
+                            </div> : undefined}
+                </div>
+                <div className="errorsidebar-2">
+                    <div className="errorsidebar-line_2-7" />
+                </div>
+                <div className="errorsidebar-3">
+                    <div className="errorsidebar-rectangle_4">
+                        <div className="errorsidebar-3-0-0">
+                            <div className="errorsidebar-3-0-0-0">
+                                <div className="errorsidebar-3-0-0-0-0">
+                                    {(this.props.errors).map((error, i) => {
+                                            return (
+                                                <div key={i} className="errorsidebar-rectangle_5">
+                                                    <div className="errorsidebar-3-0-0-0-0-0-0-0">
+                                                        <div className="errorsidebar-errormessage_instance-3">
+                                                            <Errormessage content={error.content} type="error" handleClick={error.handleClick} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            </div>
+                            <div className="errorsidebar-3-0-0-1">
+                                <div className="errorsidebar-3-0-0-1-0">
+                                    {(this.props.warnings).map((warning, i) => {
+                                            return (
+                                                <div key={i} className="errorsidebar-rectangle_5-3">
+                                                    <div className="errorsidebar-3-0-0-1-0-0-0-0">
+                                                        <div className="errorsidebar-errormessage_instance-0">
+                                                            <Errormessage
+                                                                content={warning.content}
+                                                                type="warning"
+                                                                handleClick={warning.handleClick} />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                </div>
+                            </div>
+                            <div className="errorsidebar-3-0-0-2" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 });

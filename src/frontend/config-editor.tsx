@@ -26,10 +26,16 @@ defaultExport.ConfigEditor = createReactClass({
     displayName: "ConfigEditor",
 
     render() {
-        return React.createElement("form", {"onSubmit": (this.updateConfig)},
-            React.createElement(FormControl, {"tag": "textarea", "style": ({width: '100%', height: '8em', fontFamily: 'monospace'}),  
-                "valueLink": (this.linkState('updated_config'))}),
-            React.createElement("button", {"style": ({float: 'right', marginBottom: '3em'})}, "Update config")
+        return (
+            <form onSubmit={this.updateConfig}>
+                <FormControl
+                    tag="textarea"
+                    style={{width: '100%', height: '8em', fontFamily: 'monospace'}}
+                    valueLink={this.linkState('updated_config')} />
+                <button style={{float: 'right', marginBottom: '3em'}}>
+                    Update config
+                </button>
+            </form>
         );
     },
 
@@ -49,24 +55,33 @@ defaultExport.showConfigEditorModal = (showConfigEditorModal = function() {
         let updated_config = window.localStorage.config;
 
         return modal.show(closeHandler => { return [
-            React.createElement(Modal.Header, {"closeButton": true},
-                React.createElement(Modal.Title, null, "Set config flags")
-            ),
-            React.createElement(Modal.Body, null,
-                React.createElement(FormControl, {"tag": "textarea", "style": ({width: '100%', height: '60vh', fontFamily: 'monospace'}),  
-                    "valueLink": ({
+            <Modal.Header closeButton={true}>
+                <Modal.Title>
+                    Set config flags
+                </Modal.Title>
+            </Modal.Header>,
+            <Modal.Body>
+                <FormControl
+                    tag="textarea"
+                    style={{width: '100%', height: '60vh', fontFamily: 'monospace'}}
+                    valueLink={{
                         value: updated_config,
                         requestChange: nv => { updated_config = nv; return modal.forceUpdate(); }
-                    })})
-            ),
-            React.createElement(Modal.Footer, null,
-                React.createElement(PdButtonOne, {"onClick": (closeHandler)}, "Close"),
-                React.createElement(PdButtonOne, {"type": "primary", "onClick": (() => {
-                    window.localStorage.config = updated_config;
-                    return window.setTimeout(() => window.location.reload());
-                }
-                )}, "Update")
-            )
+                    }} />
+            </Modal.Body>,
+            <Modal.Footer>
+                <PdButtonOne onClick={closeHandler}>
+                    Close
+                </PdButtonOne>
+                <PdButtonOne
+                    type="primary"
+                    onClick={() => {
+                        window.localStorage.config = updated_config;
+                        return window.setTimeout(() => window.location.reload());
+                    }}>
+                    Update
+                </PdButtonOne>
+            </Modal.Footer>
         ]; });
     });
 

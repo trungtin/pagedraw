@@ -35,56 +35,73 @@ defaultExport.SketchDropzone = createReactClass({
 
     render() {
         if (config.disableFigmaSketchImport) {
-            return React.createElement("div", {"onClick"() { return alert("Sketch importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw"); }},
-                (this.props.children)
+            return (
+                <div
+                    onClick={function() { return alert("Sketch importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw"); }}>
+                    {this.props.children}
+                </div>
             );
         }
 
-        return React.createElement("div", null,
-            React.createElement("div", {"className": "bootstrap"},
-                React.createElement("div", {"ref": "modal_container"})
-            ),
-            ((() => { 
-                // we do the modal_container shenanigans for bootstrap css...
-                switch (this.current_state) {
-                    case 'none':
-                        // no modal
-                        return React.createElement(Modal, {"show": (false), "container": (this.refs.modal_container)});
+        return (
+            <div>
+                <div className="bootstrap">
+                    <div ref="modal_container" />
+                </div>
+                {(() => { 
+                        // we do the modal_container shenanigans for bootstrap css...
+                        switch (this.current_state) {
+                            case 'none':
+                                // no modal
+                                return <Modal show={false} container={this.refs.modal_container} />;
 
-                    case 'loading':
-                        return React.createElement(Modal, {"show": true, "container": (this.refs.modal_container)},
-                            React.createElement(Modal.Header, null,
-                                React.createElement(Modal.Title, null, "Importing Sketch...")
-                            ),
-                            React.createElement(Modal.Body, null,
-                                
-                                React.createElement(SketchImporterView, {"importing": (true)})
-                            ),
-                            React.createElement(Modal.Footer, null,
-                                React.createElement("div", {"style": ({textAlign: 'left'})},
-                                    React.createElement(PdButtonOne, {"onClick": (this.cancelImport)}, "Cancel")
-                                )
-                            )
-                        );
+                            case 'loading':
+                                return (
+                                    <Modal show={true} container={this.refs.modal_container}>
+                                        <Modal.Header>
+                                            <Modal.Title>
+                                                Importing Sketch...
+                                            </Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <SketchImporterView importing={true} />
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <div style={{textAlign: 'left'}}>
+                                                <PdButtonOne onClick={this.cancelImport}>
+                                                    Cancel
+                                                </PdButtonOne>
+                                            </div>
+                                        </Modal.Footer>
+                                    </Modal>
+                                );
 
-                    case 'error':
-                        return React.createElement(Modal, {"show": true, "container": (this.refs.modal_container), "onHide": (this.errorOkay)},
-                            React.createElement(Modal.Header, null,
-                                React.createElement(Modal.Title, null, "Error")
-                            ),
-                            React.createElement(Modal.Body, null,
-                                React.createElement(SketchImporterView, {"error": (this.error_message != null ? this.error_message : "")})
-                            ),
-                            React.createElement(Modal.Footer, null,
-                                React.createElement(PdButtonOne, {"type": "primary", "onClick": (this.errorOkay)}, "Okay")
-                            )
-                        );
-            
-                } })()),
-
-            React.createElement(Dropzone, {"onDrop": (this.handleDrop), "style": ({display: 'flex', flexDirection: 'column'})},
-                (this.props.children)
-            )
+                            case 'error':
+                                return (
+                                    <Modal show={true} container={this.refs.modal_container} onHide={this.errorOkay}>
+                                        <Modal.Header>
+                                            <Modal.Title>
+                                                Error
+                                            </Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <SketchImporterView error={this.error_message != null ? this.error_message : ""} />
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <PdButtonOne type="primary" onClick={this.errorOkay}>
+                                                Okay
+                                            </PdButtonOne>
+                                        </Modal.Footer>
+                                    </Modal>
+                                );
+                    
+                        } })()}
+                <Dropzone
+                    onDrop={this.handleDrop}
+                    style={{display: 'flex', flexDirection: 'column'}}>
+                    {this.props.children}
+                </Dropzone>
+            </div>
         );
     },
 
@@ -209,87 +226,109 @@ defaultExport.FigmaModal = createReactClass({
 
     render() {
         if (config.disableFigmaSketchImport) {
-            return React.createElement("div", {"onClick"() { return alert("Figma importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw"); }},
-                (this.props.children)
+            return (
+                <div
+                    onClick={function() { return alert("Figma importing is only available in the Open Source version!  Check us out on Github: https://github.com/Pagedraw/pagedraw"); }}>
+                    {this.props.children}
+                </div>
             );
         }
 
         if (!this.props.figma_access_token) {
-            return React.createElement("a", {"href": `/oauth/figma_redirect?app_id=${this.props.app.id}`},
-                (this.props.children)
+            return (
+                <a href={`/oauth/figma_redirect?app_id=${this.props.app.id}`}>
+                    {this.props.children}
+                </a>
             );
         } else {
-            return React.createElement("div", null,
-                React.createElement("form", {"onSubmit": (evt => {
-                    evt.preventDefault();
+            return (
+                <div>
+                    <form
+                        onSubmit={evt => {
+                            evt.preventDefault();
 
 
-                    figma_import(this.figma_url_vl().value, this.props.figma_access_token)
-                    .then(({doc_json, fileName}) => {
-                        return server.createNewDoc(this.props.app.id, fileName, this.props.app.default_language, _l.cloneDeep(doc_json))
-                        .then(({docRef, docjson}) => {
-                            return server.saveLatestFigmaImportForDoc(docRef, docjson)
-                            .then(() => {
-                                return window.location = `/pages/${docRef.page_id}`;
+                            figma_import(this.figma_url_vl().value, this.props.figma_access_token)
+                            .then(({doc_json, fileName}) => {
+                                return server.createNewDoc(this.props.app.id, fileName, this.props.app.default_language, _l.cloneDeep(doc_json))
+                                .then(({docRef, docjson}) => {
+                                    return server.saveLatestFigmaImportForDoc(docRef, docjson)
+                                    .then(() => {
+                                        return window.location = `/pages/${docRef.page_id}`;
+                                    });
+                            }).catch(e => {
+                                    throw new Error();
+                                });
+                        }).catch(e => {
+                                return this.status = "error";
+                            }).then(() => {
+                                this.import_in_flight = false;
+                                return this.forceUpdate();
                             });
-                    }).catch(e => {
-                            throw new Error();
-                        });
-                }).catch(e => {
-                        return this.status = "error";
-                    }).then(() => {
-                        this.import_in_flight = false;
-                        return this.forceUpdate();
-                    });
 
-                    this.import_in_flight = true;
-                    this.status = "loading";
-                    return this.forceUpdate();
-                }
-
-                )},
-                    React.createElement("div", {"className": "bootstrap"},
-                        React.createElement("div", {"ref": "modal_container"})
-                    ),
-                    React.createElement(Modal, {"show": (this.show), "container": (this.refs.modal_container)},
-                        React.createElement(Modal.Header, null,
-                            React.createElement(Modal.Title, null, "Import from Figma")
-                        ),
-                        React.createElement(Modal.Body, null,
-                            (
-                                this.status === "default" ?
-                                    React.createElement("div", null,
-                                        React.createElement("p", null, "Paste the URL of the Figma design you\'d like to import"),
-                                        React.createElement("label", {"htmlFor": "figma_url"}, "Figma link"),
-                                        React.createElement(FormControl, {"tag": "input", "valueLink": (this.figma_url_vl()),  
-                                            "name": "figma_url", "style": ({width: '100%'}),  
-                                            "placeholder": "https://figma.com/file/XXXXXXXXXXXXXXXXXXXXXX/Sample-File-Name"})
-                                    )
+                            this.import_in_flight = true;
+                            this.status = "loading";
+                            return this.forceUpdate();
+                        }}>
+                        <div className="bootstrap">
+                            <div ref="modal_container" />
+                        </div>
+                        <Modal show={this.show} container={this.refs.modal_container}>
+                            <Modal.Header>
+                                <Modal.Title>
+                                    Import from Figma
+                                </Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                {this.status === "default" ?
+                                    <div>
+                                        <p>
+                                            Paste the URL of the Figma design you'd like to import
+                                        </p>
+                                        <label htmlFor="figma_url">
+                                            Figma link
+                                        </label>
+                                        <FormControl
+                                            tag="input"
+                                            valueLink={this.figma_url_vl()}
+                                            name="figma_url"
+                                            style={{width: '100%'}}
+                                            placeholder="https://figma.com/file/XXXXXXXXXXXXXXXXXXXXXX/Sample-File-Name" />
+                                    </div>
                                 : this.status === "loading" ?
-                                    React.createElement("img", {"style": ({display: 'block', marginLeft: 'auto', marginRight: 'auto'}), "src": "https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/"})
+                                    <img
+                                        style={{display: 'block', marginLeft: 'auto', marginRight: 'auto'}}
+                                        src="https://ucarecdn.com/59ec0968-b6e3-4a00-b082-932b7fcf41a5/" />
                                 :
-                                    React.createElement("p", {"style": ({color: 'red'})}, `We weren\'t able to recognize your upload as a Figma file.
+                                    <p style={{color: 'red'}}>
+                                        {`We weren\'t able to recognize your upload as a Figma file.
 
-If this problem persists, please contact the Pagedraw team at team@pagedraw.io`)
-                            )
-                        ),
-                        React.createElement(Modal.Footer, null,
-                            (["default", "error"].includes(this.status) ? React.createElement(PdButtonOne, {"onClick": (() => { this.show = false; this.status = "default"; return this.forceUpdate(); })}, "Close") : undefined),
-                            (this.status === "default" ? React.createElement(PdButtonOne, {"type": "primary", "submit": true, "disabled": (this.import_in_flight)}, "Import") : undefined)
-                        )
-                    )
-                ),
-                React.createElement("div", {"onClick": (() => { this.show = true; return this.forceUpdate(); })},
-                    (this.props.children)
-                )
+    If this problem persists, please contact the Pagedraw team at team@pagedraw.io`}
+                                    </p>}
+                            </Modal.Body>
+                            <Modal.Footer>
+                                {["default", "error"].includes(this.status) ? <PdButtonOne
+                                    onClick={() => { this.show = false; this.status = "default"; return this.forceUpdate(); }}>
+                                    Close
+                                </PdButtonOne> : undefined}
+                                {this.status === "default" ? <PdButtonOne type="primary" submit={true} disabled={this.import_in_flight}>
+                                    Import
+                                </PdButtonOne> : undefined}
+                            </Modal.Footer>
+                        </Modal>
+                    </form>
+                    <div onClick={() => { this.show = true; return this.forceUpdate(); }}>
+                        {this.props.children}
+                    </div>
+                </div>
             );
         }
     }
 });
 
-defaultExport.PricingCardsWrapper = props => React.createElement("div", {"style": ({position: 'relative', flexGrow: '1'})},
-    React.createElement("div", {"style": ({position: 'absolute', top: 0, left: 0})},
-        React.createElement(PagedrawnPricingCards, null)
-    )
-);
+defaultExport.PricingCardsWrapper = props => <div style={{position: 'relative', flexGrow: '1'}}>
+    <div style={{position: 'absolute', top: 0, left: 0}}>
+        <PagedrawnPricingCards />
+    </div>
+</div>;
 export default defaultExport;

@@ -15,10 +15,12 @@ import SelectOnClick from './select-on-click';
 export default CodeShower = createReactClass({
     displayName: 'CodeShower',
     render() {
-        return React.createElement(SelectOnClick, null,
-            React.createElement("pre", Object.assign({},  this.props),
-                (this.props.content)
-            )
+        return (
+            <SelectOnClick>
+                <pre {...this.props}>
+                    {this.props.content}
+                </pre>
+            </SelectOnClick>
         );
     }
 });

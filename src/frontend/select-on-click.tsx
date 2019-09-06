@@ -12,7 +12,11 @@ import createReactClass from 'create-react-class';
 export default SelectOnClick = createReactClass({
     displayName: 'ExportView',
     render() {
-        return React.createElement("div", {"onClick": (this.selectSelf), "style": ({userSelect: 'auto'}), "ref": "children"}, (this.props.children));
+        return (
+            <div onClick={this.selectSelf} style={{userSelect: 'auto'}} ref="children">
+                {this.props.children}
+            </div>
+        );
     },
 
     selectSelf() {

@@ -30,7 +30,7 @@ export default createReactClass({
             pagedrawJsonBody: recommended_pagedraw_json_for_app_id(this.state.app.id, 'src/pagedraw'),
             figma_importing: true
         });
-        return React.createElement(PagedrawnDashboard, Object.assign({},  props ));
+        return <PagedrawnDashboard {...props} />;
     },
 
     handleAppChanged(id) {
@@ -87,22 +87,33 @@ export default createReactClass({
 
     handlePageDelete(page) {
         return modal.show(closeHandler => [
-            React.createElement(Modal.Header, null,
-                React.createElement(Modal.Title, null, "Confirm Deletion")
-            ),
-            React.createElement(Modal.Body, null,
-                React.createElement("p", null, "Are you sure you want to delete the page ", React.createElement("code", null, (page.url)))
-            ),
-            React.createElement(Modal.Footer, null,
-                React.createElement(Button, {"style": ({float: 'left'}), "onClick": (closeHandler)}, "Cancel"),
-                React.createElement(Button, {"bsStyle": "danger", "children": "Delete", "onClick": (() => {
-                    return $.ajax({url: `/pages/${page.id}.json`, method:"DELETE", data: {app_id: this.state.app.id}}).done(data => {
-                        analytics.track('Deleted doc', {app: {name: this.state.app.name, id: this.state.app.id}, doc: {name: page.url, id: page.id}});
-                        this.setState({app: _l.extend({}, this.state.app, {pages: data})});
-                        return closeHandler();
-                });
-                }
-                )})
-            )
+            <Modal.Header>
+                <Modal.Title>
+                    Confirm Deletion
+                </Modal.Title>
+            </Modal.Header>,
+            <Modal.Body>
+                <p>
+                    {"Are you sure you want to delete the page "}
+                    <code>
+                        {page.url}
+                    </code>
+                </p>
+            </Modal.Body>,
+            <Modal.Footer>
+                <Button style={{float: 'left'}} onClick={closeHandler}>
+                    Cancel
+                </Button>
+                <Button
+                    bsStyle="danger"
+                    children="Delete"
+                    onClick={() => {
+                        return $.ajax({url: `/pages/${page.id}.json`, method:"DELETE", data: {app_id: this.state.app.id}}).done(data => {
+                            analytics.track('Deleted doc', {app: {name: this.state.app.name, id: this.state.app.id}, doc: {name: page.url, id: page.id}});
+                            this.setState({app: _l.extend({}, this.state.app, {pages: data})});
+                            return closeHandler();
+                    });
+                    }} />
+            </Modal.Footer>
         ]);
     }});

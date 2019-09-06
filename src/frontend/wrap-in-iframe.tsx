@@ -20,10 +20,16 @@ import propTypes from 'prop-types';
 const InsideWrapper = createReactClass({
     displayName: 'IframeInsideWrapper',
     render() {
-        return React.createElement(React.Fragment, null, ([
-            React.createElement(React.Fragment, {"key": ('render')}, (this.props.render())),
-            ...Array.from(((this.props.includeCssUrls != null ? this.props.includeCssUrls : []).map((url, i) => React.createElement("link", {"key": (i), "rel": "stylesheet", "href": (url)}))))
-        ]));
+        return (
+            <React.Fragment>
+                {[
+                    <React.Fragment key="render">
+                        {this.props.render()}
+                    </React.Fragment>,
+                    ...Array.from(((this.props.includeCssUrls != null ? this.props.includeCssUrls : []).map((url, i) => <link key={i} rel="stylesheet" href={url} />)))
+                ]}
+            </React.Fragment>
+        );
     },
 
     // FIXME: not abstracted away
@@ -45,7 +51,7 @@ defaultExport.WrapInIframe = createReactClass({
 
     displayName: 'WrapInIframe',
     render() {
-        return React.createElement("iframe", {"style": (_l.extend({border: 'none'}, this.props.style)), "ref": "iframe"});
+        return <iframe style={_l.extend({border: 'none'}, this.props.style)} ref="iframe" />;
     },
 
     enqueueForceUpdate(element) {
@@ -85,8 +91,12 @@ defaultExport.WrapInIframe = createReactClass({
 
     rerenderFromScratch(callback) {
         const iframeWindow = this.refs.iframe.contentWindow;
-        const elem = React.createElement(InsideWrapper, {"includeCssUrls": (this.props.includeCssUrls), "ref": (o => { return this._component = o; }),  
-            "iframeWindow": (iframeWindow), "render": (this.props.render), "getChildContext": (this.props.getChildContext)});
+        const elem = <InsideWrapper
+            includeCssUrls={this.props.includeCssUrls}
+            ref={o => { return this._component = o; }}
+            iframeWindow={iframeWindow}
+            render={this.props.render}
+            getChildContext={this.props.getChildContext} />;
         return ReactDOM.render(elem, iframeWindow.document.getElementById('react-mount-point'), callback);
     }
 });

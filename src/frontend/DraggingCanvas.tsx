@@ -204,13 +204,17 @@ defaultExport.DraggingCanvas = createReactClass({
 
     render() {
         // DraggingCanvas has a tabIndex not because we need it to have focus, but so that it can blur others
-        return React.createElement("div", {"className": (["no-focus-outline"].concat(this.props.classes != null ? this.props.classes : []).join(' ')),  
-             "style": (this.props.style),  
-             "onMouseDown": (this.handleMouseDown), "onMouseMove": (this.props.onMouseMove),  
-             "onContextMenu": (this.onRightClick),  
-             "ref": "canvas",  
-             "tabIndex": "100"},
-            (this.props.children)
+        return (
+            <div
+                className={["no-focus-outline"].concat(this.props.classes != null ? this.props.classes : []).join(' ')}
+                style={this.props.style}
+                onMouseDown={this.handleMouseDown}
+                onMouseMove={this.props.onMouseMove}
+                onContextMenu={this.onRightClick}
+                ref="canvas"
+                tabIndex="100">
+                {this.props.children}
+            </div>
         );
     },
 

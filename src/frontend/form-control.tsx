@@ -24,14 +24,24 @@ export default FormControl = createReactClass({
             const label = passthrough_props['label'];
             delete passthrough_props['label'];
 
-            return React.createElement("input", Object.assign({"type": "checkbox", "value": (label), "title": (label),  
-                "checked": (this.props.valueLink.value != null ? this.props.valueLink.value : false),  
-                "onChange": (this.onCheckedChanged)
-                }, passthrough_props ));
+            return (
+                <input
+                    type="checkbox"
+                    value={label}
+                    title={label}
+                    checked={this.props.valueLink.value != null ? this.props.valueLink.value : false}
+                    onChange={this.onCheckedChanged}
+                    {...passthrough_props} />
+            );
         }
 
         const Tag = this.props.tag != null ? this.props.tag : 'input';
-        return React.createElement(Tag, Object.assign({"value": (this._internalValue != null ? this._internalValue : ''), "onChange": (this.onChange)}, passthrough_props ));
+        return (
+            <Tag
+                value={this._internalValue != null ? this._internalValue : ''}
+                onChange={this.onChange}
+                {...passthrough_props} />
+        );
     },
 
     onCheckedChanged(evt) {

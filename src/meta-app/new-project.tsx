@@ -25,58 +25,50 @@ export default createReactClass({
     }; },
 
     render() {
-        return React.createElement("div", {"style": ({
-            // We need this extra CSS gross hacks because the compiler has some issues, I think.
-            // Alternatively, .app should always have this on it.  Not sure, but don't want to make such a
-            // potentially dangerous change right now.
-            display: 'flex',
-            flexGrow: '1'
-        })},
-            React.createElement(PagedrawnView, { 
-                "current_user": (this.props.current_user),  
-                "logout": (this.logout),  
+        return (
+            <div
+                style={{
+                    // We need this extra CSS gross hacks because the compiler has some issues, I think.
+                    // Alternatively, .app should always have this on it.  Not sure, but don't want to make such a
+                    // potentially dangerous change right now.
+                    display: 'flex',
+                    flexGrow: '1'
+                }}>
+                <PagedrawnView
+                    current_user={this.props.current_user}
+                    logout={this.logout}
+                    apps={this.state.apps}
+                    handleAppChanged={app_id => {
+                        return window.location = `/apps/${app_id}`;
+                    }}
+                    projectNameField={this.state.name}
+                    handleProjectNameChange={new_name => this.setState({name: new_name})}
+                    angular_support={config.angular_support}
+                    framework={this.state.framework}
+                    handleFrameworkChange={new_val => this.setState({framework: new_val})}
+                    collaborators={this.state.collaborators}
+                    handleCollaboratorDelete={email => {
+                        return this.setState({collaborators: this.state.collaborators.filter(c => c.email !== email)});
+                    }}
+                    newCollaboratorField={this.state.collaboratorField}
+                    handleNewCollaboratorChanged={new_val => this.setState({collaboratorField: new_val})}
+                    handleAddCollaborator={() => {
+                        // no-op if the field is empty
+                        if (this.state.collaboratorField === '') { return; }
 
-                "apps": (this.state.apps),  
-                "handleAppChanged": (app_id => {
-                    return window.location = `/apps/${app_id}`;
-                }
-                ),  
+                        // don't allow duplicates
+                        if (_l.find(this.state.collaborators.filter(c => c.email === this.state.collaboratorField)) != null) {
+                            this.setState({collaboratorField: ''});
+                            return;
+                        }
 
-                "projectNameField": (this.state.name),  
-                "handleProjectNameChange": (new_name => this.setState({name: new_name})),  
-
-                "angular_support": (config.angular_support),  
-                "framework": (this.state.framework),  
-                "handleFrameworkChange": (new_val => this.setState({framework: new_val})),  
-
-                "collaborators": (this.state.collaborators),  
-                "handleCollaboratorDelete": (email => {
-                    return this.setState({collaborators: this.state.collaborators.filter(c => c.email !== email)});
-                }
-                ),  
-
-                "newCollaboratorField": (this.state.collaboratorField),  
-                "handleNewCollaboratorChanged": (new_val => this.setState({collaboratorField: new_val})),  
-                "handleAddCollaborator": (() => {
-                    // no-op if the field is empty
-                    if (this.state.collaboratorField === '') { return; }
-
-                    // don't allow duplicates
-                    if (_l.find(this.state.collaborators.filter(c => c.email === this.state.collaboratorField)) != null) {
-                        this.setState({collaboratorField: ''});
-                        return;
-                    }
-
-                    return this.setState({
-                        collaborators: this.state.collaborators.concat({email: this.state.collaboratorField, is_me: false}),
-                        collaboratorField: ''
-                    });
-                }
-                ),  
-
-                "handleSubmit": (this.handleSubmit)
-
-                })
+                        return this.setState({
+                            collaborators: this.state.collaborators.concat({email: this.state.collaboratorField, is_me: false}),
+                            collaboratorField: ''
+                        });
+                    }}
+                    handleSubmit={this.handleSubmit} />
+            </div>
         );
     },
 

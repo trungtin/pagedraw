@@ -79,10 +79,12 @@ export default PdPlayground = createReactClass({
             (() => {
             let componentBlockTrees;
             if (this.refs.editor == null) {
-                return {MyPagedrawComponent: props => React.createElement("div", null)}; // loading
+                return {MyPagedrawComponent: props => <div />}; // loading
 
             } else if (_l.isEmpty((componentBlockTrees = componentBlockTreesOfDoc(this.refs.editor.doc)))) {
-                return {MyPagedrawComponent: props => React.createElement("div", null, "No components found in drawing")};
+                return {MyPagedrawComponent: props => <div>
+                    No components found in drawing
+                </div>};
 
             } else {
                 const component = componentBlockTrees[0].block;
@@ -137,25 +139,28 @@ export default PdPlayground = createReactClass({
             return this.playgroundCode = nv;
         };
 
-        const editor = React.createElement(Editor, {"ref": "editor",  
-            "playground": (true),  
-            "initialDocJson": (require('./default-playground-doc')),  
-            "onChange": (() => {
+        const editor = <Editor
+            ref="editor"
+            playground={true}
+            initialDocJson={require('./default-playground-doc')}
+            onChange={() => {
                 analytics.track('Interacted with Playground Doc');
                 return this.dirty();
-            }
-            )});
+            }} />;
 
-        return React.createElement("div", null,
-            React.createElement(LiveProvider, {"scope": (scope), "code": (this.playgroundCode), "transformCode": (transformCode)},
-                React.createElement(PagedrawnPdPlayground, { 
-                    "codeEditor": (React.createElement(LiveEditor, {"style": (codeEditorStyle), "onChange": (onCodeChange)})),  
-                    "pdEditor": (editor),  
-                    "preview": (React.createElement("div", null,
-                        React.createElement(LiveError, null),
-                        React.createElement(LivePreview, {"style": ({height: 300, overflow: 'scroll', display: 'flex', border: '1px solid gray', boxShadow})})
-                    ))})
-            )
+        return (
+            <div>
+                <LiveProvider scope={scope} code={this.playgroundCode} transformCode={transformCode}>
+                    <PagedrawnPdPlayground
+                        codeEditor={React.createElement(LiveEditor, {"style": (codeEditorStyle), "onChange": (onCodeChange)})}
+                        pdEditor={editor}
+                        preview={React.createElement("div", null,
+                            <LiveError />,
+                            <LivePreview
+                                style={{height: 300, overflow: 'scroll', display: 'flex', border: '1px solid gray', boxShadow}} />
+                        )} />
+                </LiveProvider>
+            </div>
         );
     }
 });

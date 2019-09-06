@@ -187,7 +187,7 @@ export default Block.register('layout', (LayoutBlock = (function() {
             ],
             this.is_optional ? ['Occupies space if hidden', 'occupies_space_if_hidden', CheckboxControl] : undefined,
 
-            React.createElement("hr", null),
+            <hr />,
 
             ...Array.from(this.fillSidebarControls())
         ]; }

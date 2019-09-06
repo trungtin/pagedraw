@@ -48,42 +48,50 @@ export default createReactClass({
 
 
     render() {
-        return React.createElement("div", {"ref": "scrollView", "className": "editor-scrollbar",  
-            "style": ( _.extend({}, this.props.style, {
-                // make this region scroll
-                overflow: 'auto',
+        return (
+            <div
+                ref="scrollView"
+                className="editor-scrollbar"
+                style={_.extend({}, this.props.style, {
+                    // make this region scroll
+                    overflow: 'auto',
 
-                // https://css-tricks.com/almanac/properties/o/overflow-anchor/
-                overflowAnchor: 'none',
+                    // https://css-tricks.com/almanac/properties/o/overflow-anchor/
+                    overflowAnchor: 'none',
 
-                // Without z-index higher than ref.scaling's, ref.scaling
-                // will cover our scroll bars.  Don't know why.
-                zIndex: 2
-            }
-            )),  
-            "onWheel": (this.handleMousePinchScroll)},
-            (this.stlyeTagForZoom(this.zoom)),
-            React.createElement("div", {"style": ({position: 'relative'})},
-                React.createElement("div", {"style": ({
-                        position: 'absolute',
-                        top: 0, left: 0,
-                        width: '100%',
-                        height: '100%',
-                        zIndex: 1
-                    })},
-                    React.createElement("div", {"ref": "scaling", "style": ({
-                            transform: `scale(${this.zoom})`,
-                            minWidth: `${100/this.zoom}%`,
-                            minHeight: `${100/this.zoom}%`,
-                            transformOrigin: "top left"
-                        })},
-                        React.createElement(ShouldSubtreeRender, {"shouldUpdate": (this.shouldUpdateContents), "subtree": (() => {
-                            return this.props.children;
-                        }
-                        )})
-                    )
-                )
-            )
+                    // Without z-index higher than ref.scaling's, ref.scaling
+                    // will cover our scroll bars.  Don't know why.
+                    zIndex: 2
+                }
+                )}
+                onWheel={this.handleMousePinchScroll}>
+                {this.stlyeTagForZoom(this.zoom)}
+                <div style={{position: 'relative'}}>
+                    <div
+                        style={{
+                                position: 'absolute',
+                                top: 0, left: 0,
+                                width: '100%',
+                                height: '100%',
+                                zIndex: 1
+                            }}>
+                        <div
+                            ref="scaling"
+                            style={{
+                                    transform: `scale(${this.zoom})`,
+                                    minWidth: `${100/this.zoom}%`,
+                                    minHeight: `${100/this.zoom}%`,
+                                    transformOrigin: "top left"
+                                }}>
+                            <ShouldSubtreeRender
+                                shouldUpdate={this.shouldUpdateContents}
+                                subtree={() => {
+                                    return this.props.children;
+                                }} />
+                        </div>
+                    </div>
+                </div>
+            </div>
         );
     },
 
@@ -98,9 +106,11 @@ export default createReactClass({
         // not do any updating with it.  This short circuiting is why we cache the tag, which is
         // why we have stlyeTagForZoom.  I think this improves perf, but can't really tell.  -JRP
         return this.cachedStyleTag != null ? this.cachedStyleTag : (this.cachedStyleTag =
-            React.createElement("style", {"ref": "dynamicCss", "dangerouslySetInnerHTML": ({__html: `\
-.unzoomed-control { transform: scale(${1/this.zoom}); }\
-`})}));
+            <style
+                ref="dynamicCss"
+                dangerouslySetInnerHTML={{__html: `\
+    .unzoomed-control { transform: scale(${1/this.zoom}); }\
+    `}} />);
     },
 
     updateZoom() {

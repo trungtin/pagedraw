@@ -13,66 +13,70 @@ import Individualcard from './individualcard';
 import Companycard from './companycard';
 
 
-const render = () => React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1"})},
-    React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
+const render = () => <div style={{"display": "flex", "flexDirection": "column", "flexGrow": "1"}}>
+    <style
+        dangerouslySetInnerHTML={{__html: `\
 
 
-* {
-box-sizing: border-box;
-}
+    * {
+    box-sizing: border-box;
+    }
 
-body {
-margin: 0;
-}
+    body {
+    margin: 0;
+    }
 
-button:hover {
-cursor: pointer;
-}
+    button:hover {
+    cursor: pointer;
+    }
 
-a {
-text-decoration: none;
-color: inherit;
-}
+    a {
+    text-decoration: none;
+    color: inherit;
+    }
 
-.pd-onhover-parent >.pd-onhover {
-display: none;
-}
+    .pd-onhover-parent >.pd-onhover {
+    display: none;
+    }
 
-.pd-onhover-parent:hover > * {
-display: none;
-}
+    .pd-onhover-parent:hover > * {
+    display: none;
+    }
 
-.pd-onhover-parent:hover > .pd-onhover {
-display: flex;
-}
+    .pd-onhover-parent:hover > .pd-onhover {
+    display: flex;
+    }
 
-.pd-onactive-parent > .pd-onactive {
-display: none;
-}
+    .pd-onactive-parent > .pd-onactive {
+    display: none;
+    }
 
-.pd-onactive-parent:active > * {
-display: none;
-}
+    .pd-onactive-parent:active > * {
+    display: none;
+    }
 
-.pd-onactive-parent:active > .pd-onactive {
-display: flex;
-}
+    .pd-onactive-parent:active > .pd-onactive {
+    display: flex;
+    }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-display: none;
-}\
-`})}),  
-    React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-        React.createElement("div", {"style": ({"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 348})},
-            React.createElement(Studentscard, null) 
-        ),
-        React.createElement("div", {"style": ({"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348})},
-            React.createElement(Individualcard, null) 
-        ),
-        React.createElement("div", {"style": ({"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348})},
-            React.createElement(Companycard, null) 
-        )
-    )
-);
+    .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+    display: none;
+    }\
+    `}} />
+    <div style={{"display": "flex", "flexShrink": "0"}}>
+        <div
+            style={{"flexShrink": "0", "display": "flex", "flexDirection": "column", "minWidth": 348}}>
+            <Studentscard />
+        </div>
+        <div
+            style={{"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348}}>
+            <Individualcard />
+        </div>
+        <div
+            style={{"flexShrink": "0", "marginLeft": 33, "display": "flex", "flexDirection": "column", "minWidth": 348}}>
+            <Companycard />
+        </div>
+    </div>
+</div>;
 
 export default props => render.apply({props});

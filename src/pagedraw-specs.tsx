@@ -19,8 +19,10 @@ const Enum = options => (({__ty: 'Enum', options}));
 
 const PdButtonOne = createReactClass({
     render() {
-        return React.createElement("div", {"className": "bootstrap"},
-            React.createElement(CL.PdButtonOne, Object.assign({},  this.props, {"stretch": (true)}))
+        return (
+            <div className="bootstrap">
+                <CL.PdButtonOne {...this.props} stretch={true} />
+            </div>
         );
     }
 });

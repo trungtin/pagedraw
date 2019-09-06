@@ -27,13 +27,23 @@ import { EditorMode } from './editor-mode';
 import { pdomToReactWithPropOverrides } from '../editor/pdom-to-react';
 import { inferConstraints } from '../programs';
 
-const link = (txt, href) => React.createElement("a", {"style": ({textDecoration: 'underline'}), "target": "_blank", "href": (href)}, (txt));
+const link = (txt, href) => <a style={{textDecoration: 'underline'}} target="_blank" href={href}>
+    {txt}
+</a>;
 const warningStyles = {fontFamily: 'Helvetica neue', padding: 5, borderBottom: '1px solid grey', backgroundColor: '#EEE8AA', color: '#333300'};
-const uselessStressTesterWarning = () => React.createElement("div", {"style": (warningStyles)},
-    React.createElement("img", {"style": ({marginRight: 3}), "src": `${config.static_server}/assets/warning-icon.png`}), `\
-To use stress tester mode, use the sidebar to specify that this component is\
-`, (link('resizable', 'https://documentation.pagedraw.io/layout/')), ", or add some ", (link('data bindings', 'https://documentation.pagedraw.io/data-binding/')), ` to it.\
-`);
+const uselessStressTesterWarning = () => <div style={warningStyles}>
+    <img
+        style={{marginRight: 3}}
+        src={`${config.static_server}/assets/warning-icon.png`} />
+    {`\
+    To use stress tester mode, use the sidebar to specify that this component is\
+    `}
+    {link('resizable', 'https://documentation.pagedraw.io/layout/')}
+    {", or add some "}
+    {link('data bindings', 'https://documentation.pagedraw.io/data-binding/')}
+    {` to it.\
+    `}
+</div>;
 
 export default StressTesterInteraction = class StressTesterInteraction extends EditorMode {
     constructor(artboard) {
@@ -75,15 +85,17 @@ export default StressTesterInteraction = class StressTesterInteraction extends E
         if ((component == null)) {
             // the component was deleted
             window.setTimeout(() => this.exitMode());
-            return React.createElement("div", null);
+            return <div />;
         }
 
         try {
             evaled_pdom = core.evalInstanceBlock(this.instanceBlock, this.editor.getInstanceEditorCompileOptions());
         } catch (e) {
             if (config.warnOnEvalPdomErrors) { console.warn(e); }
-            return React.createElement("div", {"style": ({padding: '0.5em', backgroundColor: '#ff7f7f'})},
-                (e.message)
+            return (
+                <div style={{padding: '0.5em', backgroundColor: '#ff7f7f'}}>
+                    {e.message}
+                </div>
             );
         }
 
@@ -115,25 +127,41 @@ export default StressTesterInteraction = class StressTesterInteraction extends E
         const canvasGeometry = {height: this.previewGeometry.height + window.innerHeight, width: this.previewGeometry.width + window.innerWidth};
 
         // We add DraggingCanvas here just for the ResizingGrip functionality
-        return React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column', flex: 1})},
-            (_l.isEmpty(dynamics) && _l.isEmpty(this.instanceBlock.resizableEdges) ? uselessStressTesterWarning() : undefined),
-            React.createElement(Zoomable, {"viewportManager": (this.viewportManager), "style": ({flex: 1, backgroundColor: '#333'})},
-                React.createElement(DraggingCanvas, { 
-                    "className": "stress-tester", "style": ({height: canvasGeometry.height, width: canvasGeometry.width}),  
-                    "onDrag": (this.handleDrag), "onClick"() {}, "onDoubleClick"() {}, "onInteractionHappened"() {}},
-                    React.createElement("div", {"className": "expand-children", "style": (_l.extend({position: 'absolute'}, _l.pick(this.previewGeometry, ['top', 'left', 'width', 'height'])))},
-                        React.createElement(ResizingFrame, {"resizable_edges": (this.instanceBlock.resizableEdges),  
-                            "style": ({position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}),  
-                            "flag": (grip => ({control: 'resizer', edges: grip.sides, grip_label: grip.label}))
-                            }),
-                        React.createElement("div", {"className": "expand-children", "style": ({overflow: 'auto'})}, (rendered_pdom))
-                    )
-                )
-            )
+        return (
+            <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+                {_l.isEmpty(dynamics) && _l.isEmpty(this.instanceBlock.resizableEdges) ? uselessStressTesterWarning() : undefined}
+                <Zoomable
+                    viewportManager={this.viewportManager}
+                    style={{flex: 1, backgroundColor: '#333'}}>
+                    <DraggingCanvas
+                        className="stress-tester"
+                        style={{height: canvasGeometry.height, width: canvasGeometry.width}}
+                        onDrag={this.handleDrag}
+                        onClick={function() {}}
+                        onDoubleClick={function() {}}
+                        onInteractionHappened={function() {}}>
+                        <div
+                            className="expand-children"
+                            style={_l.extend({position: 'absolute'}, _l.pick(this.previewGeometry, ['top', 'left', 'width', 'height']))}>
+                            <ResizingFrame
+                                resizable_edges={this.instanceBlock.resizableEdges}
+                                style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}
+                                flag={grip => ({control: 'resizer', edges: grip.sides, grip_label: grip.label})} />
+                            <div className="expand-children" style={{overflow: 'auto'}}>
+                                {rendered_pdom}
+                            </div>
+                        </div>
+                    </DraggingCanvas>
+                </Zoomable>
+            </div>
         );
     }
 
-    topbar() { return React.createElement("div", null, React.createElement(Topbar, {"editor": (_l.extend({}, this.editor, this)), "whichTopbar": ('stress-tester')})); }
+    topbar() { return (
+        <div>
+            <Topbar editor={_l.extend({}, this.editor, this)} whichTopbar="stress-tester" />
+        </div>
+    ); }
 
     //# Topbar methods
     randomizeSize() {

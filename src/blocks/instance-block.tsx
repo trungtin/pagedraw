@@ -82,26 +82,33 @@ defaultExport.BaseInstanceBlock = Model.register('base-inst', (BaseInstanceBlock
         defaultSidebarControls(linkAttr, onChange, editorCache) {
             const sourceComponent = this.getSourceComponent();
             if ((sourceComponent == null)) {
-                return React.createElement("div", null, "This block\'s source component was deleted");
+                return (
+                    <div>
+                        This block's source component was deleted
+                    </div>
+                );
             }
 
             return _l.compact([
                 Object.keys(sourceComponent.componentSpec.propControl.attrTypes).length > 0 ?
-                    React.createElement(React.Fragment, null,
-                        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => { this.propValues = sourceComponent.componentSpec.propControl.random(); return onChange(); })}, "Randomize props"),
-
-                    
-                        React.createElement("div", {"style": ({overflow: 'auto'})},
-                            (sourceComponent.componentSpec.propControl.sidebarControl('props', propValueLinkTransformer('staticValue', propValueLinkTransformer('innerValue', linkAttr('propValues')))))
-                        ),
-
-                        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => this.handleExportParamsAsJson())}, "Export params as json")
-                    ) : undefined
+                    <React.Fragment>
+                        <button
+                            style={{width: '100%'}}
+                            onClick={() => { this.propValues = sourceComponent.componentSpec.propControl.random(); return onChange(); }}>
+                            Randomize props
+                        </button>
+                        <div style={{overflow: 'auto'}}>
+                            {sourceComponent.componentSpec.propControl.sidebarControl('props', propValueLinkTransformer('staticValue', propValueLinkTransformer('innerValue', linkAttr('propValues'))))}
+                        </div>
+                        <button style={{width: '100%'}} onClick={() => this.handleExportParamsAsJson()}>
+                            Export params as json
+                        </button>
+                    </React.Fragment> : undefined
             ]);
         }
 
         constraintControls(linkAttr, onChange) { return _l.concat(super.constraintControls(linkAttr, onChange), [
-                config.ignoreMinGeometryQuickfix ? React.createElement("hr", null) : undefined,
+                config.ignoreMinGeometryQuickfix ? <hr /> : undefined,
                 // constraints
                 config.ignoreMinGeometryQuickfix ? ["fixed width", "fixedWidth", CheckboxControl] : undefined,
                 config.ignoreMinGeometryQuickfix ? ["fixed height", "fixedHeight", CheckboxControl] : undefined
@@ -111,15 +118,19 @@ defaultExport.BaseInstanceBlock = Model.register('base-inst', (BaseInstanceBlock
         handleExportParamsAsJson() {
             const json = JSON.stringify(jsonDynamicableToJsonStatic(this.getPropsAsJsonDynamicable()), null, 4);
             return modal.show(closeHandler => [
-                React.createElement(Modal.Header, {"closeButton": true},
-                    React.createElement(Modal.Title, null, "JSON Params")
-                ),
-                React.createElement(Modal.Body, null,
-                    React.createElement(CodeShower, {"content": (json)})
-                ),
-                React.createElement(Modal.Footer, null,
-                    React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
-                )
+                <Modal.Header closeButton={true}>
+                    <Modal.Title>
+                        JSON Params
+                    </Modal.Title>
+                </Modal.Header>,
+                <Modal.Body>
+                    <CodeShower content={json} />
+                </Modal.Body>,
+                <Modal.Footer>
+                    <PdButtonOne type="primary" onClick={closeHandler}>
+                        Close
+                    </PdButtonOne>
+                </Modal.Footer>
             ]);
         }
 
@@ -266,8 +277,10 @@ defaultExport.DrawInstanceBlock = Model.register_with_legacy_absolute_tag('/bloc
 
                 } catch (e) {
                     if (config.warnOnEvalPdomErrors) { console.warn(e); }
-                    return React.createElement("div", {"style": ({width: this.width, padding: '0.5em', backgroundColor: '#ff7f7f'})},
-                        (e.message)
+                    return (
+                        <div style={{width: this.width, padding: '0.5em', backgroundColor: '#ff7f7f'}}>
+                            {e.message}
+                        </div>
                     );
                 }
             });

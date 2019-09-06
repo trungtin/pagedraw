@@ -39,28 +39,56 @@ defaultExport.HistoryView = (HistoryView = createReactClass({
         // ByLineFont = 'Open Sans'
         const commitRefs = server.getCommitRefsAsync(this.props.docRef);
 
-        return React.createElement("div", null,
-            React.createElement("div", {"style": ({marginBottom: 10})},
-                React.createElement(FormControl, {"tag": "textarea", "style": ({width: '100%'}), "placeholder": "Commit message", "type": "text", "valueLink": (this.linkState('commitMessage'))}),
-                React.createElement("button", {"style": ({width: '100%'}), "disabled": (_l.isEmpty(this.state.commitMessage)), "onClick": (this.commit)}, "Commit")
-            ),
-
-            (commitRefs != null ? commitRefs.map(commit => {
-                return React.createElement("div", {"key": (commit.uniqueKey), "style": ({marginTop: '1.3em', marginBottom: '1.3em'})},
-                    (config.diffView ? React.createElement("button", {"onClick": (() => this.showDiff(commit)), "style": ({float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none'})}, `\
-Show Diff\
-`) : undefined),
-                    React.createElement("button", {"onClick": (() => this.restore(commit)), "style": ({float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none'})}, `\
-Restore\
-`),
-                    React.createElement("div", {"style": ({fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.1em'})},
-                        (commit.message)
-                    ),
-                    React.createElement("div", {"style": ({clear: 'both', fontFamily: ByLineFont, fontWeight: '300', fontSize: '0.8em', marginBottom: '0.4em'})},
-                        (moment(commit.timestamp).fromNow()), " by ", React.createElement("span", {"style": ({fontWeight: 'bold'})}, (commit.authorName))
-                    )
-                );
-            }) : undefined)
+        return (
+            <div>
+                <div style={{marginBottom: 10}}>
+                    <FormControl
+                        tag="textarea"
+                        style={{width: '100%'}}
+                        placeholder="Commit message"
+                        type="text"
+                        valueLink={this.linkState('commitMessage')} />
+                    <button
+                        style={{width: '100%'}}
+                        disabled={_l.isEmpty(this.state.commitMessage)}
+                        onClick={this.commit}>
+                        Commit
+                    </button>
+                </div>
+                {commitRefs != null ? commitRefs.map(commit => {
+                        return (
+                            <div
+                                key={commit.uniqueKey}
+                                style={{marginTop: '1.3em', marginBottom: '1.3em'}}>
+                                {config.diffView ? <button
+                                    onClick={() => this.showDiff(commit)}
+                                    style={{float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none'}}>
+                                    {`\
+                    Show Diff\
+                    `}
+                                </button> : undefined}
+                                <button
+                                    onClick={() => this.restore(commit)}
+                                    style={{float: 'right', marginLeft: '0.2em', height: '2.4em', fontSize: '0.7em', border: 'none'}}>
+                                    {`\
+                Restore\
+                `}
+                                </button>
+                                <div style={{fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: '1.1em'}}>
+                                    {commit.message}
+                                </div>
+                                <div
+                                    style={{clear: 'both', fontFamily: ByLineFont, fontWeight: '300', fontSize: '0.8em', marginBottom: '0.4em'}}>
+                                    {moment(commit.timestamp).fromNow()}
+                                    {" by "}
+                                    <span style={{fontWeight: 'bold'}}>
+                                        {commit.authorName}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }) : undefined}
+            </div>
         );
     },
 

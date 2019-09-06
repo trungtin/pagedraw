@@ -109,12 +109,20 @@ const defaultExport = {};
 defaultExport.SidebarFromSpec = (SidebarFromSpec = createReactClass({
     displayName: 'SidebarFromSpec',
     render() {
-        return React.createElement("div", null, " ", (
-            this.props.spec(this.linkAttr, this.props.onChange, this.props.editorCache, this.props.setEditorMode).map((spec, i) => {
-                const [control, react_key] = Array.from(controlFromSpec(spec, this.props.block, this.linkAttr, i));
-                return React.createElement(ReactWrapper, {"key": (react_key)}, (control));
-        })
-        ), " ");
+        return (
+            <div>
+                {" "}
+                {this.props.spec(this.linkAttr, this.props.onChange, this.props.editorCache, this.props.setEditorMode).map((spec, i) => {
+                    const [control, react_key] = Array.from(controlFromSpec(spec, this.props.block, this.linkAttr, i));
+                    return (
+                        <ReactWrapper key={react_key}>
+                            {control}
+                        </ReactWrapper>
+                    );
+            })}
+                {" "}
+            </div>
+        );
     },
 
     linkAttr(attr) { return propLinkWithMutatedBlocks(this.props.block, attr, this.props.onChange, [this.props.block]); },
@@ -196,40 +204,56 @@ const BlockInspector = createReactClass({render() {
     // Set a key so we don't reuse BlockInspectors across blocks.
     // If we use the same inspector for different blocks, color pickers
     // that are open will stay open, etc.
-    return React.createElement("div", {"key": (`design-${block.uniqueKey}`), "style": ({width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING})},
-        React.createElement("div", {"className": "ctrl-wrapper", "style": ({alignItems: 'baseline'})},
-            React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Block type"),
-            (
-                (user_level_block_types = block_types_for_doc(block.doc)),
-                React.createElement(PdIndexDropdown, {"stretch": true, "defaultIndex": (_l.findIndex(user_level_block_types, ty => ty.describes(block))),  
-                    "options": (user_level_block_types.map(ty => { return {value: ty.getName(), handler: () => {
+    return (
+        <div
+            key={`design-${block.uniqueKey}`}
+            style={{width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING}}>
+            <div className="ctrl-wrapper" style={{alignItems: 'baseline'}}>
+                <h5 className="sidebar-ctrl-label">
+                    Block type
+                </h5>
+                {(user_level_block_types = block_types_for_doc(block.doc), <PdIndexDropdown
+                    stretch={true}
+                    defaultIndex={_l.findIndex(user_level_block_types, ty => ty.describes(block))}
+                    options={user_level_block_types.map(ty => { return {value: ty.getName(), handler: () => {
                       const replacement = block.becomeFresh(new_members => ty.create(new_members));
                       if (replacement instanceof TextBlock) { replacement.textContent.staticValue = "Type something"; }
                       return this.props.onChange();
                   }
-                    }; }))})
-            )
-        ),
+                    }; })} />)}
+            </div>
+            {block.fontFamily instanceof LocalUserFont ? <p style={{color: 'red'}}>
+                The font used has not been uploaded
+            </p> : undefined}
+            <SidebarFromSpec
+                editorCache={this.props.editorCache}
+                spec={function() { return block.sidebarControls(...arguments); }}
+                block={block}
+                onChange={this.props.onChange}
+                setEditorMode={this.props.setEditorMode} />
+            <hr />
+            <button
+                style={{marginTop: 20, width: '100%'}}
+                onClick={() => {
+                    const wrapper_block = LayoutBlockType.create({
+                        color: Dynamicable(String).from('rgba(0,0,0,0)'),
+                        top: block.top, left: block.left, width: block.width, height: block.height
+                    });
 
-        (block.fontFamily instanceof LocalUserFont ? React.createElement("p", {"style": ({color: 'red'})}, "The font used has not been uploaded") : undefined),
-        React.createElement(SidebarFromSpec, {"editorCache": (this.props.editorCache), "spec"() { return block.sidebarControls(...arguments); }, "block": (block), "onChange": (this.props.onChange), "setEditorMode": (this.props.setEditorMode)}),
-
-        React.createElement("hr", null),
-        React.createElement("button", {"style": ({marginTop: 20, width: '100%'}), "onClick": (() => {
-            const wrapper_block = LayoutBlockType.create({
-                color: Dynamicable(String).from('rgba(0,0,0,0)'),
-                top: block.top, left: block.left, width: block.width, height: block.height
-            });
-
-            block.doc.addBlock(wrapper_block);
-            this.props.selectBlocks([wrapper_block]);
-            return this.props.onChange();
-        }
-        )}, "Wrap"),
-        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-            return programs.deleteAllButSelectedArtboards([block], this.props.onChange);
-        }
-        )}, "Remove All But Selected")
+                    block.doc.addBlock(wrapper_block);
+                    this.props.selectBlocks([wrapper_block]);
+                    return this.props.onChange();
+                }}>
+                Wrap
+            </button>
+            <button
+                style={{width: '100%'}}
+                onClick={() => {
+                    return programs.deleteAllButSelectedArtboards([block], this.props.onChange);
+                }}>
+                Remove All But Selected
+            </button>
+        </div>
     );
 }
 });
@@ -241,11 +265,28 @@ const DocScaler = createReactClass({
     },
 
     render() {
-        return React.createElement("div", {"style": ({display: 'flex', marginBottom: '-9px'})},
-            React.createElement("button", {"onClick": (this.rescale), "style": ({flex: '1'})}, "Rescale doc"),
-            React.createElement("input", {"style": ({marginBottom: '9px', marginLeft: '6px'}), "type": "number", "step": "0.1", "min": "0.1", "max": "10", "value": (this.state.scaleRatio), "onChange": (evt => this.setState({scaleRatio: evt.target.value}))}),
-            React.createElement("button", {"onClick": (() => this.setState({scaleRatio: Math.round((this.state.scaleRatio + .2) * 10) / 10}))}, "+"),
-            React.createElement("button", {"onClick": (() => this.setState({scaleRatio: Math.round((this.state.scaleRatio - .2) * 10) / 10}))}, "-")
+        return (
+            <div style={{display: 'flex', marginBottom: '-9px'}}>
+                <button onClick={this.rescale} style={{flex: '1'}}>
+                    Rescale doc
+                </button>
+                <input
+                    style={{marginBottom: '9px', marginLeft: '6px'}}
+                    type="number"
+                    step="0.1"
+                    min="0.1"
+                    max="10"
+                    value={this.state.scaleRatio}
+                    onChange={evt => this.setState({scaleRatio: evt.target.value})} />
+                <button
+                    onClick={() => this.setState({scaleRatio: Math.round((this.state.scaleRatio + .2) * 10) / 10})}>
+                    +
+                </button>
+                <button
+                    onClick={() => this.setState({scaleRatio: Math.round((this.state.scaleRatio - .2) * 10) / 10})}>
+                    -
+                </button>
+            </div>
         );
     },
 
@@ -270,18 +311,23 @@ const DocScaler = createReactClass({
 
 
 const DocInspector = createReactClass({render() {
-    return React.createElement("div", {"key": "doc-design", "style": ({width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING})},
-        React.createElement("div", {"style": ({margin: '1em 0'})},
-            (TextControl('Doc name', this.props.editor.docNameVL()))
-        ),
-
-        React.createElement(DocScaler, {"doc": (this.props.doc), "onChange": (this.props.onChange)}),
-        React.createElement("hr", null),
-
-        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => handleAddCustomFonts(this.props.doc, this.props.onChange))}, "Manage Fonts"),
-        React.createElement("hr", null),
-
-        (this.props.editor.getDocSidebarExtras())
+    return (
+        <div
+            key="doc-design"
+            style={{width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING}}>
+            <div style={{margin: '1em 0'}}>
+                {TextControl('Doc name', this.props.editor.docNameVL())}
+            </div>
+            <DocScaler doc={this.props.doc} onChange={this.props.onChange} />
+            <hr />
+            <button
+                style={{width: '100%'}}
+                onClick={() => handleAddCustomFonts(this.props.doc, this.props.onChange)}>
+                Manage Fonts
+            </button>
+            <hr />
+            {this.props.editor.getDocSidebarExtras()}
+        </div>
     );
 }
 });
@@ -291,46 +337,56 @@ const MultipleSelectedSidebar = createReactClass({render() {
     let block;
     const blocks = this.props.value;
 
-    return React.createElement("div", {"key": "multiple", "style": ({
-        padding: DEFAULT_SIDEBAR_PADDING, paddingTop: '1em',
-        flex: '1 0 auto', display: 'flex', flexDirection: 'column'
-    })},
-        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-            const {
-                doc
-            } = blocks[0];
-            const union = Block.unionBlock(blocks);
+    return (
+        <div
+            key="multiple"
+            style={{
+                padding: DEFAULT_SIDEBAR_PADDING, paddingTop: '1em',
+                flex: '1 0 auto', display: 'flex', flexDirection: 'column'
+            }}>
+            <button
+                style={{width: '100%'}}
+                onClick={() => {
+                    const {
+                        doc
+                    } = blocks[0];
+                    const union = Block.unionBlock(blocks);
 
-            const wrapper_block = LayoutBlockType.create({
-                color: Dynamicable(String).from('rgba(0,0,0,0)'),
-                top: union.top,
-                left: union.left,
-                width: union.width,
-                height: union.height
-            });
+                    const wrapper_block = LayoutBlockType.create({
+                        color: Dynamicable(String).from('rgba(0,0,0,0)'),
+                        top: union.top,
+                        left: union.left,
+                        width: union.width,
+                        height: union.height
+                    });
 
-            doc.addBlock(wrapper_block);
-            this.props.selectBlocks([wrapper_block]);
-            return this.props.onChange();
-        }
-        )}, "Wrap"),
-        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-            this.props.selectBlocks(_l.flatMap(blocks, b => b.andChildren()));
-            return this.props.onChange({fast: true});
-        }
-        )}, "Select Children"),
-        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-            return programs.make_multistate_component_from_blocks(blocks, this.props.editor);
-        }
-        )}, "Make Multistate"),
-
-        React.createElement("div", {"className": "sidebar-default-content noselect", "style": ({marginTop: '2em'})},
-            React.createElement("div", null, "MULTIPLE SELECTED")
-        ),
-
-        (
-            (text_blocks = blocks.filter(b => [TextBlock, TextInputBlock].includes(b.constructor))),
-            (() => {
+                    doc.addBlock(wrapper_block);
+                    this.props.selectBlocks([wrapper_block]);
+                    return this.props.onChange();
+                }}>
+                Wrap
+            </button>
+            <button
+                style={{width: '100%'}}
+                onClick={() => {
+                    this.props.selectBlocks(_l.flatMap(blocks, b => b.andChildren()));
+                    return this.props.onChange({fast: true});
+                }}>
+                Select Children
+            </button>
+            <button
+                style={{width: '100%'}}
+                onClick={() => {
+                    return programs.make_multistate_component_from_blocks(blocks, this.props.editor);
+                }}>
+                Make Multistate
+            </button>
+            <div className="sidebar-default-content noselect" style={{marginTop: '2em'}}>
+                <div>
+                    MULTIPLE SELECTED
+                </div>
+            </div>
+            {(text_blocks = blocks.filter(b => [TextBlock, TextInputBlock].includes(b.constructor)), (() => {
                 if (!_l.isEmpty(text_blocks)) {
                 let left;
                 const all_have_variants = _l.every(text_blocks, block => !_l.isEmpty(block.fontFamily.get_font_variants()));
@@ -358,87 +414,110 @@ const MultipleSelectedSidebar = createReactClass({render() {
                     }
                 });
 
-                return React.createElement("div", null,
-                    (FontControl(this.props.doc, this.props.onChange)('font', multiple_value_link('fontFamily', text_blocks[0].fontFamily))),
-
-                    React.createElement("div", {"className": "ctrl-wrapper"},
-                        React.createElement("h5", {"className": "sidebar-ctrl-label"}, "style"),
-                        React.createElement("div", {"className": "ctrl"},
-                            React.createElement(PdIconGroup, {"buttons": ([
-                                    [React.createElement("b", null, "B"), 'isBold'],
-                                    [React.createElement("i", null, "I"), 'isItalics'],
-                                    [React.createElement("u", null, "U"), 'isUnderline'],
-                                    [React.createElement("s", null, "S"), 'isStrikethrough']
-                                ].map((...args) => {
-                                    // Don't render bold button if fontweight control is showing
-                                    const [label, attr] = Array.from(args[0]), i = args[1];
-                                    if ((attr === 'isBold') && _l.some(text_blocks, 'hasCustomFontWeight') && some_have_variants) { return; }
-                                    const vlink = multiple_value_link(attr, false);
-                                    return {
-                                        label, type: vlink.value ? 'primary' : 'default',
-                                        onClick(e) { vlink.requestChange(!vlink.value); e.preventDefault(); return e.stopPropagation(); }
-                                    };
-                                }))})
-                        )
-                    ),
-
-                    (all_have_variants ? CheckboxControl("use custom font weight", multiple_value_link('hasCustomFontWeight', false)) : undefined),
-                    ((() => {
-                    if (_l.every(text_blocks, 'hasCustomFontWeight') && all_have_variants) {
-                        const fake_union_font = {
-                            get_font_variants() {
-                                const intersection = arrs => _l.intersection(...Array.from(arrs || [])); // lodash has an annoying habbit of varargs when they should have a list of lists
-                                return _l.sortBy(intersection(_l.map(text_blocks, block => block.fontFamily.get_font_variants())));
+                return (
+                    <div>
+                        {FontControl(this.props.doc, this.props.onChange)('font', multiple_value_link('fontFamily', text_blocks[0].fontFamily))}
+                        <div className="ctrl-wrapper">
+                            <h5 className="sidebar-ctrl-label">
+                                style
+                            </h5>
+                            <div className="ctrl">
+                                <PdIconGroup
+                                    buttons={[
+                                            [<b>
+                                                B
+                                            </b>, 'isBold'],
+                                            [<i>
+                                                I
+                                            </i>, 'isItalics'],
+                                            [<u>
+                                                U
+                                            </u>, 'isUnderline'],
+                                            [<s>
+                                                S
+                                            </s>, 'isStrikethrough']
+                                        ].map((...args) => {
+                                            // Don't render bold button if fontweight control is showing
+                                            const [label, attr] = Array.from(args[0]), i = args[1];
+                                            if ((attr === 'isBold') && _l.some(text_blocks, 'hasCustomFontWeight') && some_have_variants) { return; }
+                                            const vlink = multiple_value_link(attr, false);
+                                            return {
+                                                label, type: vlink.value ? 'primary' : 'default',
+                                                onClick(e) { vlink.requestChange(!vlink.value); e.preventDefault(); return e.stopPropagation(); }
+                                            };
+                                        })} />
+                            </div>
+                        </div>
+                        {all_have_variants ? CheckboxControl("use custom font weight", multiple_value_link('hasCustomFontWeight', false)) : undefined}
+                        {(() => {
+                            if (_l.every(text_blocks, 'hasCustomFontWeight') && all_have_variants) {
+                                const fake_union_font = {
+                                    get_font_variants() {
+                                        const intersection = arrs => _l.intersection(...Array.from(arrs || [])); // lodash has an annoying habbit of varargs when they should have a list of lists
+                                        return _l.sortBy(intersection(_l.map(text_blocks, block => block.fontFamily.get_font_variants())));
+                                    }
+                                };
+                                return FontWeightControl(fake_union_font)("font weight", multiple_value_link('fontWeight', '<multiple>'));
                             }
-                        };
-                        return FontWeightControl(fake_union_font)("font weight", multiple_value_link('fontWeight', '<multiple>'));
-                    }
-                    
-                })()),
-
-                    (ColorControl("text color", multiple_value_link("fontColor", text_blocks[0].fontColor))),
-
-                    React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-                        text_blocks.forEach(b => { return b.textContent.staticValue = b.textContent.staticValue.toUpperCase(); });
-                        return this.props.onChange();
-                    }
-                    )}, "To Uppercase")
+                            
+                        })()}
+                        {ColorControl("text color", multiple_value_link("fontColor", text_blocks[0].fontColor))}
+                        <button
+                            style={{width: '100%'}}
+                            onClick={() => {
+                                text_blocks.forEach(b => { return b.textContent.staticValue = b.textContent.staticValue.toUpperCase(); });
+                                return this.props.onChange();
+                            }}>
+                            To Uppercase
+                        </button>
+                    </div>
                 );
             }
-            })()
-        ),
-
-        React.createElement("div", {"style": ({
-            // push down Export section to bottom of screen
-            flex: 1
-        })}),
-
-        React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-            blocks[0].doc.removeBlocks(blocks);
-            this.props.selectBlocks([]);
-            return this.props.onChange();
-        }
-        )}, "Remove"),
-         React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => {
-            return programs.deleteAllButSelectedArtboards(blocks, this.props.onChange);
-        }
-        )}, "Remove All But Selected")
+            })())}
+            <div
+                style={{
+                    // push down Export section to bottom of screen
+                    flex: 1
+                }} />
+            <button
+                style={{width: '100%'}}
+                onClick={() => {
+                    blocks[0].doc.removeBlocks(blocks);
+                    this.props.selectBlocks([]);
+                    return this.props.onChange();
+                }}>
+                Remove
+            </button>
+            <button
+                style={{width: '100%'}}
+                onClick={() => {
+                   return programs.deleteAllButSelectedArtboards(blocks, this.props.onChange);
+               }}>
+                Remove All But Selected
+            </button>
+        </div>
     );
 }
 });
 
 
 defaultExport.StandardSidebar = ({children}) => {
-    return React.createElement("div", {"className": "sidebar bootstrap", "style": ({width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING})},
-        (children)
+    return (
+        <div
+            className="sidebar bootstrap"
+            style={{width: DEFAULT_SIDEBAR_WIDTH, padding: DEFAULT_SIDEBAR_PADDING}}>
+            {children}
+        </div>
     );
 };
 
 
-defaultExport.DrawCodeSidebarContainer = (DrawCodeSidebarContainer = ({width, sidebarMode, editor, aboveScroll, children}) => React.createElement("div", {"className": "sidebar bootstrap", "style": ({width, display: 'flex', flexDirection: 'column'})},
-    React.createElement("div", {"style": ({width: '100%', marginBottom: 12})},
-        React.createElement(PdTabBar, {"tabs": (
-            [
+defaultExport.DrawCodeSidebarContainer = (DrawCodeSidebarContainer = ({width, sidebarMode, editor, aboveScroll, children}) => <div
+    className="sidebar bootstrap"
+    style={{width, display: 'flex', flexDirection: 'column'}}>
+    <div style={{width: '100%', marginBottom: 12}}>
+        <PdTabBar
+            tabs={[
                 ['draw', 'Draw'],
                 ['code', 'Component'] // TODO rename sidebar to "Data"?
             ].map((...args) => { const [mode, label] = Array.from(args[0]); return {
@@ -448,22 +527,21 @@ defaultExport.DrawCodeSidebarContainer = (DrawCodeSidebarContainer = ({width, si
                     editor.setSidebarMode(mode);
                     return editor.handleDocChanged({fast: true});
                 }
-            }; })
-        )})
-    ),
+            }; })} />
+    </div>
+    {aboveScroll}
+    <div
+        className="editor-scrollbar scrollbar-show-on-hover"
+        style={{
+            flex: 1, display: 'flex', flexDirection: 'column', overflowX: 'hidden',
 
-    ( aboveScroll ),
-
-    React.createElement("div", {"className": "editor-scrollbar scrollbar-show-on-hover", "style": ({
-        flex: 1, display: 'flex', flexDirection: 'column', overflowX: 'hidden',
-
-        // compensate for space taken up by intercom.  This is going to look extra ugly in dev where there
-        // is no intercom.
-        paddingBottom: 80
-    })},
-        ( children )
-    )
-));
+            // compensate for space taken up by intercom.  This is going to look extra ugly in dev where there
+            // is no intercom.
+            paddingBottom: 80
+        }}>
+        {children}
+    </div>
+</div>);
 
 
 
@@ -473,59 +551,68 @@ defaultExport.Sidebar = createReactClass({
         assert(() => this.props.doc.isInReadonlyMode());
         switch (this.props.sidebarMode) {
             case 'draw':
-                var first_aligners = React.createElement(AlignmentControls, {"key": "alignment-controls", "blocks": (this.props.value), "onChange": (this.props.onChange)});
+                var first_aligners = <AlignmentControls
+                    key="alignment-controls"
+                    blocks={this.props.value}
+                    onChange={this.props.onChange} />;
 
                 if (this.props.value.length === 0) {
-                    return React.createElement(DrawCodeSidebarContainer, { 
-                        "width": (DEFAULT_SIDEBAR_WIDTH),  
-                        "sidebarMode": "draw",  
-                        "editor": (this.props.editor),  
-                        "aboveScroll": (first_aligners)
-                    },
-                        React.createElement(DocInspector, Object.assign({},  this.props ))
+                    return (
+                        <DrawCodeSidebarContainer
+                            width={DEFAULT_SIDEBAR_WIDTH}
+                            sidebarMode="draw"
+                            editor={this.props.editor}
+                            aboveScroll={first_aligners}>
+                            <DocInspector {...this.props} />
+                        </DrawCodeSidebarContainer>
                     );
 
                 } else if (this.props.value.length === 1) {
-                    return React.createElement(DrawCodeSidebarContainer, { 
-                        "width": (DEFAULT_SIDEBAR_WIDTH),  
-                        "sidebarMode": "draw",  
-                        "editor": (this.props.editor),  
-                        "aboveScroll": (first_aligners)
-                    },
-                        React.createElement(BlockInspector, Object.assign({},  this.props ))
+                    return (
+                        <DrawCodeSidebarContainer
+                            width={DEFAULT_SIDEBAR_WIDTH}
+                            sidebarMode="draw"
+                            editor={this.props.editor}
+                            aboveScroll={first_aligners}>
+                            <BlockInspector {...this.props} />
+                        </DrawCodeSidebarContainer>
                     );
 
                 } else {
-                    const aligners = React.createElement(React.Fragment, null,
-                        (first_aligners),
-                        React.createElement(ExpandAlignmentControls, {"key": "expand-alignment-controls", "blocks": (this.props.value), "onChange": (this.props.onChange)})
-                    );
-                    return React.createElement(DrawCodeSidebarContainer, { 
-                        "width": (DEFAULT_SIDEBAR_WIDTH),  
-                        "sidebarMode": "draw",  
-                        "editor": (this.props.editor),  
-                        "aboveScroll": (aligners)
-                    },
-                        React.createElement(MultipleSelectedSidebar, Object.assign({},  this.props ))
+                    const aligners = <React.Fragment>
+                        {first_aligners}
+                        <ExpandAlignmentControls
+                            key="expand-alignment-controls"
+                            blocks={this.props.value}
+                            onChange={this.props.onChange} />
+                    </React.Fragment>;
+                    return (
+                        <DrawCodeSidebarContainer
+                            width={DEFAULT_SIDEBAR_WIDTH}
+                            sidebarMode="draw"
+                            editor={this.props.editor}
+                            aboveScroll={aligners}>
+                            <MultipleSelectedSidebar {...this.props} />
+                        </DrawCodeSidebarContainer>
                     );
                 }
 
 
             case 'code':
-                return React.createElement(DrawCodeSidebarContainer, { 
-                    "width": (DEVELOPER_SIDEBAR_WIDTH),  
-                    "sidebarMode": "code",  
-                    "editor": (this.props.editor)
-                },
-                    React.createElement(ComponentSidebar, { 
-                        "selectedBlocks": (this.props.value),  
-                        "editor": (this.props.editor),  
-                        "selectBlocks": (this.props.selectBlocks),  
-                        "onChange": (this.props.onChange),  
-                        "editorCache": (this.props.editorCache),  
-                        "doc": (this.props.doc),  
-                        "setEditorMode": (this.props.setEditorMode)
-                        })
+                return (
+                    <DrawCodeSidebarContainer
+                        width={DEVELOPER_SIDEBAR_WIDTH}
+                        sidebarMode="code"
+                        editor={this.props.editor}>
+                        <ComponentSidebar
+                            selectedBlocks={this.props.value}
+                            editor={this.props.editor}
+                            selectBlocks={this.props.selectBlocks}
+                            onChange={this.props.onChange}
+                            editorCache={this.props.editorCache}
+                            doc={this.props.doc}
+                            setEditorMode={this.props.setEditorMode} />
+                    </DrawCodeSidebarContainer>
                 );
         }
     }

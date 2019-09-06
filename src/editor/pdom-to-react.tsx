@@ -46,7 +46,11 @@ const escapedHTMLForTextContent = function(textContent) {
     // where core's returning a string
     const escapedLines = textContent.split('\n');
     if (escapedLines.length === 1) { return escapedLines[0]; }
-    return escapedLines.map(function(line, i) { if (_l.isEmpty(line)) { return React.createElement("br", {"key": (i)}); } else { return React.createElement("div", {"key": (i)}, (line)); } });
+    return escapedLines.map(function(line, i) { if (_l.isEmpty(line)) { return <br key={i} />; } else { return (
+        <div key={i}>
+            {line}
+        </div>
+    ); } });
 };
 
 // Note: In React 16.4.1
@@ -59,8 +63,11 @@ const ExternalInstanceErrorBoundary = createReactClass({
 
     render() {
         if (this.state.error != null) {
-            return React.createElement("div", {"style": ({flexGrow: '1', padding: '0.5em', backgroundColor: '#ff7f7f', overflow: 'hidden'})},
-                (this.state.error.message)
+            return (
+                <div
+                    style={{flexGrow: '1', padding: '0.5em', backgroundColor: '#ff7f7f', overflow: 'hidden'}}>
+                    {this.state.error.message}
+                </div>
             );
         }
 
@@ -116,8 +123,10 @@ defaultExport.pdomToReact = (pdomToReact = function(pdom, key) {
     if (isExternalComponent(Tag)) {
         // External component props come through pdom.props, not through the regular htmlAttrs way
         assert(() => _l.isEmpty(htmlAttrsForPdom(pdom)) && _l.isEmpty(editorReactStylesForPdom(pdom)) && _l.isEmpty(props.className));
-        return React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
-            React.createElement(ExternalInstanceRenderer, {"instanceRef": (Tag.componentSpec.ref), "props": (pdom.props)})
+        return (
+            <ExternalInstanceErrorBoundary key={key}>
+                <ExternalInstanceRenderer instanceRef={Tag.componentSpec.ref} props={pdom.props} />
+            </ExternalInstanceErrorBoundary>
         );
 
     // Allowing innerHTML in the editor is a security vulnerability
@@ -125,13 +134,21 @@ defaultExport.pdomToReact = (pdomToReact = function(pdom, key) {
         throw new Error("innerHTML is bad");
 
     } else if (!_l.isEmpty(pdom.textContent)) {
-        return React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent(pdom.textContent)));
+        return (
+            <Tag {...props}>
+                {escapedHTMLForTextContent(pdom.textContent)}
+            </Tag>
+        );
 
     } else if (!_.isEmpty(pdom.children)) {
-        return React.createElement(Tag, Object.assign({},  props), (pdom.children.map((child, i) => pdomToReact(child, i))));
+        return (
+            <Tag {...props}>
+                {pdom.children.map((child, i) => pdomToReact(child, i))}
+            </Tag>
+        );
 
     } else {
-        return React.createElement(Tag, Object.assign({},  props ));
+        return <Tag {...props} />;
     }
 });
 
@@ -157,8 +174,10 @@ defaultExport.pdomToReactWithPropOverrides = (pdomToReactWithPropOverrides = fun
     if (isExternalComponent(Tag)) {
         // External component props come through pdom.props, not through the regular htmlAttrs way
         assert(() => _l.isEmpty(htmlAttrsForPdom(pdom)) && _l.isEmpty(editorReactStylesForPdom(pdom)) && _l.isEmpty(props.className));
-        return React.createElement(ExternalInstanceErrorBoundary, {"key": (key)},
-            React.createElement(ExternalInstanceRenderer, {"instanceRef": (Tag.componentSpec.ref), "props": (pdom.props)})
+        return (
+            <ExternalInstanceErrorBoundary key={key}>
+                <ExternalInstanceRenderer instanceRef={Tag.componentSpec.ref} props={pdom.props} />
+            </ExternalInstanceErrorBoundary>
         );
 
     // Allowing innerHTML in the editor is a security vulnerability
@@ -166,13 +185,21 @@ defaultExport.pdomToReactWithPropOverrides = (pdomToReactWithPropOverrides = fun
         throw new Error("innerHTML is bad");
 
     } else if (!_l.isEmpty(pdom.textContent)) {
-        return React.createElement(Tag, Object.assign({},  props), (escapedHTMLForTextContent(pdom.textContent)));
+        return (
+            <Tag {...props}>
+                {escapedHTMLForTextContent(pdom.textContent)}
+            </Tag>
+        );
 
     } else if (!_.isEmpty(pdom.children)) {
-        return React.createElement(Tag, Object.assign({},  props), (pdom.children.map((child, i) => pdomToReactWithPropOverrides(child, i, map_props))));
+        return (
+            <Tag {...props}>
+                {pdom.children.map((child, i) => pdomToReactWithPropOverrides(child, i, map_props))}
+            </Tag>
+        );
 
     } else {
-        return React.createElement(Tag, Object.assign({},  props ));
+        return <Tag {...props} />;
     }
 });
 export default defaultExport;

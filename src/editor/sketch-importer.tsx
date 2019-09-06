@@ -24,8 +24,12 @@ export default createReactClass({
     },
 
     render() {
-        return React.createElement(Dropzone, {"onDrop": (this.handleDrop), "style": ({display: 'flex', flexDirection: 'column'})},
-            React.createElement(SketchImporterView, {"error": (this.state.error), "importing": (this.state.importing)})
+        return (
+            <Dropzone
+                onDrop={this.handleDrop}
+                style={{display: 'flex', flexDirection: 'column'}}>
+                <SketchImporterView error={this.state.error} importing={this.state.importing} />
+            </Dropzone>
         );
     },
 

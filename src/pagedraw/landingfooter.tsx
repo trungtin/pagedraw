@@ -13,124 +13,167 @@ import createReactClass from 'create-react-class';
 export default Landingfooter = createReactClass({
     displayName: 'Landingfooter',
     render() {
-        return React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "flexGrow": "1", "paddingTop": 50, "paddingBottom": 50, "background": "rgb(42, 42, 89)"})},
-          React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-@import url('https://fonts.googleapis.com/css?family=Lato:');
+        return (
+            <div
+                style={{"display": "flex", "flexDirection": "column", "flexGrow": "1", "paddingTop": 50, "paddingBottom": 50, "background": "rgb(42, 42, 89)"}}>
+                <style
+                    dangerouslySetInnerHTML={{__html: `\
+          @import url('https://fonts.googleapis.com/css?family=Lato:');
 
-* {
-    box-sizing: border-box;
-}
+          * {
+              box-sizing: border-box;
+          }
 
-body {
-    margin: 0;
-}
+          body {
+              margin: 0;
+          }
 
-button:hover {
-    cursor: pointer;
-}
+          button:hover {
+              cursor: pointer;
+          }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+          a {
+              text-decoration: none;
+              color: inherit;
+          }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+          .pd-onhover-parent >.pd-onhover {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+          .pd-onhover-parent:hover > * {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+          .pd-onhover-parent:hover > .pd-onhover {
+              display: flex;
+          }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+          .pd-onactive-parent > .pd-onactive {
+              display: none;
+          }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+          .pd-onactive-parent:active > * {
+              display: none;
+          }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+          .pd-onactive-parent:active > .pd-onactive {
+              display: flex;
+          }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "justifyContent": "center"})},
-              React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column"})},
-                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column"})},
-                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-                              React.createElement("a", {"href": "https://documentation.pagedraw.io/tutorial", "style": ({"flexShrink": "0", "display": "flex"})},
-                                  React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-TUTORIAL\
-`)
-                              )
-                          ),
-                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-                              React.createElement("a", {"href": "https://documentation.pagedraw.io", "style": ({"flexShrink": "0", "display": "flex"})},
-                                  React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-DOCUMENTATION\
-`)
-                              )
-                          )
-                      ),
-                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column"})},
-                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-                              React.createElement("a", {"href": "/apps", "style": ({"flexShrink": "0", "display": "flex"})},
-                                  React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-SIGN IN\
-`)
-                              )
-                          ),
-                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-                              React.createElement("a", {"href": "mailto:team@pagedraw.io", "style": ({"flexShrink": "0", "display": "flex"})},
-                                  React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-CONTACT US\
-`)
-                              )
-                          )
-                      ),
-                      React.createElement("div", {"style": ({"display": "flex", "flexDirection": "column", "paddingTop": 4, "paddingBottom": 23})},
-                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0"})},
-                              React.createElement("div", {"style": ({"width": 124, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 17, "lineHeight": "25.5px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"})}, `\
-Pagedraw\
-`)
-                          ),
-                          React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "marginTop": 8})},
-                              React.createElement("div", {"style": ({"width": 124, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgba(255, 255, 255, 0.3)", "fontSize": 13, "lineHeight": "20px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"})},
-                                  ("©2018 Pagedraw")
-                              )
-                          )
-                      )
-                  ),
-                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingRight": 124})},
-                      React.createElement("a", {"href": "https://medium.com/pagedraw", "style": ({"flexShrink": "0", "display": "flex"})},
-                          React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-BLOG\
-`)
-                      ),
-                      React.createElement("a", {"href": "https://www.facebook.com/groups/332815050435264/", "style": ({"flexShrink": "0", "display": "flex"})},
-                          React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-FACEBOOK GROUP\
-`)
-                      )
-                  ),
-                  React.createElement("div", {"style": ({"display": "flex", "flexShrink": "0", "paddingRight": 370})},
-                      React.createElement("a", {"href": "https://twitter.com/PagedrawIO", "style": ({"flexShrink": "0", "display": "flex"})},
-                          React.createElement("div", {"style": ({"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"})}, `\
-TWITTER\
-`)
-                      )
-                  )
-              )
-          )
-      );
+          .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+              display: none;
+          }\
+          `}} />
+                <div
+                    style={{"display": "flex", "flexShrink": "0", "justifyContent": "center"}}>
+                    <div style={{"display": "flex", "flexDirection": "column"}}>
+                        <div style={{"display": "flex", "flexShrink": "0"}}>
+                            <div style={{"display": "flex", "flexDirection": "column"}}>
+                                <div style={{"display": "flex", "flexShrink": "0"}}>
+                                    <a
+                                        href="https://documentation.pagedraw.io/tutorial"
+                                        style={{"flexShrink": "0", "display": "flex"}}>
+                                        <div
+                                            style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                            {`\
+          TUTORIAL\
+          `}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div style={{"display": "flex", "flexShrink": "0"}}>
+                                    <a
+                                        href="https://documentation.pagedraw.io"
+                                        style={{"flexShrink": "0", "display": "flex"}}>
+                                        <div
+                                            style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                            {`\
+          DOCUMENTATION\
+          `}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div style={{"display": "flex", "flexDirection": "column"}}>
+                                <div style={{"display": "flex", "flexShrink": "0"}}>
+                                    <a href="/apps" style={{"flexShrink": "0", "display": "flex"}}>
+                                        <div
+                                            style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                            {`\
+          SIGN IN\
+          `}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div style={{"display": "flex", "flexShrink": "0"}}>
+                                    <a
+                                        href="mailto:team@pagedraw.io"
+                                        style={{"flexShrink": "0", "display": "flex"}}>
+                                        <div
+                                            style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                            {`\
+          CONTACT US\
+          `}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                style={{"display": "flex", "flexDirection": "column", "paddingTop": 4, "paddingBottom": 23}}>
+                                <div style={{"display": "flex", "flexShrink": "0"}}>
+                                    <div
+                                        style={{"width": 124, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 17, "lineHeight": "25.5px", "letterSpacing": 0, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"}}>
+                                        {`\
+          Pagedraw\
+          `}
+                                    </div>
+                                </div>
+                                <div style={{"display": "flex", "flexShrink": "0", "marginTop": 8}}>
+                                    <div
+                                        style={{"width": 124, "flexShrink": "0", "fontFamily": "\"Lato\", sans-serif", "color": "rgba(255, 255, 255, 0.3)", "fontSize": 13, "lineHeight": "20px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word"}}>
+                                        ©2018 Pagedraw
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{"display": "flex", "flexShrink": "0", "paddingRight": 124}}>
+                            <a
+                                href="https://medium.com/pagedraw"
+                                style={{"flexShrink": "0", "display": "flex"}}>
+                                <div
+                                    style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                    {`\
+          BLOG\
+          `}
+                                </div>
+                            </a>
+                            <a
+                                href="https://www.facebook.com/groups/332815050435264/"
+                                style={{"flexShrink": "0", "display": "flex"}}>
+                                <div
+                                    style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                    {`\
+          FACEBOOK GROUP\
+          `}
+                                </div>
+                            </a>
+                        </div>
+                        <div style={{"display": "flex", "flexShrink": "0", "paddingRight": 370}}>
+                            <a
+                                href="https://twitter.com/PagedrawIO"
+                                style={{"flexShrink": "0", "display": "flex"}}>
+                                <div
+                                    style={{"width": 246, "fontFamily": "\"Lato\", sans-serif", "color": "rgb(255, 255, 255)", "fontSize": 13, "lineHeight": "40px", "letterSpacing": 0.2867647, "fontWeight": "normal", "fontStyle": "normal", "textDecoration": "none", "textAlign": "left", "wordWrap": "break-word", "flexGrow": "1"}}>
+                                    {`\
+          TWITTER\
+          `}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 });

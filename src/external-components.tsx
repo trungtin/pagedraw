@@ -78,27 +78,37 @@ defaultExport.sidebarControlOfExternalComponentSpec = function(extComponentSpecV
     const {
         propControl
     } = extComponentSpecValueLink.value;
-    return React.createElement("div", null,
-        (TextControl('component name', dotVlt(extComponentSpecValueLink, 'name'))),
-        (TextControl('import path', dotVlt(extComponentSpecValueLink, 'requirePath'))),
-        (CheckboxControl('relative import', dotVlt(extComponentSpecValueLink, 'relativeImport'))),
-        (CheckboxControl('default export', dotVlt(extComponentSpecValueLink, 'defaultExport'))),
-        (propControl.customSpecControl(dotVlt(extComponentSpecValueLink, 'propControl'), 'Component arguments'))
+    return (
+        <div>
+            {TextControl('component name', dotVlt(extComponentSpecValueLink, 'name'))}
+            {TextControl('import path', dotVlt(extComponentSpecValueLink, 'requirePath'))}
+            {CheckboxControl('relative import', dotVlt(extComponentSpecValueLink, 'relativeImport'))}
+            {CheckboxControl('default export', dotVlt(extComponentSpecValueLink, 'defaultExport'))}
+            {propControl.customSpecControl(dotVlt(extComponentSpecValueLink, 'propControl'), 'Component arguments')}
+        </div>
     );
 };
 
 defaultExport.sidebarControlOfExternalComponentInstance = function(doc, extComponentInstanceVl) {
     const sourceComponent = getExternalComponentSpecFromInstance(extComponentInstanceVl.value, doc);
-    if ((sourceComponent == null)) { return React.createElement("div", null, "deleted"); }
-    return React.createElement("div", null,
-        React.createElement(FormControl, {"tag": "select", "valueLink": (dotVlt(extComponentInstanceVl, 'srcRef')), "style": ({width: '100%'})},
-        (
-            doc.externalComponentSpecs.map((spec, i) => React.createElement("option", {"key": (i), "value": (spec.ref)}, (spec.name)))
-        )
-        ),
-        ( sourceComponent.propControl.attrTypes.length > 0 ?
-            sourceComponent.propControl.sidebarControl('props', dotVlt(extComponentInstanceVl, ['propValues', 'innerValue', 'staticValue'])) : undefined
-        )
+    if ((sourceComponent == null)) { return (
+        <div>
+            deleted
+        </div>
+    ); }
+    return (
+        <div>
+            <FormControl
+                tag="select"
+                valueLink={dotVlt(extComponentInstanceVl, 'srcRef')}
+                style={{width: '100%'}}>
+                {doc.externalComponentSpecs.map((spec, i) => <option key={i} value={spec.ref}>
+                    {spec.name}
+                </option>)}
+            </FormControl>
+            {sourceComponent.propControl.attrTypes.length > 0 ?
+                    sourceComponent.propControl.sidebarControl('props', dotVlt(extComponentInstanceVl, ['propValues', 'innerValue', 'staticValue'])) : undefined}
+        </div>
     );
 };
 export default defaultExport;

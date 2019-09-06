@@ -31,16 +31,17 @@ import { Doc } from '../doc';
 
 export default createReactClass({
     render() {
-        if (this.loadError) { return React.createElement(ErrorPage, {"message": "404 not found"}); }
+        if (this.loadError) { return <ErrorPage message="404 not found" />; }
         if (!this.loaded) { return this.renderLoading(); }
 
         if (this.props.mobile && (this.readme != null)) { return this.renderReadme(); }
 
         if (this.props.mobile) { // and we don't have a readme
-            return React.createElement(ErrorPage, { 
-                "message": "Sorry, our editor isn't optimized for mobile yet",  
-                "detail": "Try opening this link in Chrome on a laptop or desktop!"
-                });
+            return (
+                <ErrorPage
+                    message="Sorry, our editor isn't optimized for mobile yet"
+                    detail="Try opening this link in Chrome on a laptop or desktop!" />
+            );
         }
 
         if (this.readme != null) { return this.renderReadmeOnTheSide(); }
@@ -56,44 +57,60 @@ export default createReactClass({
             zIndex: 5000
         };
 
-        return React.createElement(SplitPane, {"split": "horizontal", "defaultSize": ("55%")},
-            React.createElement("div", {"style": ({position: 'relative', width: '100%', height: '100%'})},
-                (this.overlay ?
-                    [
-                        React.createElement("div", {"onClick": (this.hideOverlay), "style": (_l.extend({}, overlayFontStyles, {cursor: 'pointer', zIndex: 5001, position: 'absolute', top: 30, right: 30}))}, "x"),
-                        React.createElement("div", {"onClick": (this.hideOverlay), "style": (_l.extend({}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'center'}))},
-                            React.createElement("div", null, "Pagedraw Editor")
-                        )
-                    ] : undefined
-                ),
-                React.createElement(ShouldSubtreeRender, {"shouldUpdate": (false), "subtree": (() => {
-                    return React.createElement(Editor, { 
-                        "initialDocJson": (this.latest_pagedraw_docjson),  
-                        "onChange": (this.handlePagedrawChanged),  
-                        "editorOuterStyle": ({height: '100%', width: '100%'}),  
-                        "defaultTopbar": (this.props.tutorial ? 'tutorial' : 'stackblitz-default'),  
-                        "onStackBlitzShare": (this.handleShare)
-                        });
-                }
-                )})
-            ),
-
-            React.createElement("div", {"className": "blitz-sb-mount-parent", "style": ({position: 'relative', width: '100%', height: '100%'})},
-                (this.overlay ?
-                    React.createElement("div", {"onClick": (this.hideOverlay), "style": (_l.extend({}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'space-around'}))},
-                        React.createElement("div", null, "Your code"),
-                        React.createElement("div", null, "Live App")
-                    ) : undefined
-                ),
-
-                React.createElement(StackBlitz, {"ref": "stackblitz",  
-                    "style": ({height: '100%', width: '100%'}),  
-                    "sb_template": (this.sb_template),  
-                    "overlayFS": (this.latest_compiled_fs),  
-                    "initialFS": (this.initial_stackblitz_fs),  
-                    "dependencies": (this.blitz_dependencies)
-                    })
-            )
+        return (
+            <SplitPane split="horizontal" defaultSize="55%">
+                <div style={{position: 'relative', width: '100%', height: '100%'}}>
+                    {this.overlay ?
+                            [
+                                <div
+                                    onClick={this.hideOverlay}
+                                    style={_l.extend({}, overlayFontStyles, {cursor: 'pointer', zIndex: 5001, position: 'absolute', top: 30, right: 30})}>
+                                    x
+                                </div>,
+                                <div
+                                    onClick={this.hideOverlay}
+                                    style={_l.extend({}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'center'})}>
+                                    <div>
+                                        Pagedraw Editor
+                                    </div>
+                                </div>
+                            ] : undefined}
+                    <ShouldSubtreeRender
+                        shouldUpdate={false}
+                        subtree={() => {
+                            return (
+                                <Editor
+                                    initialDocJson={this.latest_pagedraw_docjson}
+                                    onChange={this.handlePagedrawChanged}
+                                    editorOuterStyle={{height: '100%', width: '100%'}}
+                                    defaultTopbar={this.props.tutorial ? 'tutorial' : 'stackblitz-default'}
+                                    onStackBlitzShare={this.handleShare} />
+                            );
+                        }} />
+                </div>
+                <div
+                    className="blitz-sb-mount-parent"
+                    style={{position: 'relative', width: '100%', height: '100%'}}>
+                    {this.overlay ?
+                            <div
+                                onClick={this.hideOverlay}
+                                style={_l.extend({}, overlayStyles, overlayFontStyles, {display: 'flex', alignItems: 'center', justifyContent: 'space-around'})}>
+                                <div>
+                                    Your code
+                                </div>
+                                <div>
+                                    Live App
+                                </div>
+                            </div> : undefined}
+                    <StackBlitz
+                        ref="stackblitz"
+                        style={{height: '100%', width: '100%'}}
+                        sb_template={this.sb_template}
+                        overlayFS={this.latest_compiled_fs}
+                        initialFS={this.initial_stackblitz_fs}
+                        dependencies={this.blitz_dependencies} />
+                </div>
+            </SplitPane>
         );
     },
 
@@ -171,31 +188,51 @@ export default createReactClass({
                 this.softChangeUrl(new_blitz_link);
 
                 return modal.show(closeHandler => [
-                    React.createElement("div", {"style": ({userSelect: 'text', lineHeight: '2.4em'})},
-                        React.createElement(Modal.Header, {"style": ({textAlign: 'center'})},
-                            React.createElement(Modal.Title, null, "Your Fiddle was saved")
-                        ),
-                        React.createElement(Modal.Body, null,
-                            React.createElement("p", null, "Link to this Fiddle:"),
-                            React.createElement("div", {"style": ({marginBottom: 15})},
-                                React.createElement(CodeShower, {"content": `https://pagedraw.io${new_blitz_link}`})
-                            ),
-                            React.createElement("hr", null),
-                            React.createElement("p", null,
-                                ("Ready to start using Pagedraw in real a codebase? "),
-                                React.createElement("a", {"href": "https://documentation.pagedraw.io/install_existing/"}, `\
-Learn how to use Pagedraw with git and your regular IDE or text editor.\
-`)
-                            )
-                        ),
-                        React.createElement(Modal.Footer, {"style": ({textAlign: 'center'})},
-                            React.createElement("p", null, `\
-Continue working and collaborate with other users in real time
-by `, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.createElement("a", {"href": "/apps"}, "logging in"), `.\
-`),
-                            React.createElement("a", {"href": "/apps"}, React.createElement(PdButtonOne, {"stretch": (true), "type": "primary"}, "Login"))
-                        )
-                    )
+                    <div style={{userSelect: 'text', lineHeight: '2.4em'}}>
+                        <Modal.Header style={{textAlign: 'center'}}>
+                            <Modal.Title>
+                                Your Fiddle was saved
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <p>
+                                Link to this Fiddle:
+                            </p>
+                            <div style={{marginBottom: 15}}>
+                                <CodeShower content={`https://pagedraw.io${new_blitz_link}`} />
+                            </div>
+                            <hr />
+                            <p>
+                                {"Ready to start using Pagedraw in real a codebase? "}
+                                <a href="https://documentation.pagedraw.io/install_existing/">
+                                    {`\
+    Learn how to use Pagedraw with git and your regular IDE or text editor.\
+    `}
+                                </a>
+                            </p>
+                        </Modal.Body>
+                        <Modal.Footer style={{textAlign: 'center'}}>
+                            <p>
+                                {`\
+    Continue working and collaborate with other users in real time
+    by `}
+                                <a href="/apps">
+                                    signing up
+                                </a>
+                                {" or "}
+                                <a href="/apps">
+                                    logging in
+                                </a>
+                                {`.\
+    `}
+                            </p>
+                            <a href="/apps">
+                                <PdButtonOne stretch={true} type="primary">
+                                    Login
+                                </PdButtonOne>
+                            </a>
+                        </Modal.Footer>
+                    </div>
                 ]);
         });
     })
@@ -209,7 +246,7 @@ by `, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.c
 
 
     renderLoading() {
-        return React.createElement("div", null);
+        return <div />;
     },
 
     //#
@@ -228,9 +265,11 @@ by `, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.c
     //#
 
     renderReadmeOnTheSide() {
-        return React.createElement(SplitPane, {"split": "vertical", "defaultSize": "400px"},
-            (this.renderReadme()),
-            (this.renderPDandBlitz())
+        return (
+            <SplitPane split="vertical" defaultSize="400px">
+                {this.renderReadme()}
+                {this.renderPDandBlitz()}
+            </SplitPane>
         );
     },
 
@@ -241,26 +280,30 @@ by `, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.c
         const next_url_regex = /\nnext-url: (.*)$/;
 
         const inner_next_content =
-            React.createElement("div", {"style": ({display: 'flex', alignItems: 'center'})},
-                React.createElement("span", {"style": ({fontSize: 16, marginRight: 12})}, "NEXT"),
-                React.createElement("span", {"style": ({fontSize: 22, fontWeight: 100})}, "→")
-            );
+            <div style={{display: 'flex', alignItems: 'center'}}>
+                <span style={{fontSize: 16, marginRight: 12}}>
+                    NEXT
+                </span>
+                <span style={{fontSize: 22, fontWeight: 100}}>
+                    →
+                </span>
+            </div>;
 
         [readme, next_button] =
             Array.from((() => {
             let next_fiddle_id, next_url;
             if ((next_fiddle_id = __guard__(readme.match(next_fiddle_regex), x => x[1])) != null) {
                 next_button =
-                    React.createElement("a", {"href": (next_fiddle_id), "style": ({marginTop: 50, display: 'block'})},
-                        React.createElement(TextButton, {"text": (inner_next_content)})
-                    );
+                    <a href={next_fiddle_id} style={{marginTop: 50, display: 'block'}}>
+                        <TextButton text={inner_next_content} />
+                    </a>;
 
                 return [readme.replace(next_fiddle_regex, "").trim(), next_button];
             } else if ((next_url = __guard__(readme.match(next_url_regex), x1 => x1[1])) != null) {
                 next_button =
-                    React.createElement("a", {"href": (next_url), "style": ({marginTop: 50, display: 'block'})},
-                        React.createElement(TextButton, {"text": (inner_next_content)})
-                    );
+                    <a href={next_url} style={{marginTop: 50, display: 'block'}}>
+                        <TextButton text={inner_next_content} />
+                    </a>;
 
                 return [readme.replace(next_url_regex, "").trim(), next_button];
 
@@ -269,28 +312,38 @@ by `, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.c
             }
         })());
 
-        return React.createElement("div", {"className": "fiddle-readme-bar"},
-            React.createElement("header", null,
-                React.createElement("img", {"className": "pagedog-logo", "src": (`${config.static_server}/assets/favicon.png`)}),
-                React.createElement("div", null,
-                    React.createElement("span", {"className": "logotype"}, "Pagedraw"),
-                    (" "),
-                    React.createElement("span", {"className": "productname"}, "Intro")
-                )
-            ),
-            React.createElement("div", {"className": "scroll-pane"},
-                React.createElement("div", {"className": "content"},
-                    (this.props.mobile ? React.createElement("h2", null, "Visit this link on a computer to try the Pagedraw editor out") : undefined),
-                    React.createElement(ReactMarkdown, { 
-                        "source": (readme),  
-                        "escapeHtml": (false),  
-                        "renderers": ({
-                            code: CodeBlock,
-                            link: ReadmeLink
-                        })})
-                ),
-                ((next_button != null) ? next_button : undefined)
-            )
+        return (
+            <div className="fiddle-readme-bar">
+                <header>
+                    <img
+                        className="pagedog-logo"
+                        src={`${config.static_server}/assets/favicon.png`} />
+                    <div>
+                        <span className="logotype">
+                            Pagedraw
+                        </span>
+                        {" "}
+                        <span className="productname">
+                            Intro
+                        </span>
+                    </div>
+                </header>
+                <div className="scroll-pane">
+                    <div className="content">
+                        {this.props.mobile ? <h2>
+                            Visit this link on a computer to try the Pagedraw editor out
+                        </h2> : undefined}
+                        <ReactMarkdown
+                            source={readme}
+                            escapeHtml={false}
+                            renderers={{
+                                code: CodeBlock,
+                                link: ReadmeLink
+                            }} />
+                    </div>
+                    {(next_button != null) ? next_button : undefined}
+                </div>
+            </div>
         );
     }
 });
@@ -300,10 +353,20 @@ by `, React.createElement("a", {"href": "/apps"}, "signing up"), " or ", React.c
 const hljs = require('highlight.js');
 
 var ReadmeLink = createReactClass({
-    render() { return React.createElement("a", {"href": (this.props.href), "target": "_blank"}, (this.props.children)); }});
+    render() { return (
+        <a href={this.props.href} target="_blank">
+            {this.props.children}
+        </a>
+    ); }});
 
 var CodeBlock = createReactClass({
-    render() { return React.createElement("pre", null, React.createElement("code", {"ref": "code", "className": (this.props.language)}, (this.props.value))); },
+    render() { return (
+        <pre>
+            <code ref="code" className={this.props.language}>
+                {this.props.value}
+            </code>
+        </pre>
+    ); },
     componentDidMount() { return hljs.highlightBlock(this.refs.code); },
     shouldComponentUpdate() { return false; }
 });

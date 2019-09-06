@@ -23,11 +23,8 @@ export default createReactClass({
     },
 
     render() {
-        if (!this.loaded) { return React.createElement("div", null); }
-        return React.createElement(Editor, { 
-            "initialDocJson": (this.initialDocjson),  
-            "onChange": (this.handleDocjsonChanged)
-            });
+        if (!this.loaded) { return <div />; }
+        return <Editor initialDocJson={this.initialDocjson} onChange={this.handleDocjsonChanged} />;
     },
 
     handleDocjsonChanged(docjson) {

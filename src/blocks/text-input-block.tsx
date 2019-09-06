@@ -104,10 +104,10 @@ export default Block.register('text-input', (TextInputBlock = (function() {
             ["text shadows", "textShadows", TextShadowsControl],
 
             ["align", "textAlign", SelectControl({multi: false, style: 'segmented'}, [
-                [React.createElement(Glyphicon, {"glyph": "align-left"}), 'left'],
-                [React.createElement(Glyphicon, {"glyph": "align-center"}), 'center'],
-                [React.createElement(Glyphicon, {"glyph": "align-right"}), 'right'],
-                [React.createElement(Glyphicon, {"glyph": "align-justify"}), 'justify']
+                [<Glyphicon glyph="align-left" />, 'left'],
+                [<Glyphicon glyph="align-center" />, 'center'],
+                [<Glyphicon glyph="align-right" />, 'right'],
+                [<Glyphicon glyph="align-justify" />, 'justify']
             ])],
 
             ['Hide focus ring', 'disableFocusRing', CheckboxControl],
@@ -121,7 +121,7 @@ export default Block.register('text-input', (TextInputBlock = (function() {
             this.hasCustomPadding && this.isMultiline ? ['padding top', 'paddingTop', NumberControl] : undefined,
             this.hasCustomPadding && this.isMultiline ? ['padding bottom', 'paddingBottom', NumberControl] : undefined,
 
-            React.createElement("hr", null),
+            <hr />,
 
             ...Array.from(this.fillSidebarControls())
         ]; }

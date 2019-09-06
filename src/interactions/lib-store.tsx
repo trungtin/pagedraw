@@ -43,8 +43,11 @@ export default LibStoreInteraction = class LibStoreInteraction extends EditorMod
 
     canvas(editor) {
         // Overrides the CSS coming from editor
-        return React.createElement("div", {"style": ({overflow: 'auto', userSelect: 'text', display: 'flex', flexGrow: '1'})},
-            React.createElement(LibStore, {"editor": (editor)})
+        return (
+            <div
+                style={{overflow: 'auto', userSelect: 'text', display: 'flex', flexGrow: '1'}}>
+                <LibStore editor={editor} />
+            </div>
         );
     }
 
@@ -54,18 +57,26 @@ export default LibStoreInteraction = class LibStoreInteraction extends EditorMod
                 title: lib.library_name,
                 version: lib.version_name,
                 onRemove: () => confirm({
-                    body: React.createElement("span", null, `\
-Removing this library will delete\
-`, React.createElement("strong", null, " ", (this.blocksOfLib(editor.doc, lib).length), " blocks "), `\
-tied to it. Wish to proceed?\
-`),
+                    body: <span>
+                        {`\
+    Removing this library will delete\
+    `}
+                        <strong>
+                            {" "}
+                            {this.blocksOfLib(editor.doc, lib).length}
+                            {" blocks "}
+                        </strong>
+                        {`\
+    tied to it. Wish to proceed?\
+    `}
+                    </span>,
                     yesType: 'danger',
                     yes: 'Remove'
                 }, () => this.removeLibrary(editor, lib))
             };
         };
 
-        return React.createElement(LibsSidebar, {"libraries": (_l.map(editor.doc.libraries, mapLibrary))});
+        return <LibsSidebar libraries={_l.map(editor.doc.libraries, mapLibrary)} />;
     }
 
     blocksOfLib(doc, lib) {
@@ -106,26 +117,33 @@ const LibShower = createReactClass({
 
     // FIXME: We are getting some doc not in readonly mode errors when doing setState in this component
     render() {
-        if (this.state.error != null) { return React.createElement("div", {"style": ({padding: '50px'})}, React.createElement("h1", null, (this.state.error.message))); }
+        if (this.state.error != null) { return (
+            <div style={{padding: '50px'}}>
+                <h1>
+                    {this.state.error.message}
+                </h1>
+            </div>
+        ); }
 
         const currentUser = __guard__(window.pd_params != null ? window.pd_params.current_user : undefined, x => x.id);
 
-        return React.createElement(LibDetails, { 
-            "components": ((this.state.loadedInstances != null ? this.state.loadedInstances : []).map(instance => ({
-                title: instance.name
-            }))),  
-            "renderPreviews": (this.renderPreviews),  
-            "title": (this.props.library.name),  
-            "version": (this.props.version.name),  
-            "owner": (this.props.library.owner_name),  
-            "starCount": (this.props.library.users_who_starred.length),  
-            "installCount": (this.props.library.users_who_installed.length),  
-            "starred": (Array.from(this.props.library.users_who_starred).includes(currentUser)),  
-            "installed": (this.installedState()),  
-            "onToggleStar": (this.props.onToggleStar),  
-            "onInstall": (this.addLib),  
-            "onNavigateBack": (this.props.onNavigateBack)
-        });
+        return (
+            <LibDetails
+                components={(this.state.loadedInstances != null ? this.state.loadedInstances : []).map(instance => ({
+                    title: instance.name
+                }))}
+                renderPreviews={this.renderPreviews}
+                title={this.props.library.name}
+                version={this.props.version.name}
+                owner={this.props.library.owner_name}
+                starCount={this.props.library.users_who_starred.length}
+                installCount={this.props.library.users_who_installed.length}
+                starred={Array.from(this.props.library.users_who_starred).includes(currentUser)}
+                installed={this.installedState()}
+                onToggleStar={this.props.onToggleStar}
+                onInstall={this.addLib}
+                onNavigateBack={this.props.onNavigateBack} />
+        );
     },
 
     installedState() {
@@ -142,18 +160,31 @@ const LibShower = createReactClass({
     renderPreviews() {
         const inside = () => {
             if ((this.state.loadedInstances == null)) {
-                return React.createElement("div", {"style": ({flexGrow: '1', padding: '300px'})}, React.createElement(PdSpinner, null));
+                return (
+                    <div style={{flexGrow: '1', padding: '300px'}}>
+                        <PdSpinner />
+                    </div>
+                );
             }
 
-            return React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column', padding: '10px'})},
-                (this.state.loadedInstances.map(instance => React.createElement("div", null,
-                React.createElement("h1", null, (instance.name)),
-                (layoutViewForBlock(instance, {}, {}, null))
-            )))
+            return (
+                <div style={{display: 'flex', flexDirection: 'column', padding: '10px'}}>
+                    {this.state.loadedInstances.map(instance => <div>
+                        <h1>
+                            {instance.name}
+                        </h1>
+                        {layoutViewForBlock(instance, {}, {}, null)}
+                    </div>)}
+                </div>
             );
         };
 
-        return React.createElement(WrapInIframe, {"style": ({border: '1px solid #ccc', flexGrow: '1'}), "registerIframe": (this.onIframeLoad), "render": (inside)});
+        return (
+            <WrapInIframe
+                style={{border: '1px solid #ccc', flexGrow: '1'}}
+                registerIframe={this.onIframeLoad}
+                render={inside} />
+        );
     },
 
     addLib() {
@@ -293,33 +324,33 @@ var LibStore = createReactClass({
         if (this.showingLibId != null) {
             const lib = [...Array.from(mostStarredLibraries), ...Array.from(appLibraries)].find(l => l.id === this.showingLibId);
 
-            return React.createElement(LibShower, { 
-                "editor": (this.props.editor),  
-                "library": (lib),  
-                "version": (lib.latest_version),  
-                "onNavigateBack": (() => { this.showingLibId = null; return this.rerender(); }),  
-                "onToggleStar": (() => {
-                    if (Array.from(lib.users_who_starred).includes(this.current_user_id)) {
-                        this.unstar(this.showingLibId);
-                    } else {
-                        this.star(this.showingLibId);
-                    }
-                    return this.rerender();
-                }
-                ),  
-                "onInstall": (() => {
-                    this.trackInstall(this.showingLibId);
-                    return this.refreshable.needsRefresh();
-                }
-                )
-            });
+            return (
+                <LibShower
+                    editor={this.props.editor}
+                    library={lib}
+                    version={lib.latest_version}
+                    onNavigateBack={() => { this.showingLibId = null; return this.rerender(); }}
+                    onToggleStar={() => {
+                        if (Array.from(lib.users_who_starred).includes(this.current_user_id)) {
+                            this.unstar(this.showingLibId);
+                        } else {
+                            this.star(this.showingLibId);
+                        }
+                        return this.rerender();
+                    }}
+                    onInstall={() => {
+                        this.trackInstall(this.showingLibId);
+                        return this.refreshable.needsRefresh();
+                    }} />
+            );
         } else {
-            return React.createElement(StoreFront, { 
-                "popularLibraries": (_l.map(mostStarredLibraries, mapLibraries)),  
-                "teamLibraries": (_l.map(appLibraries, mapLibraries)),  
-                "onSearch": (search => console.log(`Searching for '${search}'`)),  
-                "onCreateNewLibrary": (() => openLibManagerModal(this.props.editor.doc, this.props.editor.handleDocChanged))
-            });
+            return (
+                <StoreFront
+                    popularLibraries={_l.map(mostStarredLibraries, mapLibraries)}
+                    teamLibraries={_l.map(appLibraries, mapLibraries)}
+                    onSearch={search => console.log(`Searching for '${search}'`)}
+                    onCreateNewLibrary={() => openLibManagerModal(this.props.editor.doc, this.props.editor.handleDocChanged)} />
+            );
         }
     },
 

@@ -33,20 +33,18 @@ window.pd_params.mobile = browser.mobile;
 
 if (browser.mobile && ['editor', 'pd_playground'].includes(window.pd_params.route)) {
     ErrorPage = require('../meta-app/error-page');
-    ReactDOM.render(React.createElement(ErrorPage, { 
-        "message": "Sorry, our editor isn't optimized for mobile yet",  
-        "detail": "Try opening this link in Chrome on a laptop or desktop!"
-    }), document.getElementById('app'));
+    ReactDOM.render(<ErrorPage
+        message="Sorry, our editor isn't optimized for mobile yet"
+        detail="Try opening this link in Chrome on a laptop or desktop!" />, document.getElementById('app'));
 
 
 } else if (!browser.mobile && (browser.name !== 'chrome') && ['editor', 'pd_playground', 'stackblitz'].includes(window.pd_params.route)) {
     ErrorPage = require('../meta-app/error-page');
-    ReactDOM.render(React.createElement(ErrorPage, { 
-        "message": "Sorry, our editor is optimized for Chrome",  
-        "detail": (
-            React.createElement("span", null, "Try opening this link in Chrome! Alternatively, you can also get ", React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "the desktop app"), ".")
-        )
-    }), document.getElementById('app'));
+    ReactDOM.render(<ErrorPage
+        message="Sorry, our editor is optimized for Chrome"
+        detail={React.createElement("span", null, "Try opening this link in Chrome! Alternatively, you can also get ", <a href="https://documentation.pagedraw.io/electron">
+            the desktop app
+        </a>, ".")} />, document.getElementById('app'));
 
 
 } else if (window.pd_params.route === 'play') {
@@ -74,9 +72,11 @@ if (browser.mobile && ['editor', 'pd_playground'].includes(window.pd_params.rout
     const AppWrapper = createReactClass({
         render() {
             const Route = pages[this.props.route]();
-            return React.createElement("div", null,
-                React.createElement(ModalComponent, {"ref": "modal"}),
-                React.createElement(Route, Object.assign({},  window.pd_params ))
+            return (
+                <div>
+                    <ModalComponent ref="modal" />
+                    <Route {...window.pd_params} />
+                </div>
             );
         },
 
@@ -87,34 +87,49 @@ if (browser.mobile && ['editor', 'pd_playground'].includes(window.pd_params.rout
 
     const CrashView = createReactClass({
         render() {
-            return React.createElement("div", null,
-                React.createElement("div", {"className": "bootstrap"},
-                    React.createElement("div", {"ref": "container"})
-                ),
-                ( this.state.mounted ?
-                    React.createElement(Modal, {"show": true, "container": (this.refs.container)},
-                        React.createElement(Modal.Header, null,
-                            React.createElement(Modal.Title, null, "Pagedraw crashed")
-                        ),
-                        React.createElement(Modal.Body, null,
-                            React.createElement("p", null, "Pagedraw crashed and we were unable to recover.  You can try reloading the page."),
-                            (!this.props.logged_crash ?
-                                React.createElement("p", null, `\
-We weren’t able to log the crash, likely because an ad blocker is stopping our analytics.  Please describe the crash to us over Intercom in as much detail as possible, or consider disabling your ad blocker. (We’re obviously never going to show you ads)\
-`) : undefined
-                            ),
-                            (!window.electron ?
-                                React.createElement("p", null, `\
-This problem might be due to one of your browser plugins or extensions interacting with our app. Consider using our `, React.createElement("a", {"href": "https://documentation.pagedraw.io/electron"}, "desktop app"), ` to avoid these issues.
-\
-`) : undefined
-                            )
-                        ),
-                        React.createElement(Modal.Footer, null,
-                            React.createElement(PdButtonOne, {"type": "primary", "onClick": (() => { return window.location = window.location; })}, "Refresh")
-                        )
-                    ) : undefined
-                )
+            return (
+                <div>
+                    <div className="bootstrap">
+                        <div ref="container" />
+                    </div>
+                    {this.state.mounted ?
+                            <Modal show={true} container={this.refs.container}>
+                                <Modal.Header>
+                                    <Modal.Title>
+                                        Pagedraw crashed
+                                    </Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <p>
+                                        Pagedraw crashed and we were unable to recover.  You can try reloading the page.
+                                    </p>
+                                    {!this.props.logged_crash ?
+                                            <p>
+                                                {`\
+                We weren’t able to log the crash, likely because an ad blocker is stopping our analytics.  Please describe the crash to us over Intercom in as much detail as possible, or consider disabling your ad blocker. (We’re obviously never going to show you ads)\
+                `}
+                                            </p> : undefined}
+                                    {!window.electron ?
+                                            <p>
+                                                {`\
+                This problem might be due to one of your browser plugins or extensions interacting with our app. Consider using our `}
+                                                <a href="https://documentation.pagedraw.io/electron">
+                                                    desktop app
+                                                </a>
+                                                {` to avoid these issues.
+                \
+                `}
+                                            </p> : undefined}
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <PdButtonOne
+                                        type="primary"
+                                        onClick={() => { return window.location = window.location; }}>
+                                        Refresh
+                                    </PdButtonOne>
+                                </Modal.Footer>
+                            </Modal> : undefined}
+                </div>
             );
         },
 
@@ -141,7 +156,7 @@ for this domain (we're obviously never going to show you ads).\
         already_unrecoverably_failed = true;
         const modalRoot = document.createElement('div');
         document.body.appendChild(modalRoot);
-        return ReactDOM.render(React.createElement(CrashView, {"logged_crash": (logged_crash)}), modalRoot);
+        return ReactDOM.render(<CrashView logged_crash={logged_crash} />, modalRoot);
     };
 
 
@@ -218,7 +233,7 @@ for this domain (we're obviously never going to show you ads).\
             require('../frontend/DraggingCanvas').windowMouseMachine.reset();
 
             // try to recover
-            ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), domRoot);
+            ReactDOM.render(<AppWrapper route={window.pd_params.route} />, domRoot);
 
         } catch (error1) { // a failure to recover
             unrecoverably_fail();
@@ -227,7 +242,7 @@ for this domain (we're obviously never going to show you ads).\
         return delete window.crash_recovery_state;
     });
 
-    ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), document.getElementById('app'));
+    ReactDOM.render(<AppWrapper route={window.pd_params.route} />, document.getElementById('app'));
 }
 
 function __guard__(value, transform) {

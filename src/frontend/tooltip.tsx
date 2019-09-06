@@ -24,9 +24,13 @@ export default Tooltip = createReactClass({
         } })();
 
         if (_l.isEmpty(this.props.content)) { return this.props.children; }
-        return React.createElement("div", {"className": "pd-tooltip"},
-            React.createElement("div", {"className": `pd-tooltiptext ${positionClass}`}, (this.props.content)),
-            (this.props.children)
+        return (
+            <div className="pd-tooltip">
+                <div className={`pd-tooltiptext ${positionClass}`}>
+                    {this.props.content}
+                </div>
+                {this.props.children}
+            </div>
         );
     }
 });

@@ -60,17 +60,23 @@ export default Block.register('button', (ButtonBlock = (function() {
         getDefaultColor() { return '#337ab7'; }
 
         sidebarControls() { return [
-            React.createElement("div", null,
-                React.createElement("h5", null, "Deprecation Notice"),
-                React.createElement("p", null, `\
-This block is a Button Block, which has been deprecated.  Instead, you should make your
-own button component, and use it throughout your app.\
-`),
-                React.createElement("p", null, `\
-You\'ll notice that the block type listed above is incorrect.  This is because the Button
-Block type has been hidden in Pagedraw as part of the deprecation process.\
-`)
-            )
+            <div>
+                <h5>
+                    Deprecation Notice
+                </h5>
+                <p>
+                    {`\
+    This block is a Button Block, which has been deprecated.  Instead, you should make your
+    own button component, and use it throughout your app.\
+    `}
+                </p>
+                <p>
+                    {`\
+    You\'ll notice that the block type listed above is incorrect.  This is because the Button
+    Block type has been hidden in Pagedraw as part of the deprecation process.\
+    `}
+                </p>
+            </div>
         ]; }
 
         renderHTML(pdom) {

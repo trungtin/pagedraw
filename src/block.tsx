@@ -665,12 +665,12 @@ export default Model.register('block', (Block = (function() {
             const specials = this.specialSidebarControls(...Array.from(args || []));
             return ((arrs => _.compact(_.flatten(arrs, true))))([
                 this.defaultTopSidebarControls(...Array.from(args || [])),
-                React.createElement("hr", null),
+                <hr />,
                 this.hasCustomCode ? this.customCodeWarning() : undefined,
                 specials,
-                !_.isEmpty(specials) ? React.createElement("hr", null) : undefined,
+                !_.isEmpty(specials) ? <hr /> : undefined,
                 this.defaultSidebarControls(...Array.from(args || [])),
-                React.createElement("hr", null),
+                <hr />,
                 this.constraintControls(...Array.from(args || []))
             ]);
         }
@@ -711,17 +711,31 @@ export default Model.register('block', (Block = (function() {
                 ["name", 'name', DebouncedTextControlWithDefault(this.getLabel())],
 
                 // Compact X/Y controls
-                React.createElement("div", {"style": ({display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'}), "key": "positon-controls"},
-                    React.createElement(CompactNumberControl, {"label": ('X'), "valueLink": (NumberToStringTransformer(linkAttr('leftOffsetToParent')))}),
-                    React.createElement(CompactNumberControl, {"label": ('Y'), "valueLink": (NumberToStringTransformer(linkAttr('topOffsetToParent')))})
-                ),
+                <div
+                    style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'}}
+                    key="positon-controls">
+                    <CompactNumberControl
+                        label="X"
+                        valueLink={NumberToStringTransformer(linkAttr('leftOffsetToParent'))} />
+                    <CompactNumberControl
+                        label="Y"
+                        valueLink={NumberToStringTransformer(linkAttr('topOffsetToParent'))} />
+                </div>,
 
                 // Compact H/W controls
-                React.createElement("div", {"style": ({display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'}), "key": "size-controls"},
-                    React.createElement(CompactNumberControl, {"label": ('W'), "valueLink": (sizeValueLink('width', SizeToWidthValueLinkTransformer))}),
-                    React.createElement("div", {"style": ({flexShrink: 0, marginTop: 5})}, React.createElement(LockToggle, {"valueLink": (linkAttr('aspectRatioLocked'))})),
-                    React.createElement(CompactNumberControl, {"label": ('H'), "valueLink": (sizeValueLink('height', SizeToHeightValueLinkTransformer))})
-                )
+                <div
+                    style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', margin: '4px'}}
+                    key="size-controls">
+                    <CompactNumberControl
+                        label="W"
+                        valueLink={sizeValueLink('width', SizeToWidthValueLinkTransformer)} />
+                    <div style={{flexShrink: 0, marginTop: 5}}>
+                        <LockToggle valueLink={linkAttr('aspectRatioLocked')} />
+                    </div>
+                    <CompactNumberControl
+                        label="H"
+                        valueLink={sizeValueLink('height', SizeToHeightValueLinkTransformer)} />
+                </div>
 
             ]);
         }
@@ -761,27 +775,33 @@ export default Model.register('block', (Block = (function() {
         resizabilitySidebarControls() { return []; }
 
         constraintControls(linkAttr, onChange) { return [
-            React.createElement("span", {"style": ({fontSize: '12px'})}, "Flexible size"),
-            React.createElement("div", {"style": ({display: 'flex'})},
-                (LeftCheckboxControl('Width', linkAttr('flexWidth'), onChange)),
-                (LeftCheckboxControl('Height', linkAttr('flexHeight'), onChange))
-            ),
-            React.createElement("span", {"style": ({fontSize: '12px'})}, "Flexible margin"),
-            React.createElement("div", {"style": ({display: 'flex'})},
-                React.createElement("div", {"style": ({flex: '1'})},
-                    (LeftCheckboxControl("left", linkAttr('flexMarginLeft'), onChange)),
-                    (LeftCheckboxControl("right", linkAttr('flexMarginRight'), onChange))
-                ),
-                React.createElement("div", {"style": ({flex: '1'})},
-                    (LeftCheckboxControl("top", linkAttr('flexMarginTop'), onChange)),
-                    (LeftCheckboxControl("bottom", linkAttr('flexMarginBottom'), onChange))
-                )
-            ),
-            React.createElement("span", {"style": ({fontSize: '12px'})}, "Center"),
-            React.createElement("div", {"style": ({display: 'flex'})},
-                (LeftCheckboxControl("Horizontally", linkAttr('centerHorizontal'), onChange)),
-                (LeftCheckboxControl("Vertically", linkAttr('centerVertical'), onChange))
-            )
+            <span style={{fontSize: '12px'}}>
+                Flexible size
+            </span>,
+            <div style={{display: 'flex'}}>
+                {LeftCheckboxControl('Width', linkAttr('flexWidth'), onChange)}
+                {LeftCheckboxControl('Height', linkAttr('flexHeight'), onChange)}
+            </div>,
+            <span style={{fontSize: '12px'}}>
+                Flexible margin
+            </span>,
+            <div style={{display: 'flex'}}>
+                <div style={{flex: '1'}}>
+                    {LeftCheckboxControl("left", linkAttr('flexMarginLeft'), onChange)}
+                    {LeftCheckboxControl("right", linkAttr('flexMarginRight'), onChange)}
+                </div>
+                <div style={{flex: '1'}}>
+                    {LeftCheckboxControl("top", linkAttr('flexMarginTop'), onChange)}
+                    {LeftCheckboxControl("bottom", linkAttr('flexMarginBottom'), onChange)}
+                </div>
+            </div>,
+            <span style={{fontSize: '12px'}}>
+                Center
+            </span>,
+            <div style={{display: 'flex'}}>
+                {LeftCheckboxControl("Horizontally", linkAttr('centerHorizontal'), onChange)}
+                {LeftCheckboxControl("Vertically", linkAttr('centerVertical'), onChange)}
+            </div>
         ]; }
 
         commentControl() {
@@ -803,16 +823,20 @@ export default Model.register('block', (Block = (function() {
                 this.borderThickness > 0 ? ["border style", 'borderStyle', SelectControl({style: 'dropdown'}, borderStyles.map(s => [s, s]))] : undefined,
                 ["corner roundness", 'borderRadius', NumberControl],
 
-                React.createElement("hr", null),
+                <hr />,
                 ["shadows", 'outerBoxShadows', BoxShadowsControl],
-                React.createElement("hr", null),
+                <hr />,
                 ["inner shadows", 'innerBoxShadows', BoxShadowsControl],
-                React.createElement("hr", null)
+                <hr />
             ];
         }
 
         customCodeWarning() {
-            return React.createElement("div", {"style": ({color: 'darkred'})}, "This block\'s code was overwritten by the developer.  It might look different in the final product.");
+            return (
+                <div style={{color: 'darkred'}}>
+                    This block's code was overwritten by the developer.  It might look different in the final product.
+                </div>
+            );
         }
 
 

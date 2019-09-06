@@ -82,7 +82,7 @@ let defined_if_nonempty = function(val) { if (_l.isEmpty(val)) { return undefine
 defaultExport.sidebarControlsOfComponent = (sidebarControlsOfComponent = function(component, specLinkAttr, onChange) {
     assert(() => component.isComponent && (component.componentSpec != null));
     return [
-        React.createElement("hr", null),
+        <hr />,
         CheckboxControl("instances have resizable width", specLinkAttr('flexWidth')),
         CheckboxControl("instances have resizable height", specLinkAttr('flexHeight'))
     ];

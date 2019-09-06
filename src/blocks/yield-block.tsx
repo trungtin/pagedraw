@@ -41,24 +41,29 @@ export default Block.register('yield', (YieldBlock = (function() {
         }
 
         editor() {
-            return React.createElement("div", {"style": ({
-                height: "100%",
-                width: "100%",
+            return (
+                <div
+                    style={{
+                        height: "100%",
+                        width: "100%",
 
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
 
-                // nice red alt background color: "#E45474"
-                backgroundColor: "#73D488",
-                borderRadius: 8,
+                        // nice red alt background color: "#E45474"
+                        backgroundColor: "#73D488",
+                        borderRadius: 8,
 
-                fontFamily: "'Open Sans', sans-serif",
-                fontWeight: 600,
-                color: "#F4F7F3"
-            })}, `\
-Yield\
-`);
+                        fontFamily: "'Open Sans', sans-serif",
+                        fontWeight: 600,
+                        color: "#F4F7F3"
+                    }}>
+                    {`\
+        Yield\
+        `}
+                </div>
+            );
         }
     };
     YieldBlock.initClass();

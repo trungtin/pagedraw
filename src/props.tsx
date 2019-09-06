@@ -226,17 +226,30 @@ defaultExport.DropdownPropControl = (DropdownPropControl = Model.register("prop-
         // add/delete options to the list of options
         customSpecControl(controlValueLink) {
             const optionsValueLink = propValueLinkTransformer('options', controlValueLink);
-            const itemRenderer = (elemValueLink, handleRemove) => React.createElement("div", {"style": ({display: 'flex', alignItems: 'center', paddingRight: '6px', marginTop: '6px'})},
-                React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": ({lineHeight: '24px', color: 'black', marginRight: '6px'}), "onClick": (handleRemove)}, "delete"),
-                React.createElement(FormControl, {"style": ({flexGrow: '1'}), "debounced": (true), "type": "text", "valueLink": (elemValueLink)})
-            );
+            const itemRenderer = (elemValueLink, handleRemove) => <div
+                style={{display: 'flex', alignItems: 'center', paddingRight: '6px', marginTop: '6px'}}>
+                <i
+                    role="button"
+                    className="material-icons md-14"
+                    style={{lineHeight: '24px', color: 'black', marginRight: '6px'}}
+                    onClick={handleRemove}>
+                    delete
+                </i>
+                <FormControl
+                    style={{flexGrow: '1'}}
+                    debounced={true}
+                    type="text"
+                    valueLink={elemValueLink} />
+            </div>;
 
-            return React.createElement("div", {"style": ({paddingLeft: indentation})},
-                React.createElement(ListComponent, { 
-                    "label": (React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Dropdown options")),  
-                    "valueLink": (optionsValueLink),  
-                    "newElement"() { return `option${optionsValueLink.value.length}`; },  
-                    "elem": (itemRenderer)})
+            return (
+                <div style={{paddingLeft: indentation}}>
+                    <ListComponent
+                        label={React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Dropdown options")}
+                        valueLink={optionsValueLink}
+                        newElement={function() { return `option${optionsValueLink.value.length}`; }}
+                        elem={itemRenderer} />
+                </div>
             );
         }
     };
@@ -284,16 +297,26 @@ defaultExport.ListPropControl = (ListPropControl = Model.register("prop-ctrl(lis
                 get() {
                     return (label, valueLink) => {
                         const elem = (elemValueLink, handleRemove, i) => {
-                            return React.createElement("div", {"style": ({paddingLeft: indentation, display: 'flex', alignItems: 'center'})},
-                                ((DynamicableControl(this.elemType.sidebarControl))(`${i}:`, propValueLinkTransformer('innerValue', elemValueLink))),
-                                React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": ({color: 'black', marginLeft: '6px'}), "onClick": (handleRemove)}, "delete")
+                            return (
+                                <div style={{paddingLeft: indentation, display: 'flex', alignItems: 'center'}}>
+                                    {(DynamicableControl(this.elemType.sidebarControl))(`${i}:`, propValueLinkTransformer('innerValue', elemValueLink))}
+                                    <i
+                                        role="button"
+                                        className="material-icons md-14"
+                                        style={{color: 'black', marginLeft: '6px'}}
+                                        onClick={handleRemove}>
+                                        delete
+                                    </i>
+                                </div>
                             );
                         };
-                        return React.createElement(ListComponent, { 
-                            "label": (React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))),  
-                            "valueLink": (valueLink),  
-                            "newElement": (() => this.elemType.default()),  
-                            "elem": (elem)});
+                        return (
+                            <ListComponent
+                                label={React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))}
+                                valueLink={valueLink}
+                                newElement={() => this.elemType.default()}
+                                elem={elem} />
+                        );
                     };
                 }
             }
@@ -315,16 +338,21 @@ defaultExport.ListPropControl = (ListPropControl = Model.register("prop-ctrl(lis
         // In the component definition, users get a customSpecControl that lets them choose the type of list
         customSpecControl(controlValueLink) {
             const elemTypeValueLink = propValueLinkTransformer('elemType', controlValueLink);
-            return React.createElement("div", {"style": ({paddingLeft: indentation})},
-                React.createElement("div", {"className": "ctrl-wrapper"},
-                    React.createElement("h5", {"className": "sidebar-ctrl-label"}, "Element type"),
-                    React.createElement(PdIndexDropdown, {"options": (controlTypes.map(ctrl => ({
-                        value: ctrl.userVisibleLabel,
-                        handler() { return elemTypeValueLink.requestChange(new ctrl()); }
-                    }))),  
-                        "defaultIndex": (_l.findIndex(controlTypes, ctrl => elemTypeValueLink.value instanceof ctrl))})
-                ),
-                (this.elemType.customSpecControl(elemTypeValueLink))
+            return (
+                <div style={{paddingLeft: indentation}}>
+                    <div className="ctrl-wrapper">
+                        <h5 className="sidebar-ctrl-label">
+                            Element type
+                        </h5>
+                        <PdIndexDropdown
+                            options={controlTypes.map(ctrl => ({
+                                value: ctrl.userVisibleLabel,
+                                handler() { return elemTypeValueLink.requestChange(new ctrl()); }
+                            }))}
+                            defaultIndex={_l.findIndex(controlTypes, ctrl => elemTypeValueLink.value instanceof ctrl)} />
+                    </div>
+                    {this.elemType.customSpecControl(elemTypeValueLink)}
+                </div>
             );
         }
     };
@@ -499,42 +527,47 @@ defaultExport.ObjectPropControl = (ObjectPropControl = Model.register("prop-ctrl
                     const visibleProps = _l.filter(allProps, (...args) => { const [prop, spec] = Array.from(args[0]); return prop.present || spec.required; });
                     const availableProps = _l.filter(allProps, (...args) => { const [prop, spec] = Array.from(args[0]); return !prop.present && !spec.required; });
     
-                    return React.createElement("div", null,
-                        React.createElement("div", {"style": ({display: 'flex', alignItems: 'center', marginTop: '9px', height: '20px'})},
-                            React.createElement("h5", {"className": "sidebar-ctrl-label", "style": ({flex: 1})},
-                                (label)
-                            ),
-                            (availableProps.length > 0 ?
-                                React.createElement(PdPopupMenu, { 
-                                    "label": "Add optional properties",  
-                                    "iconName": "add",  
-                                    "options": (_l.map(availableProps, (...args) => { const [prop, spec] = Array.from(args[0]); return spec.title; })),  
-                                    "onSelect": (index => {
-                                        const [prop, spec] = Array.from(availableProps[index]);
-                                        prop.present = true;
-                                        return propInstancesValueLink.requestChange(propInstancesValueLink.value);
-                                    }
-                                    )
-                                }) : undefined
-                            )
-                        ),
-                        React.createElement("div", {"style": ({paddingLeft: indentation})},
-                            (_l.map(visibleProps, (...args) => {
-                                const [prop, spec] = Array.from(args[0]);
-                                const valueVl = propInstancesDotVl(prop, propInstancesValueLink, 'value');
-                                const presentVl = propInstancesDotVl(prop, propInstancesValueLink, 'present');
-                                return React.createElement("div", {"key": (prop.specUniqueKey), "style": ({display: 'flex', alignItems: 'flex-start'})},
-                                    (spec.propValueSidebarControl(spec.title, valueVl)),
-                                    (!spec.required ?
-                                        React.createElement("i", {"className": "material-icons md-14",  
-                                            "title": "Remove this property",  
-                                            "style": ({marginLeft: '6px', marginTop: '6px'}),  
-                                            "onClick": (() => presentVl.requestChange(false))
-                                        }, "delete") : undefined
-                                    )
-                                );
-                            }))
-                        )
+                    return (
+                        <div>
+                            <div
+                                style={{display: 'flex', alignItems: 'center', marginTop: '9px', height: '20px'}}>
+                                <h5 className="sidebar-ctrl-label" style={{flex: 1}}>
+                                    {label}
+                                </h5>
+                                {availableProps.length > 0 ?
+                                        <PdPopupMenu
+                                            label="Add optional properties"
+                                            iconName="add"
+                                            options={_l.map(availableProps, (...args) => { const [prop, spec] = Array.from(args[0]); return spec.title; })}
+                                            onSelect={index => {
+                                                const [prop, spec] = Array.from(availableProps[index]);
+                                                prop.present = true;
+                                                return propInstancesValueLink.requestChange(propInstancesValueLink.value);
+                                            }} /> : undefined}
+                            </div>
+                            <div style={{paddingLeft: indentation}}>
+                                {_l.map(visibleProps, (...args) => {
+                                        const [prop, spec] = Array.from(args[0]);
+                                        const valueVl = propInstancesDotVl(prop, propInstancesValueLink, 'value');
+                                        const presentVl = propInstancesDotVl(prop, propInstancesValueLink, 'present');
+                                        return (
+                                            <div
+                                                key={prop.specUniqueKey}
+                                                style={{display: 'flex', alignItems: 'flex-start'}}>
+                                                {spec.propValueSidebarControl(spec.title, valueVl)}
+                                                {!spec.required ?
+                                                        <i
+                                                            className="material-icons md-14"
+                                                            title="Remove this property"
+                                                            style={{marginLeft: '6px', marginTop: '6px'}}
+                                                            onClick={() => presentVl.requestChange(false)}>
+                                                            delete
+                                                        </i> : undefined}
+                                            </div>
+                                        );
+                                    })}
+                            </div>
+                        </div>
                     );
                 }; }
             }
@@ -554,37 +587,60 @@ defaultExport.ObjectPropControl = (ObjectPropControl = Model.register("prop-ctrl
         }
 
         customSpecControl(objectControlVl, label, indent) {
-            if (label == null) { label = React.createElement("h5", {"className": 'sidebar-ctrl-label'}, "keys"); }
+            if (label == null) { label = <h5 className="sidebar-ctrl-label">
+                keys
+            </h5>; }
             if (indent == null) { indent = true; }
             const PropSpecControl = function(elemValueLink, handleRemove) {
                 const controlValueLink = propValueLinkTransformer('control', elemValueLink);
 
-                return React.createElement("div", {"style": ({flexGrow: '1', marginBottom: '9px'})},
-                    React.createElement("div", {"style": ({display: 'flex', marginBottom: '5px'})},
-                        React.createElement("div", {"style": ({marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center'})},
-                            React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": ({color: 'black'}), "onClick": (handleRemove)}, "delete")
-                        ),
-                        React.createElement("div", {"style": ({marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center'})},
-                            React.createElement(Tooltip, {"position": "top", "content": ('Required')},
-                                    React.createElement(FormControl, {"style": ({margin: 0}), "type": "checkbox", "valueLink": (propValueLinkTransformer('required', elemValueLink))})
-                            )
-                        ),
-                        React.createElement(FormControl, {"debounced": (true), "placeholder": "Prop name", "type": "text", "valueLink": (propValueLinkTransformer('name', elemValueLink)), "style": ({width: '100%', marginRight: '5px'})}),
-                        React.createElement(PdIndexDropdown, {"options": (controlTypes.map(ctrl => ({
-                            value: ctrl.userVisibleLabel,
-                            handler() { return controlValueLink.requestChange(new ctrl()); }
-                        }))),  
-                            "defaultIndex": (_l.findIndex(controlTypes, ctrl => controlValueLink.value instanceof ctrl))})
-                    ),
-                    (elemValueLink.value.control.customSpecControl(controlValueLink))
+                return (
+                    <div style={{flexGrow: '1', marginBottom: '9px'}}>
+                        <div style={{display: 'flex', marginBottom: '5px'}}>
+                            <div
+                                style={{marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                <i
+                                    role="button"
+                                    className="material-icons md-14"
+                                    style={{color: 'black'}}
+                                    onClick={handleRemove}>
+                                    delete
+                                </i>
+                            </div>
+                            <div
+                                style={{marginRight: '6px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                                <Tooltip position="top" content="Required">
+                                    <FormControl
+                                        style={{margin: 0}}
+                                        type="checkbox"
+                                        valueLink={propValueLinkTransformer('required', elemValueLink)} />
+                                </Tooltip>
+                            </div>
+                            <FormControl
+                                debounced={true}
+                                placeholder="Prop name"
+                                type="text"
+                                valueLink={propValueLinkTransformer('name', elemValueLink)}
+                                style={{width: '100%', marginRight: '5px'}} />
+                            <PdIndexDropdown
+                                options={controlTypes.map(ctrl => ({
+                                    value: ctrl.userVisibleLabel,
+                                    handler() { return controlValueLink.requestChange(new ctrl()); }
+                                }))}
+                                defaultIndex={_l.findIndex(controlTypes, ctrl => controlValueLink.value instanceof ctrl)} />
+                        </div>
+                        {elemValueLink.value.control.customSpecControl(controlValueLink)}
+                    </div>
                 );
             };
-            return React.createElement("div", {"style": ({paddingLeft: indent ? indentation : 0})},
-                React.createElement(ListComponent, { 
-                    "label": (label),  
-                    "valueLink": (propValueLinkTransformer('attrTypes', objectControlVl)),  
-                    "newElement"() { return new PropSpec({name: "", control: new StringPropControl()}); },  
-                    "elem": (PropSpecControl)})
+            return (
+                <div style={{paddingLeft: indent ? indentation : 0}}>
+                    <ListComponent
+                        label={label}
+                        valueLink={propValueLinkTransformer('attrTypes', objectControlVl)}
+                        newElement={function() { return new PropSpec({name: "", control: new StringPropControl()}); }}
+                        elem={PropSpecControl} />
+                </div>
             );
         }
     };

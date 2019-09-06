@@ -13,7 +13,7 @@ import PagedrawnPricing from '../pagedraw/pricing';
 
 const PricingDesktop = createReactClass({
     render() {
-        return React.createElement(PagedrawnPricing, null);
+        return <PagedrawnPricing />;
     }
 });
 

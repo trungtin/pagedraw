@@ -28,7 +28,7 @@ export default createReactClass({
     },
 
     render() {
-        return React.createElement("div", {"className": "shadow-host", "ref": "shadowHost"});
+        return <div className="shadow-host" ref="shadowHost" />;
     },
 
     componentDidUpdate() {
@@ -42,10 +42,12 @@ export default createReactClass({
 
     rerender() {
         // FIXME: Might want to ReactDOM.render only once here
-        const elemWithStyles = React.createElement(React.Fragment, null, ([
-            this.props.children,
-            ...Array.from(((this.props.includeCssUrls != null ? this.props.includeCssUrls : []).map((url, i) => React.createElement("link", {"key": (i), "rel": "stylesheet", "href": (url)}))))
-        ]));
+        const elemWithStyles = <React.Fragment>
+            {[
+                this.props.children,
+                ...Array.from(((this.props.includeCssUrls != null ? this.props.includeCssUrls : []).map((url, i) => <link key={i} rel="stylesheet" href={url} />)))
+            ]}
+        </React.Fragment>;
         return this.context.enqueueForceUpdate({
             forceUpdate: callback => ReactDOM.render(elemWithStyles, this.shadowRoot, callback)
         });

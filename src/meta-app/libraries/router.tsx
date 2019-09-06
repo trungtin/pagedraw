@@ -21,15 +21,22 @@ const pages = {
 const AppWrapper = createReactClass({
     render() {
         const Route = pages[this.props.route]();
-        return React.createElement("div", null,
-            React.createElement(Helmet, null,
-                React.createElement("link", {"rel": "stylesheet", "type": "text/css", "href": `${window.pd_config.static_server}/library.css`}),
-                React.createElement("link", {"rel": "stylesheet", "href": `${window.pd_config.static_server}/bootstrap-namespaced.css`})
-            ),
-            React.createElement("div", null,
-                React.createElement(ModalComponent, {"ref": "modal"}),
-                React.createElement(Route, Object.assign({},  window.pd_params ))
-            )
+        return (
+            <div>
+                <Helmet>
+                    <link
+                        rel="stylesheet"
+                        type="text/css"
+                        href={`${window.pd_config.static_server}/library.css`} />
+                    <link
+                        rel="stylesheet"
+                        href={`${window.pd_config.static_server}/bootstrap-namespaced.css`} />
+                </Helmet>
+                <div>
+                    <ModalComponent ref="modal" />
+                    <Route {...window.pd_params} />
+                </div>
+            </div>
         );
     },
 
@@ -38,4 +45,4 @@ const AppWrapper = createReactClass({
     }
 });
 
-ReactDOM.render(React.createElement(AppWrapper, {"route": (window.pd_params.route)}), document.getElementById('app'));
+ReactDOM.render(<AppWrapper route={window.pd_params.route} />, document.getElementById('app'));

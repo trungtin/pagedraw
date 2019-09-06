@@ -21,26 +21,51 @@ const FormControl = require('../frontend/form-control');
 
 defaultExport.pdSidebarHeaderFont = (pdSidebarHeaderFont = {fontFamily: 'inherit', fontSize: 14, fontWeight: '500'});
 
-defaultExport.PdButtonOne = (PdButtonOne = ({type, onClick, children, disabled, stretch, submit}) => React.createElement(Button, {"type": (submit ? 'submit' : 'button'), "bsStyle": (type), "active": (false),  
-    "onClick": (onClick), "disabled": (disabled), "block": (stretch)},
-    (children)
-));
+defaultExport.PdButtonOne = (PdButtonOne = ({type, onClick, children, disabled, stretch, submit}) => <Button
+    type={submit ? 'submit' : 'button'}
+    bsStyle={type}
+    active={false}
+    onClick={onClick}
+    disabled={disabled}
+    block={stretch}>
+    {children}
+</Button>);
 
-defaultExport.PdSidebarButton = (PdSidebarButton = ({onClick, children}) => React.createElement("button", {"style": ({width: '100%'}), "onClick": (onClick)}, (children)));
+defaultExport.PdSidebarButton = (PdSidebarButton = ({onClick, children}) => <button style={{width: '100%'}} onClick={onClick}>
+    {children}
+</button>);
 
-defaultExport.PdButtonGroup = (PdButtonGroup = ({buttons}) => React.createElement(ButtonGroup, {"className": "sidebar-select-control", "bsSize": "sm"},
-(_l.compact(buttons).map((buttonProps, i) => React.createElement(PdButtonOne, Object.assign({"key": (i)}, (_l.omit(buttonProps, 'label'))), (buttonProps.label))))
-));
+defaultExport.PdButtonGroup = (PdButtonGroup = ({buttons}) => <ButtonGroup className="sidebar-select-control" bsSize="sm">
+    {_l.compact(buttons).map((buttonProps, i) => <PdButtonOne key={i} {..._l.omit(buttonProps, 'label')}>
+        {buttonProps.label}
+    </PdButtonOne>)}
+</ButtonGroup>);
 
 defaultExport.PdButtonBar = ButtonToolbar;
 
 defaultExport.PdIconGroup = PdButtonGroup;
 
-defaultExport.PdSpinner = ({size}) => React.createElement("svg", {"className": "spinner", "width": `${size != null ? size : 40}px`, "height": `${size != null ? size : 40}px`, "viewBox": "0 0 66 66", "xmlns": "http://www.w3.org/2000/svg"},
-    React.createElement("circle", {"className": "spinner-path", "fill": "none", "strokeWidth": "6", "strokeLinecap": "round", "cx": "33", "cy": "33", "r": "30"})
-);
+defaultExport.PdSpinner = ({size}) => <svg
+    className="spinner"
+    width={`${size != null ? size : 40}px`}
+    height={`${size != null ? size : 40}px`}
+    viewBox="0 0 66 66"
+    xmlns="http://www.w3.org/2000/svg">
+    <circle
+        className="spinner-path"
+        fill="none"
+        strokeWidth="6"
+        strokeLinecap="round"
+        cx="33"
+        cy="33"
+        r="30" />
+</svg>;
 
-defaultExport.PdCheckbox = ({label, valueLink, disabled}) => React.createElement(Bp.Checkbox, {"label": (label), "checked": (valueLink.value), "onChange"(evt) { return valueLink.requestChange(!valueLink.value); }, "disabled": (disabled)});
+defaultExport.PdCheckbox = ({label, valueLink, disabled}) => <Bp.Checkbox
+    label={label}
+    checked={valueLink.value}
+    onChange={function(evt) { return valueLink.requestChange(!valueLink.value); }}
+    disabled={disabled} />;
 
 //PdDropdown A :: ({
 //  value: A,
@@ -48,32 +73,32 @@ defaultExport.PdCheckbox = ({label, valueLink, disabled}) => React.createElement
 //  label: (A) -> ReactElement,
 //  onSelect: (A) -> IO ()
 //}) -> ReactElement
-defaultExport.PdDropdown = (PdDropdown = ({value, onSelect, options, label, id}) => React.createElement(DropdownButton, {"title": (label(value)), "onSelect": (onSelect), "id": (id)},
-    (
-        options.map((value, i) => React.createElement(MenuItem, {"eventKey": (value), "key": (i)}, (label(value))))
-    )
-));
+defaultExport.PdDropdown = (PdDropdown = ({value, onSelect, options, label, id}) => <DropdownButton title={label(value)} onSelect={onSelect} id={id}>
+    {options.map((value, i) => <MenuItem eventKey={value} key={i}>
+        {label(value)}
+    </MenuItem>)}
+</DropdownButton>);
 
-defaultExport.PdDropdownTwo = (PdDropdownTwo = ({value, options, onSelect, stretch, style}) => React.createElement("select", { 
-    "className": "sidebar-select",  
-    "style": (_l.extend({width: stretch ? '100%' : undefined}, style)),  
-    "value": (value),  
-    "onChange"(evt) { return onSelect(evt.target.value, evt); }
-},
-    (options.map(({value, label}, i) => React.createElement("option", {"key": (i), "value": (value)}, (label))))
-));
+defaultExport.PdDropdownTwo = (PdDropdownTwo = ({value, options, onSelect, stretch, style}) => <select
+    className="sidebar-select"
+    style={_l.extend({width: stretch ? '100%' : undefined}, style)}
+    value={value}
+    onChange={function(evt) { return onSelect(evt.target.value, evt); }}>
+    {options.map(({value, label}, i) => <option key={i} value={value}>
+        {label}
+    </option>)}
+</select>);
 
-defaultExport.PdVlDropdownTwo = (PdVlDropdownTwo = ({valueLink, options, stretch, style}) => React.createElement(PdDropdownTwo, { 
-    "value": (valueLink.value),  
-    "onSelect": (valueLink.requestChange),  
-    "stretch": (stretch),  
-    "style": (style),  
-    "options": (options)
-}));
+defaultExport.PdVlDropdownTwo = (PdVlDropdownTwo = ({valueLink, options, stretch, style}) => <PdDropdownTwo
+    value={valueLink.value}
+    onSelect={valueLink.requestChange}
+    stretch={stretch}
+    style={style}
+    options={options} />);
 
-defaultExport.PdPopupMenu = (PdPopupMenu = ({label, iconName, options, onSelect}) => React.createElement("select", { 
-    "onChange": (evt => onSelect(evt.target.value)),  
-    "style": ({
+defaultExport.PdPopupMenu = (PdPopupMenu = ({label, iconName, options, onSelect}) => <select
+    onChange={evt => onSelect(evt.target.value)}
+    style={{
         width: '14px',
         appearance: 'none',
         WebkitAppearance: 'none',
@@ -81,17 +106,22 @@ defaultExport.PdPopupMenu = (PdPopupMenu = ({label, iconName, options, onSelect}
         outline: 'none',
         border: 'none',
         background: 'none'
-    }),  
-    "value": (label)
-},
-    React.createElement("option", {"disabled": true, "hidden": true, "value": (label)}, (iconName)),
-    React.createElement("option", {"disabled": true, "value": "no-value"}, (label)),
-    (options.map((title, index) => {
-        return React.createElement("option", {"key": (title), "value": (index)},
-            (title)
-        );
-    }))
-));
+    }}
+    value={label}>
+    <option disabled={true} hidden={true} value={label}>
+        {iconName}
+    </option>
+    <option disabled={true} value="no-value">
+        {label}
+    </option>
+    {options.map((title, index) => {
+            return (
+                <option key={title} value={index}>
+                    {title}
+                </option>
+            );
+        })}
+</select>);
 // props:
 //   defaultIndex: Number
 //   options: [{value: String, handler: (->)}]
@@ -100,11 +130,16 @@ defaultExport.PdPopupMenu = (PdPopupMenu = ({label, iconName, options, onSelect}
 
 defaultExport.PdIndexDropdown = (PdIndexDropdown = createReactClass({
     render() {
-        return React.createElement(PdDropdownTwo, {"value": (this.props.defaultIndex), "onSelect": (this.handleSelect), "stretch": (this.props.stretch),  
-            "options": (this.props.options.map(({value, handler}, i) => ({
-                value: i,
-                label: value
-            })))});
+        return (
+            <PdDropdownTwo
+                value={this.props.defaultIndex}
+                onSelect={this.handleSelect}
+                stretch={this.props.stretch}
+                options={this.props.options.map(({value, handler}, i) => ({
+                    value: i,
+                    label: value
+                }))} />
+        );
     },
 
     handleSelect(val) {
@@ -124,40 +159,49 @@ defaultExport.PdSearchableDropdown = function({search, options, text, onChange})
         return o;
     });
 
-    return React.createElement("div", {"className": "semantic"},
-        
-        React.createElement(Dropdown, {"style": ({'margin': '0 -1px 0 -1.5px'}), "className": ("pd-searchable-dropdown"),  
-            "fluid": true, "selection": true, "searchInput": ({type: 'string'}),  
-            "id": (
-                // Dropdown button's 'id' prop is required for accessibility or will warn
+    return (
+        <div className="semantic">
+            <Dropdown
+                style={{'margin': '0 -1px 0 -1.5px'}}
+                className="pd-searchable-dropdown"
+                fluid={true}
+                selection={true}
+                searchInput={{type: 'string'}}
+                id=// Dropdown button's 'id' prop is required for accessibility or will warn
                 "pd-searchable-dropdown"
-            ),  
-            "text": (text),  
-            "options": (s_ui_opts),  
-            "search": ((menuItems, query) => menuItems.filter(item => options[item.value].matches(query))),  
-            "onChange": ((evt, {value}) => {
-                // I genuinely have no idea what these types are, and can't find docs anywhere.
-                // I *think* the second parameter is the selected value
-                return options[value].onSelect();
-            }
-            )
-        })
+                text={text}
+                options={s_ui_opts}
+                search={(menuItems, query) => menuItems.filter(item => options[item.value].matches(query))}
+                onChange={(evt, {value}) => {
+                    // I genuinely have no idea what these types are, and can't find docs anywhere.
+                    // I *think* the second parameter is the selected value
+                    return options[value].onSelect();
+                }} />
+        </div>
     );
 };
 
-defaultExport.PdTabBar = (PdTabBar = ({tabs}) => React.createElement("div", {"style": (_l.extend({}, pdSidebarHeaderFont, {display: 'flex', height: 30}))},
-    (tabs.map(function({open, label, onClick, key}, i) {
-        const common = {flexGrow: '1', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center'};
-        if (open) {
-            return React.createElement("div", {"key": (key), "style": (_l.extend({}, common, {color: '#444'}))}, (label));
-        } else {
-            const style = _l.extend({}, common, {borderBottom: '1px solid #c4c4c4', color: '#aaa'});
-            if ((i < (tabs.length - 1)) && tabs[i + 1].open) { _l.extend(style, {borderRight: '1px solid #c4c4c4', borderBottomRightRadius: 3}); }
-            if ((i > 0) && tabs[i-1].open) { _l.extend(style, {borderLeft: '1px solid #c4c4c4', borderBottomLeftRadius: 3}); }
-            return React.createElement("div", {"key": (key), "onClick": (onClick), "style": (style)}, (label));
-        }
-    }))
-));
+defaultExport.PdTabBar = (PdTabBar = ({tabs}) => <div style={_l.extend({}, pdSidebarHeaderFont, {display: 'flex', height: 30})}>
+    {tabs.map(function({open, label, onClick, key}, i) {
+            const common = {flexGrow: '1', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center'};
+            if (open) {
+                return (
+                    <div key={key} style={_l.extend({}, common, {color: '#444'})}>
+                        {label}
+                    </div>
+                );
+            } else {
+                const style = _l.extend({}, common, {borderBottom: '1px solid #c4c4c4', color: '#aaa'});
+                if ((i < (tabs.length - 1)) && tabs[i + 1].open) { _l.extend(style, {borderRight: '1px solid #c4c4c4', borderBottomRightRadius: 3}); }
+                if ((i > 0) && tabs[i-1].open) { _l.extend(style, {borderLeft: '1px solid #c4c4c4', borderBottomLeftRadius: 3}); }
+                return (
+                    <div key={key} onClick={onClick} style={style}>
+                        {label}
+                    </div>
+                );
+            }
+        })}
+</div>);
 
 // FIXME: Rename these to PdModal, PdTab, etc to be consistent
 defaultExport.Modal = Modal;
@@ -168,7 +212,11 @@ defaultExport.Glyphicon = Glyphicon;
 
 //# Sidebar
 
-defaultExport.SidebarHeaderAddButton = (SidebarHeaderAddButton = ({style, onClick}) => React.createElement("i", {"className": "material-icons md-14", "style": (style), "onClick": (onClick)}, "add"));
+defaultExport.SidebarHeaderAddButton = (SidebarHeaderAddButton = ({style, onClick}) => <i className="material-icons md-14" style={style} onClick={onClick}>
+    add
+</i>);
 
-defaultExport.SidebarHeaderRemoveButton = (SidebarHeaderRemoveButton = ({style, onClick}) => React.createElement("i", {"className": "material-icons md-14", "style": (style), "onClick": (onClick)}, "remove"));
+defaultExport.SidebarHeaderRemoveButton = (SidebarHeaderRemoveButton = ({style, onClick}) => <i className="material-icons md-14" style={style} onClick={onClick}>
+    remove
+</i>);
 export default defaultExport;

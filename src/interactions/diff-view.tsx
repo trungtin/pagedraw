@@ -98,47 +98,63 @@ export default DiffViewInteraction = class DiffViewInteraction extends EditorMod
         };
 
         const layoutViewWrapper = (doc, viewport) => {
-            return React.createElement(LayoutEditorContextProvider, {"doc": (doc)},
-                React.createElement(Zoomable, {"viewportManager": (viewport), "style": ({flex: 1, backgroundColor: 'rgb(51, 51, 51, .9)'})},
-                    React.createElement(DraggingCanvas, {"classes": ([]), "ref": "draggingCanvas",  
-                        "style": ({cursor: this.cursor, height: editorGeometry.height, width: editorGeometry.width}),  
-                        "onDrag": (() => {}), "onDoubleClick": (() => {}), "onMouseMove": (() => {}), "onInteractionHappened"() {},  
-                        "onClick": (where => {
-                            let left;
-                            let block = doc.getBlockUnderMouseLocation(where);
+            return (
+                <LayoutEditorContextProvider doc={doc}>
+                    <Zoomable
+                        viewportManager={viewport}
+                        style={{flex: 1, backgroundColor: 'rgb(51, 51, 51, .9)'}}>
+                        <DraggingCanvas
+                            classes={[]}
+                            ref="draggingCanvas"
+                            style={{cursor: this.cursor, height: editorGeometry.height, width: editorGeometry.width}}
+                            onDrag={() => {}}
+                            onDoubleClick={() => {}}
+                            onMouseMove={() => {}}
+                            onInteractionHappened={function() {}}
+                            onClick={where => {
+                                let left;
+                                let block = doc.getBlockUnderMouseLocation(where);
 
-                            const rootComponent = block != null ? block.getRootComponent() : undefined;
-                            if (!rootComponent) { block = null; }
+                                const rootComponent = block != null ? block.getRootComponent() : undefined;
+                                if (!rootComponent) { block = null; }
 
-                            const componentForBlockKey = (doc, blockUniqueKey) => __guard__(__guard__(doc.getBlockByKey(blockUniqueKey), x1 => x1.getRootComponent()), x => x.uniqueKey);
-                            this.selectedBlockKey = block != null ? block.uniqueKey : undefined;
-                            this.selectedComponentKey = (left = componentForBlockKey(this.oldDoc, this.selectedBlockKey)) != null ? left : componentForBlockKey(this.newDoc, this.selectedBlockKey);
+                                const componentForBlockKey = (doc, blockUniqueKey) => __guard__(__guard__(doc.getBlockByKey(blockUniqueKey), x1 => x1.getRootComponent()), x => x.uniqueKey);
+                                this.selectedBlockKey = block != null ? block.uniqueKey : undefined;
+                                this.selectedComponentKey = (left = componentForBlockKey(this.oldDoc, this.selectedBlockKey)) != null ? left : componentForBlockKey(this.newDoc, this.selectedBlockKey);
 
-                            return this.rerender();
-                        }
-                        )},
-                        React.createElement("div", {"style": ({flex: 1, zIndex: 0, isolation: 'isolate'})},
-                            React.createElement(LayoutView, {"doc": (doc), "blockOverrides": ([]), "overlayForBlock": (block => {
-                                const overlayComponentUniqueKey = __guard__(block.getRootComponent(), x => x.uniqueKey);
-                                let classes = 'mouse-full-block-overlay';
-                                if ((overlayComponentUniqueKey == null) || (overlayComponentUniqueKey !== this.selectedComponentKey)) { classes += ' faded-out'; }
-                                return React.createElement("div", {"className": (classes)});
-                            }
-                            )})
-                        )
-                    )
-                )
+                                return this.rerender();
+                            }}>
+                            <div style={{flex: 1, zIndex: 0, isolation: 'isolate'}}>
+                                <LayoutView
+                                    doc={doc}
+                                    blockOverrides={[]}
+                                    overlayForBlock={block => {
+                                        const overlayComponentUniqueKey = __guard__(block.getRootComponent(), x => x.uniqueKey);
+                                        let classes = 'mouse-full-block-overlay';
+                                        if ((overlayComponentUniqueKey == null) || (overlayComponentUniqueKey !== this.selectedComponentKey)) { classes += ' faded-out'; }
+                                        return <div className={classes} />;
+                                    }} />
+                            </div>
+                        </DraggingCanvas>
+                    </Zoomable>
+                </LayoutEditorContextProvider>
             );
         };
 
-        return React.createElement("div", {"style": ({display: 'flex', flex: 1, flexDirection: 'row'})},
-            (layoutViewWrapper(this.oldDoc, this.vp1)),
-            React.createElement("div", {"className": "vdivider"}),
-            (layoutViewWrapper(this.newDoc, this.vp2))
+        return (
+            <div style={{display: 'flex', flex: 1, flexDirection: 'row'}}>
+                {layoutViewWrapper(this.oldDoc, this.vp1)}
+                <div className="vdivider" />
+                {layoutViewWrapper(this.newDoc, this.vp2)}
+            </div>
         );
     }
 
-    topbar(editor, defaultTopbar) { return React.createElement("div", null, React.createElement(Topbar, {"editor": (editor), "whichTopbar": ('diff-viewer')})); }
+    topbar(editor, defaultTopbar) { return (
+        <div>
+            <Topbar editor={editor} whichTopbar="diff-viewer" />
+        </div>
+    ); }
 
     getBlockSidebarControls(blocks) { return memoize_on(this.sidebarControls, blocks[0].uniqueKey, () => {
         const [oldBlock, newBlock] = Array.from(blocks);
@@ -184,85 +200,153 @@ export default DiffViewInteraction = class DiffViewInteraction extends EditorMod
             let left;
             const selectedBlock = (left = this.oldDoc.getBlockByKey(this.selectedBlockKey)) != null ? left : this.newDoc.getBlockByKey(this.selectedBlockKey);
             const rootComponent = selectedBlock.getRootComponent();
-            return React.createElement("div", {"className": "sidebar bootstrap", "style": ({width: 250, display: 'flex', flexDirection: 'column'})},
-                React.createElement("p", {"key": ("component-name"), "style": ({fontSize: '1.5em'})}, React.createElement("b", null, "Component Name:"), " ", (rootComponent.name)),
-                (this.addedBlocks[selectedBlock.uniqueKey] ?
-                    React.createElement("p", {"key": ("created-block-sidebar")}, "Block was created")
-                :
-                    React.createElement("div", {"key": ("mutated-block-sidebar")}, " ", (
-                        rootComponent.andChildren().map((blockInComponent, ind) => {
-                            // TODO: Show only top level blocks. Show removed block in sidebar when clicked
-                            if (this.addedBlocks[blockInComponent.uniqueKey] || this.removedBlocks[blockInComponent.uniqueKey]) { return React.createElement("div", {"key": (`empty-div-${ind}`)}); }
-                            const [oldBlock, newBlock, controls] = Array.from(this.getBlockSidebarControls(this.mutatedBlocks[blockInComponent.uniqueKey]));
+            return (
+                <div
+                    className="sidebar bootstrap"
+                    style={{width: 250, display: 'flex', flexDirection: 'column'}}>
+                    <p key="component-name" style={{fontSize: '1.5em'}}>
+                        <b>
+                            Component Name:
+                        </b>
+                        {" "}
+                        {rootComponent.name}
+                    </p>
+                    {this.addedBlocks[selectedBlock.uniqueKey] ?
+                            <p key="created-block-sidebar">
+                                Block was created
+                            </p>
+                        :
+                            <div key="mutated-block-sidebar">
+                                {" "}
+                                {rootComponent.andChildren().map((blockInComponent, ind) => {
+                                    // TODO: Show only top level blocks. Show removed block in sidebar when clicked
+                                    if (this.addedBlocks[blockInComponent.uniqueKey] || this.removedBlocks[blockInComponent.uniqueKey]) { return <div key={`empty-div-${ind}`} />; }
+                                    const [oldBlock, newBlock, controls] = Array.from(this.getBlockSidebarControls(this.mutatedBlocks[blockInComponent.uniqueKey]));
 
-                            const blockTitle = [React.createElement("p", {"key": (blockInComponent.name), "style": ({fontSize: '1.2em'})}, React.createElement("b", null, "Block Name:"), " ", (blockInComponent.name))];
-                            const differences = controls.map((...args) => {
-                                let isNewDynamic, isOldDynamic;
-                                const [oldSpec, newSpec] = Array.from(args[0]), i = args[1];
-                                const {
-                                    attr
-                                } = oldSpec;
+                                    const blockTitle = [<p key={blockInComponent.name} style={{fontSize: '1.2em'}}>
+                                        <b>
+                                            Block Name:
+                                        </b>
+                                        {" "}
+                                        {blockInComponent.name}
+                                    </p>];
+                                    const differences = controls.map((...args) => {
+                                        let isNewDynamic, isOldDynamic;
+                                        const [oldSpec, newSpec] = Array.from(args[0]), i = args[1];
+                                        const {
+                                            attr
+                                        } = oldSpec;
 
-                                if (oldBlock[attr] instanceof GenericDynamicable) {
-                                    [isOldDynamic, isNewDynamic] = Array.from([oldBlock[attr].isDynamic, newBlock[attr].isDynamic]);
-                                } else {
-                                    [isOldDynamic, isNewDynamic] = Array.from([false, false]);
-                                }
+                                        if (oldBlock[attr] instanceof GenericDynamicable) {
+                                            [isOldDynamic, isNewDynamic] = Array.from([oldBlock[attr].isDynamic, newBlock[attr].isDynamic]);
+                                        } else {
+                                            [isOldDynamic, isNewDynamic] = Array.from([false, false]);
+                                        }
 
-                                const [oldControl, old_react_key] = Array.from(controlFromSpec(oldSpec, oldBlock, this.linkAttrFromBlock(oldBlock), i));
-                                const [newControl, new_react_key] = Array.from(controlFromSpec(newSpec, newBlock, this.linkAttrFromBlock(newBlock), i));
-                                return React.createElement("div", {"key": (`control-container-${i}`)},
-                                    (([
-                                        [oldBlock, isOldDynamic, oldControl, "#BABABA", `old-${old_react_key}`],
-                                        [newBlock, isNewDynamic, newControl, "inherit", `new-${new_react_key}`]
-                                        ]).map((...args1) => {
-                                            const [block, isDyn, control, color, key] = Array.from(args1[0]);
-                                            return React.createElement("div", {"style": ({backgroundColor: color}), "key": (`div-${key}`)},
-                                                React.createElement(ReactWrapper, {"key": (key)}, (control)),
-                                                (isOldDynamic !== isNewDynamic ? React.createElement("p", {"key": (`dynamic-${key}`)}, React.createElement("b", null, "Dynamic:"), " ", (isDyn.toString())) : undefined),
-                                                (isDyn ? React.createElement("p", {"key": (`code-${key}`)}, React.createElement("b", null, "Code:"), " ", (block[attr].code)) : undefined)
-                                            );
-                                    }))
-                                );
-                            });
+                                        const [oldControl, old_react_key] = Array.from(controlFromSpec(oldSpec, oldBlock, this.linkAttrFromBlock(oldBlock), i));
+                                        const [newControl, new_react_key] = Array.from(controlFromSpec(newSpec, newBlock, this.linkAttrFromBlock(newBlock), i));
+                                        return (
+                                            <div key={`control-container-${i}`}>
+                                                {([
+                                                        [oldBlock, isOldDynamic, oldControl, "#BABABA", `old-${old_react_key}`],
+                                                        [newBlock, isNewDynamic, newControl, "inherit", `new-${new_react_key}`]
+                                                        ]).map((...args1) => {
+                                                            const [block, isDyn, control, color, key] = Array.from(args1[0]);
+                                                            return (
+                                                                <div style={{backgroundColor: color}} key={`div-${key}`}>
+                                                                    <ReactWrapper key={key}>
+                                                                        {control}
+                                                                    </ReactWrapper>
+                                                                    {isOldDynamic !== isNewDynamic ? <p key={`dynamic-${key}`}>
+                                                                        <b>
+                                                                            Dynamic:
+                                                                        </b>
+                                                                        {" "}
+                                                                        {isDyn.toString()}
+                                                                    </p> : undefined}
+                                                                    {isDyn ? <p key={`code-${key}`}>
+                                                                        <b>
+                                                                            Code:
+                                                                        </b>
+                                                                        {" "}
+                                                                        {block[attr].code}
+                                                                    </p> : undefined}
+                                                                </div>
+                                                            );
+                                                    })}
+                                            </div>
+                                        );
+                                    });
 
-                            let style = {};
-                            if (blockInComponent.isEqual(selectedBlock)) { style = _l.extend({}, style, {backgroundColor: "#AED1D0"}); }
-                            if (!_l.isEmpty(differences)) { return React.createElement("div", {"key": (`diffs-parent-${ind}`), "style": (style)}, (blockTitle.concat(differences))); } else { return React.createElement("div", {"key": (`empty-div-${ind}`)}); }
-                    })
-                    ), " ")
-                )
+                                    let style = {};
+                                    if (blockInComponent.isEqual(selectedBlock)) { style = _l.extend({}, style, {backgroundColor: "#AED1D0"}); }
+                                    if (!_l.isEmpty(differences)) { return (
+                                        <div key={`diffs-parent-${ind}`} style={style}>
+                                            {blockTitle.concat(differences)}
+                                        </div>
+                                    ); } else { return <div key={`empty-div-${ind}`} />; }
+                            })}
+                                {" "}
+                            </div>}
+                </div>
             );
         } else {
             const blackListedProperties = ['intentionallyMessWithUser', 'version', 'metaserver_id'];
-            return React.createElement("div", {"className": "sidebar bootstrap", "style": ({width: 250, display: 'flex', flexDirection: 'column'})},
-                React.createElement("b", {"key": ("title")}, "Select a block to see its diff"),
-                React.createElement("br", {"key": ("br")}),
-                React.createElement("b", {"key": ("subtitle")}, "Doc Level Differences:"),
-                (!_l.isEmpty(_l.values(this.removedBlocks)) ?
-                    React.createElement("div", {"key": ("removed-blocks")},
-                        React.createElement("p", null, React.createElement("b", null, "Removed blocks:")),
-                        (_l.values(this.removedBlocks).map((...args) => { const [removedBlock] = Array.from(args[0]); return React.createElement("p", {"key": (removedBlock.name)}, (removedBlock.name)); }))
-                    ) : undefined
-                ),
-
-                React.createElement("div", {"key": ("body")}, (
-                    _l.keys(_l.omit(this.oldDoc.properties, blackListedProperties))
-                        .map(prop => ({oldVal: this.oldDoc[prop], newVal: this.newDoc[prop], propLabel: prop}))
-                        .filter(({oldVal, newVal}) => {
-                            return (oldVal !== newVal) && ["boolean", "string", "number"].includes(typeof newVal);
-                    })
-                        .map(({propLabel, oldVal, newVal}, i) => {
-                            return React.createElement("div", {"key": (propLabel)},
-                                React.createElement("b", {"style": ({fontSize: '1.3em'})}, (propLabel), ":"),
-                                React.createElement("div", {"style": ({paddingLeft: '25px'})},
-                                    React.createElement("b", null, "Old value:"), " ", (oldVal ? oldVal.toString() : "not set"),
-                                    React.createElement("br", null),
-                                    React.createElement("b", null, "New value:"), " ", (newVal ? newVal.toString() : "not set")
-                                )
-                            );
-                    })
-                ))
+            return (
+                <div
+                    className="sidebar bootstrap"
+                    style={{width: 250, display: 'flex', flexDirection: 'column'}}>
+                    <b key="title">
+                        Select a block to see its diff
+                    </b>
+                    <br key="br" />
+                    <b key="subtitle">
+                        Doc Level Differences:
+                    </b>
+                    {!_l.isEmpty(_l.values(this.removedBlocks)) ?
+                            <div key="removed-blocks">
+                                <p>
+                                    <b>
+                                        Removed blocks:
+                                    </b>
+                                </p>
+                                {_l.values(this.removedBlocks).map((...args) => { const [removedBlock] = Array.from(args[0]); return (
+                                    <p key={removedBlock.name}>
+                                        {removedBlock.name}
+                                    </p>
+                                ); })}
+                            </div> : undefined}
+                    <div key="body">
+                        {_l.keys(_l.omit(this.oldDoc.properties, blackListedProperties))
+                            .map(prop => ({oldVal: this.oldDoc[prop], newVal: this.newDoc[prop], propLabel: prop}))
+                            .filter(({oldVal, newVal}) => {
+                                return (oldVal !== newVal) && ["boolean", "string", "number"].includes(typeof newVal);
+                        })
+                            .map(({propLabel, oldVal, newVal}, i) => {
+                                return (
+                                    <div key={propLabel}>
+                                        <b style={{fontSize: '1.3em'}}>
+                                            {propLabel}
+                                            :
+                                        </b>
+                                        <div style={{paddingLeft: '25px'}}>
+                                            <b>
+                                                Old value:
+                                            </b>
+                                            {" "}
+                                            {oldVal ? oldVal.toString() : "not set"}
+                                            <br />
+                                            <b>
+                                                New value:
+                                            </b>
+                                            {" "}
+                                            {newVal ? newVal.toString() : "not set"}
+                                        </div>
+                                    </div>
+                                );
+                        })}
+                    </div>
+                </div>
             );
         }
     }

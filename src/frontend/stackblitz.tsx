@@ -16,12 +16,16 @@ import { default as StackBlitzSDK } from '@stackblitz/sdk'; // ES6 `export defau
 
 export default StackBlitz = createReactClass({
     render() {
-        return React.createElement("div", {"ref": "sb_mount_node", "style": (_l.extend({}, this.props.style, {
-                overflow: 'hidden',
-                height: '100%'
-                // overflow:hidden + funky height are to hide stackblitz bar on the bottom
-            }))},
-            React.createElement("div", {"ref": (node => { return this.node = node; })})
+        return (
+            <div
+                ref="sb_mount_node"
+                style={_l.extend({}, this.props.style, {
+                        overflow: 'hidden',
+                        height: '100%'
+                        // overflow:hidden + funky height are to hide stackblitz bar on the bottom
+                    })}>
+                <div ref={node => { return this.node = node; }} />
+            </div>
         );
     },
 

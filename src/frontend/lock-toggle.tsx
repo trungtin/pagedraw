@@ -13,8 +13,17 @@ export default createReactClass({
     displayName: 'LockToggle',
 
     render() {
-        const checkedIcon = React.createElement("i", {"className": "locker material-icons md-14 md-dark"}, "lock_outline");
-        var uncheckedIcon = (uncheckedIcon = React.createElement("i", {"className": "locker material-icons md-14 md-dark"}, "lock_open"));
-        return React.createElement(ToggleIcon, {"valueLink": (this.props.valueLink), "checkedIcon": (checkedIcon), "uncheckedIcon": (uncheckedIcon)});
+        const checkedIcon = <i className="locker material-icons md-14 md-dark">
+            lock_outline
+        </i>;
+        var uncheckedIcon = (uncheckedIcon = <i className="locker material-icons md-14 md-dark">
+            lock_open
+        </i>);
+        return (
+            <ToggleIcon
+                valueLink={this.props.valueLink}
+                checkedIcon={checkedIcon}
+                uncheckedIcon={uncheckedIcon} />
+        );
     }
 });

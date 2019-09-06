@@ -22,43 +22,48 @@ defaultExport.EditorMode = (EditorMode = class EditorMode {
         // Implement me in subclasses!
 
     topbar(editor, defaultTopbar) {
-        return React.createElement("div", null, React.createElement(Topbar, {"editor": (editor), "whichTopbar": (defaultTopbar)}));
+        return (
+            <div>
+                <Topbar editor={editor} whichTopbar={defaultTopbar} />
+            </div>
+        );
     }
 
     canvas(editor) {
         // Implment me in subclasses!
-        return React.createElement("div", null);
+        return <div />;
     }
 
     sidebar(editor) {
-        return React.createElement(Sidebar, { 
-            "editor": (editor),  
-            "value": (editor.getSelectedBlocks()),  
-            "selectBlocks": (editor.selectBlocks),  
-            "editorCache": (editor.editorCache),  
-            "sidebarMode": "draw",  
-            "doc": (editor.doc),  
-            "setEditorMode": (editor.setEditorMode),  
-            "onChange": (editor.handleDocChanged)
-            });
+        return (
+            <Sidebar
+                editor={editor}
+                value={editor.getSelectedBlocks()}
+                selectBlocks={editor.selectBlocks}
+                editorCache={editor.editorCache}
+                sidebarMode="draw"
+                doc={editor.doc}
+                setEditorMode={editor.setEditorMode}
+                onChange={editor.handleDocChanged} />
+        );
     }
 
     leftbar(editor) {
-        return React.createElement(React.Fragment, null,
-            React.createElement(LayerList, { 
-                "doc": (editor.doc),  
-                "selectedBlocks": (editor.getSelectedBlocks()),  
-                "onBlocksSelected": (editor.handleLayerListSelectedBlocks),  
-                "onLayerItemMouseDown": (editor.setEditorStateToDefault),  
-                "highlightedBlock": (editor.highlightedBlock),  
-                "setHighlightedblock": (editor.setHighlightedblock),  
-                "onChange": (editor.handleDocChanged)}),
-
-            ((editor.errors.length > 0) || (editor.warnings.length > 0) ?
-                React.createElement("div", {"style": ({maxHeight: 314})},
-                    React.createElement(ErrorSidebar, {"errors": (editor.errors), "warnings": (editor.warnings)})
-                ) : undefined
-            )
+        return (
+            <React.Fragment>
+                <LayerList
+                    doc={editor.doc}
+                    selectedBlocks={editor.getSelectedBlocks()}
+                    onBlocksSelected={editor.handleLayerListSelectedBlocks}
+                    onLayerItemMouseDown={editor.setEditorStateToDefault}
+                    highlightedBlock={editor.highlightedBlock}
+                    setHighlightedblock={editor.setHighlightedblock}
+                    onChange={editor.handleDocChanged} />
+                {(editor.errors.length > 0) || (editor.warnings.length > 0) ?
+                        <div style={{maxHeight: 314}}>
+                            <ErrorSidebar errors={editor.errors} warnings={editor.warnings} />
+                        </div> : undefined}
+            </React.Fragment>
         );
     }
 

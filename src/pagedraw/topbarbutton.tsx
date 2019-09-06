@@ -13,358 +13,360 @@ import createReactClass from 'create-react-class';
 export default Topbarbutton = createReactClass({
     displayName: 'Topbarbutton',
     render() {
-        return React.createElement("div", {"className": "topbarbutton"},
-          React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.topbarbutton {
-    display: flex;
-    flex-grow: 1;
-}
+        return (
+            <div className="topbarbutton">
+                <style
+                    dangerouslySetInnerHTML={{__html: `\
+          .topbarbutton {
+              display: flex;
+              flex-grow: 1;
+          }
 
-.topbarbutton-0-0 {
-    display: flex;
-    flex-grow: 1;
-}
+          .topbarbutton-0-0 {
+              display: flex;
+              flex-grow: 1;
+          }
 
-.topbarbutton-_active-6 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    padding-top: 8px;
-    padding-bottom: 6px;
-}
+          .topbarbutton-_active-6 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              padding-top: 8px;
+              padding-bottom: 6px;
+          }
 
-.topbarbutton-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-}
+          .topbarbutton-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              justify-content: center;
+          }
 
-.topbarbutton-rectangle_4 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 2px;
-    padding-bottom: 1px;
-    border-radius: 4px;
-    background: rgb(224, 224, 224);
-    border: 1px solid #979797;
-}
+          .topbarbutton-rectangle_4 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 2px;
+              padding-bottom: 1px;
+              border-radius: 4px;
+              background: rgb(224, 224, 224);
+              border: 1px solid #979797;
+          }
 
-.topbarbutton-0-0-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 15px;
-    padding-right: 16px;
-}
+          .topbarbutton-0-0-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 15px;
+              padding-right: 16px;
+          }
 
-.topbarbutton-image-5 {
-    width: 21px;
-    height: 21px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+          .topbarbutton-image-5 {
+              width: 21px;
+              height: 21px;
+              flex-shrink: 0;
+              border-width: 0px;
+          }
 
-.topbarbutton-0-0-0-1 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 6px;
-}
+          .topbarbutton-0-0-0-1 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 6px;
+          }
 
-.topbarbutton-push_to_github_-9 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
-    color: rgb(51, 51, 51);
-    font-size: 10px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: center;
-    word-wrap: break-word;
-}
+          .topbarbutton-push_to_github_-9 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
+              color: rgb(51, 51, 51);
+              font-size: 10px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: center;
+              word-wrap: break-word;
+          }
 
-.topbarbutton-_hover-6 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    padding-top: 8px;
-    padding-bottom: 6px;
-}
+          .topbarbutton-_hover-6 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              padding-top: 8px;
+              padding-bottom: 6px;
+          }
 
-.topbarbutton-0-0-1-0 {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-}
+          .topbarbutton-0-0-1-0 {
+              display: flex;
+              flex-shrink: 0;
+              justify-content: center;
+          }
 
-.topbarbutton-rectangle_43 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 3px;
-    padding-bottom: 2px;
-    border-radius: 4px;
-    background: rgb(236, 236, 236);
-}
+          .topbarbutton-rectangle_43 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 3px;
+              padding-bottom: 2px;
+              border-radius: 4px;
+              background: rgb(236, 236, 236);
+          }
 
-.topbarbutton-0-0-1-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 16px;
-    padding-right: 17px;
-}
+          .topbarbutton-0-0-1-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 16px;
+              padding-right: 17px;
+          }
 
-.topbarbutton-image-2 {
-    width: 21px;
-    height: 21px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+          .topbarbutton-image-2 {
+              width: 21px;
+              height: 21px;
+              flex-shrink: 0;
+              border-width: 0px;
+          }
 
-.topbarbutton-0-0-1-1 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 6px;
-}
+          .topbarbutton-0-0-1-1 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 6px;
+          }
 
-.topbarbutton-push_to_github_-0 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
-    color: rgb(51, 51, 51);
-    font-size: 10px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: center;
-    word-wrap: break-word;
-}
+          .topbarbutton-push_to_github_-0 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
+              color: rgb(51, 51, 51);
+              font-size: 10px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: center;
+              word-wrap: break-word;
+          }
 
-.topbarbutton-a-6 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 8px;
-    padding-bottom: 6px;
-    flex-grow: 1;
-}
+          .topbarbutton-a-6 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 8px;
+              padding-bottom: 6px;
+              flex-grow: 1;
+          }
 
-.topbarbutton-0-0-2-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-}
+          .topbarbutton-0-0-2-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              justify-content: center;
+          }
 
-.topbarbutton-rectangle_43-0 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 3px;
-    padding-bottom: 2px;
-    border-radius: 4px;
-    background: rgb(255, 255, 255);
-}
+          .topbarbutton-rectangle_43-0 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 3px;
+              padding-bottom: 2px;
+              border-radius: 4px;
+              background: rgb(255, 255, 255);
+          }
 
-.topbarbutton-0-0-2-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 16px;
-    padding-right: 17px;
-}
+          .topbarbutton-0-0-2-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 16px;
+              padding-right: 17px;
+          }
 
-.topbarbutton-image-6 {
-    width: 21px;
-    height: 21px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+          .topbarbutton-image-6 {
+              width: 21px;
+              height: 21px;
+              flex-shrink: 0;
+              border-width: 0px;
+          }
 
-.topbarbutton-0-0-2-0-1 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 6px;
-}
+          .topbarbutton-0-0-2-0-1 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 6px;
+          }
 
-.topbarbutton-push_to_github_-1 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
-    color: rgb(51, 51, 51);
-    font-size: 10px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: center;
-    word-wrap: break-word;
-}
+          .topbarbutton-push_to_github_-1 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
+              color: rgb(51, 51, 51);
+              font-size: 10px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: center;
+              word-wrap: break-word;
+          }
 
-.topbarbutton-disabled-8 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 8px;
-    padding-bottom: 6px;
-    flex-grow: 1;
-}
+          .topbarbutton-disabled-8 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 8px;
+              padding-bottom: 6px;
+              flex-grow: 1;
+          }
 
-.topbarbutton-1-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    justify-content: center;
-}
+          .topbarbutton-1-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              justify-content: center;
+          }
 
-.topbarbutton-rectangle_43-6 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 3px;
-    padding-bottom: 2px;
-    border-radius: 4px;
-    background: rgb(238, 238, 238);
-}
+          .topbarbutton-rectangle_43-6 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 3px;
+              padding-bottom: 2px;
+              border-radius: 4px;
+              background: rgb(238, 238, 238);
+          }
 
-.topbarbutton-1-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 16px;
-    padding-right: 17px;
-}
+          .topbarbutton-1-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+              padding-left: 16px;
+              padding-right: 17px;
+          }
 
-.topbarbutton-image-7 {
-    width: 21px;
-    height: 21px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+          .topbarbutton-image-7 {
+              width: 21px;
+              height: 21px;
+              flex-shrink: 0;
+              border-width: 0px;
+          }
 
-.topbarbutton-1-0-1 {
-    display: flex;
-    flex-shrink: 0;
-    margin-top: 6px;
-}
+          .topbarbutton-1-0-1 {
+              display: flex;
+              flex-shrink: 0;
+              margin-top: 6px;
+          }
 
-.topbarbutton-text_2 {
-    flex-grow: 1;
-    flex-basis: 0px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
-    color: rgb(163, 161, 161);
-    font-size: 10px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: center;
-    word-wrap: break-word;
-}
+          .topbarbutton-text_2 {
+              flex-grow: 1;
+              flex-basis: 0px;
+              font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', sans-serif;
+              color: rgb(163, 161, 161);
+              font-size: 10px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: center;
+              word-wrap: break-word;
+          }
 
-* {
-    box-sizing: border-box;
-}
+          * {
+              box-sizing: border-box;
+          }
 
-body {
-    margin: 0;
-}
+          body {
+              margin: 0;
+          }
 
-button:hover {
-    cursor: pointer;
-}
+          button:hover {
+              cursor: pointer;
+          }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+          a {
+              text-decoration: none;
+              color: inherit;
+          }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+          .pd-onhover-parent >.pd-onhover {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+          .pd-onhover-parent:hover > * {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+          .pd-onhover-parent:hover > .pd-onhover {
+              display: flex;
+          }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+          .pd-onactive-parent > .pd-onactive {
+              display: none;
+          }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+          .pd-onactive-parent:active > * {
+              display: none;
+          }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+          .pd-onactive-parent:active > .pd-onactive {
+              display: flex;
+          }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-          ( ((this.props.disabled ? 'Disabled' : 'Enabled') === "Enabled") ?
-              React.createElement("div", {"className": "pd-onactive-parent pd-onhover-parent topbarbutton-0-0"},
-                  React.createElement("div", {"className": "pd-onactive topbarbutton-_active-6"},
-                      React.createElement("div", {"className": "topbarbutton-0-0-0-0"},
-                          React.createElement("div", {"onMouseUp": (this.props.onClick), "className": "topbarbutton-rectangle_4"},
-                              React.createElement("div", {"className": "topbarbutton-0-0-0-0-0-0"},
-                                  React.createElement("img", {"src": (this.props.image), "className": "topbarbutton-image-5"}) 
-                              )
-                          )
-                      ),
-                      React.createElement("div", {"className": "topbarbutton-0-0-0-1"},
-                          React.createElement("div", {"className": "topbarbutton-push_to_github_-9"},
-                              ( this.props.text )
-                          )
-                      )
-                  ),
-                  React.createElement("div", {"className": "pd-onhover topbarbutton-_hover-6"},
-                      React.createElement("div", {"className": "topbarbutton-0-0-1-0"},
-                          React.createElement("div", {"className": "topbarbutton-rectangle_43"},
-                              React.createElement("div", {"className": "topbarbutton-0-0-1-0-0-0"},
-                                  React.createElement("img", {"src": (this.props.image), "className": "topbarbutton-image-2"}) 
-                              )
-                          )
-                      ),
-                      React.createElement("div", {"className": "topbarbutton-0-0-1-1"},
-                          React.createElement("div", {"className": "topbarbutton-push_to_github_-0"},
-                              ( this.props.text )
-                          )
-                      )
-                  ),
-                  ( (('A') === "A") ?
-                      React.createElement("div", {"className": "topbarbutton-a-6"},
-                          React.createElement("div", {"className": "topbarbutton-0-0-2-0-0"},
-                              React.createElement("div", {"onMouseDown": (this.props.onClick), "className": "topbarbutton-rectangle_43-0"},
-                                  React.createElement("div", {"className": "topbarbutton-0-0-2-0-0-0-0"},
-                                      React.createElement("img", {"src": (this.props.image), "className": "topbarbutton-image-6"}) 
-                                  )
-                              )
-                          ),
-                          React.createElement("div", {"className": "topbarbutton-0-0-2-0-1"},
-                              React.createElement("div", {"className": "topbarbutton-push_to_github_-1"},
-                                  ( this.props.text )
-                              )
-                          )
-                      ) : undefined
-                  )
-              ) : undefined
-          ),
-          ( ((this.props.disabled ? 'Disabled' : 'Enabled') === "Disabled") ?
-              React.createElement("div", {"className": "topbarbutton-disabled-8"},
-                  React.createElement("div", {"className": "topbarbutton-1-0-0"},
-                      React.createElement("div", {"className": "topbarbutton-rectangle_43-6"},
-                          React.createElement("div", {"className": "topbarbutton-1-0-0-0-0"},
-                              React.createElement("img", {"src": (this.props.image), "className": "topbarbutton-image-7"}) 
-                          )
-                      )
-                  ),
-                  React.createElement("div", {"className": "topbarbutton-1-0-1"},
-                      React.createElement("div", {"className": "topbarbutton-text_2"}, ( this.props.text ))
-                  )
-              ) : undefined
-          )
-      );
+          .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+              display: none;
+          }\
+          `}} />
+                {((this.props.disabled ? 'Disabled' : 'Enabled') === "Enabled") ?
+                      <div className="pd-onactive-parent pd-onhover-parent topbarbutton-0-0">
+                          <div className="pd-onactive topbarbutton-_active-6">
+                              <div className="topbarbutton-0-0-0-0">
+                                  <div onMouseUp={this.props.onClick} className="topbarbutton-rectangle_4">
+                                      <div className="topbarbutton-0-0-0-0-0-0">
+                                          <img src={this.props.image} className="topbarbutton-image-5" />
+                                      </div>
+                                  </div>
+                              </div>
+                              <div className="topbarbutton-0-0-0-1">
+                                  <div className="topbarbutton-push_to_github_-9">
+                                      {this.props.text}
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="pd-onhover topbarbutton-_hover-6">
+                              <div className="topbarbutton-0-0-1-0">
+                                  <div className="topbarbutton-rectangle_43">
+                                      <div className="topbarbutton-0-0-1-0-0-0">
+                                          <img src={this.props.image} className="topbarbutton-image-2" />
+                                      </div>
+                                  </div>
+                              </div>
+                              <div className="topbarbutton-0-0-1-1">
+                                  <div className="topbarbutton-push_to_github_-0">
+                                      {this.props.text}
+                                  </div>
+                              </div>
+                          </div>
+                          {(('A') === "A") ?
+                                  <div className="topbarbutton-a-6">
+                                      <div className="topbarbutton-0-0-2-0-0">
+                                          <div onMouseDown={this.props.onClick} className="topbarbutton-rectangle_43-0">
+                                              <div className="topbarbutton-0-0-2-0-0-0-0">
+                                                  <img src={this.props.image} className="topbarbutton-image-6" />
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="topbarbutton-0-0-2-0-1">
+                                          <div className="topbarbutton-push_to_github_-1">
+                                              {this.props.text}
+                                          </div>
+                                      </div>
+                                  </div> : undefined}
+                      </div> : undefined}
+                {((this.props.disabled ? 'Disabled' : 'Enabled') === "Disabled") ?
+                      <div className="topbarbutton-disabled-8">
+                          <div className="topbarbutton-1-0-0">
+                              <div className="topbarbutton-rectangle_43-6">
+                                  <div className="topbarbutton-1-0-0-0-0">
+                                      <img src={this.props.image} className="topbarbutton-image-7" />
+                                  </div>
+                              </div>
+                          </div>
+                          <div className="topbarbutton-1-0-1">
+                              <div className="topbarbutton-text_2">
+                                  {this.props.text}
+                              </div>
+                          </div>
+                      </div> : undefined}
+            </div>
+        );
     }
 });

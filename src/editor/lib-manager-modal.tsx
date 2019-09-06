@@ -88,122 +88,224 @@ const LibManager = createReactClass({
 
     render() {
         if (this.state.confirm != null) {
-            return React.createElement(React.Fragment, null,
-                React.createElement(Modal.Header, {"closeButton": true},
-                    React.createElement(Modal.Title, null, (this.state.confirm.title != null ? this.state.confirm.title : 'Are you sure?'))
-                ),
-                React.createElement(Modal.Body, null,
-                    (this.state.confirm.body)
-                ),
-                React.createElement(Modal.Footer, null,
-                    React.createElement(PdButtonOne, {"onClick": (() => this.setState({confirm: null}))}, (this.state.confirm.no != null ? this.state.confirm.no : 'Back')),
-                    React.createElement(PdButtonOne, {"type": (this.state.confirm.yesType != null ? this.state.confirm.yesType : "primary"), "onClick": (this.state.confirm.callback)}, (this.state.confirm.yes != null ? this.state.confirm.yes : 'Yes'))
-                )
+            return (
+                <React.Fragment>
+                    <Modal.Header closeButton={true}>
+                        <Modal.Title>
+                            {this.state.confirm.title != null ? this.state.confirm.title : 'Are you sure?'}
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {this.state.confirm.body}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <PdButtonOne onClick={() => this.setState({confirm: null})}>
+                            {this.state.confirm.no != null ? this.state.confirm.no : 'Back'}
+                        </PdButtonOne>
+                        <PdButtonOne
+                            type={this.state.confirm.yesType != null ? this.state.confirm.yesType : "primary"}
+                            onClick={this.state.confirm.callback}>
+                            {this.state.confirm.yes != null ? this.state.confirm.yes : 'Yes'}
+                        </PdButtonOne>
+                    </Modal.Footer>
+                </React.Fragment>
             );
         }
 
-        return React.createElement(React.Fragment, null,
-            React.createElement(Modal.Header, {"closeButton": true},
-                React.createElement(Modal.Title, null, "My External Libraries")
-            ),
-            React.createElement(Modal.Body, null,
-                (this.renderBody())
-            ),
-            React.createElement(Modal.Footer, null,
-                React.createElement(PdButtonOne, {"onClick": (this.props.closeHandler)}, "Close")
-            )
+        return (
+            <React.Fragment>
+                <Modal.Header closeButton={true}>
+                    <Modal.Title>
+                        My External Libraries
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {this.renderBody()}
+                </Modal.Body>
+                <Modal.Footer>
+                    <PdButtonOne onClick={this.props.closeHandler}>
+                        Close
+                    </PdButtonOne>
+                </Modal.Footer>
+            </React.Fragment>
         );
     },
 
     renderBody() {
-        if ((this.state.serverSnapshot.editableLibraryIds == null) || (this.state.serverSnapshot.publicLibraryIds == null)) { return React.createElement(PdSpinner, null); }
+        if ((this.state.serverSnapshot.editableLibraryIds == null) || (this.state.serverSnapshot.publicLibraryIds == null)) { return <PdSpinner />; }
 
         const dev_lib = this.props.doc.libCurrentlyInDevMode();
-        return React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column', justifyContent: 'space-between'})},
-            React.createElement("div", null,
-                (this.state.cliAlive ? React.createElement("div", {"style": ({color: 'green', marginBottom: '6px'})}, "Detected ", React.createElement("code", null, "pagedraw develop"), " CLI server :)") : undefined),
-                (dev_lib && !this.state.cliAlive ? React.createElement("div", {"style": ({color: 'orange', marginBottom: '6px'})}, "You have a library in dev mode but your CLI is not running ", React.createElement("code", null, "pagedraw develop"), " :(") : undefined),
-                (this.state.uploadingLib ? React.createElement("div", null, React.createElement("div", {"style": ({marginBottom: '6px'})}, "Uploading library to the Pagedraw servers"), React.createElement(PdSpinner, null)) : undefined),
-                (this.state.error ? React.createElement("div", {"style": ({color: 'red', marginBottom: '6px'})}, (this.state.error.message)) : undefined),
-                (this.props.doc.libraries.map(lib => {
-                    let vl;
-                    const publicVl = this.publicVl(lib);
-                    return React.createElement("div", {"key": (lib.uniqueKey)},
-                        React.createElement("hr", null),
-                        React.createElement("div", {"style": ({display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px'})},
-                            React.createElement("span", null, (lib.name())),
-                            (!lib.didLoad(window) ? React.createElement("span", null, "Did not load!") : undefined),
-                            (
-                                Array.from(this.state.serverSnapshot.editableLibraryIds).includes(lib.library_id) && (dev_lib !== lib) ?
-                                    React.createElement("label", {"style": ({margin: 'none'})},
-                                        React.createElement("input", {"type": "checkbox", "disabled": (this.state.doingWork || (dev_lib != null)),  
-                                            "checked": (false), "onChange": (() => this.enterDevMode(lib))}),
-                                        React.createElement("span", null, " Enter development mode")
-                                    )
-                                : Array.from(this.state.serverSnapshot.editableLibraryIds).includes(lib.library_id) && (dev_lib === lib) ?
-                                    React.createElement(React.Fragment, null,
-                                        React.createElement("label", null, "In dev mode"),
-
-                                        React.createElement("label", {"style": ({display: 'flex', flexDirection: 'column'})}, `\
-New version:\
-`, React.createElement(FormControl, {"disabled": (this.state.doingWork), "style": ({width: '100px'}), "type": "text", "placeholder": "New version", "valueLink": (this.newVersionNameVl(lib))})
-                                        ),
-                                        React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column'})},
-                                            React.createElement(PdButtonOne, {"disabled": (this.state.doingWork || !lib.didLoad(window)),  
-                                                "type": "warning", "onClick": (() => this.discardDevModeChanges(lib))}, "Discard changes"),
-                                            React.createElement(PdButtonOne, {"disabled": (this.state.doingWork || !lib.didLoad(window) || !this.state.cliAlive),  
-                                                "type": "primary", "onClick": (() => this.publishDevModeChanges(lib))}, "Publish changes")
-                                        )
-                                    )
-                                :
-                                    React.createElement("span", null, "Not owned by this project")
-                            ),
-                            (
-                                Array.from(this.state.serverSnapshot.editableLibraryIds).includes(lib.library_id) && (lib !== dev_lib) ?
-                                    React.createElement("label", {"style": ({margin: 'none'})},
-                                        React.createElement("input", {"type": "checkbox", "disabled": (this.state.doingWork || (!lib.didLoad(window))),  
-                                            "checked": (publicVl.value), "onChange": (e => publicVl.requestChange(!publicVl.value))}),
-                                        React.createElement("span", null, " Public")
-                                    ) : undefined
-                            ),
-                            React.createElement(Glyphicon, {"glyph": "remove", "onClick": (() => {
-                                return this.confirm({
-                                    body: React.createElement("span", null, "Removing this library will delete ", React.createElement("strong", null, (this.blocksOfLib(lib).length), " blocks"), " tied to it. Wish to proceed?"),
-                                    yesType: 'danger',
-                                    yes: 'Remove'
-                                }, () => {
-                                    return this.removeLibrary(lib);
-                            });
-                            }
-                            )})
-                        ),
-                        React.createElement("div", {"style": ({marginBottom: '6px'})},
-                            (lib.inDevMode ? [
-                                    React.createElement(Tooltip, {"key": "1", "position": "right", "content": ("Require path for Pagedraw generated code. Can be local or an npm package.")},
-                                        React.createElement(FormControl, {"style": ({marginRight: '10px'}), "type": "text", "placeholder": "require-path", "valueLink": (this.libVl(lib, 'devModeRequirePath'))})
-                                    ),
-                                    React.createElement("label", {"key": "2", "style": ({margin: 'none'})},
-                                        React.createElement("input", {"type": "checkbox", "checked": ((vl = this.libVl(lib, 'devModeIsNodeModule')).value), "onChange": (e => vl.requestChange(!vl.value))}),
-                                        React.createElement("span", null, "Is a node module")
-                                    )
-                            ] :
-                                React.createElement("span", null, (lib.isNodeModule() ? 'Node module import path:' : 'Local import path:'), React.createElement("code", null, (lib.requirePath())))
-                            )
-                        )
-                    );
-                })),
-                React.createElement("hr", null)
-            ),
-            React.createElement("div", {"style": ({display: 'flex', justifyContent: 'space-between'})},
-                React.createElement("div", null,
-                    ((dev_lib == null) ? React.createElement(FormControl, {"style": ({marginRight: '10px'}), "type": "text", "placeholder": "New lib name", "valueLink": (this.linkState('newLibName'))}) : undefined),
-                    React.createElement(Tooltip, {"position": "right", "content": ((dev_lib != null) ? "You can't create a new lib while you have another in dev mode." : undefined)},
-                        React.createElement(PdButtonOne, {"type": "primary",  
-                            "disabled": (_l.isEmpty(this.state.newLibName) || this.state.doingWork || (dev_lib != null)),  
-                            "onClick": (this.createLibrary)}, "Create Library")
-                    )
-                )
-            )
+        return (
+            <div
+                style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                <div>
+                    {this.state.cliAlive ? <div style={{color: 'green', marginBottom: '6px'}}>
+                        {"Detected "}
+                        <code>
+                            pagedraw develop
+                        </code>
+                        {" CLI server :)"}
+                    </div> : undefined}
+                    {dev_lib && !this.state.cliAlive ? <div style={{color: 'orange', marginBottom: '6px'}}>
+                        {"You have a library in dev mode but your CLI is not running "}
+                        <code>
+                            pagedraw develop
+                        </code>
+                        {" :("}
+                    </div> : undefined}
+                    {this.state.uploadingLib ? <div>
+                        <div style={{marginBottom: '6px'}}>
+                            Uploading library to the Pagedraw servers
+                        </div>
+                        <PdSpinner />
+                    </div> : undefined}
+                    {this.state.error ? <div style={{color: 'red', marginBottom: '6px'}}>
+                        {this.state.error.message}
+                    </div> : undefined}
+                    {this.props.doc.libraries.map(lib => {
+                            let vl;
+                            const publicVl = this.publicVl(lib);
+                            return (
+                                <div key={lib.uniqueKey}>
+                                    <hr />
+                                    <div
+                                        style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px'}}>
+                                        <span>
+                                            {lib.name()}
+                                        </span>
+                                        {!lib.didLoad(window) ? <span>
+                                            Did not load!
+                                        </span> : undefined}
+                                        {Array.from(this.state.serverSnapshot.editableLibraryIds).includes(lib.library_id) && (dev_lib !== lib) ?
+                                            <label style={{margin: 'none'}}>
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={this.state.doingWork || (dev_lib != null)}
+                                                    checked={false}
+                                                    onChange={() => this.enterDevMode(lib)} />
+                                                <span>
+                                                    {" Enter development mode"}
+                                                </span>
+                                            </label>
+                                        : Array.from(this.state.serverSnapshot.editableLibraryIds).includes(lib.library_id) && (dev_lib === lib) ?
+                                            <React.Fragment>
+                                                <label>
+                                                    In dev mode
+                                                </label>
+                                                <label style={{display: 'flex', flexDirection: 'column'}}>
+                                                    {`\
+            New version:\
+            `}
+                                                    <FormControl
+                                                        disabled={this.state.doingWork}
+                                                        style={{width: '100px'}}
+                                                        type="text"
+                                                        placeholder="New version"
+                                                        valueLink={this.newVersionNameVl(lib)} />
+                                                </label>
+                                                <div style={{display: 'flex', flexDirection: 'column'}}>
+                                                    <PdButtonOne
+                                                        disabled={this.state.doingWork || !lib.didLoad(window)}
+                                                        type="warning"
+                                                        onClick={() => this.discardDevModeChanges(lib)}>
+                                                        Discard changes
+                                                    </PdButtonOne>
+                                                    <PdButtonOne
+                                                        disabled={this.state.doingWork || !lib.didLoad(window) || !this.state.cliAlive}
+                                                        type="primary"
+                                                        onClick={() => this.publishDevModeChanges(lib)}>
+                                                        Publish changes
+                                                    </PdButtonOne>
+                                                </div>
+                                            </React.Fragment>
+                                        :
+                                            <span>
+                                                Not owned by this project
+                                            </span>}
+                                        {Array.from(this.state.serverSnapshot.editableLibraryIds).includes(lib.library_id) && (lib !== dev_lib) ?
+                                            <label style={{margin: 'none'}}>
+                                                <input
+                                                    type="checkbox"
+                                                    disabled={this.state.doingWork || (!lib.didLoad(window))}
+                                                    checked={publicVl.value}
+                                                    onChange={e => publicVl.requestChange(!publicVl.value)} />
+                                                <span>
+                                                    {" Public"}
+                                                </span>
+                                            </label> : undefined}
+                                        <Glyphicon
+                                            glyph="remove"
+                                            onClick={() => {
+                                                return this.confirm({
+                                                    body: <span>
+                                                        {"Removing this library will delete "}
+                                                        <strong>
+                                                            {this.blocksOfLib(lib).length}
+                                                            {" blocks"}
+                                                        </strong>
+                                                        {" tied to it. Wish to proceed?"}
+                                                    </span>,
+                                                    yesType: 'danger',
+                                                    yes: 'Remove'
+                                                }, () => {
+                                                    return this.removeLibrary(lib);
+                                            });
+                                            }} />
+                                    </div>
+                                    <div style={{marginBottom: '6px'}}>
+                                        {lib.inDevMode ? [
+                                                    <Tooltip
+                                                        key="1"
+                                                        position="right"
+                                                        content="Require path for Pagedraw generated code. Can be local or an npm package.">
+                                                        <FormControl
+                                                            style={{marginRight: '10px'}}
+                                                            type="text"
+                                                            placeholder="require-path"
+                                                            valueLink={this.libVl(lib, 'devModeRequirePath')} />
+                                                    </Tooltip>,
+                                                    <label key="2" style={{margin: 'none'}}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={(vl = this.libVl(lib, 'devModeIsNodeModule')).value}
+                                                            onChange={e => vl.requestChange(!vl.value)} />
+                                                        <span>
+                                                            Is a node module
+                                                        </span>
+                                                    </label>
+                                            ] :
+                                                <span>
+                                                    {lib.isNodeModule() ? 'Node module import path:' : 'Local import path:'}
+                                                    <code>
+                                                        {lib.requirePath()}
+                                                    </code>
+                                                </span>}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    <hr />
+                </div>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div>
+                        {(dev_lib == null) ? <FormControl
+                            style={{marginRight: '10px'}}
+                            type="text"
+                            placeholder="New lib name"
+                            valueLink={this.linkState('newLibName')} /> : undefined}
+                        <Tooltip
+                            position="right"
+                            content={(dev_lib != null) ? "You can't create a new lib while you have another in dev mode." : undefined}>
+                            <PdButtonOne
+                                type="primary"
+                                disabled={_l.isEmpty(this.state.newLibName) || this.state.doingWork || (dev_lib != null)}
+                                onClick={this.createLibrary}>
+                                Create Library
+                            </PdButtonOne>
+                        </Tooltip>
+                    </div>
+                </div>
+            </div>
         );
     },
 
@@ -370,18 +472,29 @@ New version:\
 
 export default function(doc, onChange) {
     let willRefresh = false;
-    return modal.show((closeHandler => [React.createElement(LibManager, {"doc": (doc), "onChange": (onChange), "willRefresh": (willRefresh), "needsRefresh"() { return willRefresh = true; }, "closeHandler": (closeHandler)})]), (function() {
+    return modal.show((closeHandler => [<LibManager
+        doc={doc}
+        onChange={onChange}
+        willRefresh={willRefresh}
+        needsRefresh={function() { return willRefresh = true; }}
+        closeHandler={closeHandler} />]), (function() {
         if (willRefresh) {
             return window.requestAnimationFrame(() => modal.show((closeHandler => [
-                React.createElement(Modal.Header, null,
-                    React.createElement(Modal.Title, null, "About to refresh")
-                ),
-                React.createElement(Modal.Body, null, `\
-The changes you did require a refresh. Closing this window will refresh the screen.\
-`),
-                React.createElement(Modal.Footer, null,
-                    React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Ok")
-                )
+                <Modal.Header>
+                    <Modal.Title>
+                        About to refresh
+                    </Modal.Title>
+                </Modal.Header>,
+                <Modal.Body>
+                    {`\
+    The changes you did require a refresh. Closing this window will refresh the screen.\
+    `}
+                </Modal.Body>,
+                <Modal.Footer>
+                    <PdButtonOne type="primary" onClick={closeHandler}>
+                        Ok
+                    </PdButtonOne>
+                </Modal.Footer>
             ]), () => window.location = window.location));
         }
     }));

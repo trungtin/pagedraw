@@ -129,18 +129,26 @@ export default Block.register('artboard', (ArtboardBlock = (function() {
             const StressTesterInteraction = require('../interactions/stress-tester');
 
             return _.compact([
-                React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => { setEditorMode(new StressTesterInteraction(this)); return onChange({fast: true}); })}, "Stress test"),
-                this.isComponent ? React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => this.becomeMultistate(onChange))}, "Make multistate") : undefined,
-                this.isComponent ? React.createElement("button", {"style": ({width: '100%'}), "onClick": (() => this.becomeHoverable(onChange))}, "Make Hoverable") : undefined,
+                <button
+                    style={{width: '100%'}}
+                    onClick={() => { setEditorMode(new StressTesterInteraction(this)); return onChange({fast: true}); }}>
+                    Stress test
+                </button>,
+                this.isComponent ? <button style={{width: '100%'}} onClick={() => this.becomeMultistate(onChange)}>
+                    Make multistate
+                </button> : undefined,
+                this.isComponent ? <button style={{width: '100%'}} onClick={() => this.becomeHoverable(onChange)}>
+                    Make Hoverable
+                </button> : undefined,
 
-                React.createElement("hr", null),
+                <hr />,
 
                 // background styling
                 ...Array.from(this.fillSidebarControls()),
                 ["include color in instances/code", 'includeColorInCompilation', CheckboxControl],
                 ["cursor", "cursor", CursorControl],
 
-                React.createElement("hr", null),
+                <hr />,
 
                 // Design grid
                 // ["window dressing", "windowDressing", SelectControl({multi: false, style: 'dropdown'}, [
@@ -159,11 +167,13 @@ export default Block.register('artboard', (ArtboardBlock = (function() {
             return _l.compact([
                 ["Is page", 'is_screenfull', CheckboxControl],
                 ...Array.from((this.isComponent && !this.is_screenfull ? [
-                    React.createElement("span", {"style": ({fontSize: '12px'})}, "Instances have resizable"),
-                    React.createElement("div", {"style": ({display: 'flex', justifyContent: 'flex'})},
-                        (LeftCheckboxControl("Width", componentSpecLinkAttr('flexWidth'))),
-                        (LeftCheckboxControl("Height", componentSpecLinkAttr('flexHeight')))
-                    )
+                    <span style={{fontSize: '12px'}}>
+                        Instances have resizable
+                    </span>,
+                    <div style={{display: 'flex', justifyContent: 'flex'}}>
+                        {LeftCheckboxControl("Width", componentSpecLinkAttr('flexWidth'))}
+                        {LeftCheckboxControl("Height", componentSpecLinkAttr('flexHeight'))}
+                    </div>
                 ] : []))
             ]);
         }
@@ -213,52 +223,63 @@ export default Block.register('artboard', (ArtboardBlock = (function() {
             //    @renderWithoutWindowDressing(styles)
 
         renderWithoutWindowDressing(styles) {
-            return React.createElement("div", {"className": "expand-children", "style": ({minWidth: this.width, minHeight: this.height, position: 'relative'})},
-                React.createElement("div", {"style": ({
-                    position: 'absolute', top: -20, whiteSpace: 'pre',
-                    fontFamily: 'Open Sans',
-                    color: this.is_screenfull ? '#111' : '#aa00cc'
-                })},
-                    (this.getLabel())
-                ),
-                React.createElement("div", {"className": "expand-children", "style": (_l.extend({}, {boxShadow: '0 0 5px 2px #DEDEDE'}, styles))}),
-                (this.renderDesignGrid())
+            return (
+                <div
+                    className="expand-children"
+                    style={{minWidth: this.width, minHeight: this.height, position: 'relative'}}>
+                    <div
+                        style={{
+                            position: 'absolute', top: -20, whiteSpace: 'pre',
+                            fontFamily: 'Open Sans',
+                            color: this.is_screenfull ? '#111' : '#aa00cc'
+                        }}>
+                        {this.getLabel()}
+                    </div>
+                    <div
+                        className="expand-children"
+                        style={_l.extend({}, {boxShadow: '0 0 5px 2px #DEDEDE'}, styles)} />
+                    {this.renderDesignGrid()}
+                </div>
             );
         }
 
         renderWithWindowDressing(styles) {
-            return React.createElement("div", {"className": "expand-children", "style": ({minWidth: this.width, minHeight: this.height, position: 'relative'})},
-
-                React.createElement("div", {"style": ({
-                    position: 'absolute', top: -75, height: 75,
-                    left: 10, right: 10,
-                    backgroundImage: `url('${config.static_server}/assets/chrome-mid.png')`
-                    })}),
-
-                React.createElement("div", {"style": ({
-                    position: 'absolute', top: -75, height: 75, left: 0, right: 0,
-                    backgroundImage: `url('${config.static_server}/assets/chrome-right.png')`,
-                    backgroundRepeat: 'no-repeat', backgroundPositionX: '100%'
-                    })}),
-
-                React.createElement("div", {"style": ({
-                    position: 'absolute', top: -75, height: 75, left: 0, right: 0,
-                    backgroundImage: `url('${config.static_server}/assets/chrome-left.png')`,
-                    backgroundRepeat: 'no-repeat', backgroundPositionX: '0%'
-                    })}),
-
-                React.createElement("div", {"style": ({position: 'absolute', top: -26.7, left: 168, fontFamily: "Helvetica", fontSize: "14px", fontWeight: "lighter"})},
-                    (this.getLabel())
-                ),
-
-                React.createElement("div", {"className": "expand-children", "style": (_l.extend({
-                    boxShadow: '0 0 5px 2px #DEDEDE',
-                    borderRadius: '0 0 5px 5px',
-                    outline: '1px solid #dbdbdb',
-                    borderTopWidth: 0
-                }, styles))}),
-
-                (this.renderDesignGrid())
+            return (
+                <div
+                    className="expand-children"
+                    style={{minWidth: this.width, minHeight: this.height, position: 'relative'}}>
+                    <div
+                        style={{
+                            position: 'absolute', top: -75, height: 75,
+                            left: 10, right: 10,
+                            backgroundImage: `url('${config.static_server}/assets/chrome-mid.png')`
+                            }} />
+                    <div
+                        style={{
+                            position: 'absolute', top: -75, height: 75, left: 0, right: 0,
+                            backgroundImage: `url('${config.static_server}/assets/chrome-right.png')`,
+                            backgroundRepeat: 'no-repeat', backgroundPositionX: '100%'
+                            }} />
+                    <div
+                        style={{
+                            position: 'absolute', top: -75, height: 75, left: 0, right: 0,
+                            backgroundImage: `url('${config.static_server}/assets/chrome-left.png')`,
+                            backgroundRepeat: 'no-repeat', backgroundPositionX: '0%'
+                            }} />
+                    <div
+                        style={{position: 'absolute', top: -26.7, left: 168, fontFamily: "Helvetica", fontSize: "14px", fontWeight: "lighter"}}>
+                        {this.getLabel()}
+                    </div>
+                    <div
+                        className="expand-children"
+                        style={_l.extend({
+                            boxShadow: '0 0 5px 2px #DEDEDE',
+                            borderRadius: '0 0 5px 5px',
+                            outline: '1px solid #dbdbdb',
+                            borderTopWidth: 0
+                        }, styles)} />
+                    {this.renderDesignGrid()}
+                </div>
             );
         }
 
@@ -269,15 +290,18 @@ export default Block.register('artboard', (ArtboardBlock = (function() {
 
             // We need pointerEvents: 'none' in both of these so our clicks go through to Layout/Content editor and don't
             // stop on the overlay
-            return React.createElement("div", {"style": ({position: 'absolute', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: '100%', pointerEvents: 'none'})},
-                (__range__(0, (this.gridNumOfColumns - 1), true).map(i => {
-                    // The zIndex here has to be smaller than that of draggable
-                    const style = {backgroundColor: 'rgba(0,0,0,0.23)', zIndex: 999, flexGrow: 1, pointerEvents: 'none'};
-                    if (i > 0) {
-                        _l.extend(style, {marginLeft: this.gridGutterWidth});
-                    }
-                    return React.createElement("div", {"key": (i), "style": (style)});
-                }))
+            return (
+                <div
+                    style={{position: 'absolute', display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', height: '100%', pointerEvents: 'none'}}>
+                    {__range__(0, (this.gridNumOfColumns - 1), true).map(i => {
+                            // The zIndex here has to be smaller than that of draggable
+                            const style = {backgroundColor: 'rgba(0,0,0,0.23)', zIndex: 999, flexGrow: 1, pointerEvents: 'none'};
+                            if (i > 0) {
+                                _l.extend(style, {marginLeft: this.gridGutterWidth});
+                            }
+                            return <div key={i} style={style} />;
+                        })}
+                </div>
             );
         }
 

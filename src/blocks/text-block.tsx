@@ -128,20 +128,14 @@ export default Block.register('text', (TextBlock = (function() {
 
         specialSidebarControls(linkAttr, onChange) {
             return [
-                React.createElement("div", {"style": ({display: 'flex', flexDirection: 'row', alignItems: 'stretch'})},
-                    React.createElement("div", {"style": ({flex: 1, marginRight: 8})},
-                        React.createElement(SidebarControls.PDFontControl, { 
-                            "valueLink": (linkAttr('fontFamily')),  
-                            "doc": (this.doc),  
-                            "onChange": (onChange)
-                        })
-                    ),
-
-                    React.createElement(SidebarControls.PDColorControl, { 
-                        "valueLink": (SidebarControls.staticValueLinkTransformer(linkAttr('fontColor'))),  
-                        "color_well_style": ({height: ""})
-                    })
-                ),
+                <div style={{display: 'flex', flexDirection: 'row', alignItems: 'stretch'}}>
+                    <div style={{flex: 1, marginRight: 8}}>
+                        <SidebarControls.PDFontControl valueLink={linkAttr('fontFamily')} doc={this.doc} onChange={onChange} />
+                    </div>
+                    <SidebarControls.PDColorControl
+                        valueLink={SidebarControls.staticValueLinkTransformer(linkAttr('fontColor'))}
+                        color_well_style={{height: ""}} />
+                </div>,
 
 
                 ...Array.from(((() => {
@@ -149,25 +143,33 @@ export default Block.register('text', (TextBlock = (function() {
                     const hasCustomFontWeight = fontHasWeightVariants && (linkAttr('hasCustomFontWeight').value === true);
 
                     return [
-                        React.createElement("div", {"className": "ctrl-wrapper"},
-                            React.createElement("h5", {"className": "sidebar-ctrl-label"}, "style"),
-                            React.createElement("div", {"className": "ctrl"},
-                                React.createElement(PDStyleGuide.PdButtonGroup, {"buttons": ([
-                                        [React.createElement("i", null, "I"), 'isItalics'],
-                                        [React.createElement("u", null, "U"), 'isUnderline'],
-                                        [React.createElement("s", null, "S"), 'isStrikethrough']
-                                    ].map((...args) => {
-                                        const [label, attr] = Array.from(args[0]), i = args[1];
-                                        const vlink = linkAttr(attr);
-                                        return {
-                                            type: vlink.value ? 'primary' : 'default',
-                                            label,
-                                            onClick(e) { vlink.requestChange(!vlink.value); e.preventDefault(); return e.stopPropagation(); }
-                                        };
-                                })
-                                )})
-                            )
-                        ),
+                        <div className="ctrl-wrapper">
+                            <h5 className="sidebar-ctrl-label">
+                                style
+                            </h5>
+                            <div className="ctrl">
+                                <PDStyleGuide.PdButtonGroup
+                                    buttons={[
+                                            [<i>
+                                                I
+                                            </i>, 'isItalics'],
+                                            [<u>
+                                                U
+                                            </u>, 'isUnderline'],
+                                            [<s>
+                                                S
+                                            </s>, 'isStrikethrough']
+                                        ].map((...args) => {
+                                            const [label, attr] = Array.from(args[0]), i = args[1];
+                                            const vlink = linkAttr(attr);
+                                            return {
+                                                type: vlink.value ? 'primary' : 'default',
+                                                label,
+                                                onClick(e) { vlink.requestChange(!vlink.value); e.preventDefault(); return e.stopPropagation(); }
+                                            };
+                                    })} />
+                            </div>
+                        </div>,
 
                         fontHasWeightVariants ? ["use custom font weight", 'hasCustomFontWeight', CheckboxControl] : undefined,
                         hasCustomFontWeight ? ["font weight", 'fontWeight', FontWeightControl(this.fontFamily)] : undefined
@@ -175,21 +177,21 @@ export default Block.register('text', (TextBlock = (function() {
                 }
                 )())),
 
-                React.createElement("div", {"style": ({
-                    display: 'flex',
-                    justifyContent: 'stretch',
-                    width: '100%'
-                })},
-                    React.createElement(SidebarControls.LabelBelowControl, { 
-                        "label": "Size",  
-                        "vl": (SidebarControls.NumberToStringTransformer(SidebarControls.staticValueLinkTransformer(linkAttr('fontSize')))),  
-                        "ctrlProps": ({type: 'number', className: 'underlined-number-input'})
-                    }),
-                    React.createElement("div", {"style": ({width: 16})}),
-                    (React.createElement(SidebarControls.LabelBelowControl, {
-                        label: React.createElement("span", {"style": ({color: !this.hasCustomLineHeight ? '#555' : ""})}, "Line"),
-                        vl: SidebarControls.NumberToStringTransformer(linkAttr('lineHeight')),
-                        ctrlProps: {type: 'number', className: 'underlined-number-input', disabled: !this.hasCustomLineHeight, style:
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'stretch',
+                        width: '100%'
+                    }}>
+                    <SidebarControls.LabelBelowControl
+                        label="Size"
+                        vl={SidebarControls.NumberToStringTransformer(SidebarControls.staticValueLinkTransformer(linkAttr('fontSize')))}
+                        ctrlProps={{type: 'number', className: 'underlined-number-input'}} />
+                    <div style={{width: 16}} />
+                    <SidebarControls.LabelBelowControl
+                        label={React.createElement("span", {"style": ({color: !this.hasCustomLineHeight ? '#555' : ""})}, "Line")}
+                        vl={SidebarControls.NumberToStringTransformer(linkAttr('lineHeight'))}
+                        ctrlProps={{type: 'number', className: 'underlined-number-input', disabled: !this.hasCustomLineHeight, style:
                             !this.hasCustomLineHeight ? {
                                 // disabled
                                 backgroundColor: 'rgb(236, 236, 236)',
@@ -198,30 +200,31 @@ export default Block.register('text', (TextBlock = (function() {
                             } : {
                                 // not disabled
                             }
-                        }
-                    })),
-                    React.createElement("div", {"style": ({width: 16})}),
-                    React.createElement(SidebarControls.LabelBelowControl, { 
-                        "label": "Kerning",  
-                        "vl": (SidebarControls.NumberToStringTransformer(SidebarControls.staticValueLinkTransformer(linkAttr('kerning')))),  
-                        "ctrlProps": ({type: 'number', className: 'underlined-number-input'})
-                    })
-                ),
+                        }} />
+                    <div style={{width: 16}} />
+                    <SidebarControls.LabelBelowControl
+                        label="Kerning"
+                        vl={SidebarControls.NumberToStringTransformer(SidebarControls.staticValueLinkTransformer(linkAttr('kerning')))}
+                        ctrlProps={{type: 'number', className: 'underlined-number-input'}} />
+                </div>,
                 ["use custom line height", 'hasCustomLineHeight', CheckboxControl],
 
-                React.createElement("hr", null),
+                <hr />,
                 ["text shadows", "textShadows", TextShadowsControl],
 
-                React.createElement("hr", null),
+                <hr />,
 
                 // this is all just so we can get a dynamicable around content
                 ["Content", "textContent", labeledControl((() => {
-                    return React.createElement("div", {"style": ({height: 24, display: 'flex', alignItems: 'center'})},
-                        React.createElement(Tooltip, {"content": "Double click text block on canvas to edit content"},
-                            React.createElement("div", {"style": ({whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', fontSize: 14, fontFamily: this.fontFamily.get_css_string()})},
-                                (this.textContent.staticValue)
-                            )
-                        )
+                    return (
+                        <div style={{height: 24, display: 'flex', alignItems: 'center'}}>
+                            <Tooltip content="Double click text block on canvas to edit content">
+                                <div
+                                    style={{whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden', fontSize: 14, fontFamily: this.fontFamily.get_css_string()}}>
+                                    {this.textContent.staticValue}
+                                </div>
+                            </Tooltip>
+                        </div>
                     );
                 })
                 )]
@@ -231,10 +234,10 @@ export default Block.register('text', (TextBlock = (function() {
         // FIXME: Disable or remove flexWidth if in auto, flex height in text doesnt make sense and whatnot
         constraintControls(linkAttr, onChange) { return _l.concat(super.constraintControls(linkAttr, onChange), [
                 ["align", "textAlign", SelectControl({multi: false, style: 'segmented'}, [
-                    [React.createElement(Glyphicon, {"glyph": "align-left"}), 'left'],
-                    [React.createElement(Glyphicon, {"glyph": "align-center"}), 'center'],
-                    [React.createElement(Glyphicon, {"glyph": "align-right"}), 'right'],
-                    [React.createElement(Glyphicon, {"glyph": "align-justify"}), 'justify']
+                    [<Glyphicon glyph="align-left" />, 'left'],
+                    [<Glyphicon glyph="align-center" />, 'center'],
+                    [<Glyphicon glyph="align-right" />, 'right'],
+                    [<Glyphicon glyph="align-justify" />, 'justify']
                 ])],
 
                 // For text block's textContent we have to add a dynamic checkbox

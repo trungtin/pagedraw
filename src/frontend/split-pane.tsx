@@ -16,11 +16,16 @@ export default createReactClass({
     render() {
         assert(() => (this.props.onDragStarted == null));
         assert(() => (this.props.onDragFinished == null));
-        return React.createElement("div", null,
-            React.createElement(TheirSplitPane, Object.assign({},  this.props, {"onDragStarted": (() => this.setState({draggingPane: true})), "onDragFinished": (() => this.setState({draggingPane: false}))}),
-                (this.props.children)
-            ),
-            (this.state.draggingPane ? React.createElement("div", {"style": ({position: 'fixed', width: '100vw', height: '100vh'})}) : undefined)
+        return (
+            <div>
+                <TheirSplitPane
+                    {...this.props}
+                    onDragStarted={() => this.setState({draggingPane: true})}
+                    onDragFinished={() => this.setState({draggingPane: false})}>
+                    {this.props.children}
+                </TheirSplitPane>
+                {this.state.draggingPane ? <div style={{position: 'fixed', width: '100vw', height: '100vh'}} /> : undefined}
+            </div>
         );
     },
 

@@ -33,7 +33,7 @@ export default createReactClass({
     // changes until we get the firing event (animation frame).
 
     render() {
-        return React.createElement("input", {"ref": "native_ctrl"});
+        return <input ref="native_ctrl" />;
     },
 
     componentWillMount() {

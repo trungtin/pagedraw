@@ -15,90 +15,182 @@ import config from '../config';
 
 const LandingDesktop = createReactClass({
     render() {
-        const playground = React.createElement("iframe", {"id": "playground", "style": ({minHeight: 800, minWidth: 1000, border: 0}), "src": "/playground"}, `\
-Iframes not supported\
-`);
+        const playground = <iframe
+            id="playground"
+            style={{minHeight: 800, minWidth: 1000, border: 0}}
+            src="/playground">
+            {`\
+    Iframes not supported\
+    `}
+        </iframe>;
 
-        const editorPicture = React.createElement("img", {"style": ({width: 1000}), "src": "https://ucarecdn.com/bb07033e-3a89-4509-be20-7f901988d6e0/"});
+        const editorPicture = <img
+            style={{width: 1000}}
+            src="https://ucarecdn.com/bb07033e-3a89-4509-be20-7f901988d6e0/" />;
 
         const importPagedrawn =
-            React.createElement("div", {"style": ({fontFamily: 'monaco, monospace', lineHeight: '40px', color: '#fff', fontSize: 22, whiteSpace: 'pre'})},
-                React.createElement("div", null, React.createElement(Keyword, null, ("import")), " ", React.createElement(ComponentName, null, ("MainScreen")), " ", React.createElement(Keyword, null, ("from"))),
-                React.createElement("div", null, React.createElement(String, null, ("'./src/pagedraw/mainscreen'")), (";")),
-                React.createElement("br", null),
-                React.createElement("div", null, "..."),
-                React.createElement("br", null),
-                React.createElement("div", null, ("<"), React.createElement(ComponentName, null, ("MainScreen"))),
-                React.createElement("div", null, ("  "), React.createElement(Prop, null, ("someData")), ("={"), React.createElement(Keyword, null, ("this")), (".fromServer}")),
-                React.createElement("div", null, ("  "), React.createElement(Prop, null, ("onClick")), ("={"), React.createElement(Keyword, null, ("this")), (".handleSubmit}")),
-                React.createElement("div", null, ("  />"))
-            );
+            <div
+                style={{fontFamily: 'monaco, monospace', lineHeight: '40px', color: '#fff', fontSize: 22, whiteSpace: 'pre'}}>
+                <div>
+                    <Keyword>
+                        import
+                    </Keyword>
+                    {" "}
+                    <ComponentName>
+                        MainScreen
+                    </ComponentName>
+                    {" "}
+                    <Keyword>
+                        from
+                    </Keyword>
+                </div>
+                <div>
+                    <String>
+                        './src/pagedraw/mainscreen'
+                    </String>
+                    ;
+                </div>
+                <br />
+                <div>
+                    ...
+                </div>
+                <br />
+                <div>
+                    &lt;
+                    <ComponentName>
+                        MainScreen
+                    </ComponentName>
+                </div>
+                <div>
+                    {"  "}
+                    <Prop>
+                        someData
+                    </Prop>
+                    ={
+                    <Keyword>
+                        this
+                    </Keyword>
+                    .fromServer}
+                </div>
+                <div>
+                    {"  "}
+                    <Prop>
+                        onClick
+                    </Prop>
+                    ={
+                    <Keyword>
+                        this
+                    </Keyword>
+                    .handleSubmit}
+                </div>
+                <div>
+                    {"  />"}
+                </div>
+            </div>;
 
-        const announcement = !config.announceOpenSource ? undefined : React.createElement("div", {"style": ({
-            fontFamily: 'Helvetica, sans-serif',
-            margin: 'auto',
-            padding: 50,
-            minHeight: '80vh',
-            maxWidth: 980,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center'
-        })},
-            React.createElement("h1", {"style": ({
-                fontSize: '87px'
-            })}, `\
-Pagedraw is going Open Source!\
-`),
-            React.createElement("div", {"style": ({
-                textAlign: 'right',
-                marginTop: -50,
-                marginBottom: 44,
-                lineHeight: '15px'
-            })},
-                React.createElement("a", {"href": "https://github.com/Pagedraw/pagedraw", "style": ({color: 'blue'})},
-                    React.createElement("span", {"style": ({
-                        fontSize: '20px'
-                    })}, `\
-Open on GitHub\
-`),
-                    React.createElement("br", null),
-                    React.createElement("span", {"style": ({
-                        fontFamily: 'monospace', fontSize: '14px'
-                    })}, `\
-https:\x2F\x2Fgithub.com\x2FPagedraw\x2Fpagedraw\
-`)
-                )
-            ),
-            React.createElement("ul", {"style": ({
-                marginLeft: '-33px',
-                fontSize: '20px',
-                lineHeight: '33px'
-            })},
-              React.createElement("li", null, "Shutting down company"),
-              React.createElement("li", null, "Not recommended for production as we are not offering paid support"),
-              React.createElement("li", null, "Differences from Hosted version:"),
-                React.createElement("ul", null,
-                    React.createElement("li", null, React.createElement("code", null, ".pagedraw.json"), " files"),
-                    React.createElement("li", null, "Pagedraw library")
-                ),
-              React.createElement("li", null, "Migration pathway for existing users"),
-              React.createElement("li", null, "Pagedraw will remain as it was for 2 mo more")
-            )
-        );
+        const announcement = !config.announceOpenSource ? undefined : <div
+            style={{
+                fontFamily: 'Helvetica, sans-serif',
+                margin: 'auto',
+                padding: 50,
+                minHeight: '80vh',
+                maxWidth: 980,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+            }}>
+            <h1
+                style={{
+                    fontSize: '87px'
+                }}>
+                {`\
+    Pagedraw is going Open Source!\
+    `}
+            </h1>
+            <div
+                style={{
+                    textAlign: 'right',
+                    marginTop: -50,
+                    marginBottom: 44,
+                    lineHeight: '15px'
+                }}>
+                <a href="https://github.com/Pagedraw/pagedraw" style={{color: 'blue'}}>
+                    <span
+                        style={{
+                            fontSize: '20px'
+                        }}>
+                        {`\
+    Open on GitHub\
+    `}
+                    </span>
+                    <br />
+                    <span
+                        style={{
+                            fontFamily: 'monospace', fontSize: '14px'
+                        }}>
+                        {`\
+    https:\x2F\x2Fgithub.com\x2FPagedraw\x2Fpagedraw\
+    `}
+                    </span>
+                </a>
+            </div>
+            <ul
+                style={{
+                    marginLeft: '-33px',
+                    fontSize: '20px',
+                    lineHeight: '33px'
+                }}>
+                <li>
+                    Shutting down company
+                </li>
+                <li>
+                    Not recommended for production as we are not offering paid support
+                </li>
+                <li>
+                    Differences from Hosted version:
+                </li>
+                <ul>
+                    <li>
+                        <code>
+                            .pagedraw.json
+                        </code>
+                        {" files"}
+                    </li>
+                    <li>
+                        Pagedraw library
+                    </li>
+                </ul>
+                <li>
+                    Migration pathway for existing users
+                </li>
+                <li>
+                    Pagedraw will remain as it was for 2 mo more
+                </li>
+            </ul>
+        </div>;
 
-        return React.createElement("div", null,
-            ( announcement ),
-            React.createElement(PagedrawnLandingDesktop, { 
-                "pdPlayground": (browser.mobile || (browser.name !== 'chrome') ? editorPicture : playground),  
-                "importPagedrawn": (importPagedrawn)
-                })
+        return (
+            <div>
+                {announcement}
+                <PagedrawnLandingDesktop
+                    pdPlayground={browser.mobile || (browser.name !== 'chrome') ? editorPicture : playground}
+                    importPagedrawn={importPagedrawn} />
+            </div>
         );
     }
 });
 
-var Keyword         = ({children}) => React.createElement("span", {"style": ({color: '#f92672'})}, (children));
-var ComponentName   = ({children}) => React.createElement("span", {"style": ({color: '#d4d797'})}, (children));
-var String          = ({children}) => React.createElement("span", {"style": ({color: '#ce9178'})}, (children));
-var Prop            = ({children}) => React.createElement("span", {"style": ({color: '#8ad3ff'})}, (children));
+var Keyword         = ({children}) => <span style={{color: '#f92672'}}>
+    {children}
+</span>;
+var ComponentName   = ({children}) => <span style={{color: '#d4d797'}}>
+    {children}
+</span>;
+var String          = ({children}) => <span style={{color: '#ce9178'}}>
+    {children}
+</span>;
+var Prop            = ({children}) => <span style={{color: '#8ad3ff'}}>
+    {children}
+</span>;
 
 export default LandingDesktop;

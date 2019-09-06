@@ -87,14 +87,20 @@ defaultExport.propControlTransformer = (propControlTransformer = _l.curry((prop,
 defaultExport.LabeledControl = (LabeledControl = createReactClass({
     displayName: 'LabeledControl',
     render() {
-        return React.createElement("div", {"className": "ctrl-wrapper"},
-            React.createElement("h5", {"className": "sidebar-ctrl-label"}, (this.props.label)),
-            React.createElement("div", {"className": "ctrl"}, (this.props.control(this.props.valueLink)))
+        return (
+            <div className="ctrl-wrapper">
+                <h5 className="sidebar-ctrl-label">
+                    {this.props.label}
+                </h5>
+                <div className="ctrl">
+                    {this.props.control(this.props.valueLink)}
+                </div>
+            </div>
         );
     }
 }));
 
-defaultExport.labeledControl = (labeledControl = control => (label, valueLink) => React.createElement(LabeledControl, {"control": (control), "label": (label), "valueLink": (valueLink)}));
+defaultExport.labeledControl = (labeledControl = control => (label, valueLink) => <LabeledControl control={control} label={label} valueLink={valueLink} />);
 
 // DynamicableControl :: (control A) -> (control (A.staticValue, A.isDynamic))
 defaultExport.DynamicableControl = (DynamicableControl = control => (function(label, valueLink) {
@@ -102,41 +108,42 @@ defaultExport.DynamicableControl = (DynamicableControl = control => (function(la
     const is_dynamic = dynamicValueLink.value;
 
     const tooltip_content =
-        React.createElement("span", {"style": ({
-            padding: '0.5em',
-            fontSize: '16px'
-        })},
-            (is_dynamic ? "Make static" : "Control with code")
-        );
+        <span
+            style={{
+                padding: '0.5em',
+                fontSize: '16px'
+            }}>
+            {is_dynamic ? "Make static" : "Control with code"}
+        </span>;
 
     const clickable_label =
-        React.createElement(Tooltip, {"position": "right", "content": (tooltip_content)},
-            React.createElement("span", {"className": "dynamicable-control-label", "style": ({cursor: 'pointer'}), "onClick": (() => {
-                return dynamicValueLink.requestChange(!dynamicValueLink.value);
-            }
-            )},
-                React.createElement("span", {"style": (
-                    is_dynamic ? {
+        <Tooltip position="right" content={tooltip_content}>
+            <span
+                className="dynamicable-control-label"
+                style={{cursor: 'pointer'}}
+                onClick={() => {
+                    return dynamicValueLink.requestChange(!dynamicValueLink.value);
+                }}>
+                <span
+                    style={is_dynamic ? {
                         color: '#e27fe2',
                         fontWeight: 'bold',
                         letterSpacing: '-0.5px'
                     } : {
 
-                    }
-                )},
-                    (label)
-                ),
-                (" "),
-                React.createElement("i", { 
-                    "className": (`material-icons md-14 dynamicable-icon-${is_dynamic ? 'on' : 'off'}`),  
-                    "children": "code",  
-                    "style": ({
+                    }}>
+                    {label}
+                </span>
+                {" "}
+                <i
+                    className={`material-icons md-14 dynamicable-icon-${is_dynamic ? 'on' : 'off'}`}
+                    children="code"
+                    style={{
                         fontSize: '14px',
                         verticalAlign: '-3.2px'
-                    })
-                })
-            )
-        );
+                    }} />
+            </span>
+        </Tooltip>;
 
     return control(clickable_label, staticValueLinkTransformer(valueLink));
 }));
@@ -145,13 +152,13 @@ defaultExport.staticValueLinkTransformer = (staticValueLinkTransformer = valueLi
 
 
 //# Controls
-defaultExport.TextControlWithDefault = dfault => labeledControl(valueLink => React.createElement(FormControl, {"type": "text", "placeholder": (dfault), "valueLink": (valueLink)}));
+defaultExport.TextControlWithDefault = dfault => labeledControl(valueLink => <FormControl type="text" placeholder={dfault} valueLink={valueLink} />);
 
-defaultExport.DebouncedTextControlWithDefault = dfault => labeledControl(valueLink => React.createElement(FormControl, {"debounced": (true), "type": "text", "placeholder": (dfault), "valueLink": (valueLink)}));
+defaultExport.DebouncedTextControlWithDefault = dfault => labeledControl(valueLink => <FormControl debounced={true} type="text" placeholder={dfault} valueLink={valueLink} />);
 
-defaultExport.DebouncedTextControl = labeledControl(valueLink => React.createElement(FormControl, {"debounced": (true), "type": "text", "valueLink": (valueLink)}));
+defaultExport.DebouncedTextControl = labeledControl(valueLink => <FormControl debounced={true} type="text" valueLink={valueLink} />);
 
-defaultExport.TextControl = (TextControl = labeledControl(valueLink => React.createElement(FormControl, {"type": "text", "valueLink": (valueLink)})));
+defaultExport.TextControl = (TextControl = labeledControl(valueLink => <FormControl type="text" valueLink={valueLink} />));
 
 defaultExport.PDTextControlWithConfirmation = (PDTextControlWithConfirmation = createReactClass({
     linkState(attr) {
@@ -174,39 +181,43 @@ defaultExport.PDTextControlWithConfirmation = (PDTextControlWithConfirmation = c
         let textStyle = {display: 'flex', justifyContent: 'space-between'};
         if (this.props.showEditButton != null) { textStyle = _l.extend(textStyle, {cursor: "pointer"}); }
 
-        return React.createElement("div", null,
-            ( this.state.editing ?
-                React.createElement("div", {"style": ({display: 'flex', width: "100%", justifyContent: 'space-between', position: 'relative', zIndex: 11})},
-                    React.createElement("form", {"style": ({width: '100%'}), "onSubmit": (e => {
-                        // this form is here so we pick up an 'enter' in the text field
-                        this.handleSubmit();
-                        return e.preventDefault();
-                    }
-                    )},
-                        React.createElement(FormControl, {"type": "text", "valueLink": (this.linkState('tmpValue')),  
-                            "style": (
-                                _l.extend({
-                                    width: '100%', wordBreak: 'break-all',
+        return (
+            <div>
+                {this.state.editing ?
+                        <div
+                            style={{display: 'flex', width: "100%", justifyContent: 'space-between', position: 'relative', zIndex: 11}}>
+                            <form
+                                style={{width: '100%'}}
+                                onSubmit={e => {
+                                    // this form is here so we pick up an 'enter' in the text field
+                                    this.handleSubmit();
+                                    return e.preventDefault();
+                                }}>
+                                <FormControl
+                                    type="text"
+                                    valueLink={this.linkState('tmpValue')}
+                                    style={_l.extend({
+                                        width: '100%', wordBreak: 'break-all',
+                                        fontFamily: 'monospace'
+                                    }, this.props.style)}
+                                    autoFocus={true}
+                                    onBlur={this.handleSubmit} />
+                            </form>
+                        </div>
+                    :
+                        <div onClick={this.startEditing} style={textStyle}>
+                            <div
+                                style={_l.extend({
+                                    width: '100%', wordBreak: 'break-all', marginRight: 8,
                                     fontFamily: 'monospace'
-                                }, this.props.style)
-                            ),  
-                            "autoFocus": true,  
-                            "onBlur": (this.handleSubmit)})
-                    )
-                )
-            :
-                React.createElement("div", {"onClick": (this.startEditing), "style": (textStyle)},
-                    React.createElement("div", {"style": (
-                        _l.extend({
-                            width: '100%', wordBreak: 'break-all', marginRight: 8,
-                            fontFamily: 'monospace'
-                        }, this.props.style)
-                    )},
-                        (this.props.valueLink.value)
-                    ),
-                    (this.props.showEditButton ? React.createElement("div", null, "Edit") : undefined)
-                )
-            )
+                                }, this.props.style)}>
+                                {this.props.valueLink.value}
+                            </div>
+                            {this.props.showEditButton ? <div>
+                                Edit
+                            </div> : undefined}
+                        </div>}
+            </div>
         );
     },
 
@@ -225,82 +236,115 @@ defaultExport.PDTextControlWithConfirmation = (PDTextControlWithConfirmation = c
     }
 }));
 
-defaultExport.TextControlWithConfirmation = labeledControl(valueLink => React.createElement(PDTextControlWithConfirmation, {"valueLink": (valueLink), "showEditButton": (true)}));
+defaultExport.TextControlWithConfirmation = labeledControl(valueLink => <PDTextControlWithConfirmation valueLink={valueLink} showEditButton={true} />);
 
-defaultExport.FilePathControl = labeledControl(valueLink => React.createElement(PDTextControlWithConfirmation, {"valueLink": (valueLink), "showEditButton": (true), "style": (filePathTextStyle)}));
+defaultExport.FilePathControl = labeledControl(valueLink => <PDTextControlWithConfirmation valueLink={valueLink} showEditButton={true} style={filePathTextStyle} />);
 
 defaultExport.DebouncedTextAreaControlWithPlaceholder = function(placeholder, options) { if (options == null) { options = {}; } return function(label, valueLink) {
-    const textarea = React.createElement(FormControl, {"debounced": (true), "tag": "textarea", "valueLink": (valueLink), "placeholder": (placeholder), "style": ({width: '100%', height: options.height != null ? options.height : '20em'})});
+    const textarea = <FormControl
+        debounced={true}
+        tag="textarea"
+        valueLink={valueLink}
+        placeholder={placeholder}
+        style={{width: '100%', height: options.height != null ? options.height : '20em'}} />;
     if (_l.isEmpty(label)) { return textarea; }
-    return React.createElement("div", null,
-        React.createElement("div", {"className": "ctrl-wrapper", "style": ({alignItems: 'baseline'})},
-            React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))
-        ),
-        (textarea)
+    return (
+        <div>
+            <div className="ctrl-wrapper" style={{alignItems: 'baseline'}}>
+                <h5 className="sidebar-ctrl-label">
+                    {label}
+                </h5>
+            </div>
+            {textarea}
+        </div>
     );
 }; };
 
-defaultExport.NumberControl = (NumberControl = (label, valueLink) => React.createElement("div", {"className": 'ctrl-wrapper', "style": ({
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    flex: '1'
-})},
-    React.createElement("h5", {"className": "sidebar-ctrl-label", "style": ({flexGrow: 1})}, (label)),
-    React.createElement(FormControl, {"valueLink": (NumberToStringTransformer(valueLink)),  
-        "type": "number",  
-        "className": "underlined-number-input"})
-));
-
-
-defaultExport.CustomSliderControl = (CustomSliderControl = ({min, max}) => (label, valueLink) => React.createElement("div", {"className": "ctrl-wrapper", "style": ({flexDirection: 'column', alignItems: 'normal'})},
-    React.createElement("div", {"style": ({
+defaultExport.NumberControl = (NumberControl = (label, valueLink) => <div
+    className="ctrl-wrapper"
+    style={{
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'baseline',
         flex: '1'
-    })},
-        React.createElement("h5", {"className": "sidebar-ctrl-label", "style": ({flexGrow: 1})}, (label)),
-        React.createElement(FormControl, {"valueLink": (NumberToStringTransformer(valueLink)),  
-            "type": "number",  
-            "className": "underlined-number-input"})
-    ),
-    React.createElement("div", null,
-        React.createElement(FormControl, {"type": "range", "min": (min), "max": (max), "valueLink": (NumberToStringTransformer(valueLink))})
-    )
-));
+    }}>
+    <h5 className="sidebar-ctrl-label" style={{flexGrow: 1}}>
+        {label}
+    </h5>
+    <FormControl
+        valueLink={NumberToStringTransformer(valueLink)}
+        type="number"
+        className="underlined-number-input" />
+</div>);
+
+
+defaultExport.CustomSliderControl = (CustomSliderControl = ({min, max}) => (label, valueLink) => <div
+    className="ctrl-wrapper"
+    style={{flexDirection: 'column', alignItems: 'normal'}}>
+    <div
+        style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'baseline',
+            flex: '1'
+        }}>
+        <h5 className="sidebar-ctrl-label" style={{flexGrow: 1}}>
+            {label}
+        </h5>
+        <FormControl
+            valueLink={NumberToStringTransformer(valueLink)}
+            type="number"
+            className="underlined-number-input" />
+    </div>
+    <div>
+        <FormControl
+            type="range"
+            min={min}
+            max={max}
+            valueLink={NumberToStringTransformer(valueLink)} />
+    </div>
+</div>);
 
 defaultExport.SliderControl = CustomSliderControl({min: 0, max: 100});
 
-defaultExport.CheckboxControl = (CheckboxControl = (label, valueLink) => React.createElement("div", {"className": "ctrl-wrapper", "style": ({alignItems: 'center'})},
-  React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label)),
-  React.createElement(FormControl, {"type": "checkbox", "valueLink": (valueLink), "label": (label)})
-));
+defaultExport.CheckboxControl = (CheckboxControl = (label, valueLink) => <div className="ctrl-wrapper" style={{alignItems: 'center'}}>
+    <h5 className="sidebar-ctrl-label">
+        {label}
+    </h5>
+    <FormControl type="checkbox" valueLink={valueLink} label={label} />
+</div>);
 
-defaultExport.LeftCheckboxControl = (LeftCheckboxControl = (label, valueLink) => React.createElement("label", {"style": ({fontSize: '12px', fontWeight: 'normal', display: 'flex', alignItems: 'center', flex: '1'})},
-  React.createElement(FormControl, {"style": ({margin: '0'}), "type": "checkbox", "valueLink": (valueLink), "label": (label)}), `\
-   \
-`, React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))
-));
+defaultExport.LeftCheckboxControl = (LeftCheckboxControl = (label, valueLink) => <label
+    style={{fontSize: '12px', fontWeight: 'normal', display: 'flex', alignItems: 'center', flex: '1'}}>
+    <FormControl style={{margin: '0'}} type="checkbox" valueLink={valueLink} label={label} />
+    {`\
+       \
+    `}
+    <h5 className="sidebar-ctrl-label">
+        {label}
+    </h5>
+</label>);
 
 defaultExport.PDFontControl = (PDFontControl = createReactClass({
     render() {
         let left;
-        return React.createElement(PdSearchableDropdown, { 
-            "text": ((left = (this.props.valueLink.value != null ? this.props.valueLink.value.get_user_visible_name() : undefined)) != null ? left : 'None'),  
-            "options": (_l.flatten([
-                this.props.doc.fonts.map(font => ({
-                    text: font.get_user_visible_name(),
-                    style: {fontFamily: font.get_css_string()},
-                    matches: query => fuzzysearch(query.toLowerCase(), font.get_user_visible_name().toLowerCase()),
-                    onSelect: () => this.props.valueLink.requestChange(font)
-                })),
-                [{
-                    text: "Add more fonts",
-                    matches: query => true,
-                    onSelect: () => handleAddCustomFonts(this.props.doc, this.props.onChange)
-                }]
-            ]))});
+        return (
+            <PdSearchableDropdown
+                text={(left = (this.props.valueLink.value != null ? this.props.valueLink.value.get_user_visible_name() : undefined)) != null ? left : 'None'}
+                options={_l.flatten([
+                    this.props.doc.fonts.map(font => ({
+                        text: font.get_user_visible_name(),
+                        style: {fontFamily: font.get_css_string()},
+                        matches: query => fuzzysearch(query.toLowerCase(), font.get_user_visible_name().toLowerCase()),
+                        onSelect: () => this.props.valueLink.requestChange(font)
+                    })),
+                    [{
+                        text: "Add more fonts",
+                        matches: query => true,
+                        onSelect: () => handleAddCustomFonts(this.props.doc, this.props.onChange)
+                    }]
+                ])} />
+        );
     },
 
     componentDidMount() { return this.updateRenderedFonts(); },
@@ -315,7 +359,7 @@ defaultExport.PDFontControl = (PDFontControl = createReactClass({
 }));
 
 
-defaultExport.FontControl = (FontControl = (doc, onChange) => labeledControl(valueLink => React.createElement(PDFontControl, {"valueLink": (valueLink), "doc": (doc), "onChange": (onChange)})));
+defaultExport.FontControl = (FontControl = (doc, onChange) => labeledControl(valueLink => <PDFontControl valueLink={valueLink} doc={doc} onChange={onChange} />));
 
 
 const StringToTinycolorTransformer = valueLinkTransformer({
@@ -330,43 +374,53 @@ defaultExport.PDColorControl = (PDColorControl = createReactClass({
         const color_value_link = StringToTinycolorTransformer(this.props.valueLink);
 
         const color_well =
-            React.createElement("div", {"style": (_l.extend({}, {
-                    padding: '5px',
-                    background: '#fff',
-                    borderRadius: '1px',
-                    boxShadow: '0 0 0 1px rgba(0,0,0,.4)',
-                    display: 'inline-flex',
-                    cursor: 'pointer',
-                    lineHeight: 0,
-                    width: 46,
-                    height: 24
-                }, this.props.color_well_style))},
-                React.createElement("div", {"style": ({
-                    flex: 1,
-                    borderRadius: '2px',
-                    background: this.props.valueLink.value
-                })})
-            );
+            <div
+                style={_l.extend({}, {
+                        padding: '5px',
+                        background: '#fff',
+                        borderRadius: '1px',
+                        boxShadow: '0 0 0 1px rgba(0,0,0,.4)',
+                        display: 'inline-flex',
+                        cursor: 'pointer',
+                        lineHeight: 0,
+                        width: 46,
+                        height: 24
+                    }, this.props.color_well_style)}>
+                <div
+                    style={{
+                        flex: 1,
+                        borderRadius: '2px',
+                        background: this.props.valueLink.value
+                    }} />
+            </div>;
 
-        const popover = () => React.createElement(ChromePicker, {"color": (color_value_link.value),  
-                      "onChange"(c) { return color_value_link.requestChange(c); }});
+        const popover = () => <ChromePicker
+            color={color_value_link.value}
+            onChange={function(c) { return color_value_link.requestChange(c); }} />;
 
-        return React.createElement(Popover, {"trigger": (color_well), "popover": (popover), "popover_position_for_trigger_rect"(trigger_rect) { return {
-            top: trigger_rect.bottom,
-            right: document.documentElement.clientWidth - trigger_rect.right
-        }; }});
+        return (
+            <Popover
+                trigger={color_well}
+                popover={popover}
+                popover_position_for_trigger_rect={function(trigger_rect) { return {
+                    top: trigger_rect.bottom,
+                    right: document.documentElement.clientWidth - trigger_rect.right
+                }; }} />
+        );
     }
 }));
 
-const ColorControlCaseSandberg = (label, valueLink) => React.createElement("div", {"className": "ctrl-wrapper", "style": ({alignItems: 'flex-start'})},
-    React.createElement("h5", {"className": "sidebar-ctrl-label", "style": ({paddingTop: 7})}, (label)),
-    React.createElement(PDColorControl, {"valueLink": (valueLink)})
-);
+const ColorControlCaseSandberg = (label, valueLink) => <div className="ctrl-wrapper" style={{alignItems: 'flex-start'}}>
+    <h5 className="sidebar-ctrl-label" style={{paddingTop: 7}}>
+        {label}
+    </h5>
+    <PDColorControl valueLink={valueLink} />
+</div>;
 
 
-const ColorControlUndebounced = labeledControl(valueLink => React.createElement(FormControl, {"type": "color", "valueLink": (valueLink)}));
+const ColorControlUndebounced = labeledControl(valueLink => <FormControl type="color" valueLink={valueLink} />);
 
-const ColorControlDebounced = labeledControl(valueLink => React.createElement(ColorPickerDebounced, {"valueLink": (valueLink)}));
+const ColorControlDebounced = labeledControl(valueLink => <ColorPickerDebounced valueLink={valueLink} />);
 
 defaultExport.ColorControl = (ColorControl = (() => { switch (config.colorPickerImplementation) {
     case 'CaseSandberg':
@@ -380,61 +434,78 @@ defaultExport.ColorControl = (ColorControl = (() => { switch (config.colorPicker
 
 defaultExport.ImageControl = (ImageControl = labeledControl(valueLink => // FIXME: allow folks to change an image instead of having to recreate a block
 // to choose a new image
-React.createElement(
-    "div",
-    {"style": ({display: 'flex', justifyContent: 'flex-end'})},
-    React.createElement(Glyphicon, {"glyph": "open-file"})
-)));
+<div style={{display: 'flex', justifyContent: 'flex-end'}}>
+    <Glyphicon glyph="open-file" />
+</div>));
 
 
 defaultExport.SelectControl = (SelectControl = ({multi, style}, opts) => labeledControl(function(valueLink) {
     if (style === 'segmented') {
-        return React.createElement(PdButtonGroup, {"buttons": (opts.map(function(...args) { const [label, value] = Array.from(args[0]), i = args[1]; return {
-                type: valueLink.value === value ? 'primary' : 'default',
-                onClick(e) { valueLink.requestChange(value); e.preventDefault(); return e.stopPropagation(); },
-                label
-            }; })
-        )});
+        return (
+            <PdButtonGroup
+                buttons={opts.map(function(...args) { const [label, value] = Array.from(args[0]), i = args[1]; return {
+                        type: valueLink.value === value ? 'primary' : 'default',
+                        onClick(e) { valueLink.requestChange(value); e.preventDefault(); return e.stopPropagation(); },
+                        label
+                    }; })} />
+        );
     } else if (style === 'dropdown') {
-        return React.createElement(FormControl, {"tag": "select", "valueLink": (valueLink)},
-        (
-            opts.map(function(...args) {
-                const [label, value] = Array.from(args[0]), i = args[1];
-                return React.createElement("option", {"key": (i), "value": (value)}, (label));})
-        )
+        return (
+            <FormControl tag="select" valueLink={valueLink}>
+                {opts.map(function(...args) {
+                    const [label, value] = Array.from(args[0]), i = args[1];
+                    return (
+                        <option key={i} value={value}>
+                            {label}
+                        </option>
+                    );})}
+            </FormControl>
         );
     } else {
         throw new Error("unknown SelectControl style");
     }
 }));
 
-defaultExport.ObjectSelectControl = (ObjectSelectControl = ({isEqual, getLabel, options}) => labeledControl(valueLink => React.createElement(FormControl, {"tag": "select", "valueLink": ({
-    value: _l.findIndex(options, opt => isEqual(opt, valueLink.value)),
-    requestChange(idx) { return valueLink.requestChange(options[idx]); }
-})},
-    ( options.map((opt, i) => React.createElement("option", {"key": (i), "value": (i)}, (getLabel(opt)))) )
-)));
+defaultExport.ObjectSelectControl = (ObjectSelectControl = ({isEqual, getLabel, options}) => labeledControl(valueLink => <FormControl
+    tag="select"
+    valueLink={{
+        value: _l.findIndex(options, opt => isEqual(opt, valueLink.value)),
+        requestChange(idx) { return valueLink.requestChange(options[idx]); }
+    }}>
+    {options.map((opt, i) => <option key={i} value={i}>
+        {getLabel(opt)}
+    </option>)}
+</FormControl>));
 
 
 defaultExport.BooleanSelectControl = (BooleanSelectControl = (trueLabel, falseLabel) => SelectControl({style: 'segmented'}, [[trueLabel, true], [falseLabel, false]]));
 
 
-defaultExport.ListControl = (ListControl = (new_element, elem_renderer) => (label, valueLink) => React.createElement("div", {"className": "ctrl-wrapper"},
-    React.createElement(ListComponent, { 
-        "labelRowStyle": ({flex: 1}),  
-        "label": (React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))),  
-        "valueLink": (valueLink),  
-        "newElement": (new_element),  
-        "elem": (elem_renderer)})
-));
+defaultExport.ListControl = (ListControl = (new_element, elem_renderer) => (label, valueLink) => <div className="ctrl-wrapper">
+    <ListComponent
+        labelRowStyle={{flex: 1}}
+        label={React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label))}
+        valueLink={valueLink}
+        newElement={new_element}
+        elem={elem_renderer} />
+</div>);
 
 
 // Not a "sidebar control", but a control we use in the sidebar (see Block.defaultTopSidebarControls)
 defaultExport.CompactNumberControl = createReactClass({
     render() {
-        return React.createElement("div", {"style": ({width: '45%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'})},
-            React.createElement("span", {"style": ({fontWeight: 'bold', fontSize: '0.9em', width: 15, textAlign: 'right'})}, (this.props.label)),
-            React.createElement(FormControl, {"type": "number", "valueLink": (this.props.valueLink), "style": ({marginLeft: '6px', width: '100%'})})
+        return (
+            <div
+                style={{width: '45%', display: 'flex', flexDirection: 'row', alignItems: 'baseline'}}>
+                <span
+                    style={{fontWeight: 'bold', fontSize: '0.9em', width: 15, textAlign: 'right'}}>
+                    {this.props.label}
+                </span>
+                <FormControl
+                    type="number"
+                    valueLink={this.props.valueLink}
+                    style={{marginLeft: '6px', width: '100%'}} />
+            </div>
         );
     }
 });
@@ -449,9 +520,13 @@ defaultExport.LabelBelowControl = (LabelBelowControl = createReactClass({
         ctrlProps.style = _l.extend({}, {
             height: 30, width: '100%'
         }, ctrlProps.style);
-        return React.createElement("div", {"style": ({flex: 1})},
-            React.createElement(Tag, Object.assign({"valueLink": (vl)}, ctrlProps )),
-            React.createElement("div", {"style": ({textAlign: 'center', fontSize: '0.7em', color: '#555'})}, (label))
+        return (
+            <div style={{flex: 1}}>
+                <Tag valueLink={vl} {...ctrlProps} />
+                <div style={{textAlign: 'center', fontSize: '0.7em', color: '#555'}}>
+                    {label}
+                </div>
+            </div>
         );
     }
 }));
@@ -465,32 +540,39 @@ defaultExport.CursorControl = (CursorControl = function(label, valueLink) {
     // which we typically use value empty string `""` for.
 
     if (valueLink.value === '') {
-        return React.createElement("div", {"className": "ctrl-wrapper"},
-            React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label)),
-            React.createElement(PDStyleGuide.SidebarHeaderAddButton, {"onClick": (() => {
-                // default to pointer when we add a cursor
-                return valueLink.requestChange(default_new_cursor);
-            }
-            )})
+        return (
+            <div className="ctrl-wrapper">
+                <h5 className="sidebar-ctrl-label">
+                    {label}
+                </h5>
+                <PDStyleGuide.SidebarHeaderAddButton
+                    onClick={() => {
+                        // default to pointer when we add a cursor
+                        return valueLink.requestChange(default_new_cursor);
+                    }} />
+            </div>
         );
 
     } else {
-        return React.createElement("div", null,
-            React.createElement("div", {"className": "ctrl-wrapper"},
-                React.createElement("h5", {"className": "sidebar-ctrl-label"}, (label)),
-                React.createElement(PDStyleGuide.SidebarHeaderRemoveButton, {"onClick": (() => {
-                    return valueLink.requestChange('');
-                }
-                )})
-            ),
-            React.createElement(PDStyleGuide.PdVlDropdownTwo, { 
-                "valueLink": (valueLink),  
-                "style": ({width: '100%', cursor: valueLink.value}),  
-                "options": (allCursors.map(cursor => ({
-                    label: cursor,
-                    value: cursor
-                })))
-            })
+        return (
+            <div>
+                <div className="ctrl-wrapper">
+                    <h5 className="sidebar-ctrl-label">
+                        {label}
+                    </h5>
+                    <PDStyleGuide.SidebarHeaderRemoveButton
+                        onClick={() => {
+                            return valueLink.requestChange('');
+                        }} />
+                </div>
+                <PDStyleGuide.PdVlDropdownTwo
+                    valueLink={valueLink}
+                    style={{width: '100%', cursor: valueLink.value}}
+                    options={allCursors.map(cursor => ({
+                        label: cursor,
+                        value: cursor
+                    }))} />
+            </div>
         );
     }
 });
@@ -499,14 +581,18 @@ defaultExport.CursorControl = (CursorControl = function(label, valueLink) {
 const PDFontWeightControl = createReactClass({
     render() {
         //FIXME: because CJSX didn't compile this inline
-        const makeSpan = val => React.createElement("span", {"style": ({fontWeight: val})}, (val));
+        const makeSpan = val => <span style={{fontWeight: val}}>
+            {val}
+        </span>;
 
-        return React.createElement(PdDropdown, { 
-            "id": "font-weight-control",  
-            "value": (this.props.valueLink.value || '700'),  
-            "onSelect": (this.props.valueLink.requestChange),  
-            "label": (makeSpan),  
-            "options": (this.props.fontFamily.get_font_variants())});
+        return (
+            <PdDropdown
+                id="font-weight-control"
+                value={this.props.valueLink.value || '700'}
+                onSelect={this.props.valueLink.requestChange}
+                label={makeSpan}
+                options={this.props.fontFamily.get_font_variants()} />
+        );
     },
 
     shouldComponentUpdate(nextProps) {
@@ -514,29 +600,49 @@ const PDFontWeightControl = createReactClass({
     }
 });
 
-defaultExport.FontWeightControl = (FontWeightControl = fontFamily => labeledControl(valueLink => React.createElement(PDFontWeightControl, {"valueLink": (valueLink), "fontFamily": (fontFamily)})));
+defaultExport.FontWeightControl = (FontWeightControl = fontFamily => labeledControl(valueLink => <PDFontWeightControl valueLink={valueLink} fontFamily={fontFamily} />));
 
 
 defaultExport.ShadowsControl = (ShadowsControl = shadowType => ListControl(
     (() => new (Model.tuple_named[shadowType])({ color: "#000", offsetX: 0, offsetY: 2, blurRadius: 4, spreadRadius: 0 })),
-    (elem, handleRemove) => React.createElement("div", {"style": ({display: 'flex', justifyContent: 'space-between', width: '100%', alignItems:'center', marginTop: '9px'})},
-        React.createElement(LabelBelowControl, {"label": "color", "vl": (propValueLinkTransformer('color')(elem)), "tag": (PDColorControl)}),
-        React.createElement("div", {"style": ({width: 8})}),
-        React.createElement(LabelBelowControl, {"label": "X", "vl": (NumberToStringTransformer(propValueLinkTransformer('offsetX')(elem))), "ctrlProps": ({type: 'number', className: 'underlined-number-input'})}),
-        React.createElement("div", {"style": ({width: 8})}),
-        React.createElement(LabelBelowControl, {"label": "Y", "vl": (NumberToStringTransformer(propValueLinkTransformer('offsetY')(elem))), "ctrlProps": ({type: 'number', className: 'underlined-number-input'})}),
-        React.createElement("div", {"style": ({width: 8})}),
-        React.createElement(LabelBelowControl, {"label": "blur", "vl": (NumberToStringTransformer(propValueLinkTransformer('blurRadius')(elem))), "ctrlProps": ({type: 'number', className: 'underlined-number-input'})}),
-        (
-            shadowType === "box-shadow" ?
-                React.createElement(React.Fragment, null,
-                    React.createElement("div", {"style": ({width: 8})}),
-                    React.createElement(LabelBelowControl, {"label": "spread", "vl": (NumberToStringTransformer(propValueLinkTransformer('spreadRadius')(elem))), "ctrlProps": ({type: 'number', className: 'underlined-number-input'})})
-                ) : undefined
-        ),
-        React.createElement("div", {"style": ({width: 8})}),
-        React.createElement("i", {"role": "button", "className": "material-icons md-14", "style": ({lineHeight: '24px', color: 'black'}), "onClick": (handleRemove)}, "delete")
-    )));
+    (elem, handleRemove) => <div
+        style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems:'center', marginTop: '9px'}}>
+        <LabelBelowControl
+            label="color"
+            vl={propValueLinkTransformer('color')(elem)}
+            tag={PDColorControl} />
+        <div style={{width: 8}} />
+        <LabelBelowControl
+            label="X"
+            vl={NumberToStringTransformer(propValueLinkTransformer('offsetX')(elem))}
+            ctrlProps={{type: 'number', className: 'underlined-number-input'}} />
+        <div style={{width: 8}} />
+        <LabelBelowControl
+            label="Y"
+            vl={NumberToStringTransformer(propValueLinkTransformer('offsetY')(elem))}
+            ctrlProps={{type: 'number', className: 'underlined-number-input'}} />
+        <div style={{width: 8}} />
+        <LabelBelowControl
+            label="blur"
+            vl={NumberToStringTransformer(propValueLinkTransformer('blurRadius')(elem))}
+            ctrlProps={{type: 'number', className: 'underlined-number-input'}} />
+        {shadowType === "box-shadow" ?
+            <React.Fragment>
+                <div style={{width: 8}} />
+                <LabelBelowControl
+                    label="spread"
+                    vl={NumberToStringTransformer(propValueLinkTransformer('spreadRadius')(elem))}
+                    ctrlProps={{type: 'number', className: 'underlined-number-input'}} />
+            </React.Fragment> : undefined}
+        <div style={{width: 8}} />
+        <i
+            role="button"
+            className="material-icons md-14"
+            style={{lineHeight: '24px', color: 'black'}}
+            onClick={handleRemove}>
+            delete
+        </i>
+    </div>));
 
 defaultExport.TextShadowsControl = (TextShadowsControl = ShadowsControl('text-shadow'));
 defaultExport.BoxShadowsControl = (BoxShadowsControl = ShadowsControl('box-shadow'));
@@ -547,29 +653,40 @@ defaultExport.TextStyleVariantControlGroup = (TextStyleVariantControlGroup = fun
     const hasCustomFontWeight = fontHasWeightVariants && (linkAttr('hasCustomFontWeight').value === true);
 
     return [
-        React.createElement("div", {"className": "ctrl-wrapper"},
-            React.createElement("h5", {"className": "sidebar-ctrl-label"}, "style"),
-            React.createElement("div", {"className": "ctrl"},
-                React.createElement(PdButtonGroup, {"buttons": ([
-                        [React.createElement("b", null, "B"), 'isBold'],
-                        [React.createElement("i", null, "I"), 'isItalics'],
-                        [React.createElement("u", null, "U"), 'isUnderline'],
-                        [React.createElement("s", null, "S"), 'isStrikethrough']
-                    ].map((...args) => {
-                        // Don't render bold button if fontweight control is showing
-                        const [label, attr] = Array.from(args[0]), i = args[1];
-                        if ((attr === 'isBold') && hasCustomFontWeight) { return; }
+        <div className="ctrl-wrapper">
+            <h5 className="sidebar-ctrl-label">
+                style
+            </h5>
+            <div className="ctrl">
+                <PdButtonGroup
+                    buttons={[
+                            [<b>
+                                B
+                            </b>, 'isBold'],
+                            [<i>
+                                I
+                            </i>, 'isItalics'],
+                            [<u>
+                                U
+                            </u>, 'isUnderline'],
+                            [<s>
+                                S
+                            </s>, 'isStrikethrough']
+                        ].map((...args) => {
+                            // Don't render bold button if fontweight control is showing
+                            const [label, attr] = Array.from(args[0]), i = args[1];
+                            if ((attr === 'isBold') && hasCustomFontWeight) { return; }
 
-                        const vlink = linkAttr(attr);
-                        return {
-                            type: vlink.value ? 'primary' : 'default',
-                            disabled: !Array.from(valid_attrs).includes(attr),
-                            label,
-                            onClick(e) { vlink.requestChange(!vlink.value); e.preventDefault(); return e.stopPropagation(); }
-                        };
-                }))})
-            )
-        ),
+                            const vlink = linkAttr(attr);
+                            return {
+                                type: vlink.value ? 'primary' : 'default',
+                                disabled: !Array.from(valid_attrs).includes(attr),
+                                label,
+                                onClick(e) { vlink.requestChange(!vlink.value); e.preventDefault(); return e.stopPropagation(); }
+                            };
+                    })} />
+            </div>
+        </div>,
 
         fontHasWeightVariants ? ["use custom font weight", 'hasCustomFontWeight', CheckboxControl] : undefined,
         hasCustomFontWeight ? ["font weight", 'fontWeight', FontWeightControl(fontFamily)] : undefined

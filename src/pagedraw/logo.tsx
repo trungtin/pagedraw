@@ -13,204 +13,214 @@ import createReactClass from 'create-react-class';
 export default Logo = createReactClass({
     displayName: 'Logo',
     render() {
-        return React.createElement("div", {"className": "pd-onhover-parent logo"},
-          React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-@import url('https://fonts.googleapis.com/css?family=Lato:');
+        return (
+            <div className="pd-onhover-parent logo">
+                <style
+                    dangerouslySetInnerHTML={{__html: `\
+          @import url('https://fonts.googleapis.com/css?family=Lato:');
 
-.logo {
-    display: flex;
-    flex-grow: 1;
-}
+          .logo {
+              display: flex;
+              flex-grow: 1;
+          }
 
-.logo-_hover-2 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    cursor: pointer;
-}
+          .logo-_hover-2 {
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              cursor: pointer;
+          }
 
-.logo-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .logo-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.logo-rectangle_4 {
-    display: flex;
-    flex-direction: column;
-}
+          .logo-rectangle_4 {
+              display: flex;
+              flex-direction: column;
+          }
 
-.logo-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .logo-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.logo-0-0-0-0-0 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 4px;
-    padding-bottom: 6px;
-}
+          .logo-0-0-0-0-0 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 4px;
+              padding-bottom: 6px;
+          }
 
-.logo-0-0-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .logo-0-0-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.logo-image-6 {
-    width: 32px;
-    height: 28px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+          .logo-image-6 {
+              width: 32px;
+              height: 28px;
+              flex-shrink: 0;
+              border-width: 0px;
+          }
 
-.logo-text_2 {
-    flex-shrink: 0;
-    margin-left: 3px;
-    font-family: "Lato", sans-serif;
-    color: rgb(255, 255, 255);
-    font-size: 31px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-    padding-right: 0.578125px;
-}
+          .logo-text_2 {
+              flex-shrink: 0;
+              margin-left: 3px;
+              font-family: "Lato", sans-serif;
+              color: rgb(255, 255, 255);
+              font-size: 31px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+              padding-right: 0.578125px;
+          }
 
-.logo-default-4 {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    flex-grow: 1;
-}
+          .logo-default-4 {
+              display: flex;
+              flex-direction: column;
+              cursor: pointer;
+              flex-grow: 1;
+          }
 
-.logo-1-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .logo-1-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.logo-rectangle_4-6 {
-    display: flex;
-    flex-direction: column;
-}
+          .logo-rectangle_4-6 {
+              display: flex;
+              flex-direction: column;
+          }
 
-.logo-1-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .logo-1-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.logo-1-0-0-0-0-0 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 4px;
-    padding-bottom: 6px;
-}
+          .logo-1-0-0-0-0-0 {
+              display: flex;
+              flex-direction: column;
+              padding-top: 4px;
+              padding-bottom: 6px;
+          }
 
-.logo-1-0-0-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+          .logo-1-0-0-0-0-0-0 {
+              display: flex;
+              flex-shrink: 0;
+          }
 
-.logo-image_2 {
-    width: 32px;
-    height: 28px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+          .logo-image_2 {
+              width: 32px;
+              height: 28px;
+              flex-shrink: 0;
+              border-width: 0px;
+          }
 
-.logo-text_1 {
-    flex-shrink: 0;
-    margin-left: 3px;
-    font-family: "Lato", sans-serif;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 31px;
-    line-height: normal;
-    letter-spacing: 0px;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: none;
-    text-align: left;
-    word-wrap: break-word;
-    padding-right: 0.578125px;
-}
+          .logo-text_1 {
+              flex-shrink: 0;
+              margin-left: 3px;
+              font-family: "Lato", sans-serif;
+              color: rgba(255, 255, 255, 0.8);
+              font-size: 31px;
+              line-height: normal;
+              letter-spacing: 0px;
+              font-weight: normal;
+              font-style: normal;
+              text-decoration: none;
+              text-align: left;
+              word-wrap: break-word;
+              padding-right: 0.578125px;
+          }
 
-* {
-    box-sizing: border-box;
-}
+          * {
+              box-sizing: border-box;
+          }
 
-body {
-    margin: 0;
-}
+          body {
+              margin: 0;
+          }
 
-button:hover {
-    cursor: pointer;
-}
+          button:hover {
+              cursor: pointer;
+          }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+          a {
+              text-decoration: none;
+              color: inherit;
+          }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+          .pd-onhover-parent >.pd-onhover {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+          .pd-onhover-parent:hover > * {
+              display: none;
+          }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+          .pd-onhover-parent:hover > .pd-onhover {
+              display: flex;
+          }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+          .pd-onactive-parent > .pd-onactive {
+              display: none;
+          }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+          .pd-onactive-parent:active > * {
+              display: none;
+          }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+          .pd-onactive-parent:active > .pd-onactive {
+              display: flex;
+          }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-          React.createElement("div", {"className": "pd-onhover logo-_hover-2"},
-              React.createElement("div", {"className": "logo-0-0"},
-                  React.createElement("div", {"className": "logo-rectangle_4"},
-                      React.createElement("div", {"className": "logo-0-0-0-0"},
-                          React.createElement("div", {"className": "logo-0-0-0-0-0"},
-                              React.createElement("div", {"className": "logo-0-0-0-0-0-0"},
-                                  React.createElement("img", {"src": "https://ucarecdn.com/5fc60725-367b-43a7-a9cb-edd667094fb7/", "className": "logo-image-6"}) 
-                              )
-                          ),
-                          React.createElement("div", {"className": "logo-text_2"}, "Pagedraw")
-                      )
-                  )
-              )
-          ),
-          ( (("default") === "default") ?
-              React.createElement("div", {"className": "logo-default-4"},
-                  React.createElement("div", {"className": "logo-1-0-0"},
-                      React.createElement("div", {"className": "logo-rectangle_4-6"},
-                          React.createElement("div", {"className": "logo-1-0-0-0-0"},
-                              React.createElement("div", {"className": "logo-1-0-0-0-0-0"},
-                                  React.createElement("div", {"className": "logo-1-0-0-0-0-0-0"},
-                                      React.createElement("img", {"src": "https://ucarecdn.com/5fc60725-367b-43a7-a9cb-edd667094fb7/", "className": "logo-image_2"}) 
-                                  )
-                              ),
-                              React.createElement("div", {"className": "logo-text_1"}, "Pagedraw")
-                          )
-                      )
-                  )
-              ) : undefined
-          )
-      );
+          .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+              display: none;
+          }\
+          `}} />
+                <div className="pd-onhover logo-_hover-2">
+                    <div className="logo-0-0">
+                        <div className="logo-rectangle_4">
+                            <div className="logo-0-0-0-0">
+                                <div className="logo-0-0-0-0-0">
+                                    <div className="logo-0-0-0-0-0-0">
+                                        <img
+                                            src="https://ucarecdn.com/5fc60725-367b-43a7-a9cb-edd667094fb7/"
+                                            className="logo-image-6" />
+                                    </div>
+                                </div>
+                                <div className="logo-text_2">
+                                    Pagedraw
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {(("default") === "default") ?
+                      <div className="logo-default-4">
+                          <div className="logo-1-0-0">
+                              <div className="logo-rectangle_4-6">
+                                  <div className="logo-1-0-0-0-0">
+                                      <div className="logo-1-0-0-0-0-0">
+                                          <div className="logo-1-0-0-0-0-0-0">
+                                              <img
+                                                  src="https://ucarecdn.com/5fc60725-367b-43a7-a9cb-edd667094fb7/"
+                                                  className="logo-image_2" />
+                                          </div>
+                                      </div>
+                                      <div className="logo-text_1">
+                                          Pagedraw
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div> : undefined}
+            </div>
+        );
     }
 });

@@ -61,24 +61,25 @@ export default Block.register('image', (ImageBlock = (function() {
             ["Parallax Scrolling", "parallax", CheckboxControl],
 
             // TODO only show stretch controls iff dynamic src OR non-fixed size
-            React.createElement("div", {"className": "ctrl-wrapper"},
-                React.createElement("div", {"className": "ctrl"},
-                    React.createElement(PdButtonGroup, {"buttons": ([
-                        ['Stretch', 'stretch'],
-                        ['Cover',   'cover'],
-                        ['Contain', 'contain']
-                        // [Image size,    'img-file-size']
-                        // TODO setting where height is set by width * aspect ratio
-                    ].map(function(...args) {
-                        const [label, value] = Array.from(args[0]), i = args[1];
-                        const vlink = linkAttr('stretchAlgo');
-                        return {
-                            label, type: vlink.value === value ? 'primary' : 'default',
-                            onClick(e) { vlink.requestChange(value); e.preventDefault(); return e.stopPropagation(); }
-                        };
-                    }))})
-                )
-            )
+            <div className="ctrl-wrapper">
+                <div className="ctrl">
+                    <PdButtonGroup
+                        buttons={[
+                            ['Stretch', 'stretch'],
+                            ['Cover',   'cover'],
+                            ['Contain', 'contain']
+                            // [Image size,    'img-file-size']
+                            // TODO setting where height is set by width * aspect ratio
+                        ].map(function(...args) {
+                            const [label, value] = Array.from(args[0]), i = args[1];
+                            const vlink = linkAttr('stretchAlgo');
+                            return {
+                                label, type: vlink.value === value ? 'primary' : 'default',
+                                onClick(e) { vlink.requestChange(value); e.preventDefault(); return e.stopPropagation(); }
+                            };
+                        })} />
+                </div>
+            </div>
         ]); }
 
         renderHTML(dom, options, editorCache) {
@@ -148,8 +149,10 @@ export default Block.register('image', (ImageBlock = (function() {
             // returning null uses the default editor, rendering the image the same way it's compiled
             if (!needs_loading_animation) { return null; }
 
-            return React.createElement("div", null,
-                React.createElement("div", {"className": "animated-background", "style": ({height: this.height})})
+            return (
+                <div>
+                    <div className="animated-background" style={{height: this.height}} />
+                </div>
             );
         }
     };

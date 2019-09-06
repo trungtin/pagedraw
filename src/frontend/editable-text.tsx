@@ -16,23 +16,31 @@ export default EditableText = createReactClass({
 
     render() {
         if (this.props.isEditing) {
-            return React.createElement("input", {"type": "text",  
-                   "autoFocus": (true),  
-                   "value": (this.newValue),  
-                   "onChange": (this.handleChange),  
-                   "style": (_.extend({color:'black'}, this.props.editingStyle)),  
-                   "onKeyDown": (this.inputKeyDown),  
-                   "onBlur": (this.finish),  
-                   "onFocus": (this.inputHandleFocus)});
+            return (
+                <input
+                    type="text"
+                    autoFocus={true}
+                    value={this.newValue}
+                    onChange={this.handleChange}
+                    style={_.extend({color:'black'}, this.props.editingStyle)}
+                    onKeyDown={this.inputKeyDown}
+                    onBlur={this.finish}
+                    onFocus={this.inputHandleFocus} />
+            );
         } else {
-            return React.createElement("span", {"style": (_.extend({
-                    display:'block',
-                    width:'100%',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }, this.props.readOnlyStyle)),  
-                  "onMouseDown": (this.textMouseDown)}, (this.props.valueLink.value));
+            return (
+                <span
+                    style={_.extend({
+                            display:'block',
+                            width:'100%',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }, this.props.readOnlyStyle)}
+                    onMouseDown={this.textMouseDown}>
+                    {this.props.valueLink.value}
+                </span>
+            );
         }
     },
 

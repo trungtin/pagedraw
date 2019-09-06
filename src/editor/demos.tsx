@@ -43,16 +43,20 @@ const LocalStorageValueLink = function(key, dfault, onchange) {
     };
 };
 
-const DemoContainer = props => React.createElement("div", {"style": (_l.extend({width: 800, margin: 'auto'}, props.style))},
-    (props.children)
-);
+const DemoContainer = props => <div style={_l.extend({width: 800, margin: 'auto'}, props.style)}>
+    {props.children}
+</div>;
 
 //#
 
 Demos.Blank = () => createReactClass({
     render() {
-        return React.createElement(DemoContainer, null,
-            React.createElement("div", null, "Use me for a temporary test")
+        return (
+            <DemoContainer>
+                <div>
+                    Use me for a temporary test
+                </div>
+            </DemoContainer>
         );
     }
 });
@@ -84,83 +88,92 @@ Demos.JSONExplorer = function() {
 
     const JSONTable = createReactClass({
         render() {
-            return React.createElement("div", {"className": "JSONTable"},
-                React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.JSONTable table {
-    border-collapse: collapse;
-}
+            return (
+                <div className="JSONTable">
+                    <style
+                        dangerouslySetInnerHTML={{__html: `\
+        .JSONTable table {
+            border-collapse: collapse;
+        }
 
-.JSONTable table, .JSONTable th, .JSONTable td {
-   border: 1px solid black;
-}
+        .JSONTable table, .JSONTable th, .JSONTable td {
+           border: 1px solid black;
+        }
 
-.JSONTable thead td {
-    background-color: antiquewhite;
-    position: sticky;
-    top: 0;
-}\
-`})}),
-                ((() => { 
-                    try {
-                        if (_l.isArray(this.props.json)) {
-                            return this.renderList(this.props.json);
-                        } else if (isPrimitive(this.props.json)) {
-                            return React.createElement("div", null, (JSON.stringify(this.props.json)));
-                        } else {
-                            return this.renderHash(this.props.json);
-                        }
-                    } catch (e) {
-                        return `JSONExplorer error: ${e.message}`;
-                    }
-                 })())
+        .JSONTable thead td {
+            background-color: antiquewhite;
+            position: sticky;
+            top: 0;
+        }\
+        `}} />
+                    {(() => { 
+                            try {
+                                if (_l.isArray(this.props.json)) {
+                                    return this.renderList(this.props.json);
+                                } else if (isPrimitive(this.props.json)) {
+                                    return (
+                                        <div>
+                                            {JSON.stringify(this.props.json)}
+                                        </div>
+                                    );
+                                } else {
+                                    return this.renderHash(this.props.json);
+                                }
+                            } catch (e) {
+                                return `JSONExplorer error: ${e.message}`;
+                            }
+                         })()}
+                </div>
             );
         },
 
 
         renderHash(hash) {
             let flattened;
-            return React.createElement("table", null,
-                React.createElement("tbody", null,
-                (
-                    (flattened = _l.toPairs(flatten_hash(hash))),
-
-                    (flattened = _l.sortBy(flattened, [(function(...args) { const [k,v] = Array.from(args[0]); return _l.isArray(v); }), '0'])),
-
-                    (() => {
-                        const result = [];
-                        for (let i = 0; i < flattened.length; i++) {
-                            var [key, value] = flattened[i];
-                            result.push(React.createElement("tr", {"key": (i)},
-                                React.createElement("td", null,
-                                    React.createElement("div", {"style": ({position: 'sticky', top: 10, bottom: 10})},
-                                        (key)
-                                    )
-                                ),
-                                React.createElement("td", null, (
-                                    _l.isArray(value) ?
-                                        this.renderList(value)
-                                    : isPrimitive(value) ?
-                                        React.createElement("div", null, (JSON.stringify(value)))
-                                    :
-                                        (() => { try {
-                                            return `Unknown object kind ${JSON.stringify(value)}`;
-                                        } catch (e) {
-                                            return `Unknown object [un-JSONable] ${e.message}`;
-                                        } })()
-                                ))
-                            ));
-                        }
-                        return result;
-                    })()
-                )
-                )
+            return (
+                <table>
+                    <tbody>
+                        {(flattened = _l.toPairs(flatten_hash(hash)), flattened = _l.sortBy(flattened, [(function(...args) { const [k,v] = Array.from(args[0]); return _l.isArray(v); }), '0']), (() => {
+                            const result = [];
+                            for (let i = 0; i < flattened.length; i++) {
+                                var [key, value] = flattened[i];
+                                result.push(<tr key={i}>
+                                    <td>
+                                        <div style={{position: 'sticky', top: 10, bottom: 10}}>
+                                            {key}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {_l.isArray(value) ?
+                                            this.renderList(value)
+                                        : isPrimitive(value) ?
+                                            <div>
+                                                {JSON.stringify(value)}
+                                            </div>
+                                        :
+                                            (() => { try {
+                                                return `Unknown object kind ${JSON.stringify(value)}`;
+                                            } catch (e) {
+                                                return `Unknown object [un-JSONable] ${e.message}`;
+                                            } })()}
+                                    </td>
+                                </tr>);
+                            }
+                            return result;
+                        })())}
+                    </tbody>
+                </table>
             );
         },
 
         renderList(list) {
             let i, value, hash;
             if (_l.isEmpty(list)) {         //0
-                return React.createElement("div", null, "[]");
+                return (
+                    <div>
+                        []
+                    </div>
+                );
             }
 
             const hasSublists = _l.some(list, elem => _l.isArray(elem));
@@ -170,73 +183,83 @@ Demos.JSONExplorer = function() {
             if (hasObjs && !hasSublists && !hasPrims) {     //1
                 const keys = _l.union(...Array.from(list.map(hash => _l.keys(flatten_hash(hash))) || []));
 
-                return React.createElement("table", null,
-                    React.createElement("thead", null,
-                        React.createElement("tr", null, ((() => {
-                            const result = [];
-                            for (i = 0; i < keys.length; i++) {
-                                const key = keys[i];
-                                result.push(React.createElement("td", {"key": (i)}, (key)));
-                            }
-                        
-                            return result;
-                        })())
-                        )
-                    ),
-
-                    React.createElement("tbody", null,
-                        ((() => {
-                        const result1 = [];
-                        
-                            for (i = 0; i < list.length; i++) {
-                            hash = list[i];
-                            result1.push(React.createElement("tr", {"key": (i)},
-                                ((() => {
-                                const result2 = [];
-                                const iterable = _l.at(hash, keys);
+                return (
+                    <table>
+                        <thead>
+                            <tr>
+                                {(() => {
+                                    const result = [];
+                                    for (i = 0; i < keys.length; i++) {
+                                        const key = keys[i];
+                                        result.push(<td key={i}>
+                                            {key}
+                                        </td>);
+                                    }
                                 
-                                    for (let j = 0; j < iterable.length; j++) {
-                                    value = iterable[j];
-                                        result2.push(React.createElement("td", {"key": (j)},
-                                        (
-                                            _l.isArray(value) ?
-                                                // sort of the least we can do
-                                                // FIXME pull their headers a level up
-                                                this.renderList(value)
-                                            : isPrimitive(value) ?
-                                                React.createElement("div", null, (JSON.stringify(value)))
-                                            :
-                                                // FIXME for this key, some elements have a non-object type and others have an object type
-                                                React.createElement("div", null, ("{Object}"))
-                                        )
-                                        ));
+                                    return result;
+                                })()}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {(() => {
+                                const result1 = [];
+                                
+                                    for (i = 0; i < list.length; i++) {
+                                    hash = list[i];
+                                    result1.push(<tr key={i}>
+                                        {(() => {
+                                            const result2 = [];
+                                            const iterable = _l.at(hash, keys);
+                                            
+                                                for (let j = 0; j < iterable.length; j++) {
+                                                value = iterable[j];
+                                                    result2.push(<td key={j}>
+                                                        {_l.isArray(value) ?
+                                                            // sort of the least we can do
+                                                            // FIXME pull their headers a level up
+                                                            this.renderList(value)
+                                                        : isPrimitive(value) ?
+                                                            <div>
+                                                                {JSON.stringify(value)}
+                                                            </div>
+                                                        :
+                                                            // FIXME for this key, some elements have a non-object type and others have an object type
+                                                            <div>
+                                                                {Object}
+                                                            </div>}
+                                                    </td>);
+                                            }
+                                            
+                                            return result2;
+                                        })()}
+                                    </tr>);
                                 }
                                 
-                                return result2;
-                            })())
-                            ));
-                        }
-                        
-                        return result1;
-                    })())
-                    )
+                                return result1;
+                            })()}
+                        </tbody>
+                    </table>
                 );
 
             } else if (!hasObjs && !hasSublists && hasPrims) {    //2
-                return React.createElement("table", null,
-                    React.createElement("tbody", null,
-                        ((() => {
-                        const result3 = [];
-                         for (i = 0; i < list.length; i++) {
-                            value = list[i];
-                            result3.push(React.createElement("tr", {"key": (i)},
-                                React.createElement("td", null, (JSON.stringify(value)))
-                            ));
-                        }
-                        
-                        return result3;
-                    })())
-                    )
+                return (
+                    <table>
+                        <tbody>
+                            {(() => {
+                                const result3 = [];
+                                 for (i = 0; i < list.length; i++) {
+                                    value = list[i];
+                                    result3.push(<tr key={i}>
+                                        <td>
+                                            {JSON.stringify(value)}
+                                        </td>
+                                    </tr>);
+                                }
+                                
+                                return result3;
+                            })()}
+                        </tbody>
+                    </table>
                 );
 
             } else {
@@ -255,20 +278,24 @@ Demos.JSONExplorer = function() {
 
                 */
                 // UNIMPLEMENTED / DEFAULT
-                return React.createElement("table", null,
-                    React.createElement("tbody", null,
-                        ((() => {
-                        const result4 = [];
-                         for (i = 0; i < list.length; i++) {
-                            value = list[i];
-                            result4.push(React.createElement("tr", {"key": (i)},
-                                React.createElement("td", null, (JSON.stringify(value)))
-                            ));
-                        }
-                        
-                        return result4;
-                    })())
-                    )
+                return (
+                    <table>
+                        <tbody>
+                            {(() => {
+                                const result4 = [];
+                                 for (i = 0; i < list.length; i++) {
+                                    value = list[i];
+                                    result4.push(<tr key={i}>
+                                        <td>
+                                            {JSON.stringify(value)}
+                                        </td>
+                                    </tr>);
+                                }
+                                
+                                return result4;
+                            })()}
+                        </tbody>
+                    </table>
                 );
             }
         }
@@ -278,15 +305,24 @@ Demos.JSONExplorer = function() {
 
     return createReactClass({
         render() {
-            return React.createElement("div", null,
-                React.createElement(DemoContainer, null,
-                    React.createElement(FormControl, {"tag": "textarea", "valueLink": (this.getJSVL()), "style": ({width: '100%', height: '5em'})}),
-                    React.createElement(FormControl, {"tag": "select", "valueLink": (this.getLanguageVL())},
-                        React.createElement("option", {"value": "Javascript"}, "Javascript"),
-                        React.createElement("option", {"value": "YAML"}, "YAML")
-                    )
-                ),
-                React.createElement(JSONTable, {"json": (this.state.data)})
+            return (
+                <div>
+                    <DemoContainer>
+                        <FormControl
+                            tag="textarea"
+                            valueLink={this.getJSVL()}
+                            style={{width: '100%', height: '5em'}} />
+                        <FormControl tag="select" valueLink={this.getLanguageVL()}>
+                            <option value="Javascript">
+                                Javascript
+                            </option>
+                            <option value="YAML">
+                                YAML
+                            </option>
+                        </FormControl>
+                    </DemoContainer>
+                    <JSONTable json={this.state.data} />
+                </div>
             );
         },
 
@@ -322,19 +358,25 @@ Demos.InstanceRenderer = function() {
     return createReactClass({
         render() {
             let left;
-            return React.createElement("div", {"style": ({margin: 'auto'})},
-                React.createElement("p", null, `\
-DocID: `, React.createElement(FormControl, {"type": "text", "valueLink": (this.getPageIdValueLink())}),
-                    React.createElement(PdDropdownTwo, {"title": (this.selectedInstance != null ? this.selectedInstance.name : undefined),  
-                        "onSelect": ((val, evt) => { return this.selectedInstance = _l.find(this.doc.blocks, {uniqueKey: val}); }),  
-                        "options": ((left = (this.doc != null ? this.doc.blocks.filter(b => b instanceof BaseInstanceBlock).map(instance => ({
-                            label: instance.getLabel(),
-                            value: instance.uniqueKey
-                        })) : undefined)) != null ? left : [])}),
-                    React.createElement("button", {"onClick": (this.mount)}, "Mount")
-                ),
-
-                React.createElement("div", {"ref": "mount_point"})
+            return (
+                <div style={{margin: 'auto'}}>
+                    <p>
+                        {`\
+        DocID: `}
+                        <FormControl type="text" valueLink={this.getPageIdValueLink()} />
+                        <PdDropdownTwo
+                            title={this.selectedInstance != null ? this.selectedInstance.name : undefined}
+                            onSelect={(val, evt) => { return this.selectedInstance = _l.find(this.doc.blocks, {uniqueKey: val}); }}
+                            options={(left = (this.doc != null ? this.doc.blocks.filter(b => b instanceof BaseInstanceBlock).map(instance => ({
+                                label: instance.getLabel(),
+                                value: instance.uniqueKey
+                            })) : undefined)) != null ? left : []} />
+                        <button onClick={this.mount}>
+                            Mount
+                        </button>
+                    </p>
+                    <div ref="mount_point" />
+                </div>
             );
         },
 
@@ -405,20 +447,27 @@ Demos.LocalCompiler = function() {
 
     return createReactClass({
         render() {
-            return React.createElement("div", {"style": ({margin: 'auto'})},
-                React.createElement("p", null, `\
-DocID: `, React.createElement(FormControl, {"type": "text", "valueLink": (this.getPageIdValueLink())}), `\
-Hide CSS: `, React.createElement(FormControl, {"type": "checkbox", "valueLink": (this.getIgnoreCSSValueLink())})
-                ),
-
-                React.createElement("div", {"style": ({display: 'flex'})},
-                    (this.getCompiled().map(({filePath, contents}, i) => React.createElement("div", {"key": (i)},
-                    React.createElement("span", {"style": ({fontWeight: 'bold'})}, (filePath)),
-                    React.createElement("pre", {"style": ({overflow: 'auto', width: 750, border: '1px solid gray'})},
-                        (contents)
-                    )
-                )))
-                )
+            return (
+                <div style={{margin: 'auto'}}>
+                    <p>
+                        {`\
+        DocID: `}
+                        <FormControl type="text" valueLink={this.getPageIdValueLink()} />
+                        {`\
+        Hide CSS: `}
+                        <FormControl type="checkbox" valueLink={this.getIgnoreCSSValueLink()} />
+                    </p>
+                    <div style={{display: 'flex'}}>
+                        {this.getCompiled().map(({filePath, contents}, i) => <div key={i}>
+                            <span style={{fontWeight: 'bold'}}>
+                                {filePath}
+                            </span>
+                            <pre style={{overflow: 'auto', width: 750, border: '1px solid gray'}}>
+                                {contents}
+                            </pre>
+                        </div>)}
+                    </div>
+                </div>
             );
         },
 
@@ -490,24 +539,32 @@ Demos.RefactorTesting = function() {
 
     return createReactClass({
         render() {
-            return React.createElement("div", {"style": ({margin: 'auto'})},
-                React.createElement("div", null, `\
-DocID: `, React.createElement(FormControl, {"type": "text", "valueLink": (this.getPageIdValueLink())}),
-                    (this.matches ?
-                        React.createElement("span", {"style": ({backgroundColor: 'green', color: 'white'})}, "Matches")
-                    :
-                        React.createElement("span", {"style": ({backgroundColor: 'red', color: 'white'})}, "Fails")
-                    )
-                ),
-
-                React.createElement("div", {"style": ({display: 'flex'})},
-                    (this.compiled.map(({filePath, contents}, i) => React.createElement("div", {"key": (i)},
-                    React.createElement("span", {"style": ({fontWeight: 'bold'})}, (filePath)),
-                    React.createElement("pre", {"style": ({overflow: 'auto', width: 750, border: '1px solid gray'})},
-                        (contents)
-                    )
-                )))
-                )
+            return (
+                <div style={{margin: 'auto'}}>
+                    <div>
+                        {`\
+        DocID: `}
+                        <FormControl type="text" valueLink={this.getPageIdValueLink()} />
+                        {this.matches ?
+                                <span style={{backgroundColor: 'green', color: 'white'}}>
+                                    Matches
+                                </span>
+                            :
+                                <span style={{backgroundColor: 'red', color: 'white'}}>
+                                    Fails
+                                </span>}
+                    </div>
+                    <div style={{display: 'flex'}}>
+                        {this.compiled.map(({filePath, contents}, i) => <div key={i}>
+                            <span style={{fontWeight: 'bold'}}>
+                                {filePath}
+                            </span>
+                            <pre style={{overflow: 'auto', width: 750, border: '1px solid gray'}}>
+                                {contents}
+                            </pre>
+                        </div>)}
+                    </div>
+                </div>
             );
         },
 
@@ -564,9 +621,13 @@ DocID: `, React.createElement(FormControl, {"type": "text", "valueLink": (this.g
 
 Demos.BlockRenderingExperiment = function() {  return createReactClass({
     render() {
-        return React.createElement("div", null,
-            React.createElement("button", {"onClick": (this.start)}, "start"),
-            React.createElement("span", {"ref": "dom"})
+        return (
+            <div>
+                <button onClick={this.start}>
+                    start
+                </button>
+                <span ref="dom" />
+            </div>
         );
     },
 
@@ -595,16 +656,24 @@ Demos.BlockRenderingExperiment = function() {  return createReactClass({
 
 Demos.IframeExperiment = () => createReactClass({
     render() {
-        return React.createElement("iframe", {"ref": "iframe"}, `\
-I have content!\
-`);
+        return (
+            <iframe ref="iframe">
+                {`\
+        I have content!\
+        `}
+            </iframe>
+        );
     }
 });
 
 
 Demos.MouseDragExperiment = function() { return createReactClass({
     render() {
-        return React.createElement("button", {"onClick": (this.start)}, "start");
+        return (
+            <button onClick={this.start}>
+                start
+            </button>
+        );
     },
 
     start() {
@@ -615,9 +684,13 @@ Demos.MouseDragExperiment = function() { return createReactClass({
 
 Demos.CopyPasteExperiment = function() { return createReactClass({
     render() {
-        return React.createElement("div", {"tabIndex": "100"}, `\
-Some content\
-`);
+        return (
+            <div tabIndex="100">
+                {`\
+        Some content\
+        `}
+            </div>
+        );
     },
 
     componentDidMount() {
@@ -632,13 +705,19 @@ Some content\
 Demos.SpinExperiment = function() { return createReactClass({
     render() {
         const boxSize = 100;
-        return React.createElement(DraggingCanvas, {"style": ({height: 1000, position: 'relative'}), "onDrag": (this.handleDrag), "onClick"() {}},
-            React.createElement("div", {"style": ({
-                position: 'absolute', backgroundColor: 'red',
-                width: boxSize, height: boxSize,
-                top: this.state.top - (boxSize/2), left: this.state.left - (boxSize/2),
-                transform: `rotate(${this.state.top+this.state.left}deg)`
-            })})
+        return (
+            <DraggingCanvas
+                style={{height: 1000, position: 'relative'}}
+                onDrag={this.handleDrag}
+                onClick={function() {}}>
+                <div
+                    style={{
+                        position: 'absolute', backgroundColor: 'red',
+                        width: boxSize, height: boxSize,
+                        top: this.state.top - (boxSize/2), left: this.state.left - (boxSize/2),
+                        transform: `rotate(${this.state.top+this.state.left}deg)`
+                    }} />
+            </DraggingCanvas>
         );
     },
 
@@ -659,22 +738,29 @@ Demos.SpinExperiment = function() { return createReactClass({
 
 Demos.DynamicStyleTagExperiment1 = function() { return createReactClass({
     render() {
-        return React.createElement("div", null,
-            React.createElement("div", null,
-                React.createElement("button", {"onClick": (this.start)}, "Start dynamic style tag animation")
-            ),
-            React.createElement("div", {"style": ({height: 100, position: 'relative'})},
-                React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-#dste_box {
-    left: ${this.offset}px;
-}\
-`})}),
-                React.createElement("div", {"id": "dste_box", "ref": "box",  
-                    "style": ({
-                        position: 'absolute', backgroundColor: 'red',
-                        width: 80, height: 80
-                    })})
-            )
+        return (
+            <div>
+                <div>
+                    <button onClick={this.start}>
+                        Start dynamic style tag animation
+                    </button>
+                </div>
+                <div style={{height: 100, position: 'relative'}}>
+                    <style
+                        dangerouslySetInnerHTML={{__html: `\
+        #dste_box {
+            left: ${this.offset}px;
+        }\
+        `}} />
+                    <div
+                        id="dste_box"
+                        ref="box"
+                        style={{
+                            position: 'absolute', backgroundColor: 'red',
+                            width: 80, height: 80
+                        }} />
+                </div>
+            </div>
         );
     },
 
@@ -696,18 +782,23 @@ Demos.DynamicStyleTagExperiment1 = function() { return createReactClass({
 
 Demos.DynamicStyleTagExperiment2 = function() { return createReactClass({
     render() {
-        return React.createElement("div", null,
-            React.createElement("div", null,
-                React.createElement("button", {"onClick": (this.start)}, "Start style animation")
-            ),
-            React.createElement("div", {"style": ({height: 100, position: 'relative'})},
-                React.createElement("div", {"ref": "box",  
-                    "style": ({
-                        position: 'absolute', backgroundColor: 'red',
-                        width: 80, height: 80,
-                        left: this.offset
-                    })})
-            )
+        return (
+            <div>
+                <div>
+                    <button onClick={this.start}>
+                        Start style animation
+                    </button>
+                </div>
+                <div style={{height: 100, position: 'relative'}}>
+                    <div
+                        ref="box"
+                        style={{
+                            position: 'absolute', backgroundColor: 'red',
+                            width: 80, height: 80,
+                            left: this.offset
+                        }} />
+                </div>
+            </div>
         );
     },
 
@@ -739,32 +830,40 @@ Demos.SideScrollerExperiment = function() { return createReactClass({
         } = this.state;
         const card_count = cards.length;
 
-        return React.createElement("div", {"style": ({overflow: 'auto', height: 500, width: '100%'})},
-            React.createElement("div", {"style": ({height: '100%', width: ((card_count*card_width) + ((card_count-1)*card_margin) + extra_right_space)})},
-                (cards.map((card, i) => {
-                    return React.createElement("div", {"key": (i), "style": ({
-                        display: 'inline-block',
-                        width: card_width,
-                        height: '100%',
-                        marginLeft: i !== 0 ? card_margin : 0,
-                        backgroundColor: 'red'})},
-                        (['foo', 'bar', 'baz', 'qoux', 'lorem', 'ipsum'].map(item => {
-                            return React.createElement("div", {"key": (item),  
-                                "onClick": ( () => {
-                                    return this.setState({cards: cards.slice(0, i).concat([item, undefined])});
-                                }
-                                ),  
-                                "style": ({
-                                    margin: 5, padding: 10, borderRadius: 5,
-                                    backgroundColor: item !== card ? 'aliceblue' : 'blue'
-                                })
-                            },
-                                (item)
+        return (
+            <div style={{overflow: 'auto', height: 500, width: '100%'}}>
+                <div
+                    style={{height: '100%', width: ((card_count*card_width) + ((card_count-1)*card_margin) + extra_right_space)}}>
+                    {cards.map((card, i) => {
+                            return (
+                                <div
+                                    key={i}
+                                    style={{
+                                        display: 'inline-block',
+                                        width: card_width,
+                                        height: '100%',
+                                        marginLeft: i !== 0 ? card_margin : 0,
+                                        backgroundColor: 'red'}}>
+                                    {['foo', 'bar', 'baz', 'qoux', 'lorem', 'ipsum'].map(item => {
+                                            return (
+                                                <div
+                                                    key={item}
+                                                    onClick={() => {
+                                                        return this.setState({cards: cards.slice(0, i).concat([item, undefined])});
+                                                    }}
+                                                    style={{
+                                                        margin: 5, padding: 10, borderRadius: 5,
+                                                        backgroundColor: item !== card ? 'aliceblue' : 'blue'
+                                                    }}>
+                                                    {item}
+                                                </div>
+                                            );
+                                        })}
+                                </div>
                             );
-                        }))
-                    );
-                }))
-            )
+                        })}
+                </div>
+            </div>
         );
     }
 }); };
@@ -819,17 +918,25 @@ Demos.VnetExperiment = function() {
 
     return createReactClass({
         render() {
-            return React.createElement(DemoContainer, null,
-                React.createElement("div", {"style": ({border: '1px solid #888', display: 'inline-block', margin: 10, fontSize: 0}), "onKeyDown": (this.handleKey)},
-                    React.createElement(FocusController, null,
-                        React.createElement(DraggingCanvas, {"onDrag": (this.handleDrag), "onClick": (this.handleClick)},
-                            React.createElement("canvas", {"width": (WIDTH), "height": (HEIGHT), "style": ({
-                                width: WIDTH/2, height: HEIGHT/2,
-                                display: 'inline-block'
-                            }), "ref": "canvas"})
-                        )
-                    )
-                )
+            return (
+                <DemoContainer>
+                    <div
+                        style={{border: '1px solid #888', display: 'inline-block', margin: 10, fontSize: 0}}
+                        onKeyDown={this.handleKey}>
+                        <FocusController>
+                            <DraggingCanvas onDrag={this.handleDrag} onClick={this.handleClick}>
+                                <canvas
+                                    width={WIDTH}
+                                    height={HEIGHT}
+                                    style={{
+                                        width: WIDTH/2, height: HEIGHT/2,
+                                        display: 'inline-block'
+                                    }}
+                                    ref="canvas" />
+                            </DraggingCanvas>
+                        </FocusController>
+                    </div>
+                </DemoContainer>
             );
         },
 
@@ -985,18 +1092,27 @@ Demos.VnetExperiment = function() {
 Demos.ShadowDomExperiment = function() {
     return createReactClass({
         render() {
-            return React.createElement(DemoContainer, null,
-                React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.make-red { color: red }\
-`})}),
-                React.createElement("div", {"className": "make-red"}, "This should be red"),
-                React.createElement("div", {"ref": "shadowHost"})
+            return (
+                <DemoContainer>
+                    <style
+                        dangerouslySetInnerHTML={{__html: `\
+        .make-red { color: red }\
+        `}} />
+                    <div className="make-red">
+                        This should be red
+                    </div>
+                    <div ref="shadowHost" />
+                </DemoContainer>
             );
         },
 
         componentDidMount() {
             const shadowRoot = this.refs.shadowHost.attachShadow({mode: 'open'});
-            const shadowTree = React.createElement("div", {"className": "make-red", "onClick"() { return window.alert('hello'); }}, "This should be black");
+            const shadowTree = <div
+                className="make-red"
+                onClick={function() { return window.alert('hello'); }}>
+                This should be black
+            </div>;
             return ReactDOM.render(shadowTree, shadowRoot);
         }
     });
@@ -1007,19 +1123,24 @@ Demos.ColorPickerExperiment = function() {
     const ColorPicker = require('../frontend/react-input-color');
     return createReactClass({
         render() {
-            return React.createElement("div", {"key": (`key${this.key}`)},
-                React.createElement(ColorPicker, {"valueLink": ({
-                    value: this.value,
-                    requestChange: newval => {
-                        console.log(newval);
-                        return this.value = newval;
-                    }
-                })}),
-                React.createElement("button", {"onClick": (() => {
-                    this.key += 1;
-                    return this.forceUpdate();
-                }
-                )}, "Change key")
+            return (
+                <div key={`key${this.key}`}>
+                    <ColorPicker
+                        valueLink={{
+                            value: this.value,
+                            requestChange: newval => {
+                                console.log(newval);
+                                return this.value = newval;
+                            }
+                        }} />
+                    <button
+                        onClick={() => {
+                            this.key += 1;
+                            return this.forceUpdate();
+                        }}>
+                        Change key
+                    </button>
+                </div>
             );
         },
 
@@ -1034,7 +1155,12 @@ Demos.ErrorBoundaryExperiment = function() {
     const ErrorSource = createReactClass({
         displayName: 'ErrorSource',
         render() {
-            return React.createElement("div", null, "Hello ", (undefined['world']));
+            return (
+                <div>
+                    {"Hello "}
+                    {undefined['world']}
+                </div>
+            );
         }
     });
 
@@ -1051,12 +1177,22 @@ Demos.ErrorBoundaryExperiment = function() {
 
         render() {
             if (this.state.errorFound) {
-                return React.createElement(DemoContainer, null, React.createElement("div", null, "Error found. We shouldn\'t need to crash"));
+                return (
+                    <DemoContainer>
+                        <div>
+                            Error found. We shouldn't need to crash
+                        </div>
+                    </DemoContainer>
+                );
             }
 
-            return React.createElement(DemoContainer, null,
-                React.createElement("div", null, "No error found"),
-                React.createElement(ErrorSource, null)
+            return (
+                <DemoContainer>
+                    <div>
+                        No error found
+                    </div>
+                    <ErrorSource />
+                </DemoContainer>
             );
         },
 
@@ -1137,52 +1273,87 @@ Demos.RebaseExperiment = function() {
                 requestChange(new_val) { return vl.requestChange(String(new_val)); }
             });
 
-            return React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column', flex: 1})},
-                React.createElement(DemoContainer, null,
-                    React.createElement("div", {"style": ({display: 'flex', justifyContent: 'space-between'})},
-                        React.createElement("div", null, `\
-base: `, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserBase', "", this.handleUpdate))})
-                        ),
-                        React.createElement("div", null, `\
-left: `, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserLeft', "", this.handleUpdate))})
-                        ),
-                        React.createElement("div", null, `\
-right: `, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserRight', "", this.handleUpdate))})
-                        ),
-                        React.createElement("div", null, `\
-output: `, React.createElement(FormControl, {"placeholder": "Enter doc id", "valueLink": (LocalStorageValueLink('RebaserOut', "", this.handleUpdate))})
-                        ),
+            return (
+                <div style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+                    <DemoContainer>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <div>
+                                {`\
+        base: `}
+                                <FormControl
+                                    placeholder="Enter doc id"
+                                    valueLink={LocalStorageValueLink('RebaserBase', "", this.handleUpdate)} />
+                            </div>
+                            <div>
+                                {`\
+        left: `}
+                                <FormControl
+                                    placeholder="Enter doc id"
+                                    valueLink={LocalStorageValueLink('RebaserLeft', "", this.handleUpdate)} />
+                            </div>
+                            <div>
+                                {`\
+        right: `}
+                                <FormControl
+                                    placeholder="Enter doc id"
+                                    valueLink={LocalStorageValueLink('RebaserRight', "", this.handleUpdate)} />
+                            </div>
+                            <div>
+                                {`\
+        output: `}
+                                <FormControl
+                                    placeholder="Enter doc id"
+                                    valueLink={LocalStorageValueLink('RebaserOut', "", this.handleUpdate)} />
+                            </div>
+                            {(([show, hide] = Array.from(ref = [<button>
+                                Show iFrames
+                            </button>, <button>
+                                Hide iFrames
+                            </button>]), ref), <ToggleIcon
+                                valueLink={StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (() => this.forceUpdate())))}
+                                checkedIcon={hide}
+                                uncheckedIcon={show} />)}
+                        </div>
+                    </DemoContainer>
+                    {(() => {
+                         if (StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (() => this.forceUpdate()))).value) {
+                            const Embed = function({docid, style}) {
+                                if (!_l.isEmpty(docid)) {
+                                    return (
+                                        <iframe
+                                            src={`http://localhost:4000/pages/${docid}`}
+                                            frameBorder="0"
+                                            style={style} />
+                                    );
+                                } else {
+                                    return <div style={style} />;
+                                }
+                            };
 
-                        (
-                            ([show, hide] = Array.from(ref = [React.createElement("button", null, "Show iFrames"), React.createElement("button", null, "Hide iFrames")]), ref),
-                            React.createElement(ToggleIcon, {"valueLink": (StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (() => this.forceUpdate())))),  
-                                "checkedIcon": (hide), "uncheckedIcon": (show)})
-                        )
-                    )
-                ),
-                ((() => {
-                 if (StringToBooleanVLT(LocalStorageValueLink('RebaserShowIframes', "", (() => this.forceUpdate()))).value) {
-                    const Embed = function({docid, style}) {
-                        if (!_l.isEmpty(docid)) {
-                            return React.createElement("iframe", {"src": (`http://localhost:4000/pages/${docid}`), "frameBorder": "0", "style": (style)});
-                        } else {
-                            return React.createElement("div", {"style": (style)});
+                            return (
+                                <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                                    <div style={{display: 'flex', flex: 1}}>
+                                        <Embed
+                                            docid={LocalStorageValueLink('RebaserBase', "", this.handleUpdate).value}
+                                            style={{flexGrow: '1'}} />
+                                        <Embed
+                                            docid={LocalStorageValueLink('RebaserLeft', "", this.handleUpdate).value}
+                                            style={{flexGrow: '1'}} />
+                                    </div>
+                                    <div style={{display: 'flex', flex: 1}}>
+                                        <Embed
+                                            docid={LocalStorageValueLink('RebaserRight', "", this.handleUpdate).value}
+                                            style={{flexGrow: '1'}} />
+                                        <Embed
+                                            docid={LocalStorageValueLink('RebaserOut', "", this.handleUpdate).value}
+                                            style={{flexGrow: '1'}} />
+                                    </div>
+                                </div>
+                            );
                         }
-                    };
-
-                    return React.createElement("div", {"style": ({flex: 1, display: 'flex', flexDirection: 'column'})},
-                            React.createElement("div", {"style": ({display: 'flex', flex: 1})},
-                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserBase', "", this.handleUpdate).value), "style": ({flexGrow: '1'})}),
-                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserLeft', "", this.handleUpdate).value), "style": ({flexGrow: '1'})})
-                            ),
-                            React.createElement("div", {"style": ({display: 'flex', flex: 1})},
-                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserRight', "", this.handleUpdate).value), "style": ({flexGrow: '1'})}),
-                                React.createElement(Embed, {"docid": (LocalStorageValueLink('RebaserOut', "", this.handleUpdate).value), "style": ({flexGrow: '1'})})
-                            )
-                    );
-                }
-                
-            })())
+                        
+                    })()}
+                </div>
             );
         }
     });
@@ -1191,9 +1362,14 @@ output: `, React.createElement(FormControl, {"placeholder": "Enter doc id", "val
 Demos.DatabaseExplorer = function() {
     const Embed = function({docserver_id, style}) {
         if (!_l.isEmpty(docserver_id)) {
-            return React.createElement("iframe", {"src": (`http://localhost:4000/dashboard/${docserver_id}`), "frameBorder": "0", "style": (style)});
+            return (
+                <iframe
+                    src={`http://localhost:4000/dashboard/${docserver_id}`}
+                    frameBorder="0"
+                    style={style} />
+            );
         } else {
-            return React.createElement("div", {"style": (style)});
+            return <div style={style} />;
         }
     };
 
@@ -1207,43 +1383,56 @@ Demos.DatabaseExplorer = function() {
         },
 
         render() {
-            return React.createElement("div", {"style": ({display: 'flex', flex: 1})},
-                React.createElement("div", {"style": ({display: 'flex', flexDirection: 'column'})},
-                    React.createElement("div", null,
-                        React.createElement(FormControl, {"valueLink": (LocalStorageValueLink('Script', "", (() => this.forceUpdate()))),  
-                            "tag": "textarea",  
-                            "placeholder": "Enter JS script",  
-                            "style": ({
-                                fontFamily: 'Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace',
-                                fontSize: 13,
-                                color: '#441173',
+            return (
+                <div style={{display: 'flex', flex: 1}}>
+                    <div style={{display: 'flex', flexDirection: 'column'}}>
+                        <div>
+                            <FormControl
+                                valueLink={LocalStorageValueLink('Script', "", (() => this.forceUpdate()))}
+                                tag="textarea"
+                                placeholder="Enter JS script"
+                                style={{
+                                    fontFamily: 'Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace',
+                                    fontSize: 13,
+                                    color: '#441173',
 
-                                width: '100%', height: '5em',
-                                WebkitAppearance: 'textfield'
-                            })}),
-                        React.createElement("button", {"onClick": (() => {
-                            return this.executeAcrossDocset(LocalStorageValueLink('Script', "", (() => this.forceUpdate())).value);
-                        }
-                        )}, "Submit")
-                    ),
-                    React.createElement("table", {"style": ({overflow: 'auto', flex: 1})},
-                        React.createElement("thead", null,
-                            React.createElement("tr", null,
-                                ([
-                                    'doc id', 'docserver id', 'doc name', 'app id', 'app name', 'user id', 'first name', 'last name'
-                                ].map(item => React.createElement("th", {"key": (item)}, (item))))
-                            )
-                        ),
-                        React.createElement("tbody", null,
-                            (this.state.rows.map((row, i) => {
-                                return React.createElement("tr", {"key": (`${row[0]}-${i}`), "onClick": (() => this.setState({docserver_id: `${row[1]}`}))},
-                                    (row.map((item, ind) => React.createElement("td", {"key": (`${item}-${i}-${ind}`)}, (item))))
-                                );
-                            }))
-                        )
-                    )
-                ),
-                React.createElement(Embed, {"docserver_id": (this.state.docserver_id), "style": ({width: '50%'})})
+                                    width: '100%', height: '5em',
+                                    WebkitAppearance: 'textfield'
+                                }} />
+                            <button
+                                onClick={() => {
+                                    return this.executeAcrossDocset(LocalStorageValueLink('Script', "", (() => this.forceUpdate())).value);
+                                }}>
+                                Submit
+                            </button>
+                        </div>
+                        <table style={{overflow: 'auto', flex: 1}}>
+                            <thead>
+                                <tr>
+                                    {[
+                                            'doc id', 'docserver id', 'doc name', 'app id', 'app name', 'user id', 'first name', 'last name'
+                                        ].map(item => <th key={item}>
+                                        {item}
+                                    </th>)}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.rows.map((row, i) => {
+                                        return (
+                                            <tr
+                                                key={`${row[0]}-${i}`}
+                                                onClick={() => this.setState({docserver_id: `${row[1]}`})}>
+                                                {row.map((item, ind) => <td key={`${item}-${i}-${ind}`}>
+                                                    {item}
+                                                </td>)}
+                                            </tr>
+                                        );
+                                    })}
+                            </tbody>
+                        </table>
+                    </div>
+                    <Embed docserver_id={this.state.docserver_id} style={{width: '50%'}} />
+                </div>
             );
         }
     });
@@ -1319,45 +1508,48 @@ Demos.LayoutPreviewToggle = function() {
                 }
             }
 
-            return React.createElement(DemoContainer, {"style": ({flex: 1})},
-                React.createElement("div", null,
-                    React.createElement("div", {"style": ({margin: '0 auto', width: '400px'})},
-                        React.createElement(FormControl, {"placeholder": "Doc id", "valueLink": (docidValueLink)}),
-                        React.createElement("button", {"onClick": (() => {
-                            return this.setState({mode: this.state.mode === 'layout' ? 'content' : 'layout'});
-                        }
-                            )}, (`Toggle to ${this.state.mode === 'layout' ? 'content' : 'layout'} mode`))
-                    ),
+            return (
+                <DemoContainer style={{flex: 1}}>
+                    <div>
+                        <div style={{margin: '0 auto', width: '400px'}}>
+                            <FormControl placeholder="Doc id" valueLink={docidValueLink} />
+                            <button
+                                onClick={() => {
+                                    return this.setState({mode: this.state.mode === 'layout' ? 'content' : 'layout'});
+                                }}>
+                                {`Toggle to ${this.state.mode === 'layout' ? 'content' : 'layout'} mode`}
+                            </button>
+                        </div>
+                        <div className="bootstrap" style={{marginBottom: '2em'}}>
+                            {(error == null) ?
+                                    <PdDropdown
+                                        title={selectedArtboard.name}
+                                        onSelect={(val, evt) => selectedArtboardVL.requestChange(val)}
+                                        options={artboards.map(artboard => ({
+                                            label: artboard.name,
+                                            value: artboard.uniqueKey
+                                        }))} /> : undefined}
+                        </div>
+                        {(() => { 
+                                try {
+                                    if (error != null) {
+                                        return error;
 
-                    React.createElement("div", {"className": "bootstrap", "style": ({marginBottom: '2em'})},
-                        ( (error == null) ?
-                            React.createElement(PdDropdown, {"title": (selectedArtboard.name),  
-                                "onSelect": ((val, evt) => selectedArtboardVL.requestChange(val)),  
-                                "options": (artboards.map(artboard => ({
-                                    label: artboard.name,
-                                    value: artboard.uniqueKey
-                                })))}) : undefined
-                        )
-                    ),
-                    ((() => { 
-                        try {
-                            if (error != null) {
-                                return error;
+                                    } else if (this.state.mode === 'layout') {
+                                        return layoutEditorOfArtboard(selectedArtboard.uniqueKey, this.state.docjson);
 
-                            } else if (this.state.mode === 'layout') {
-                                return layoutEditorOfArtboard(selectedArtboard.uniqueKey, this.state.docjson);
+                                    } else if (this.state.mode === 'content') {
+                                        return previewOfArtboard(selectedArtboard.uniqueKey, this.state.docjson);
+                                    }
 
-                            } else if (this.state.mode === 'content') {
-                                return previewOfArtboard(selectedArtboard.uniqueKey, this.state.docjson);
-                            }
-
-                        } catch (error2) {
-                            e = error2;
-                            console.error(e);
-                            return "error logged to console";
-                        }
-                     })())
-                )
+                                } catch (error2) {
+                                    e = error2;
+                                    console.error(e);
+                                    return "error logged to console";
+                                }
+                             })()}
+                    </div>
+                </DemoContainer>
             );
         }
     });
@@ -1376,54 +1568,63 @@ const DemoPage = createReactClass({
         const {value: demo_name} = (demoNameValueLink = this.getDemoNameValueLink());
         const CurrentDemo = (LoadedDemos[demo_name] != null ? LoadedDemos[demo_name] : (LoadedDemos[demo_name] = (left = (typeof Demos[demo_name] === 'function' ? Demos[demo_name]() : undefined)) != null ? left : this.DefaultDemo));
 
-        return React.createElement("div", {"style": ({flex: 1, display: 'flex', flexDirection: 'column'})},
-            React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700,900');
-#app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}\
-`})}),
-            (
-                demo_name === "RebaseExperiment" ?
-                        React.createElement(FormControl, {"tag": "select", "valueLink": (demoNameValueLink)},
-                        (
-                            _l.keys(Demos).map((demo_name, i) => React.createElement("option", {"key": (i), "value": (demo_name)}, (demo_name)))
-                        )
-                        )
+        return (
+            <div style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                <style
+                    dangerouslySetInnerHTML={{__html: `\
+        @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,600,700,900');
+        #app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }\
+        `}} />
+                {demo_name === "RebaseExperiment" ?
+                        <FormControl tag="select" valueLink={demoNameValueLink}>
+                            {_l.keys(Demos).map((demo_name, i) => <option key={i} value={demo_name}>
+                                {demo_name}
+                            </option>)}
+                        </FormControl>
 
                 :
-                    React.createElement(DemoContainer, {"style": ({marginTop: '4em'})},
-                        React.createElement("h1", {"style": ({fontFamily: 'Roboto'})},
-                            React.createElement("span", {"style": ({letterSpacing: 0.5})}, "PAGE"),
-                            React.createElement("span", {"style": ({fontWeight: '100'})}, "DEMOS")
-                        ),
-                        React.createElement("p", {"style": ({
-                            fontFamily: 'Open Sans',
-                            marginTop: -19,
-                            marginBottom: '2em',
-                            fontWeight: '300',
-                            fontSize: '0.8em'
-                        })},
-                            ("If you're not working for Pagedraw, you probbably didn't mean to be here!  Cool find, don't tell anyone about it ;)")
-                        ),
-
-                        React.createElement("p", null,
-                            React.createElement(FormControl, {"tag": "select", "valueLink": (demoNameValueLink)},
-                            (
-                                _l.keys(Demos).map((demo_name, i) => React.createElement("option", {"key": (i), "value": (demo_name)}, (demo_name)))
-                            )
-                            )
-                        )
-                    )
-            ),
-            React.createElement(CurrentDemo, null)
+                    <DemoContainer style={{marginTop: '4em'}}>
+                        <h1 style={{fontFamily: 'Roboto'}}>
+                            <span style={{letterSpacing: 0.5}}>
+                                PAGE
+                            </span>
+                            <span style={{fontWeight: '100'}}>
+                                DEMOS
+                            </span>
+                        </h1>
+                        <p
+                            style={{
+                                fontFamily: 'Open Sans',
+                                marginTop: -19,
+                                marginBottom: '2em',
+                                fontWeight: '300',
+                                fontSize: '0.8em'
+                            }}>
+                            If you're not working for Pagedraw, you probbably didn't mean to be here!  Cool find, don't tell anyone about it ;)
+                        </p>
+                        <p>
+                            <FormControl tag="select" valueLink={demoNameValueLink}>
+                                {_l.keys(Demos).map((demo_name, i) => <option key={i} value={demo_name}>
+                                    {demo_name}
+                                </option>)}
+                            </FormControl>
+                        </p>
+                    </DemoContainer>}
+                <CurrentDemo />
+            </div>
         );
     },
 
     DefaultDemo() {
-        return React.createElement("div", null, "Select a demo");
+        return (
+            <div>
+                Select a demo
+            </div>
+        );
     },
 
     getDemoNameValueLink() {
@@ -1431,4 +1632,4 @@ const DemoPage = createReactClass({
     }
 });
 
-ReactDOM.render(React.createElement(DemoPage, null), document.getElementById('app'));
+ReactDOM.render(<DemoPage />, document.getElementById('app'));

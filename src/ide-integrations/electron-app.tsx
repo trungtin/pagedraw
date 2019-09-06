@@ -59,11 +59,12 @@ export default createReactClass({
     },
 
     render() {
-        return React.createElement(Editor, { 
-            "initialDocJson": (initialDocjson),  
-            "onChange": (this.handleDocjsonChanged),  
-            "windowTitle": "Pagedraw"
-        });
+        return (
+            <Editor
+                initialDocJson={initialDocjson}
+                onChange={this.handleDocjsonChanged}
+                windowTitle="Pagedraw" />
+        );
     },
 
     handleDocjsonChanged(docjson) {

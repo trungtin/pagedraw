@@ -10,146 +10,152 @@ import React from 'react';
 
 
 const render = function() {
-    return React.createElement("div", {"className": "pd-onhover-parent deletebutton"},
-        React.createElement("style", {"dangerouslySetInnerHTML": ({__html: `\
-.deletebutton {
-    display: flex;
-    flex-grow: 1;
-}
+    return (
+        <div className="pd-onhover-parent deletebutton">
+            <style
+                dangerouslySetInnerHTML={{__html: `\
+        .deletebutton {
+            display: flex;
+            flex-grow: 1;
+        }
 
-.deletebutton-_hover-2 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+        .deletebutton-_hover-2 {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
 
-.deletebutton-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+        .deletebutton-0-0 {
+            display: flex;
+            flex-shrink: 0;
+        }
 
-.deletebutton-oval_2 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-radius: 100%;
-    background: rgb(253, 57, 86);
-}
+        .deletebutton-oval_2 {
+            display: flex;
+            flex-direction: column;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-radius: 100%;
+            background: rgb(253, 57, 86);
+        }
 
-.deletebutton-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 5px;
-    padding-right: 5px;
-}
+        .deletebutton-0-0-0-0 {
+            display: flex;
+            flex-shrink: 0;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
 
-.deletebutton-image_6 {
-    width: 8px;
-    height: 8px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+        .deletebutton-image_6 {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            border-width: 0px;
+        }
 
-.deletebutton-default-7 {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
+        .deletebutton-default-7 {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
 
-.deletebutton-1-0-0 {
-    display: flex;
-    flex-shrink: 0;
-}
+        .deletebutton-1-0-0 {
+            display: flex;
+            flex-shrink: 0;
+        }
 
-.deletebutton-oval_2-3 {
-    display: flex;
-    flex-direction: column;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-radius: 100%;
-    background: rgb(255, 212, 219);
-}
+        .deletebutton-oval_2-3 {
+            display: flex;
+            flex-direction: column;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-radius: 100%;
+            background: rgb(255, 212, 219);
+        }
 
-.deletebutton-1-0-0-0-0 {
-    display: flex;
-    flex-shrink: 0;
-    padding-left: 5px;
-    padding-right: 5px;
-}
+        .deletebutton-1-0-0-0-0 {
+            display: flex;
+            flex-shrink: 0;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
 
-.deletebutton-image_6-3 {
-    width: 8px;
-    height: 8px;
-    flex-shrink: 0;
-    border-width: 0px;
-}
+        .deletebutton-image_6-3 {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            border-width: 0px;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-body {
-    margin: 0;
-}
+        body {
+            margin: 0;
+        }
 
-button:hover {
-    cursor: pointer;
-}
+        button:hover {
+            cursor: pointer;
+        }
 
-a {
-    text-decoration: none;
-    color: inherit;
-}
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-.pd-onhover-parent >.pd-onhover {
-    display: none;
-}
+        .pd-onhover-parent >.pd-onhover {
+            display: none;
+        }
 
-.pd-onhover-parent:hover > * {
-    display: none;
-}
+        .pd-onhover-parent:hover > * {
+            display: none;
+        }
 
-.pd-onhover-parent:hover > .pd-onhover {
-    display: flex;
-}
+        .pd-onhover-parent:hover > .pd-onhover {
+            display: flex;
+        }
 
-.pd-onactive-parent > .pd-onactive {
-    display: none;
-}
+        .pd-onactive-parent > .pd-onactive {
+            display: none;
+        }
 
-.pd-onactive-parent:active > * {
-    display: none;
-}
+        .pd-onactive-parent:active > * {
+            display: none;
+        }
 
-.pd-onactive-parent:active > .pd-onactive {
-    display: flex;
-}
+        .pd-onactive-parent:active > .pd-onactive {
+            display: flex;
+        }
 
-.pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
-    display: none;
-}\
-`})}),  
-        React.createElement("div", {"className": "pd-onhover deletebutton-_hover-2"},
-            React.createElement("div", {"className": "deletebutton-0-0"},
-                React.createElement("div", {"className": "deletebutton-oval_2"},
-                    React.createElement("div", {"className": "deletebutton-0-0-0-0"},
-                        React.createElement("img", {"src": "https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/", "className": "deletebutton-image_6"}) 
-                    )
-                )
-            )
-        ),
-        ( (this.props.state === "default") ?
-            React.createElement("div", {"className": "deletebutton-default-7"},
-                React.createElement("div", {"className": "deletebutton-1-0-0"},
-                    React.createElement("div", {"className": "deletebutton-oval_2-3"},
-                        React.createElement("div", {"className": "deletebutton-1-0-0-0-0"},
-                            React.createElement("img", {"src": "https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/", "className": "deletebutton-image_6-3"}) 
-                        )
-                    )
-                )
-            ) : undefined
-        )
+        .pd-onactive-parent.pd-onhover-parent:active > .pd-onhover {
+            display: none;
+        }\
+        `}} />
+            <div className="pd-onhover deletebutton-_hover-2">
+                <div className="deletebutton-0-0">
+                    <div className="deletebutton-oval_2">
+                        <div className="deletebutton-0-0-0-0">
+                            <img
+                                src="https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/"
+                                className="deletebutton-image_6" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {(this.props.state === "default") ?
+                    <div className="deletebutton-default-7">
+                        <div className="deletebutton-1-0-0">
+                            <div className="deletebutton-oval_2-3">
+                                <div className="deletebutton-1-0-0-0-0">
+                                    <img
+                                        src="https://ucarecdn.com/f2991d60-0b5c-4d07-bf8c-97c6a6d33c64/"
+                                        className="deletebutton-image_6-3" />
+                                </div>
+                            </div>
+                        </div>
+                    </div> : undefined}
+        </div>
     );
 };
 

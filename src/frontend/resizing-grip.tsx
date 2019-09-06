@@ -17,13 +17,17 @@ const defaultExport = {};
 defaultExport.ResizingGrip = (ResizingGrip = createReactClass({
     displayName: 'ResizingGrip',
     render() {
-        return React.createElement("div", {"style": (_l.extend({}, this.props.positioning, {
-            position: 'absolute',
-            width: 0, height: 0
-        }))},
-            React.createElement("div", {"className": "gabe-grip unzoomed-control",  
-                "onMouseDown": (this.flagEvent),  
-                "style": ({cursor: `${this.props.cursor}-resize`})})
+        return (
+            <div
+                style={_l.extend({}, this.props.positioning, {
+                    position: 'absolute',
+                    width: 0, height: 0
+                })}>
+                <div
+                    className="gabe-grip unzoomed-control"
+                    onMouseDown={this.flagEvent}
+                    style={{cursor: `${this.props.cursor}-resize`}} />
+            </div>
         );
     },
 
@@ -47,18 +51,21 @@ defaultExport.resizingGrips = (resizingGrips = [
 ]);
 
 defaultExport.ResizingFrame = (ResizingFrame = ({style, resizable_edges, flag}) => // style must include either position:absolute or position:relative
-React.createElement("div", {"className": "resizing-frame", "style": (style)}, (() => {
-    const result = [];
-    
-    for (let grip of Array.from(resizingGrips)) {
-        if (_l.every(grip.sides, grip => Array.from(resizable_edges).includes(grip))) {
-            result.push(React.createElement(ResizingGrip, {"key": (grip.label),  
-                "positioning": (grip.positioning),  
-                "cursor": (grip.cursor),  
-                "clickFlag": (flag(grip))}));
+<div className="resizing-frame" style={style}>
+    {(() => {
+        const result = [];
+        
+        for (let grip of Array.from(resizingGrips)) {
+            if (_l.every(grip.sides, grip => Array.from(resizable_edges).includes(grip))) {
+                result.push(<ResizingGrip
+                    key={grip.label}
+                    positioning={grip.positioning}
+                    cursor={grip.cursor}
+                    clickFlag={flag(grip)} />);
+            }
         }
-    }
 
-    return result;
-})()));
+        return result;
+    })()}
+</div>);
 export default defaultExport;

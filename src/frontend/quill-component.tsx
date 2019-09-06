@@ -20,7 +20,13 @@ const defaultExport = {};
 defaultExport.QuillComponent = createReactClass({
     displayName: 'QuillComponent',
     render() {
-        return React.createElement("div", {"ref": "editor", "className": "quill-editor expand-children", "onMouseDown": (this.handleMouseDown), "onContextMenu": (this.handleRightClick)});
+        return (
+            <div
+                ref="editor"
+                className="quill-editor expand-children"
+                onMouseDown={this.handleMouseDown}
+                onContextMenu={this.handleRightClick} />
+        );
     },
 
     handleMouseDown(e) {

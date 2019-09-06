@@ -27,11 +27,11 @@ defaultExport.handleAddCustomFonts = function(doc, onClosed=null) {
 
         const sp_g = / /g; // because cjsx is broken, I can't inline this
         const font_list_loader_helmet =
-            React.createElement(Helmet, null,
-                React.createElement("link", {"rel": "stylesheet", "href": (
-                    `https://fonts.googleapis.com/css?family=${_allGoogleWebFonts.map(f => f.name.replace(sp_g, '+')).join('|')}`
-                )})
-            );
+            <Helmet>
+                <link
+                    rel="stylesheet"
+                    href={`https://fonts.googleapis.com/css?family=${_allGoogleWebFonts.map(f => f.name.replace(sp_g, '+')).join('|')}`} />
+            </Helmet>;
 
         return modal.show((function(closeHandler) {
             if (showModalName === 'font-list') {
@@ -48,25 +48,32 @@ defaultExport.handleAddCustomFonts = function(doc, onClosed=null) {
                     );
                 return [
                     font_list_loader_helmet,
-                    React.createElement(Modal.Header, {"closeButton": true},
-                        React.createElement(Modal.Title, null, "Choose Custom Fonts")
-                    ),
-                    React.createElement(Modal.Body, null,
-                        React.createElement("input", {"placeholder": "Search...",  
-                            "style": ({width: '100%', marginBottom: '5px', fontSize: '24px'}),  
-                            "value": (font_filter),  
-                            "onChange": (e => {
+                    <Modal.Header closeButton={true}>
+                        <Modal.Title>
+                            Choose Custom Fonts
+                        </Modal.Title>
+                    </Modal.Header>,
+                    <Modal.Body>
+                        <input
+                            placeholder="Search..."
+                            style={{width: '100%', marginBottom: '5px', fontSize: '24px'}}
+                            value={font_filter}
+                            onChange={e => {
                                 font_filter = e.target.value;
                                 return modal.forceUpdate();
-                            }
-                            )}),
-                        React.createElement(Infinite, {"containerHeight": (400), "elementHeight": (26), "className": "font-manager-infinite-scroll"},
-                            (
-                                currentFonts.map(font => {
-                                    return React.createElement("div", {"key": (font.uniqueKey), "style": ({display: 'flex', alignItems: 'baseline'})},
-                                        React.createElement("input", {"id": (`font-${font.uniqueKey}`), "type": "checkbox",  
-                                            "checked": (fontsHash[font.name] != null ? fontsHash[font.name] : false),  
-                                            "onChange": (e => {
+                            }} />
+                        <Infinite
+                            containerHeight={400}
+                            elementHeight={26}
+                            className="font-manager-infinite-scroll">
+                            {currentFonts.map(font => {
+                                return (
+                                    <div key={font.uniqueKey} style={{display: 'flex', alignItems: 'baseline'}}>
+                                        <input
+                                            id={`font-${font.uniqueKey}`}
+                                            type="checkbox"
+                                            checked={fontsHash[font.name] != null ? fontsHash[font.name] : false}
+                                            onChange={e => {
                                                 if (e.target.checked) {
                                                     // went from unchecked -> checked
                                                     doc.fonts.push(font);
@@ -78,46 +85,61 @@ defaultExport.handleAddCustomFonts = function(doc, onClosed=null) {
                                                 }
 
                                                 return modal.forceUpdate();
-                                            }
-                                            )}),
-                                        React.createElement("label", {"htmlFor": (`font-${font.uniqueKey}`), "style": ({
-                                            fontFamily: font.get_css_string(),
-                                            fontWeight: 400, fontSize: '24px',
-                                            paddingLeft: '5px', flex: 1
-                                        })},
-                                            (font.name)
-                                        )
-                                    );
-                            })
-                            )
-                        )
-                    ),
-                    React.createElement(Modal.Footer, null,
-                        React.createElement("div", {"style": ({float: 'left'})}, React.createElement(PdButtonOne, {"onClick": (() => {
-                            showModalName = 'upload-font';
-                            return modal.forceUpdate();
-                        }
-                        )}, "Upload new font")),
-                        React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
-                    )
+                                            }} />
+                                        <label
+                                            htmlFor={`font-${font.uniqueKey}`}
+                                            style={{
+                                                fontFamily: font.get_css_string(),
+                                                fontWeight: 400, fontSize: '24px',
+                                                paddingLeft: '5px', flex: 1
+                                            }}>
+                                            {font.name}
+                                        </label>
+                                    </div>
+                                );
+                        })}
+                        </Infinite>
+                    </Modal.Body>,
+                    <Modal.Footer>
+                        <div style={{float: 'left'}}>
+                            <PdButtonOne
+                                onClick={() => {
+                                    showModalName = 'upload-font';
+                                    return modal.forceUpdate();
+                                }}>
+                                Upload new font
+                            </PdButtonOne>
+                        </div>
+                        <PdButtonOne type="primary" onClick={closeHandler}>
+                            Close
+                        </PdButtonOne>
+                    </Modal.Footer>
                 ];
 
             } else if (showModalName === 'upload-font') {
                 return [
-                    React.createElement(Modal.Header, {"closeButton": true},
-                        React.createElement(Modal.Title, null, "Upload a font")
-                    ),
-                    React.createElement(Modal.Body, null,
-                        React.createElement(FontImporter, {"doc": (doc), "closeHandler": (closeHandler)})
-                    ),
-                    React.createElement(Modal.Footer, null,
-                        React.createElement("div", {"style": ({float: 'left'})}, React.createElement(PdButtonOne, {"onClick": (() => {
-                            showModalName = 'font-list';
-                            return modal.forceUpdate();
-                        }
-                        )}, "Back")),
-                        React.createElement(PdButtonOne, {"type": "primary", "onClick": (closeHandler)}, "Close")
-                    )
+                    <Modal.Header closeButton={true}>
+                        <Modal.Title>
+                            Upload a font
+                        </Modal.Title>
+                    </Modal.Header>,
+                    <Modal.Body>
+                        <FontImporter doc={doc} closeHandler={closeHandler} />
+                    </Modal.Body>,
+                    <Modal.Footer>
+                        <div style={{float: 'left'}}>
+                            <PdButtonOne
+                                onClick={() => {
+                                    showModalName = 'font-list';
+                                    return modal.forceUpdate();
+                                }}>
+                                Back
+                            </PdButtonOne>
+                        </div>
+                        <PdButtonOne type="primary" onClick={closeHandler}>
+                            Close
+                        </PdButtonOne>
+                    </Modal.Footer>
                 ];
             }
 

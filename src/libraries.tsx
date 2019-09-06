@@ -190,7 +190,7 @@ const parseUserSpecs = (user_specs, lib_name) => _l.map(user_specs, function(Use
 
     return {
         ref, name: component_name,
-        render(props) { return React.createElement(UserSpec, Object.assign({},  props )); },
+        render(props) { return <UserSpec {...props} />; },
         flexWidth: Array.from(resizable).includes('width'),
         flexHeight: Array.from(resizable).includes('height'),
         propControl
